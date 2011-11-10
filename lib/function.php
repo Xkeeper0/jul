@@ -17,7 +17,9 @@
 
 	if (file_exists("lib/firewall.php")) {
 		require("lib/firewall.php");			# Oh no!
+		$nofw	= false;
 	} else {
+		$nofw	= true;
 		function firewall() {}
 	}
 
@@ -30,6 +32,7 @@
 		$HTTP_POST_VARS = addslashes_array($HTTP_POST_VARS);
 		$HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
 	}
+
 
 	if ($_GET['a']) print "sr = ". $_SERVER['DOCUMENT_ROOT'] ."<br>";
 	if(!ini_get('register_globals')){
@@ -60,7 +63,24 @@
 	require 'lib/mysql.php';
 
 
-
+	firewall();
+	if ($nofw) {
+		$sql	= new mysql;
+		$sql	-> connect($sqlhost, $sqluser, $sqlpass) or 
+		die("<title>Damn</title>
+		<body style=\"background: #000 url('images/bombbg.png'); color: #f00;\">
+			<font style=\"font-family: Verdana, sans-serif;\">
+			<center>
+			<img src=\"http://xkeeper.shacknet.nu:5/docs/temp/mysqlbucket.png\" title=\"bought the farm, too\">
+			<br><br><font style=\"color: #f88; size: 175%;\"><b>The MySQL server has exploded.</b></font>
+			<br>
+			<br><font style=\"color: #f55;\">Error: ". mysql_error() ."</font>
+			<br>
+			<br><small>This is not a hack attempt; it is a server problem.</small>
+		");
+		
+		$sql	-> selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
+	}
 
 
 	
