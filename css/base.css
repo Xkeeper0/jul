@@ -1,0 +1,29 @@
+textarea,input,select {
+	border: 1px solid #000;
+	background: #000;
+	color: #EEE;
+	font: 10pt monospace;
+}
+input[type=radio] {
+	border: none;
+}
+input[type=submit] {
+	border: #000 solid 2px;
+	font: 10pt 'verdana', sans-serif;
+}
+body, table, thead, tbody, span, td, tr, th, a, img, br { padding: 0; margin: 0; border: 0; font-size: 100%; }
+center { text-align: center; }
+.tdbgh, .tbl, .tdbgc, .tdbg1, .tdbg2 { line-height: 1; padding: 1px;}
+table { border-spacing: 0; border-collapse: collapse; }
+a:link,a:visited,a:active,a:hover { text-decoration:none; font-weight: bold; }
+table { padding: 0.5em; }
+span.lastpost { font-size: 90%; padding: 0; margin: 0; }
+div.lastpost { font-size: 90%; text-align: right !important; }
+
+.table { width: 100%; empty-cells: show;}
+.sparkline { display: none; }
+.center, center { text-align: center; }
+.right { text-align: right; }
+
+code { overflow: auto; width: 100%; white-space: pre; display: block; }
+code br { display: none; }

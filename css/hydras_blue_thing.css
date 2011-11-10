@@ -1,0 +1,18 @@
+body { background: #013 !important; color: #DDD; margin: 1em; }
+
+a { color: #BEBAFE; }
+a:visited { color: #9990c0; }
+a:active { color: #CFBEFF; }
+a:hover { color: #CECAFE; }
+
+.tdbg1 { background: #05375F; } /* tablebg1 */
+.tdbg2 { background: #15426D; } /* tablebg2 */
+.tdbgc { background: #0F265F; }
+.tdbgh { 
+	background: #0048B7 url("/images/julold/header_shade.png") repeat-x bottom center; color: #FFF; border: 1px solid black; text-shadow: 2px 2px 4px #000; font: 13px 'verdana', sans-serif;
+} 
+td.tbl { border-right: 1px solid #000; border-bottom: 1px solid #000; }
+.table { border-top: #000 1px solid; border-left: #000 1px solid; }
+.font { font: 13px 'verdana', sans-serif; }
+.fonts { font: 10px 'verdana', sans-serif; }
+.fontt { font: 10px 'tahoma', serif; }

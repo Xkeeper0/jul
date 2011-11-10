@@ -1,0 +1,56 @@
+# Jul-specific redirect + errors
+board/
+errors/
+
+# Random crap we don't need
+images/*.*
+images/*/
+
+# External 'plugins' (if you could get away with that name)
+ext/
+irc/
+
+# Themeing
+numgfx/
+
+
+# Trade secrets
+lib/config.php
+lib/firewall.php
+
+
+irc.php
+
+# Thread "unread count" and reply buttons
+!numgfx/jul/
+!images/new*.png
+!images/threadclosed.png
+
+# Thread state indicators
+!images/hot.gif
+!images/new.gif
+!images/off.gif
+!images/hotoff.gif
+!images/hotnew.gif
+!images/offnew.gif
+!images/offhotnew.gif
+
+# Default scheme stuff
+!images/jul/
+
+# New reply toolbar (not that it works)
+!images/toolbar/
+
+
+# Thread icons
+!images/coin*
+!images/icons
+
+
+# Smilies
+!images/smilies/
+
+
+# Misc
+!images/rpg/
+

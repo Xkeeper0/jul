@@ -1,0 +1,41 @@
+
+ErrorDocument 403 /errors/403.html
+ErrorDocument 404 /errors/404.html
+ErrorDocument 500 /errors/500.html
+
+Order Allow,Deny
+Allow from all
+
+## Uncommenting these causes some weird lag problem
+## As does adding any other Deny lines
+#
+#Deny from 82.32.71.191		# Arbe
+#Deny from 99.233.36.5		# Various #nobodysworld morons
+##Deny from 97.92.177.104		# |
+#Deny from 68.35.135.91		# |
+#Deny from 68.10.71.220		# Legion, etc
+#Deny from 208.53.157.23		# +---------------------------
+#
+#Deny from 98.130.2.16		# Another hacker wannabe
+##Deny from 75.161.101.58
+#
+#Deny from 193.200.150.23	# Anonymouse
+#Deny from 85.17.174.196		# moron
+#Deny from 74.63.84.68		# |
+#Deny from 209.17.190.78		# |
+#Deny from 72.36.147.170		# |
+#Deny from 66.90.104.89		# |
+#Deny from 67.159.44.103		# |
+#Deny from 87.229.73.174		# |
+#Deny from 91.111.40.97		# |
+#
+#Deny from 86.137.143.9		# Arbe
+#Deny from 200.26.114.131	# |
+#Deny from 77.98.129.123		# |
+#Deny from 216.246.0.146		# |
+#Deny from 196.32.195.125	# |
+#Deny from 67.220.202.107	# |
+#Deny from 82.32.64.54		# |
+#Deny from 67.228.159.181	# |
+##Deny from 
+#
