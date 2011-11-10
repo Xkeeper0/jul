@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 	if (!$x_hacks['host']) {
 	//	if ($loguserid == 1) $boardtitle	= "";
