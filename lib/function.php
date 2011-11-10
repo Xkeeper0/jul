@@ -176,7 +176,10 @@
 //  $hacks['noposts'] = true;
 
   mysql_query("UPDATE `users` SET `sex` = '2' WHERE `sex` = 255");
-	$getdoom	= true;
+
+
+/*
+  $getdoom	= true;
 	require "ext/mmdoom.php";
 
   if (!$x_hacks['host'] && $_GET['namecolors']) {
@@ -206,39 +209,18 @@
 
 //	$x_hacks['mmdeath'] = -1;
 
-/*	if ($x_hacks['mmdeath'] < 0 && true && $sql -> resultq("SELECT `powerlevel` FROM `users` WHERE `id` = '61'") == 0) {
-		$user	= $sql -> fetchq("UPDATE `users` SET `powerlevel` = 1 WHERE `id` IN (61)");
-
-	}
-*/
+//	if ($x_hacks['mmdeath'] < 0 && true && $sql -> resultq("SELECT `powerlevel` FROM `users` WHERE `id` = '61'") == 0) {
+//		$user	= $sql -> fetchq("UPDATE `users` SET `powerlevel` = 1 WHERE `id` IN (61)");
+//
+//	}
 
 	if ($x_hacks['mmdeath'] < 0 && true && $sql -> resultq("SELECT `powerlevel` FROM `users` WHERE `id` = '18'") >= 0) {
 		mysql_query("UPDATE `users` SET `powerlevel` = -1 WHERE `id` = '18'");
 
 		// Please don't uncomment this I don't know what it does other than Very Bad Things
 		
-		/*
-		$delid	= 18;
-		$user	= $sql -> fetchq("SELECT * FROM `users` WHERE `id` = '$delid'");
 
-		$name=$user[name];
-		$namecolor=getnamecolor($user[sex],$user[powerlevel]);
-		$line="<br><br>===================<br>[Posted by <font $namecolor><b>". addslashes($name) ."</b></font>]<br>";
-		$ups=mysql_query("SELECT id FROM posts WHERE user=$delid");
-		while($up=mysql_fetch_array($ups)) mysql_query("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=$up[id]") or print mysql_error();
-		mysql_query("INSERT INTO `ipbans` SET `ip` = '". $user['lastip'] ."', `date` = '". ctime() ."', `reason` = 'unspecified'");
-		mysql_query("UPDATE threads SET user=89 WHERE user=$delid");
-		mysql_query("UPDATE threads SET lastposter=89 WHERE lastposter=$delid");
-		mysql_query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$delid");
-		mysql_query("UPDATE pmsgs SET userto=89 WHERE userto=$delid");
-		mysql_query("UPDATE posts SET user=89,headid=0,signid=0 WHERE user=$delid");
-		mysql_query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '89') WHERE `id` = '89'");
-		mysql_query("DELETE FROM userratings WHERE userrated=$delid OR userfrom=$delid");
-		mysql_query("DELETE FROM pollvotes WHERE user=$delid");
-		mysql_query("DELETE FROM users WHERE id=$delid");
-		mysql_query("DELETE FROM users_rpg WHERE uid=$delid");
-*/
-/*		$delid	= 1085;
+		$delid	= 1085;
 		$user	= $sql -> fetchq("SELECT * FROM `users` WHERE `id` = '$delid'");
 
 		$name=$user[name];
@@ -257,10 +239,10 @@
 		mysql_query("DELETE FROM pollvotes WHERE user=$delid");
 		mysql_query("DELETE FROM users WHERE id=$delid");
 		mysql_query("DELETE FROM users_rpg WHERE uid=$delid");
-*/
+
 	}
   }
-  
+*/  
 	$busers = @mysql_query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() - (60 * 60 * 3))."' AND birthday") or print mysql_error();
 	$bquery = "";
 	while($buserid = mysql_fetch_array($busers, MYSQL_ASSOC)) {
