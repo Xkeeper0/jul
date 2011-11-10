@@ -1035,13 +1035,6 @@ function dofilters($p){
 		}
 	}
 
-	$p=preg_replace("'document.cookie'si",'document.co<z>okie',$p);
-	$p=preg_replace("'eval'si",'eva<z>l',$p);
-	//  $p=preg_replace("'document.'si",'docufail.',$p);
-	$p=preg_replace("'<script'si",'<<z>script',$p);
-	$p=preg_replace("'javascript:'si",'javasc<z>ript:',$p);
-	$p=preg_replace("'<iframe'si",'<<z>iframe',$p);
-	$p=preg_replace("'<meta'si",'<<z>meta',$p);
 	//$p=preg_replace("'<object(.*?)</object>'si","",$p);
 	$p=preg_replace("'autoplay'si",'',$p); // kills autoplay, need to think of a solution for embeds.
 	$p=preg_replace("'filter:alpha'si",'falpha',$p);
@@ -1085,7 +1078,16 @@ function dofilters($p){
 //  $p=preg_replace("'<style'si",'&lt;style',$p);
 
 
+
 	$p=preg_replace("'%BZZZ%'si",'onclick="bzzz(',$p);
+
+	$p=preg_replace("'document.cookie'si",'document.co<z>okie',$p);
+	$p=preg_replace("'eval'si",'eva<z>l',$p);
+	//  $p=preg_replace("'document.'si",'docufail.',$p);
+	$p=preg_replace("'<script'si",'<<z>script',$p);
+	$p=preg_replace("'javascript:'si",'javasc<z>ript:',$p);
+	$p=preg_replace("'<iframe'si",'<<z>iframe',$p);
+	$p=preg_replace("'<meta'si",'<<z>meta',$p);
 
 	return $p;
 }
