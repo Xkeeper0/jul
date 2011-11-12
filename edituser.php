@@ -139,6 +139,8 @@
 	$lft Homepage URL		$rgt$inpt=homepage VALUE=\"$user[homepageurl]\" SIZE=60 MAXLENGTH=80>
 	$hlft Options		$hrgt
 	$lft Timezone offset	$rgt$inpt=timezone SIZE=5 MAXLENGTH=5 VALUE=$user[timezone]>
+	$lft Date format	$rgt$inpt=dateformat VALUE=\"$dateformat\" SIZE=16 MAXLENGTH=32>
+	$lft Short date format	$rgt$inpt=dateshort VALUE=\"$dateshort\" SIZE=8 MAXLENGTH=32>
 	$lft Posts per page	$rgt$inpt=postsperpage SIZE=5 MAXLENGTH=5 VALUE=$user[postsperpage]>
 	$lft Threads per page	$rgt$inpt=threadsperpage SIZE=4 MAXLENGTH=4 VALUE=$user[threadsperpage]>
 	$lft Use text toolbar when posting		$rgt$vtool
@@ -165,7 +167,11 @@
 	if ($sex == -378) {
 		$sex = $sexn;
 	}
-    mysql_query("UPDATE `users` SET `posts` = '$numposts', `regdate` = '$regtime', `name` = '$username'$passedit, `picture` = '$picture', `signature` = '$signature', `bio` = '$bio', `powerlevel` = '$powerlevel', `title` = '$usertitle', `email` = '$email', `icq` = '$icq', `aim` = '$aim', `sex` = '$sex',  `homepageurl` = '$homepage', `timezone` = '$timezone', `postsperpage` = '$postsperpage', `realname` = '$realname', `location` = '$location', `postbg` = '$postbg', `postheader` = '$postheader', `useranks` = '$useranks', `birthday` = '$birthday', `minipic` = '$minipic', `homepagename` = '$pagename', `scheme` = '$sscheme', `threadsperpage` = '$threadsperpage', `viewsig` = '$viewsig', `layout` = '$tlayout', `posttool` = '$posttool', `moodurl` = '$moodurl', `profile_locked` = '$profile_locked', `editing_locked` = '$editing_locked' WHERE `id` = '$userid'") or print mysql_error();
+	
+    $dateformat = str_replace("'", "", $_POST['dateformat']);
+    $dateshort = str_replace("'", "", $_POST['dateshort']);
+	
+    mysql_query("UPDATE `users` SET `posts` = '$numposts', `regdate` = '$regtime', `name` = '$username'$passedit, `picture` = '$picture', `signature` = '$signature', `bio` = '$bio', `powerlevel` = '$powerlevel', `title` = '$usertitle', `email` = '$email', `icq` = '$icq', `aim` = '$aim', `sex` = '$sex',  `homepageurl` = '$homepage', `timezone` = '$timezone', `dateformat` = '$dateformat', `dateshort` = '$dateshort', `postsperpage` = '$postsperpage', `realname` = '$realname', `location` = '$location', `postbg` = '$postbg', `postheader` = '$postheader', `useranks` = '$useranks', `birthday` = '$birthday', `minipic` = '$minipic', `homepagename` = '$pagename', `scheme` = '$sscheme', `threadsperpage` = '$threadsperpage', `viewsig` = '$viewsig', `layout` = '$tlayout', `posttool` = '$posttool', `moodurl` = '$moodurl', `profile_locked` = '$profile_locked', `editing_locked` = '$editing_locked' WHERE `id` = '$userid'") or print mysql_error();
     print "
 	$tblstart
 	 $tccell1>Thank you, $loguser[name], for editing this user.<br>

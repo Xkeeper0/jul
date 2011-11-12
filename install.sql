@@ -841,6 +841,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `lastexp` bigint(20) NOT NULL,
   `lastannouncement` int(11) NOT NULL,
   `fancy_js` tinyint(1) unsigned NOT NULL default '0',
+  `dateformat` VARCHAR(32) NOT NULL,
+  `dateshort` VARCHAR(32) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `posts` (`posts`),
   KEY `name` (`name`),

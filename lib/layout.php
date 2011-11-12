@@ -27,8 +27,12 @@
 	// if($forumid==30) $boardtitle = "<a href='./'><img src=\"images/poniecentral.gif\" title=\"YAAAAAAAAAAY\"></a>";
 	// end PONIES!!!
 
-	$dateformat='m-d-y h:i:s A';
-	$dateshort='m-d-y';
+	if(!$loguserid || $dateformat == "") {
+		$dateformat='m-d-y h:i:s A';
+		$dateshort='m-d-y';
+	}
+
+	if (isset($_GET['dateformat'])) $dateformat = $_GET['dateformat'];
 
 	$race=postradar($loguserid);
 
