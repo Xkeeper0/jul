@@ -19,11 +19,16 @@ lib/config.php
 lib/firewall.php
 
 
+# Local fun stuff
 irc.php
+.htaccess
+
+
 
 # Thread "unread count" and reply buttons
 !numgfx/jul/
 !images/new*.png
+!images/_.gif
 !images/threadclosed.png
 
 # Thread state indicators
