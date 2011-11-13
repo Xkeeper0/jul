@@ -15,3 +15,7 @@
 	// Default date/time formatting
 	$defaultdateformat	= "m-d-y h:i:s A";
 	$defaultdateshort	= "m-d-y";
+
+	
+	// Other Fun Things
+	$displayerrors		= false;

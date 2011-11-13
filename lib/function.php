@@ -9,8 +9,13 @@
 	
 	// GitHub hosts my shame
 
+	
 
-
+	set_error_handler("errorhandler", E_ALL | E_STRICT);	// Generate 4 pages worth of output per page load
+	register_shutdown_function("errorprinter");				// Make sure to print that 4 pages worth of output
+	
+	
+	
 	$vernumber	= 378.01; # ha
 	$verupdated	= "04/23/2010"; # NOBODY UPDATES THIS EVER
 
@@ -348,6 +353,8 @@ function printtimedif($timestart){
 	$timedif=number_format(microtime(true) - $timestart, 3); /* sprintf('%01.3f',$timenow[sec]+$timenow[usec]/1000000-$timestart); */
 	print "<br>$smallfont Page rendered in $timedif seconds.";
 
+	errorprinter();
+	
 	if (!$x_hacks['host']) {
 		$pages	= array(
 			"/index.php",
@@ -1292,3 +1299,75 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 </center>
 <!-- End of Project Wonderful ad code. -->";
 	}
+
+	
+	
+	
+	
+	
+	
+	// Kill the internal PHP error handler because good god there are just so many of them
+	function errorhandler($type, $msg = "", $file = "", $line = "", $context = array()) {
+		static $elog	= array();
+		
+		if ($type == -1) {
+			$output		= "";
+			foreach ($elog as $out) {
+				$output	.= "$out<br>";
+			}
+			return $output;
+		}
+		
+		$errortypes		= array(
+			E_ERROR					=> "Error",
+			E_WARNING				=> "Warning",
+			E_PARSE					=> "Parse Error",
+			E_NOTICE				=> "Notice",
+			E_CORE_ERROR			=> "Core Error",
+			E_CORE_WARNING			=> "Core Warning",
+			E_COMPILE_ERROR			=> "Compile Error",
+			E_COMPILE_WARNING		=> "Compile Warning",
+			E_USER_ERROR			=> "User Error",
+			E_USER_WARNING			=> "User Warning",
+			E_USER_NOTICE			=> "User Notice",
+			E_STRICT				=> "Strict Notice",
+			E_RECOVERABLE_ERROR		=> "Recoverable Error",
+			);
+	
+		$elog[]			= $errortypes[$type] ."<small> ($file : $line)</small> $msg";
+	
+	}
+
+	
+	// Function runs twice, once when called by printtimedif and once at the end of a script
+	// If it's called in printtimedif, it doesn't print the errors twice (that way they always get out even if printtimedif isn't called)
+	// Also tries to not break gd-images or other things
+	function errorprinter() {
+		static $done	= false;
+		
+		global $displayerrors;
+		
+		
+		if ($displayerrors && !$done) {
+		
+			$headers	= headers_list();
+			$silence	= false;
+			
+			// Half-heartedly check to see if this is a PHP-generated image or some other fun thing.
+			// If so, try to silence error reporting so that they don't break.
+			foreach ($headers as $header) {
+				if (strpos("Content-type:") !== false && strpos("image/") !== false) {
+					$silence	= true;
+				}
+			}
+			
+			if (!$silence) {
+				errorhandler(-1);
+			}
+			$done	= true;
+			
+		}
+		
+		return true;
+	}
+	
