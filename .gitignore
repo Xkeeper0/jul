@@ -11,7 +11,9 @@ ext/
 irc/
 
 # Themeing
-numgfx/
+images/*.*
+numgfx/*
+
 
 
 # Trade secrets
@@ -26,7 +28,7 @@ irc.php
 
 
 # Thread "unread count" and reply buttons
-!numgfx/jul/
+!numgfx/jul*
 !images/new*.png
 !images/_.gif
 !images/threadclosed.png
