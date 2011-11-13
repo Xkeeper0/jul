@@ -11,7 +11,7 @@ ext/
 irc/
 
 # Themeing
-images/*.*
+images/*
 numgfx/*
 
 

@@ -2,7 +2,6 @@
   require 'lib/function.php';
   require 'lib/layout.php';
   if(!$log) errorpage('You must be logged in to edit your profile.');
-  if($_GET['lol'] || ($loguserid == 1420)) errorpage('<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;"><object width="100%" height="100%"><param name="movie" value="http://www.youtube.com/v/lSNeL0QYfqo&hl=en_US&fs=1&color1=0x2b405b&color2=0x6b8ab6&autoplay=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/lSNeL0QYfqo&hl=en_US&fs=1&color1=0x2b405b&color2=0x6b8ab6&autoplay=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="100%" height="100%"></embed></object></div>');
   if($banned) errorpage('Sorry, but banned users arent allowed to edit their profile.');
 	if($loguser['profile_locked'] == 1) {
 		errorpage("You are not allowed to edit your profile.");
@@ -144,9 +143,9 @@
 	 $tccell1><b>Timezone offset:$descbr How many hours you're offset from the time on the board (".date($dateformat,ctime()).").</td>
 	 $tccell2l>$inpt=timezone VALUE=$loguser[timezone] SIZE=5 MAXLENGTH=5><tr>
 	 $tccell1><b>Date format:$descbr How dates on the board are displayed (uses the <a href='http://php.net/manual/en/function.date.php'>PHP date()</a> function).</td>
-	 $tccell2l>$inpt=dateformat VALUE=\"$dateformat\" SIZE=16 MAXLENGTH=32><tr>
+	 $tccell2l>$inpt=dateformat VALUE=\"". $user['dateformat'] ."\" SIZE=16 MAXLENGTH=32><tr>
 	 $tccell1><b>Short date format:$descbr A short date format displayed on certain pages.</td>
-	 $tccell2l>$inpt=dateshort VALUE=\"$dateshort\" SIZE=8 MAXLENGTH=32><tr>
+	 $tccell2l>$inpt=dateshort VALUE=\"". $user['dateshort'] ."\" SIZE=8 MAXLENGTH=32><tr>
 	 $tccell1><b>Posts per page:$descbr The maximum number of posts you want to be shown in a page in threads.</td>
 	 $tccell2l>$inpt=postsperpage SIZE=4 MAXLENGTH=4 VALUE=$loguser[postsperpage]><tr>
 	 $tccell1><b>Threads per page:$descbr The maximum number of threads you want to be shown in a page in forums.</td>
@@ -218,8 +217,8 @@
     }
     if(!isset($useranks)) $useranks=$loguser[useranks];
 
-    $dateformat = str_replace("'", "", $_POST['dateformat']);
-    $dateshort = str_replace("'", "", $_POST['dateshort']);
+    $dateformat = $_POST['dateformat'];
+    $dateshort = $_POST['dateshort'];
 
     mysql_query("UPDATE users SET `password` = '$passwordenc', `picture` = '$picture', `minipic` = '$minipic', `signature` = '$signature', `bio` = '$bio', `email` = '$email', `icq` = '$icq', `title` = '$title', `useranks` = '$useranks', `aim` = '$aim', `sex` = '$sex', `homepageurl` = '$homepage', `homepagename` = '$pagename', `timezone` = '$timezone', `dateformat` = '$dateformat', `dateshort` = '$dateshort', `postsperpage` = '$postsperpage', `realname` = '$realname', `location` = '$location', `postbg` = '$postbg', `postheader` = '$postheader', `birthday` = '$birthday', `scheme` = '$sscheme', `threadsperpage` = '$threadsperpage', `viewsig` = '$viewsig', `layout` = '$tlayout', `moodurl` = '". $_POST['moodurl'] ."', `posttool` = '$posttool', `imood` = '$imood', `signsep` = '$signsep', `pagestyle` = '$pagestyle', `pollstyle` = '$pollstyle' WHERE `id` = '$loguserid' AND `password` = '$userpass'") OR print mysql_error();
 
