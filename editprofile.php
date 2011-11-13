@@ -233,7 +233,7 @@
 
 		$icq	= intval($icq);
 		
-		if ($_POST['password'])
+		if ($_POST['password']) {
 			$passwordenc	= "`password` = '". md5($_POST['password']) ."', ";
 			if ($loguser['id'] == $loguserid) {
 				setcookie('logpassword',shenc($_POST['password']),2147483647);
