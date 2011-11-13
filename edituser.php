@@ -183,8 +183,8 @@
 
 					$hlft Options                   $hrgt
 					$lft Timezone offset            $rgt $inpt=timezone size=5 maxlength=5 value=$user[timezone]>
-					$lft Date format                $rgt $inpt=dateformat value=\"". $user['dateformat'] ."\" size=16 maxlength=32>
-					$lft Short date format          $rgt $inpt=dateshort value=\"". $user['dateshort'] ."\" size=8 maxlength=32>
+					$lft Date format                $rgt $inpt=dateformat value=\"". $dateformat ."\" size=16 maxlength=32>
+					$lft Short date format          $rgt $inpt=dateshort value=\"". $dateformat ."\" size=8 maxlength=32>
 					$lft Posts per page             $rgt $inpt=postsperpage size=5 maxlength=5 value=$user[postsperpage]>
 					$lft Threads per page           $rgt $inpt=threadsperpage size=4 maxlength=4 value=$user[threadsperpage]>
 					$lft Use post toolbar           $rgt $vtool
@@ -225,8 +225,13 @@
 			$sex = $sexn;
 		}
 	
+		$insdateformat		= ($_POST['dateformat'] == $defaultdateformat) ? "" : $_POST['dateformat'];
+		$insdateshort		= ($_POST['dateshort'] == $defaultdateshort) ? "" : $_POST['dateshort'];
+
+	
 		$sql -> query("
 		UPDATE	`users` 
+		
 		SET		`posts`				= '$numposts',
 				`regdate`			= '$regtime',
 				`name`				= '$username',
@@ -242,8 +247,8 @@
 				`sex`				= '$sex',  
 				`homepageurl`		= '$homepage', 
 				`timezone`			= '$timezone', 
-				`dateformat`		= '$dateformat', 
-				`dateshort`			= '$dateshort', 
+				`dateformat`		= '$insdateformat', 
+				`dateshort`			= '$insdateshort', 
 				`postsperpage`		= '$postsperpage', 
 				`realname`			= '$realname', 
 				`location`			= '$location', 
@@ -267,8 +272,8 @@
 			
 		print "
 			$tblstart
-			 $tccell1>Thank you, $loguser[name], for editing this user.<br>
-						". redirect("index.php","return to the board", 0) ."
+			 $tccell1>$user[name]'s profile has been edited.<br>
+						". redirect("profile.php?id=$userid", "the user's profile", 0) ."
 			$tblend"; 
 	}
 	
