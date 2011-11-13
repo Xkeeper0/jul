@@ -189,6 +189,7 @@
 		</form>
 		";
 	}
+
 	if($action=='saveprofile'){
 		sbr(0,$postheader);
 		sbr(0,$signature);
