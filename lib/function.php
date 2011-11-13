@@ -1362,7 +1362,7 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 			}
 			
 			if (!$silence) {
-				errorhandler(-1);
+				print errorhandler(-1);
 			}
 			$done	= true;
 			
