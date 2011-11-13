@@ -121,6 +121,8 @@
 
   
   
+	$dateformat			= $defaultdateformat;
+	$dateshort			= $defaultdateshort;
   
 
 	$loguser	= array();
@@ -164,6 +166,7 @@
 		$loguser[powerlevel]= 0;
 		$loguser['signsep']	= 0;
 		$log				= 0;
+		
 	}
 	if ($x_hacks['superadmin']) $loguser['powerlevel'] = 4;
 
