@@ -1,16 +1,17 @@
 <?php
 
 	//MySQL setup
-
-
-	
 	$sqlhost		= "localhost";
 	$sqluser		= "user";
-	$sqlpass		= "password";
-	$dbname			= "BASE";
+	$sqlpass		= "";
+	$dbname			= "database";
 
+	// Board naming
+	$boardname		= "Board Name";
+	$boardtitle		= "Board Title";
+	$siteurl		= "http://example.com";
+	$sitename		= "Site Name";
 
-	$boardname		= "Default";
-	$boardtitle		= "This file isn't actually used";
-	$siteurl		= "http://sorry.to.disappoi.nt";
-	$sitename		= "Oh well";
+	// Default date/time formatting
+	$dateformat		= "m-d-y h:i:s A";
+	$dateshort		= "m-d-y";

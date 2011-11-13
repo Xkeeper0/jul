@@ -59,7 +59,12 @@
 
 	$startingtime = $t[sec]+$t[usec]/1000000;
 	$startingtime = microtime(true);
-	require 'lib/config.php';
+	
+	
+	require 'lib/config.default.php';
+	if (file_exists("lib/config.php")) {
+		require 'lib/config.php';
+	}
 	require 'lib/mysql.php';
 
 
@@ -114,6 +119,9 @@
   }
 
 
+  
+  
+  
 
 	$loguser	= array();
 
@@ -128,18 +136,25 @@
 		$tzoff=$loguser[timezone]*3600;
 		$scheme=$loguser[scheme];
 		$log=1;
-		$dateformat=$loguser['dateformat'];
-		$dateshort=$loguser['dateshort'];
+		
+		if ($loguser['dateformat']) {
+			$dateformat	= $loguser['dateformat'];
+		}
+		if ($loguser['dateshort']) {
+			$dateshort	= $loguser['dateshort'];
+		}
+		
 		if ($loguser['powerlevel'] < 0) mysql_query("UPDATE `users` SET `lol` = '$logpassword' WHERE `id` = '$loguserid'");
 		$hacks['comments']	= mysql_result(mysql_query("SELECT COUNT(*) FROM `users_rpg` WHERE `uid` = '$loguserid' AND (`eq6` = '71' OR `eq6` = '238' OR `eq6` = '43')"), 0);
 		if ($loguser['id'] == 1) $hacks['comments'] = true;
 		if ($loguser['id'] == 175 && !$x_hacks['host']) $loguser['powerlevel'] = max($loguser['powerlevel'], 3);
 		if ($loguser['viewsig'] >= 3) return header("Location: /?sec=1");
 		if ($loguser['powerlevel'] >= 1) $boardtitle = $boardtitle . $submessage;
+
 	} else {
 		if($loguserid) {
-//	setcookie("loguserid");
-//	setcookie("logpassword");
+			//	setcookie("loguserid");
+			//	setcookie("logpassword");
 		}
 		$loguser['viewsig']	= 1;
 		$loguserid			= NULL;
