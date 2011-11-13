@@ -446,8 +446,8 @@ pageTracker._trackPageview();
 	<br><small>&copy;2000-2010 Acmlm, Emuz, Blades, Xkeeper</small> <!--
 	<br><img src=\"images/4funin1.png\" title=\"totally!\" width=448 height=48> -->
 	$honeypotl
-	". ($x_hacks['mmdeath'] >= 0 ? "<div style='position: absolute; top: -100px; left: -100px;'>Hidden preloader for doom numbers:
-		<img src='numgfx/death/0.png'> <img src='numgfx/death/1.png'> <img src='numgfx/death/2.png'> <img src='numgfx/death/3.png'> <img src='numgfx/death/4.png'> <img src='numgfx/death/5.png'> <img src='numgfx/death/6.png'> <img src='numgfx/death/7.png'> <img src='numgfx/death/8.png'> <img src='numgfx/death/9.png'>" : "") ."
+	". ($x_hacks['mmdeath'] > 0 ? "<div style='position: absolute; top: -100px; left: -100px;'>Hidden preloader for doom numbers:
+		<img src='numgfx/death/0.png'> <img src='numgfx/death/1.png'> <img src='numgfx/death/2.png'> <img src='numgfx/death/3.png'> <img src='numgfx/death/4.png'> <img src='numgfx/death/5.png'> <img src='numgfx/death/6.png'> <img src='numgfx/death/7.png'> <img src='numgfx/death/8.png'> <img src='numgfx/death/9.png'></div>" : "") ."
 <!-- Piwik -->
 <script type=\"text/javascript\">
 var pkBaseURL = ((\"https:\" == document.location.protocol) ? \"https://stats.rustedlogic.net/\" : \"http://stats.rustedlogic.net/\");
@@ -463,7 +463,6 @@ piwikTracker.enableLinkTracking();
 <!--<script type=\"text/javascript\" src=\"http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.min.js\"></script>
 <script type=\"text/javascript\" src=\"js/useful.js\"></script> -->
 
-</body></html>
   ";
 	if($ipbanned) {
 		if ($loguser['title'] == "Banned; account hijacked. Contact admin via PM to change it.") {

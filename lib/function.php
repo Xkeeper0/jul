@@ -349,11 +349,13 @@ function calclvl($exp){
 }
 function printtimedif($timestart){
 	global $x_hacks;
+	
 	$timenow=gettimeofday();
 	$timedif=number_format(microtime(true) - $timestart, 3); /* sprintf('%01.3f',$timenow[sec]+$timenow[usec]/1000000-$timestart); */
 	print "<br>$smallfont Page rendered in $timedif seconds.";
 
-	errorprinter();
+	print "<div id='errors' style='width: 100%; margin: 0; text-align: left;'>". errorprinter(true) ."</div>";
+	
 	
 	if (!$x_hacks['host']) {
 		$pages	= array(
@@ -367,6 +369,9 @@ function printtimedif($timestart){
 			mysql_query("DELETE FROM `rendertimes` WHERE `time` < '". (ctime() - 86400 * 14) ."'");
 		}
 	}
+	
+	print "</body></html>";
+	
 }
 function generatenumbergfx($num,$minlen=0,$double=false){
 	global $numdir;
@@ -1313,7 +1318,7 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 		if ($type == -1) {
 			$output		= "";
 			foreach ($elog as $out) {
-				$output	.= "$out<br>";
+				$output	.= "$out<br>\n";
 			}
 			return $output;
 		}
@@ -1334,7 +1339,7 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 			E_RECOVERABLE_ERROR		=> "Recoverable Error",
 			);
 	
-		$elog[]			= $errortypes[$type] ."<small> ($file : $line)</small> $msg";
+		$elog[]			= $errortypes[$type] ."<small> (". str_replace($_SERVER['DOCUMENT_ROOT'], "", $file) ." #$line)</small> ". htmlspecialchars($msg);
 	
 	}
 
@@ -1342,7 +1347,7 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 	// Function runs twice, once when called by printtimedif and once at the end of a script
 	// If it's called in printtimedif, it doesn't print the errors twice (that way they always get out even if printtimedif isn't called)
 	// Also tries to not break gd-images or other things
-	function errorprinter() {
+	function errorprinter($return = false) {
 		static $done	= false;
 		
 		global $displayerrors;
@@ -1350,21 +1355,25 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 		
 		if ($displayerrors && !$done) {
 		
+			$done		= true;
 			$headers	= headers_list();
 			$silence	= false;
 			
 			// Half-heartedly check to see if this is a PHP-generated image or some other fun thing.
 			// If so, try to silence error reporting so that they don't break.
 			foreach ($headers as $header) {
-				if (strpos("Content-type:") !== false && strpos("image/") !== false) {
+				if (strpos($header, "Content-type:") !== false && strpos($header, "image/") !== false) {
 					$silence	= true;
 				}
 			}
 			
 			if (!$silence) {
-				print errorhandler(-1);
+				if ($return) {
+					return  errorhandler(-1);
+				} else {
+					print errorhandler(-1);
+				}
 			}
-			$done	= true;
 			
 		}
 		
