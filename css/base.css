@@ -21,18 +21,10 @@ body, table, thead, tbody, span, td, tr, th, a, img, br {
 	font-size:		100%; 
 	}
 	
-center {		/* ... *why*? */
-	text-align: center; 
-	}
 	
 .tdbgh, .tbl, .tdbgc, .tdbg1, .tdbg2 { 
 	line-height:	1;
 	padding:		1px;
-	}
-
-table {			/* Should this be .table? */
-	border-spacing:		0;
-	border-collapse:	collapse;
 	}
 
 a:link,a:visited,a:active,a:hover {
@@ -40,7 +32,9 @@ a:link,a:visited,a:active,a:hover {
 	font-weight:		bold;
 	}
 	
-table {			/* Is there a reason this isn't above? ... and *why* does it exist in the first place? */
+table {	
+	border-spacing:		0;
+	border-collapse:	collapse;
 	padding:			0.5em;
 	}
 
@@ -65,11 +59,11 @@ div.lastpost {
 	
 .center, center {	/* Didn't we already *do* this?! */
 	text-align:		center;
-	}
+}
 	
 .right {
 	text-align:		right;
-	}
+}
 
 	
 code {
@@ -77,11 +71,11 @@ code {
 	width:			100%;
 	white-space:	pre;
 	display:		block;
-	}
+}
 	
 code br { 
 	display:		none; 
-	}
+}
 
 	
 .onlineuser	{

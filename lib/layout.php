@@ -1,15 +1,4 @@
 <?php
-	// dear xkeeper:
-	// removing most images and dropping the file size a good mobile site does not make
-	// cattishly yours,
-	// hydrapheetz
-
-	// dear hydrapheetz:
-	// trying to stuff a square peg (jul) into a round hole (mobile) does not a good idea make
-	// from russia with fun,
-	// xkeeper
-
-
 	// cache bad
 	header('Cache-Control: no-cache, max-age=0, must-revalidate');
 
@@ -20,13 +9,9 @@
 
 	if(!$windowtitle) $windowtitle=$boardname;
 	require 'colors.php';
+	require 'hacks.php';
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
 	$boardtitle	= "<a href='./'>$boardtitle</a>";
-
-	// PONIES!!!
-	// if($forumid==30) $boardtitle = "<a href='./'><img src=\"images/poniecentral.gif\" title=\"YAAAAAAAAAAY\"></a>";
-	// end PONIES!!!
-
 
 	$race=postradar($loguserid);
 
@@ -84,9 +69,9 @@
 		// special "null" scheme.
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
-		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
-		$dateformat = "m/d/y h:i";
-		$dateshort  = "m/d/y";
+		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'>\n<link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
+		/*$dateformat = "m/d/y h:i";
+		$dateshort  = "m/d/y"*/
 		
 		// backwards compat
 		global $bgcolor, $linkcolor;
@@ -123,9 +108,9 @@
 				font:13px $font;
 				background: #$bgcolor$bgimage;
 			}
+			/* no idea what this is for */
 			div.lastpost { font: 10px $font2 !important; white-space: nowrap; }
 			div.lastpost:first-line { font: 13px $font !important; }
-			.sparkline { display: none; }
 			.font 	{font:13px $font}
 			.fonth	{font:13px $font;color:$tableheadtext}	/* is this even used? */
 			.fonts	{font:10px $font2}
@@ -323,7 +308,7 @@
 		$css = "<link rel='stylesheet' href='/mobile.css'>";
 	}
 	$header1="<html><head><title>$windowtitle</title>
-	<link rel=\"shortcut icon\" href=\"/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
+	".$hacks['layout']['favicon']."
 	$css
 	<link rel=\"stylesheet\" href=\"http://xkeeper.net/img/layouts/fonts/stylesheet.css\" type=\"text/css\">
 	</head>

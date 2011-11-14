@@ -148,6 +148,7 @@
 		
 		// Code to enable viewing comments.
 		// Checks for a specific item id. Probably could be done better.
+		// (like in javascript?)
 		$hacks['comments']	= mysql_result(mysql_query("SELECT COUNT(*) FROM `users_rpg` WHERE `uid` = '$loguserid' AND (`eq6` = '71' OR `eq6` = '238' OR `eq6` = '43')"), 0);
 
 	} else {
@@ -174,7 +175,7 @@
 	$specialscheme = ""; 
 	
 	// Array of user-agents to force the "mobile scheme" on
-	
+	// TODO: make everything related to this suck less.
 	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE");
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || $_GET['mobile'] == 1) {
 		$loguser['layout']		= 2;
@@ -682,7 +683,9 @@ function fonlineusers($id){
 
 
 // BIG GIANT GROSS HACK OH MY GOD.
-function getnamecolor($sex,$powl){
+function getnamecolor($sex,$powl,$raw=FALSE) {
+	// $raw will return the name color's hexadecimal value instead of being decorated with
+	// COLOR=
 	global $nmcol, $x_hacks;
 
   //$namecolor='color='.$nmcol[$sex][$powl];
@@ -718,7 +721,7 @@ function getnamecolor($sex,$powl){
 		}
 		$rndcolor=substr(dechex($r*65536+$g*256+$b),-6);
 		$namecolor="color=$rndcolor";
-		return $namecolor;
+		return ($raw === TRUE ? substr($namecolor, 6) : $namecolor);
 	}
 
 	if($sex==3){
@@ -781,7 +784,7 @@ function getnamecolor($sex,$powl){
 		$namecolor="color=6600DD";
 	}
 
-  return $namecolor;
+  return ($raw === TRUE ? substr($namecolor, 6) : $namecolor);
 }
 
 function redirect($url,$msg,$delay){
