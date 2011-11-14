@@ -30,45 +30,55 @@
 
 	$race=postradar($loguserid);
 
-	$tablewidth='100%';
-	$fonttag='<font class="font">';
-	$fonthead='<font class="fonth">';
-	$smallfont='<font class="fonts">';
-	$tinyfont='<font class="fontt">';
+	$tablewidth	= '100%';
+	$fonttag	= '<font class="font">';
+	$fonthead	= '<font class="fonth">';
+	$smallfont	= '<font class="fonts">';
+	$tinyfont	= '<font class="fontt">';
 
-	foreach(array(1,2,c,h) as $celltype){
+	foreach(array(1, 2, 'c', 'h') as $celltype){
 		$cell="<td class='tbl tdbg$celltype font";
 		$celln="tccell$celltype";
 		$$celln     =$cell." center'";
-		${$celln.s} =$cell."s center'";
-		${$celln.t} =$cell."t center'";
-		${$celln.l} =$cell."'";
-		${$celln.r} =$cell." right'";
-		${$celln.ls}=$cell."s'";
-		${$celln.lt}=$cell."t'";
-		${$celln.rs}=$cell."s right'";
-		${$celln.rt}=$cell."t right'";
+		${$celln.'s'}	=$cell."s center'";
+		${$celln.'t'}	=$cell."t center'";
+		${$celln.'l'}	=$cell."'";
+		${$celln.'r'}	=$cell." right'";
+		${$celln.'ls'}	=$cell."s'";
+		${$celln.'lt'}	=$cell."t'";
+		${$celln.'rs'}	=$cell."s right'";
+		${$celln.'rt'}	=$cell."t right'";
 	}
 
-	$inpt='<input type="text" name';
-	$inpp='<input type="password" name';
-	$inph='<input type="hidden" name';
-	$inps='<input type="submit" class=submit name';
-	$inpc="<input type=checkbox name";
-	$radio='<input type=radio class=radio name';
-	$txta='<textarea wrap=virtual name';
-	$tblstart='<table class="table" cellspacing=0>';
-	$tblend='</table>';
-	$sepn=array('Dashes','Line','Full horizontal line','None');
-	$sep=array('<br><br>--------------------<br>',
-		 '<br><br>____________________<br>',
-		 '<br><br><hr>',
-		 '<br><br>');
-	$br="\n";
+	$br			= "\n";
+	$inpt		= "<input type='text' name";
+	$inpp		= "<input type='password' name";
+	$inph		= "<input type='hidden' name";
+	$inps		= "<input type='submit' class=submit name";
+	$inpc		= "<input type='checkbox' name";
+	$radio		= "<input type=radio class=radio name";
+	$txta		= "<textarea name";
+	$tblstart	= "<table class='table' cellspacing='0'>";
+	$tblend		= "</table>";
+	$sepn		= array(
+					'Dashes',
+					'Line',
+					'Full horizontal line',
+					'None
+					');
+	$sep		= array(
+					'<br><br>--------------------<br>',
+					'<br><br>____________________<br>',
+					'<br><br><hr>',
+					'<br><br>',
+					);
+
 
 	if (isset($bgimage) && $bgimage != "") {
 		$bgimage = " url('$bgimage')";
-	} else { $bgimage = ''; }
+	} else { 
+		$bgimage = '';
+	}
 
 	if (isset($nullscheme) && $nullscheme == 1) {
 		// special "null" scheme.
@@ -139,7 +149,6 @@
 			}
 			code br { display: none; }
 			input[type=radio] { color: black; background: white; }
-			". ($_GET['test'] ? "td:before, body:before {content: \"\\202E\";}" : "") ."
 		";
 	}
 	$numcols=(intval($numcols) ? intval($numcols) : 60);
@@ -174,8 +183,6 @@
 		$css.='</style>';
 	}
 
-	// $css	.= "<!--[if IE]><style type='text/css'>#f_ikachan, #f_doomcounter, #f_mustbeblind { display: none; }</style><![endif]-->	";
-
 
 	if($loguserid) {
 		$headlinks='
@@ -195,12 +202,8 @@
 	if($isadmin) $headlinks="<a href=\"admin.php\">Admin</a> - $headlinks";
 	if($power >= 1) $headlinks="<a href=\"shoped.php\">Shop Editor</a> - $headlinks";
 
+	
 	if (in_array($loguserid,array(1,5))) {
-		$xminilog	= $sql -> fetchq("SELECT COUNT(*) as count, MAX(`time`) as time FROM `minilog`");
-		if ($xminilog['count']) {
-			$xminilogip	= $sql -> fetchq("SELECT `ip`, `banflags` FROM `minilog` ORDER BY `time` DESC LIMIT 1");
-			$boardtitle	.= "<br><a href='shitbugs.php'><span class=font style=\"color: #f00\"><b>". $xminilog['count'] ."</b> suspicious request(s) logged, last at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ." (". $xminilogip['banflags'] .")</b></span></a>";
-		}
 		$xminilog	= $sql -> fetchq("SELECT COUNT(*) as count, MAX(`time`) as time FROM `pendingusers`");
 		if ($xminilog['count']) {
 			$xminilogip	= $sql -> fetchq("SELECT `username`, `ip` FROM `pendingusers` ORDER BY `time` DESC LIMIT 1");
@@ -209,25 +212,25 @@
 	}
 
 	$headlinks2="
-	<a href='/index.php'>Main</a>
-	- <a href='/memberlist.php'>Memberlist</a>
-	- <a href='/activeusers.php'>Active users</a>
-	- <a href='/calendar.php'>Calendar</a>
-	- <a href='http://tcrf.net'>Wiki</a>
-	- <a href='/irc.php'>IRC Chat</a>
-	- <a href='/online.php'>Online users</a><br>
-	<a href='/ranks.php'>Ranks</a>
-	- <a href='/faq.php'>Rules/FAQ</a>
-	- <a href='/acs.php'>JCS</a>
-	- <a href='/stats.php'>Stats</a>
-	- <a href='/latestposts.php'>Latest Posts</a>
-	- <a href='/hex.php' title='Color Chart' class='popout' target='_blank'>Color Chart</a>
-	- <a href='/smilies.php' title='Smilies' class='popout' target='_blank'>Smilies</a>
+		<a href='index.php'>Main</a>
+		- <a href='memberlist.php'>Memberlist</a>
+		- <a href='activeusers.php'>Active users</a>
+		- <a href='calendar.php'>Calendar</a>
+		- <a href='irc.php'>IRC Chat</a>
+		- <a href='online.php'>Online users</a><br>
+
+		<a href='ranks.php'>Ranks</a>
+		- <a href='faq.php'>Rules/FAQ</a>
+		- <a href='acs.php'>JCS</a>
+		- <a href='stats.php'>Stats</a>
+		- <a href='latestposts.php'>Latest Posts</a>
+		- <a href='hex.php' title='Color Chart' class='popout' target='_blank'>Color Chart</a>
+		- <a href='smilies.php' title='Smilies' class='popout' target='_blank'>Smilies</a>
 	";
 
 
 	$ipbanned	= 0;
-	
+	$torbanned	= 0;
 	if(mysql_result(mysql_query("SELECT count(*) FROM ipbans WHERE INSTR('$forwardedip',ip)=1"),0,0)) $ipbanned=1;
 	if(mysql_result(mysql_query("SELECT count(*) FROM ipbans WHERE INSTR('$clientip',ip)=1"),0,0)) $ipbanned=1;
 	if(mysql_result(mysql_query("SELECT count(*) FROM ipbans WHERE INSTR('$userip',ip)=1"),0,0)) $ipbanned=1;
@@ -259,9 +262,9 @@
 		}
 	}
 
-	$count[u] = mysql_result(mysql_query('SELECT COUNT(*) FROM users'),0,0);
-	$count[t] = mysql_result(mysql_query('SELECT COUNT(*) FROM threads'),0,0);
-	$count[p] = mysql_result(mysql_query('SELECT COUNT(*) FROM posts'),0,0);
+	$count['u'] = mysql_result(mysql_query('SELECT COUNT(*) FROM users'),0,0);
+	$count['t'] = mysql_result(mysql_query('SELECT COUNT(*) FROM threads'),0,0);
+	$count['p'] = mysql_result(mysql_query('SELECT COUNT(*) FROM posts'),0,0);
 	
 	mysql_query("INSERT INTO dailystats (date) VALUES ('".date('m-d-y',ctime())."')");
 	mysql_query("UPDATE dailystats SET users=$count[u],threads=$count[t],posts=$count[p],views=$views WHERE date='".date('m-d-y',ctime())."'");
@@ -278,8 +281,8 @@
 			$pmsgnum  = mysql_result(mysql_query("SELECT COUNT(*) FROM pmsgs WHERE userto=$loguserid"),0,0);
 			$pmsgnew  = mysql_result(mysql_query("SELECT COUNT(*) FROM pmsgs WHERE userto=$loguserid AND msgread=0"),0,0);
 			if($pmsgnew) { $new=$newpic; }
-			$namecolor =  getnamecolor($pmsg[sex],$pmsg[powerlevel]);
-			$lastmsg   =  "Last message from <a href=profile.php?id=$pmsg[id]><font $namecolor>$pmsg[name]</font></a> on ".date($dateformat,$pmsg[date]+$tzoff);
+			$namecolor =  getnamecolor($pmsg['sex'],$pmsg['powerlevel']);
+			$lastmsg   =  "Last message from <a href=profile.php?id=$pmsg[id]><font $namecolor>$pmsg[name]</font></a> on ".date($dateformat,$pmsg['date']+$tzoff);
 		}
 
 		if ($pmsgnew != 1) $ssss = "s";
@@ -290,7 +293,8 @@
 	}
 
 	$jscripts = '';
-	if ($loguserid == 1 or true) {
+
+	if (true) {
 		$yyy	= "
 			<img id='f_ikachan' src='images/sankachan.png' style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"It's no pointy hat, but it should work... right?\">
 			";
@@ -299,21 +303,12 @@
 			";
 	}
 
-	/*if ($_GET['w']) {
-		$yyy	= "<img src=images/wave/squid.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"Ikachaaaan!\">";
-		$yyy	.= "<img src=images/wave/cheepcheep.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"cheep tricks\">";
-		$yyy .= "<img src=images/wave/chest.png style=\"position: fixed; right: 20px; bottom: 0px;\" title=\"1\">";
 
-		for ($xxx = rand(0,5); $xxx < 20; $xxx++) {
-			$yyy .= "<img src=images/wave/seaweed.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; bottom: -". mt_rand(24,72) ."px;\" title=\"weed\">";
-		}
-	}*/
-	
-	
-	// :shepicide:
+
+
 	$body="<body>";
 
-	if ($x_hacks['smallbrowse'] == 1 and false) {
+	if (false) {
 		$css = "";
 		$css = "<link rel='stylesheet' href='/mobile.css'>";
 	}
@@ -361,7 +356,8 @@
 	
 	if($q) $url.="?$q";
 	
-	if($ref && substr($ref,7,7)!="jul.rus") mysql_query("INSERT INTO referer (time,url,ref,ip) VALUES (". ctime() .", '".addslashes($url)."', '".addslashes($ref)."'), '". $_SERVER['REMOTE_ADDR'] ."'");
+	
+	#if($ref && substr($ref,7,7)!="jul.rus") mysql_query("INSERT INTO referer (time,url,ref,ip) VALUES (". ctime() .", '".addslashes($url)."', '".addslashes($ref)."'), '". $_SERVER['REMOTE_ADDR'] ."'");
 
 	mysql_query("DELETE FROM guests WHERE ip='$userip' OR date<".(ctime()-300));
 
@@ -379,7 +375,7 @@
 		*/
 		//if ($loguserid != 3 && $loguserid != 2) 
 		if (($loguser['powerlevel'] < 4) and (!IS_AJAX_REQUEST)) {
-			$influencelv=calclvl(calcexp($loguser[posts],(ctime()-$loguser[regdate])/86400));
+			$influencelv=calclvl(calcexp($loguser['posts'],(ctime()-$loguser['regdate'])/86400));
 			mysql_query("UPDATE users SET lastactivity=".ctime().",lastip='$userip',lasturl='".addslashes($url)."',lastforum=0,`influence`='$influencelv' WHERE id=$loguserid");
 		}
 
@@ -418,25 +414,13 @@
 
 	$header=makeheader($header1,$headlinks,$header2);
 
+	
+	$affiliatelinks	= "";
+	
 	$footer="	</textarea></form></embed></noembed></noscript></noembed></embed></table></table>
 <br>". 	($loguser['id'] && strpos($PHP_SELF, "index.php") === false ? adbox() ."<br>" : "") ."
 <center>
 
-<img src='adnonsense.php?m=d' title='generous donations to the first national bank of bad jokes and other dumb crap people post' style='margin-left: 44px;'><br>
-<img src='adnonsense.php' title='hotpod fund' style='margin: 0 22px;'><br>
-<img src='adnonsense.php?m=v' title='VPS slushie fund' style='margin-right: 44px;'>
-
-<br><img src='http://valkyrie.rustedlogic.net/h/' style='padding: 8px;' alt='' title='YOU ARE NOW HALF-ASSEDLY TESTING OUR NEW SERVER.'>
-
-".(false ? "<script type=\"text/javascript\">
-var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");
-document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));
-</script>
-<script type=\"text/javascript\">
-try {
-var pageTracker = _gat._getTracker(\"UA-9215725-1\");
-pageTracker._trackPageview();
-} catch(err) {}</script>" : "") ."
 <br>
 	$smallfont
 	<br><br><a href=$siteurl>$sitename</a>

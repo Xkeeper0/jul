@@ -4,7 +4,7 @@
 
 	if ($pid) {
 		if (!$ppp)
-		$ppp = ($log ? $loguser[postsperpage] : 20);
+		$ppp = ($log ? $loguser['postsperpage'] : 20);
 		$id = $sql->resultq("SELECT `thread` FROM `posts` WHERE `id` = '$pid'");
 		$numposts = $sql->resultq("SELECT COUNT(*) FROM `posts` WHERE `thread` = '$id' AND `id` < '$pid'");
 		$page = floor($numposts / $ppp);
@@ -12,7 +12,7 @@
 
 	if ($lpt) {
 		if (!$ppp)
-		$ppp = ($log ? $loguser[postsperpage] : 20);
+		$ppp = ($log ? $loguser['postsperpage'] : 20);
 		$pid = $sql->resultq("SELECT MIN(`id`) FROM `posts` WHERE `thread` = '".$_GET['id']."' AND `date` > '".$_GET['lpt']."'");
 		if (!$pid) {
 		$pid = $sql->resultq("SELECT MAX(`id`) FROM `posts` WHERE `thread` = '".$_GET['id']."'");
@@ -22,11 +22,11 @@
 
 	if ($id) {
 		$thread = mysql_fetch_array(mysql_query("SELECT * FROM threads WHERE id=$id"));
-		$forumid = intval($thread[forum]);
+		$forumid = intval($thread['forum']);
 		$forum = mysql_fetch_array(mysql_query("SELECT * FROM forums WHERE id=$forumid"));
 		$specialscheme = $forum['specialscheme'];
 
-		if ($loguser[id]) {
+		if ($loguser['id']) {
 
 		$readdate = @mysql_result(@mysql_query("SELECT `readdate` FROM `forumread` WHERE `user` = '$loguser[id]' AND `forum` = '$forumid'"), 0);
 
@@ -60,21 +60,21 @@
 		$favlink	.= ' | ';
 
 		mysql_query("UPDATE threads SET views=views+1 WHERE id=$id");
-		$thread[title] = str_replace("<", "<", $thread[title]);
-		if ($forum[minpower] > $power and $forum[minpower] > 0)
-		$thread[title] = "(restricted)";
+		$thread['title'] = str_replace("<", "<", $thread['title']);
+		if ($forum['minpower'] > $power and $forum['minpower'] > 0)
+		$thread['title'] = "(restricted)";
 		$forumtitle = "$forum[title]: ";
 	}
 	elseif($user)
 	{
 		$usr = $user;
 		$tuser = mysql_fetch_array(mysql_query("SELECT name FROM users WHERE id=$usr"));
-		$thread[title] = "Posts by $tuser[name]";
+		$thread['title'] = "Posts by $tuser[name]";
 	}
 
 	elseif($search)
 	{
-		$thread[title] = "Search results";
+		$thread['title'] = "Search results";
 	}
 
 	$windowtitle = "$boardname -- $forumtitle$thread[title]";
@@ -94,7 +94,7 @@
 				mysql_query("UPDATE threads SET closed=$cl WHERE id=$id");
 			if ($trash && $_POST['confirm']) {
 				mysql_query("UPDATE threads SET sticky=0,closed=1,forum=$trashid WHERE id=$id");
-				$numposts = $thread[replies] + 1;
+				$numposts = $thread['replies'] + 1;
 				$t1 = mysql_fetch_array(mysql_query("SELECT lastpostdate,lastposter FROM threads WHERE forum=$forumid ORDER BY lastpostdate DESC LIMIT 1"));
 				$t2 = mysql_fetch_array(mysql_query("SELECT lastpostdate,lastposter FROM threads WHERE forum=$trashid ORDER BY lastpostdate DESC LIMIT 1"));
 				mysql_query("UPDATE forums SET numposts=numposts-$numposts,numthreads=numthreads-1,lastpostdate=$t1[lastpostdate],lastpostuser=$t1[lastposter] WHERE id=$forumid");
@@ -111,26 +111,26 @@
 		} else {
 			$fulledit = "<a href=editthread.php?id=$id>Edit thread<a>";
 			$link = "<a href=thread.php?id=$id&qmod=1";
-			if (!$thread[sticky])
+			if (!$thread['sticky'])
 				$stick = "$link&st=1>Stick</a>";
 			else
 				$stick = "$link&st=0>Unstick</a>";
-			if (!$thread[closed])
+			if (!$thread['closed'])
 				$close = "$link&cl=1>Close</a>";
 			else
 				$close = "$link&cl=0>Open</a>";
-			if ($thread[forum] != $trashid)
+			if ($thread['forum'] != $trashid)
 				$trash = " |  <a href='/editthread.php?action=trashthread&id=$id'>Trash</a>";
 			$delete = "<a href='/editthread.php?action=editthread&delete=1&id=$id'>Delete</a>";
 			$modfeats = "<tr>$tccellcls colspan=2>Moderating options: $stick | $close$trash -- $fulledit";
 		}
 	}
-	if ($thread[poll]) {
+	if ($thread['poll']) {
 
 		$poll = mysql_fetch_array(mysql_query("SELECT * FROM poll WHERE id=$thread[poll]"));
 		//    $voted=@mysql_result(mysql_query("SELECT count(*) FROM pollvotes WHERE poll=$poll[id] AND user=$loguserid"),0,0);
 
-		if ($action and $loguserid and(!$voted or $poll[doublevote]) and ! $poll[closed] && $_GET['dat'] == md5($loguser['name']."sillysaltstring")) {
+		if ($action and $loguserid and(!$voted or $poll['doublevote']) and ! $poll['closed'] && $_GET['dat'] == md5($loguser['name']."sillysaltstring")) {
 
 		if ($action == "vote") {
 
@@ -187,12 +187,12 @@
 			$votes = "$votes vote".($votes == 1 ? '' : 's');
 		}
 
-		$barpart = "<table cellpadding=0 cellspacing=0 width=$pct% bgcolor='".($pollc[color] ? $pollc[color] : "cccccc")."'><td>&nbsp;</table>";
+		$barpart = "<table cellpadding=0 cellspacing=0 width=$pct% bgcolor='".($pollc['color'] ? $pollc['color'] : "cccccc")."'><td>&nbsp;</table>";
 		if ($pct == "0.0")
 			$barpart = '&nbsp;';
 		$link = '';
 
-		if ($loguserid and(!$voted or $poll[doublevote]) and ! $poll[closed])
+		if ($loguserid and(!$voted or $poll['doublevote']) and ! $poll['closed'])
 			$link = "<a href=thread.php?id=$id&choice=$pollc[id]&dat=".md5($loguser['name']."sillysaltstring")."&action=vote";
 
 		if ($uservote[$pollc['id']]) {
@@ -213,7 +213,7 @@
 		}
 
 		$mlt = 'disabled';
-		if ($poll[doublevote])
+		if ($poll['doublevote'])
 		$mlt = 'enabled';
 		if ($tvotes != 1) {
 		$ss = 's';
@@ -222,7 +222,7 @@
 		$ss = '';
 		$hv = 'has';
 		}
-		if ($ismod or $thread[user] == $loguserid)
+		if ($ismod or $thread['user'] == $loguserid)
 		$polledit = "<!-- edit would go here -->";
 		$polltbl = "
 			$tccellc colspan=3><b>".htmlspecialchars($poll['question'])."<tr>
@@ -235,29 +235,29 @@
 
 	loadtlayout();
 	$sfields = '';			// S I G H
-	if ($loguser[viewsig] == 0)
+	if ($loguser['viewsig'] == 0)
 		$sfields = '';
-	if ($loguser[viewsig] == 1)
+	if ($loguser['viewsig'] == 1)
 		$sfields = ',headtext,signtext';
-	if ($loguser[viewsig] == 2)
+	if ($loguser['viewsig'] == 2)
 		$sfields = ',u.postheader headtext,u.signature signtext';
 	$ufields = userfields();
 
 	$activity = mysql_query("SELECT user, count(*) num FROM posts WHERE date>".(ctime() - 86400)." GROUP BY user");
 	while ($n = mysql_fetch_array($activity))
-		$act[$n[user]] = $n[num];
+		$act[$n['user']] = $n['num'];
 	$postlist = "
 		$polltbl
 		$modfeats$tblend
 	  ";
 	if (!$ppp)
-		$ppp = ($log ? $loguser[postsperpage] : 20);
+		$ppp = ($log ? $loguser['postsperpage'] : 20);
 	if ($log && $id) {
 		$headlinks	.= " - <a href=index.php?action=markforumread&forumid=$forum[id]>Mark forum read</a>";
 		$header = makeheader($header1, $headlinks, $header2 . "$tblstart$tccell1s>$fonline$tblend");
 	}
 
-	if ($id && $power < $forum[minpower]) {
+	if ($id && $power < $forum['minpower']) {
 		print "
 		$header$tblstart
 		$tccell1>Couldn't enter the forum. Either you don't have access to this restricted forum, or you are not logged in.
@@ -270,7 +270,7 @@
 		if ($id)
 		$posts = mysql_query("SELECT p.*,text$sfields,edited,options,tagval,u.id uid,name,$ufields,regdate FROM posts_text, posts p LEFT JOIN users u ON p.user=u.id WHERE thread=$id AND p.id=pid ORDER BY p.id LIMIT $min,$ppp");
 		elseif($usr) {
-		$thread[replies] = mysql_result(mysql_query("SELECT count(*) FROM posts WHERE user=$usr"), 0, 0) - 1;
+		$thread['replies'] = mysql_result(mysql_query("SELECT count(*) FROM posts WHERE user=$usr"), 0, 0) - 1;
 		$posts = mysql_query("SELECT p.*,text$sfields,edited,options,tagval,u.id uid,name,$ufields,regdate FROM posts_text, posts p LEFT JOIN users u ON p.user=u.id WHERE user=$usr AND p.id=pid ORDER BY p.id LIMIT $min,$ppp");
 		}
 		elseif($search) {
@@ -285,7 +285,7 @@
 
 		if ($quser) {
 			$user = mysql_fetch_array(mysql_query("SELECT id FROM users WHERE name='".addslashes($quser)."'"));
-			$u = $user[id];
+			$u = $user['id'];
 			$srch	.= ($srch ? "AND " : "")."posts.user=$u";
 		}
 		if ($qip)
@@ -306,10 +306,10 @@
 
 		if (!$fsch && false) {
 			$posts = mysql_query("SELECT id,user,date,thread,ip,text,num$signquery,edited,options FROM posts,posts_text WHERE $srch AND id=pid $order LIMIT $min,$ppp");
-			$thread[replies] = mysql_result(mysql_query("SELECT COUNT(*) FROM posts,posts_text WHERE $srch AND id=pid"), 0, 0);
+			$thread['replies'] = mysql_result(mysql_query("SELECT COUNT(*) FROM posts,posts_text WHERE $srch AND id=pid"), 0, 0);
 		} else {
 			$posts = mysql_query("SELECT posts.id,posts.user,date,thread,ip,text,num$signquery,edited,options FROM posts,posts_text,threads WHERE $srch AND thread=threads.id AND forum=$fid AND id=pid $order LIMIT $min,$ppp");
-			$thread[replies] = mysql_result(mysql_query("SELECT COUNT(*) FROM posts,posts_text,threads WHERE $srch AND thread=threads.id AND forum=$fid AND id=pid"), 0, 0);
+			$thread['replies'] = mysql_result(mysql_query("SELECT COUNT(*) FROM posts,posts_text,threads WHERE $srch AND thread=threads.id AND forum=$fid AND id=pid"), 0, 0);
 		}
 		$quser = str_replace(" ", "+", $quser);
 		$qip = str_replace(" ", "+", $qip);
@@ -322,10 +322,10 @@
 		
 		$quote = "<a href=\"thread.php?pid=$post[id]#$post[id]\">Link</a>";
 		$edit = '';
-		if ($id and ! $thread[closed])
+		if ($id and ! $thread['closed'])
 			$quote	.= " | <a href=newreply.php?id=$id&postid=$post[id]>Quote</a>";
 		$deletelink = "<a href=editpost.php?id=$post[id]&action=delete>Delete</a>";
-		if (($ismod or $post[user] == $loguserid) and ! $thread[closed])
+		if (($ismod or $post['user'] == $loguserid) and ! $thread['closed'])
 			$edit = ($quote ? ' | ' : '')."<a href=editpost.php?id=$post[id]>Edit</a> | $deletelink";
 		if ($isadmin)
 			$ip = " | IP: <a href=ipsearch.php?ip=$post[ip]>$post[ip]</a>";
@@ -333,8 +333,8 @@
 			$pthread = mysql_fetch_array(mysql_query("SELECT id,title,forum FROM threads WHERE id=$post[thread]"));
 			$pforum = @mysql_fetch_array(mysql_query("SELECT minpower FROM forums WHERE id=$pthread[forum]"));
 		}
-		$post[act] = $act[$post[user]];
-		if ($pforum[minpower] <= $power or ! $pforum[minpower]) {
+		$post['act'] = $act[$post['user']];
+		if ($pforum['minpower'] <= $power or ! $pforum['minpower']) {
 			$postlist	.= threadpost($post, $bg, $pthread);
 		} else
 			$postlist	.= "$tccellc colspan=2>$fonttag (restricted)";
@@ -347,7 +347,7 @@
 		$page = 0;
 		$pagelinks = "Pages:";
 		
-		for ($i = 0; $i < (($thread[replies] + 1) / $ppp); $i++) {
+		for ($i = 0; $i < (($thread['replies'] + 1) / $ppp); $i++) {
 		
 		if ($i == $page)
 			$pagelinks	.= " ".($i + 1);
@@ -355,9 +355,9 @@
 			$pagelinks	.= " <a href=thread.php$query"."page=$i>".($i + 1)."</a>";
 		}
 		
-		if ($thread[replies] < $ppp)
+		if ($thread['replies'] < $ppp)
 		$pagelinks = '';
-		print $header.sizelimitjs()."
+		print $header."
 		<table width=100%><td align=left>$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]</td><td align=right>$smallfont
 		";
 		
@@ -370,7 +370,7 @@
 			
 			print "<a href=newthread.php?id=$forumid>$newthreadpic</a>";
 			
-			if (!$thread[closed])
+			if (!$thread['closed'])
 				print " - <a href=newreply.php?id=$id>$newreplypic</a>";
 			else
 				print " - $closedpic";
@@ -393,7 +393,7 @@
 			//      print "<a href=newthread.php?poll=1&id=$forumid>$newpollpic</a> - ";
 			print "<a href=newthread.php?id=$forumid>$newthreadpic</a>";
 
-			if (!$thread[closed]) {
+			if (!$thread['closed']) {
 				print " - <a href=newreply.php?id=$id>$newreplypic</a>";
 			} else {
 				print " - $closedpic";
