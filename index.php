@@ -31,22 +31,19 @@
 	require 'lib/function.php';
 	require 'lib/layout.php';
 
-	if ($x_hacks['smallbrowse'] == 1 and false) {
-		require 'mobile/index.php'; // alternate markup for mobile clients.
-	} else {
-		if($action=='markforumread' and $log) {
-			mysql_query("DELETE FROM forumread WHERE user=$loguserid AND forum='$forumid'");
-			mysql_query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid' AND `tid` IN (SELECT `id` FROM `threads` WHERE `forum` = '$forumid')");
-			mysql_query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,".ctime().')');
-			return header("Location: index.php");
-		}
+	if($action=='markforumread' and $log) {
+		mysql_query("DELETE FROM forumread WHERE user=$loguserid AND forum='$forumid'");
+		mysql_query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid' AND `tid` IN (SELECT `id` FROM `threads` WHERE `forum` = '$forumid')");
+		mysql_query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,".ctime().')');
+		return header("Location: index.php");
+	}
 		
-		if($action=='markallforumsread' and $log) {
+	if($action=='markallforumsread' and $log) {
 			mysql_query("DELETE FROM forumread WHERE user=$loguserid");
 			mysql_query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid'");
 			mysql_query("INSERT INTO forumread (user,forum,readdate) SELECT $loguserid,id,".ctime().' FROM forums');
 			return header("Location: index.php");
-		}
+	}
 
 		$postread = readpostread($loguserid);
 
@@ -56,8 +53,8 @@
 			else $blist.=', ';
 			$users[$user[id]]=$user;
 			$y=date('Y',ctime())-date('Y',$user[birthday]);
-			$namecolor=getnamecolor($user[sex],$user[powerlevel]);
-			$blist.="<a href=profile.php?id=$user[id]><font $namecolor>$user[name]</font></a> ($y)"; 
+			$namecolor=getnamecolor($user[sex],$user[powerlevel],TRUE);
+			$blist.="<a href='profile.php?id=$user[id]' style='color: #$namecolor'>$user[name]</a> ($y)"; 
 		}
 		
 		$onlinetime=ctime()-300;
@@ -129,7 +126,8 @@
 	  ";
 
 	  $new='&nbsp;';
-	  if($log){
+	  
+	if($log) {
 		$pmsgnum=0;
 		$pmsgnew=0;
 		$maxid=mysql_result(mysql_query("SELECT max(id) FROM pmsgs WHERE userto=$loguserid"),0,0);
@@ -138,8 +136,8 @@
 		$pmsgnum=mysql_result(mysql_query("SELECT COUNT(*) FROM pmsgs WHERE userto=$loguserid"),0,0);
 		$pmsgnew=mysql_result(mysql_query("SELECT COUNT(*) FROM pmsgs WHERE userto=$loguserid AND msgread=0"),0,0);
 		if($pmsgnew) $new=$statusicons['new'];
-		$namecolor=getnamecolor($pmsg[sex],$pmsg[powerlevel]);
-		$lastmsg="Last message from <a href='profile.php?id=$pmsg[id]' $namecolor>$pmsg[name]</a> on ".date($dateformat,$pmsg[date]+$tzoff);
+		$namecolor=getnamecolor($pmsg[sex],$pmsg[powerlevel],TRUE);
+		$lastmsg="Last message from <a href='profile.php?id=$pmsg[id]' style='color: #$namecolor'>$pmsg[name]</a> on ".date($dateformat,$pmsg[date]+$tzoff);
 		}
 		$privatebox="
 		$tblstart
@@ -220,11 +218,11 @@
 			$forum=mysql_fetch_array($forums);
 		}
 	}
-		print "$tblend<br>$privatebox
-		
-		". adbox() ."<br>
+	print "$tblend<br>$privatebox
+	
+	". adbox() ."<br>
 
-		$tblstart$forumlist$tblend$footer";
-		printtimedif($startingtime);
-	}
+	$tblstart$forumlist$tblend$footer";
+	printtimedif($startingtime);
+	
 ?>
