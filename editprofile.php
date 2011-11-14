@@ -254,40 +254,40 @@
 				UPDATE	`users`
 
 				SET		$passwordenc
-						`picture`			= '$picture'
-						`minipic`			= '$minipic'
-						`signature`			= '$signature'
-						`bio`				= '$bio'
-						`email`				= '$email'
-						`icq`				= '$icq'
-						`title`				= '$title'
-						`useranks`			= '$useranks'
-						`aim`				= '$aim'
-						`sex`				= '$sex'
-						`homepageurl`		= '$homepage'
-						`homepagename`		= '$pagename'
-						`timezone`			= '$timezone'
-						`dateformat`		= '$insdateformat'
-						`dateshort`			= '$insdateshort'
-						`postsperpage`		= '$postsperpage'
-						`realname`			= '$realname'
-						`location`			= '$location'
-						`postbg`			= '$postbg'
-						`postheader`		= '$postheader'
-						`birthday`			= '$birthday'
-						`scheme`			= '$sscheme'
-						`threadsperpage`	= '$threadsperpage'
-						`viewsig`			= '$viewsig'
-						`layout`			= '$tlayout'
-						`moodurl`			= '". $_POST['moodurl'] ."'
-						`posttool`			= '$posttool'
-						`imood`				= '$imood'
-						`signsep`			= '$signsep'
-						`pagestyle`			= '$pagestyle'
-						`pollstyle`			= '$pollstyle' 
+						`picture`			= '$picture',
+						`minipic`			= '$minipic',
+						`signature`			= '$signature',
+						`bio`				= '$bio',
+						`email`				= '$email',
+						`icq`				= '$icq',
+						`title`				= '$title',
+						`useranks`			= '$useranks',
+						`aim`				= '$aim',
+						`sex`				= '$sex',
+						`homepageurl`		= '$homepage',
+						`homepagename`		= '$pagename',
+						`timezone`			= '$timezone',
+						`dateformat`		= '$insdateformat',
+						`dateshort`			= '$insdateshort',
+						`postsperpage`		= '$postsperpage',
+						`realname`			= '$realname',
+						`location`			= '$location',
+						`postbg`			= '$postbg',
+						`postheader`		= '$postheader',
+						`birthday`			= '$birthday',
+						`scheme`			= '$sscheme',
+						`threadsperpage`	= '$threadsperpage',
+						`viewsig`			= '$viewsig',
+						`layout`			= '$tlayout',
+						`moodurl`			= '". $_POST['moodurl'] ."',
+						`posttool`			= '$posttool',
+						`imood`				= '$imood',
+						`signsep`			= '$signsep',
+						`pagestyle`			= '$pagestyle',
+						`pollstyle`			= '$pollstyle'
 
 				WHERE	`id`			= '$loguserid'
-						 AND `password` = '$userpass'
+
 			");
 
 		print "
