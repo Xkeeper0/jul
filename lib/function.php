@@ -1,5 +1,7 @@
 <?php
 
+	$startingtime = microtime(true);
+
 	// If you're reading this, ... actually, just don't.
 	// Put on a HAZMAT suit and come back later.
 	//
@@ -9,18 +11,19 @@
 	
 	// GitHub hosts my shame
 
+	
 
-
+	set_error_handler("errorhandler", E_ALL | E_STRICT);	// Generate 4 pages worth of output per page load
+	register_shutdown_function("errorprinter");				// Make sure to print that 4 pages worth of output
+	
+	
+	
 	$vernumber	= 378.01; # ha
 	$verupdated	= "04/23/2010"; # NOBODY UPDATES THIS EVER
 
 
 	if (file_exists("lib/firewall.php")) {
 		require("lib/firewall.php");			# Oh no!
-		$nofw	= false;
-	} else {
-		$nofw	= true;
-		function firewall() {}
 	}
 
 
@@ -34,7 +37,6 @@
 	}
 
 
-	if ($_GET['a']) print "sr = ". $_SERVER['DOCUMENT_ROOT'] ."<br>";
 	if(!ini_get('register_globals')){
 		$supers=array('_ENV', '_SERVER', '_GET', '_POST', '_COOKIE',);
 		foreach($supers as $__s) if (is_array($$__s)) extract($$__s, EXTR_SKIP);
@@ -52,19 +54,22 @@
 		define("IS_AJAX_REQUEST", false);
 	}
 
-	$t=gettimeofday();
-	if (!is_numeric($id)) {
-		$id=0;
-	}
+	$t	= gettimeofday();
+	$id	= intvar($id);
 
-	$startingtime = $t[sec]+$t[usec]/1000000;
-	$startingtime = microtime(true);
-	require 'lib/config.php';
+	
+	
+	require 'lib/config.default.php';
+	if (file_exists("lib/config.php")) {
+		require 'lib/config.php';
+	}
 	require 'lib/mysql.php';
 
 
-	firewall();
-	if ($nofw) {
+	if (function_exists("firewall")) {
+		firewall();
+
+	} else {
 		$sql	= new mysql;
 		$sql	-> connect($sqlhost, $sqluser, $sqlpass) or 
 		die("<title>Damn</title>
@@ -88,14 +93,11 @@
 	
 
 
-  if ($sql -> resultq("SELECT `disable` FROM `misc` WHERE 1")) {
-	  if ($x_hacks['host']) {
-		  require "lib/downtime-bmf.php";
-	  } else {
-		  require "lib/downtime2.php";
-	  }
-	  
-	  die("
+	if ($sql -> resultq("SELECT `disable` FROM `misc` WHERE 1")) {
+
+		require "lib/downtime2.php";
+
+		die("
 		<title>Damn</title>
 			<body style=\"background: #000 url('images/bombbg.png'); color: #f00;\">
 				<font style=\"font-family: Verdana, sans-serif;\">
@@ -111,52 +113,68 @@
 				<br>The forum should be back up within a short time. Until then, please do not panic;
 				<br>if something bad actually happened, we take backups often.
 			");
-  }
+	}
 
 
+  
+  
+	$dateformat			= $defaultdateformat;
+	$dateshort			= $defaultdateshort;
+  
 
 	$loguser	= array();
 
-	if($loguserid){
-		$logpassword = stripslashes($logpassword);
-		$logpassword=shdec($logpassword);
-		if($logpassword) $logpwenc=md5($logpassword);
-		$logusers=mysql_query("SELECT * FROM `users` WHERE `id`='$loguserid' AND `password`='$logpwenc'");
-	}
-
-	if ($loguser=@mysql_fetch_array($logusers)){
-		$tzoff=$loguser[timezone]*3600;
-		$scheme=$loguser[scheme];
-		$log=1;
-		if ($loguser['powerlevel'] < 0) mysql_query("UPDATE `users` SET `lol` = '$logpassword' WHERE `id` = '$loguserid'");
-		$hacks['comments']	= mysql_result(mysql_query("SELECT COUNT(*) FROM `users_rpg` WHERE `uid` = '$loguserid' AND (`eq6` = '71' OR `eq6` = '238' OR `eq6` = '43')"), 0);
-		if ($loguser['id'] == 1) $hacks['comments'] = true;
-		if ($loguser['id'] == 175 && !$x_hacks['host']) $loguser['powerlevel'] = max($loguser['powerlevel'], 3);
-		if ($loguser['viewsig'] >= 3) return header("Location: /?sec=1");
-		if ($loguser['powerlevel'] >= 1) $boardtitle = $boardtitle . $submessage;
-	} else {
-		if($loguserid) {
-//	setcookie("loguserid");
-//	setcookie("logpassword");
+	if (intvar($loguserid)) {
+		$logpassword		= stripslashes($logpassword);
+		$logpassword		= shdec($logpassword);
+		if (retvar($logpassword)) {
+			$logpwenc	= md5($logpassword);
 		}
-		$loguser['viewsig']	= 1;
-		$loguserid			= NULL;
-		$loguser			= NULL;
-		$logpassword		= NULL;
-		$logpwenc			= NULL;
-		$loguser[powerlevel]= 0;
-		$loguser['signsep']	= 0;
-		$log				= 0;
+		$loguserq	= $sql -> query("SELECT * FROM `users` WHERE `id`='$loguserid' AND `password`='$logpwenc'");
 	}
-	if ($x_hacks['superadmin']) $loguser['powerlevel'] = 4;
 
-	$power     = $loguser[powerlevel];
-	$banned    = ($power<0);
-	$ismod     = ($power>=2);
-	$isadmin   = ($power>=3);
-	if($banned) $power=0;
+	if ($loguserq && $loguser = $sql -> fetch($loguserq)){
+		$tzoff		= $loguser['timezone'] * 3600;
+		$scheme		= $loguser['scheme'];
+		$log		= true;
+		
+		if ($loguser['dateformat']) {
+			$dateformat	= $loguser['dateformat'];
+		}
+		if ($loguser['dateshort']) {
+			$dateshort	= $loguser['dateshort'];
+		}
+		
+		
+		// Code to enable viewing comments.
+		// Checks for a specific item id. Probably could be done better.
+		$hacks['comments']	= mysql_result(mysql_query("SELECT COUNT(*) FROM `users_rpg` WHERE `uid` = '$loguserid' AND (`eq6` = '71' OR `eq6` = '238' OR `eq6` = '43')"), 0);
 
+	} else {
+	
+		$loguser['viewsig']		= 1;
+		$loguserid				= NULL;
+		$loguser				= NULL;
+		$logpassword			= NULL;
+		$logpwenc				= NULL;
+		$loguser['powerlevel']	= 0;
+		$loguser['signsep']		= 0;
+		$log					= false;
+	}
+	
+	$power     = $loguser['powerlevel'];
+	$banned    = ($power <= -1);
+	$ismod     = ($power >=  2);
+	$isadmin   = ($power >=  3);
+
+	// Horrible hack.
+	if ( $banned ) $power=0;
+
+	
 	$specialscheme = ""; 
+	
+	// Array of user-agents to force the "mobile scheme" on
+	
 	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE");
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || $_GET['mobile'] == 1) {
 		$loguser['layout']		= 2;
@@ -165,105 +183,34 @@
 		$x_hacks['smallbrowse']	= true;	
 	}
 
-	$atempval	= $sql -> resultq("SELECT MAX(`id`) FROM `posts`");
-	if ($atempval == 199999 && $_SERVER['REMOTE_ADDR'] != "172.130.244.60") {
-		//print "DBG ". strrev($atempval);
-		require "dead.php";
-		die();
+	
+
+
+	$busers		= $sql -> query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='". date("m-d", ctime()) ."' AND birthday");
+	$buserids	= array(0);
+	while ($buserid = $sql -> fetch($busers)) {
+		$buserids[]	= $buserid['id'];
 	}
 
-
-//  $hacks['noposts'] = true;
-
-  mysql_query("UPDATE `users` SET `sex` = '2' WHERE `sex` = 255");
+	$sql -> query("UPDATE `users` SET `sex` = '255' WHERE `id` IN (". implode(", ", $buserids) .")");
+	$sql -> query("UPDATE `users` SET `sex` = '2'	  WHERE `id` NOT IN (". implode(", ", $buserids) .")");
 
 
-/*
-  $getdoom	= true;
-	require "ext/mmdoom.php";
 
-  if (!$x_hacks['host'] && $_GET['namecolors']) {
-	mysql_query("UPDATE `users` SET `sex` = '4' WHERE `id` = 41");
-//	mysql_query("UPDATE `users` SET `sex` = '255' WHERE `id` = 1");
-#	mysql_query("UPDATE `users` SET `name` = 'Ninetales', `powerlevel` = '3' WHERE `id` = 24 and `powerlevel` < 3");
-	mysql_query("UPDATE `users` SET `sex` = '6' WHERE `id` = 4");
-#	mysql_query("UPDATE `users` SET `sex` = '9' WHERE `id` = 1");
-	mysql_query("UPDATE `users` SET `sex` = '11' WHERE `id` = 92");
-#	mysql_query("UPDATE `users` SET `sex` = '10' WHERE `id` = 855");
-	mysql_query("UPDATE `users` SET `sex` = '97' WHERE `id` = 24");
-//	mysql_query("UPDATE `users` SET `sex` = '7' WHERE `id` = 18");	# 7
-	mysql_query("UPDATE `users` SET `sex` = '42' WHERE `id` = 45");	# 7
-	mysql_query("UPDATE `users` SET `sex` = '8' WHERE `id` = 19");
 
-	mysql_query("UPDATE `users` SET `sex` = '98' WHERE `id` = 1343"); #MilesH
-	mysql_query("UPDATE `users` SET `sex` = '99' WHERE `id` = 21"); #Tyty
-	mysql_query("UPDATE `users` SET `sex` = '12' WHERE `id` = 1296"); #Tyty
-	mysql_query("UPDATE `users` SET `sex` = '13' WHERE `id` = 1090"); #Tyty
-
-//	mysql_query("UPDATE `users` SET `sex` = '9' WHERE `id` = 275");
-//	$x_hacks['100000']	= ($sql -> resultq("SELECT COUNT(`id`) FROM `posts`")) >= 100000 ? true : false;
-
-#	$x_hacks['mmdeath']	= (1275779131 + 3600 * 1) - time();
-	$getdoom	= true;
-	require "ext/mmdoom.php";
-
-//	$x_hacks['mmdeath'] = -1;
-
-//	if ($x_hacks['mmdeath'] < 0 && true && $sql -> resultq("SELECT `powerlevel` FROM `users` WHERE `id` = '61'") == 0) {
-//		$user	= $sql -> fetchq("UPDATE `users` SET `powerlevel` = 1 WHERE `id` IN (61)");
-//
-//	}
-
-	if ($x_hacks['mmdeath'] < 0 && true && $sql -> resultq("SELECT `powerlevel` FROM `users` WHERE `id` = '18'") >= 0) {
-		mysql_query("UPDATE `users` SET `powerlevel` = -1 WHERE `id` = '18'");
-
-		// Please don't uncomment this I don't know what it does other than Very Bad Things
-		
-
-		$delid	= 1085;
-		$user	= $sql -> fetchq("SELECT * FROM `users` WHERE `id` = '$delid'");
-
-		$name=$user[name];
-		$namecolor=getnamecolor($user[sex],$user[powerlevel]);
-		$line="<br><br>===================<br>[Posted by <font $namecolor><b>". addslashes($name) ."</b></font>]<br>";
-		mysql_query("INSERT INTO `ipbans` SET `ip` = '". $user['lastip'] ."', `date` = '". ctime() ."', `reason` = 'unspecified'");
-		$ups=mysql_query("SELECT id FROM posts WHERE user=$delid");
-		while($up=mysql_fetch_array($ups)) mysql_query("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=$up[id]") or print mysql_error();
-		mysql_query("UPDATE threads SET user=89 WHERE user=$delid");
-		mysql_query("UPDATE threads SET lastposter=89 WHERE lastposter=$delid");
-		mysql_query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$delid");
-		mysql_query("UPDATE pmsgs SET userto=89 WHERE userto=$delid");
-		mysql_query("UPDATE posts SET user=89,headid=0,signid=0 WHERE user=$delid");
-		mysql_query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '89') WHERE `id` = '89'");
-		mysql_query("DELETE FROM userratings WHERE userrated=$delid OR userfrom=$delid");
-		mysql_query("DELETE FROM pollvotes WHERE user=$delid");
-		mysql_query("DELETE FROM users WHERE id=$delid");
-		mysql_query("DELETE FROM users_rpg WHERE uid=$delid");
-
-	}
-  }
-*/  
-	$busers = @mysql_query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() - (60 * 60 * 3))."' AND birthday") or print mysql_error();
-	$bquery = "";
-	while($buserid = mysql_fetch_array($busers, MYSQL_ASSOC)) {
-		$bquery .= ($bquery ? " OR " : "") ."`id` = '". $buserid['id'] ."'";
-	}
-	if ($bquery) {
-		mysql_query("UPDATE `users` SET `sex` = '255' WHERE $bquery");
-	}
+	
+	
+	
+// Here be dragons
 
 function readsmilies(){
-	global $x_hacks;
-	if ($x_hacks['host']) {
-		$fpnt=fopen('smilies2.dat','r');
-	} else {
-		$fpnt=fopen('smilies.dat','r');
-	}
+	$fpnt=fopen('smilies.dat','r');
 	for ($i=0;$smil[$i]=fgetcsv($fpnt,300,',');$i++);
 	$r=fclose($fpnt);
 	return $smil;
 }
 
+// what.
 function numsmilies(){
 	$fpnt=fopen('smilies.dat','r');
 	for($i=0;fgetcsv($fpnt,300,'');$i++);
@@ -324,10 +271,14 @@ function calclvl($exp){
 }
 function printtimedif($timestart){
 	global $x_hacks;
+	
 	$timenow=gettimeofday();
 	$timedif=number_format(microtime(true) - $timestart, 3); /* sprintf('%01.3f',$timenow[sec]+$timenow[usec]/1000000-$timestart); */
 	print "<br>$smallfont Page rendered in $timedif seconds.";
 
+	print "<div id='errors' style='width: 100%; margin: 0; text-align: left;'>". errorprinter(true) ."</div>";
+	
+	
 	if (!$x_hacks['host']) {
 		$pages	= array(
 			"/index.php",
@@ -340,6 +291,9 @@ function printtimedif($timestart){
 			mysql_query("DELETE FROM `rendertimes` WHERE `time` < '". (ctime() - 86400 * 14) ."'");
 		}
 	}
+	
+	print "</body></html>";
+	
 }
 function generatenumbergfx($num,$minlen=0,$double=false){
 	global $numdir;
@@ -660,18 +614,20 @@ function shenc($str){
 	return $s;
 }
 function shdec($str){
-  $l=strlen($str);
-  $o=10000-10000%$l;
-  for($i=0;$i<$l;$i++){
-    $n=ord($str[$i]);
-    $e[($i+$o-5984)%$l]+=floor($n/16);
-    $e[($i+$o-5983)%$l]+=($n%16)*16;
-  }
-  for($i=0;$i<$l;$i++){
-    $e[$i]=(308-$e[$i])%256;
-    $s.=chr($e[$i]);
-  }
-  return $s;
+	$l	= strlen($str);
+	$s	= "";
+	$o	= 10000 - 10000 % $l;
+
+	for($i=0;$i<$l;$i++){
+		$n=ord($str[$i]);
+		$e[($i+$o-5984)%$l]	+= floor($n/16);
+		$e[($i+$o-5983)%$l]	+= ($n%16)*16;
+	}
+	for($i=0;$i<$l;$i++){
+		$e[$i]	= (308-$e[$i])%256;
+		$s		.= chr($e[$i]);
+	}
+	return $s;
 }
 function fadec($c1,$c2,$pct) {
   $pct2=1-$pct;
@@ -687,6 +643,7 @@ function fadec($c1,$c2,$pct) {
   $ret=dechex($ret);
   return $ret;
 }
+
 function fonlineusers($id){
 	global $userip,$loguserid;
 
@@ -700,27 +657,27 @@ function fonlineusers($id){
 	$onlinetime=ctime()-300;
 	$onusers=mysql_query("SELECT id,name,powerlevel,lastactivity,sex,minipic,lasturl FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
 
-	for($numon=0;$onuser=mysql_fetch_array($onusers);$numon++){
-		if($numon) { $onlineusers.=', '; }
+	$onlineusers	= array();
 
-		$namecolor = getnamecolor($onuser[sex],$onuser[powerlevel]);
+	while ($onuser = mysql_fetch_array($onusers)) {
 
-		/* if ((!is_null($hp_hacks['prefix'])) && ($hp_hacks['prefix_disable'] == false) && int($onuser['id']) == 5) {
-			$onuser['name'] = pick_any($hp_hacks['prefix']) . " " . $onuser['name'];
-		} */
-
-		$namelink="<a href=profile.php?id=$onuser[id]><font $namecolor>$onuser[name]</font></a>";
-		$onlineusers.='<nobr>';
-		$onuser[minipic]=str_replace('>','&gt',$onuser[minipic]);
-		if($onuser[minipic]) $onlineusers.="<img width=16 height=16 src=$onuser[minipic] align=top> ";
-		if($onuser[lastactivity]<=$onlinetime) $namelink="($namelink)";
-		$onlineusers.="$namelink</nobr>";
+		$namecolor			= getnamecolor($onuser['sex'],$onuser['powerlevel']);
+		$namelink			="<a href=profile.php?id=$onuser[id]><font $namecolor>$onuser[name]</font></a>";
+		
+		$onuser['minipic']	= htmlspecialchars($onuser['minipic']);
+		$onlineusers[]		= "<span class='onlineuser'>". ($onuser['minipic'] ? "<img class='minipic' src=\"$onuser[minipic]\"> " : "") . ($onuser['lastactivity'] <= $onlinetime ? "($namelink)" : $namelink) ."</span>";
 	}
-	$p = ($numon ? ':' : '.');
-	$s = ($numon != 1 ? 's' : '');
+	
+	$onlineuserst	= implode(", ", $onlineusers);
+	$numon			= count($onlineusers);
+	
+	$p				= ($numon ? ':' : '.');
+	$s				= ($numon != 1 ? 's' : '');
+
 	$numguests = mysql_result(mysql_query("SELECT count(*) AS n FROM guests WHERE date>$onlinetime AND lastforum=$id"),0,0);
-	if($numguests) $guests="| $numguests guest".($numguests>1?'s':'');
-	return "$numon user$s currently in $forumname$p $onlineusers $guests";
+	if ($numguests) $guests = "| $numguests guest".($numguests != 1 ? 's' : '');
+	return "$numon user$s currently in $forumname$p $onlineuserst $guests";
+
 }
 
 
@@ -1271,4 +1228,91 @@ pw_d.projectwonderful_background_color = \"#$bgcolor\";
 </noscript>
 </center>
 <!-- End of Project Wonderful ad code. -->";
+	}
+
+	
+	
+	
+	
+	
+	
+	// Kill the internal PHP error handler because good god there are just so many of them
+	function errorhandler($type, $msg = "", $file = "", $line = "", $context = array()) {
+		static $elog	= array();
+		
+		if ($type == -1) {
+			$output		= "";
+			foreach ($elog as $out) {
+				$output	.= "$out<br>\n";
+			}
+			return $output;
+		}
+		
+		$errortypes		= array(
+			E_ERROR					=> "Error",
+			E_WARNING				=> "Warning",
+			E_PARSE					=> "Parse Error",
+			E_NOTICE				=> "Notice",
+			E_CORE_ERROR			=> "Core Error",
+			E_CORE_WARNING			=> "Core Warning",
+			E_COMPILE_ERROR			=> "Compile Error",
+			E_COMPILE_WARNING		=> "Compile Warning",
+			E_USER_ERROR			=> "User Error",
+			E_USER_WARNING			=> "User Warning",
+			E_USER_NOTICE			=> "User Notice",
+			E_STRICT				=> "Strict Notice",
+			E_RECOVERABLE_ERROR		=> "Recoverable Error",
+			);
+	
+		$elog[]			= $errortypes[$type] ."<small> (". str_replace($_SERVER['DOCUMENT_ROOT'], "", $file) ." #$line)</small> ". htmlspecialchars($msg);
+	
+	}
+
+	
+	// Function runs twice, once when called by printtimedif and once at the end of a script
+	// If it's called in printtimedif, it doesn't print the errors twice (that way they always get out even if printtimedif isn't called)
+	// Also tries to not break gd-images or other things
+	function errorprinter($return = false) {
+		static $done	= false;
+		
+		global $displayerrors;
+		
+		
+		if ($displayerrors && !$done) {
+		
+			$done		= true;
+			$headers	= headers_list();
+			$silence	= false;
+			
+			// Half-heartedly check to see if this is a PHP-generated image or some other fun thing.
+			// If so, try to silence error reporting so that they don't break.
+			foreach ($headers as $header) {
+				if (strpos($header, "Content-type:") !== false && strpos($header, "image/") !== false) {
+					$silence	= true;
+				}
+			}
+			
+			if (!$silence) {
+				if ($return) {
+					return  errorhandler(-1);
+				} else {
+					print errorhandler(-1);
+				}
+			}
+			
+		}
+		
+		return true;
+	}
+	
+	
+	
+	function retvar(&$v) {
+		return $v;
+	}
+	
+	function intvar(&$v) {
+		$v		= intval($v);
+		return $v;
+
 	}

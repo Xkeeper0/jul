@@ -73,15 +73,15 @@
 			
 			$namelink="<a href=profile.php?id=$onuser[id] style='color: #$namecolor'>$onuser[name]</a>";
 
-			if($onuser[minipic]) {
-				$onuser[minipic]='<img width="16" height="16" src="'.str_replace('"','%22',$onuser[minipic]).'" align="absmiddle"> ';
+			if($onuser['minipic']) {
+				$onuser['minipic']='<img class="minipic" src="'. htmlspecialchars($onuser['minipic']) .'"> ';
 			}
 			
 			if($onuser[lastactivity]<=$onlinetime) { 
 				$namelink="($namelink)";
 			}
 			
-			$onlineusers.="$onuser[minipic]$namelink";
+			$onlineusers.="<span class='onlineuser'>$onuser[minipic]$namelink</span>";
 		}
 
 		if($onlineusers) $onlineusers=': '.$onlineusers;
