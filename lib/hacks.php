@@ -7,4 +7,5 @@
 		"ikachan" => function($image = "/images/squid.png") {
 			return "<img src='$image' style='position: fixed; left: ".mt_rand(0,100)."%;
 				top: ".mt_rand(0,100)."%'>";
-		});
+		}
+	);
