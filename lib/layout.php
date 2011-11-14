@@ -94,6 +94,7 @@
 		$linkcolor = "FFF";
 	} else {
 		$css="
+			<link rel='stylesheet' href='/css/base.css' type='text/css'>
 			<style type='text/css'>
 			html, img { image-rendering: -moz-crisp-edges; }
 			a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold}
