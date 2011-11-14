@@ -94,7 +94,6 @@
 		$linkcolor = "FFF";
 	} else {
 		$css="
-			<link rel='stylesheet' href='/css/base.css' type='text/css'>
 			<style type='text/css'>
 			html, img { image-rendering: -moz-crisp-edges; }
 			a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold}
@@ -150,9 +149,19 @@
 			}
 			code br { display: none; }
 			input[type=radio] { color: black; background: white; }
-		";
+
+	.onlineuser	{
+		white-space:	nowrap;
+		}
+		
+	.minipic	{
+		vertical-align:	middle;
+		max-width:		16px;
+		max-height:		16px;
+		}
+			";
 	}
-	$numcols=(intval($numcols) ? intval($numcols) : 60);
+	$numcols	=(intval($numcols) ? intval($numcols) : 60);
 
 	if($formcss){
 		$numcols=80;
