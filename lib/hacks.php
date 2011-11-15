@@ -7,11 +7,8 @@
 		"ikachan" => function($image = "/images/squid.png") {
 			return "<img src='$image' style='position: fixed; left: ".mt_rand(0,100)."%;
 				top: ".mt_rand(0,100)."%'>";
-<<<<<<< Updated upstream
 		},
 		"favicon" => function($image = "/favicon.ico", $type="image/x-icon") {
 			return "<link rel='shortcut icon' src='$image' type='$type'>";
-=======
->>>>>>> Stashed changes
 		}
 	);

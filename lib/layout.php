@@ -10,20 +10,13 @@
 	if(!$windowtitle) $windowtitle=$boardname;
 	require 'colors.php';
 	require 'hacks.php';
-<<<<<<< Updated upstream
-=======
 	
->>>>>>> Stashed changes
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
 	
 	$boardtitle	= "<a href='./'>$boardtitle</a>";
-
-<<<<<<< Updated upstream
-=======
 	$dateformat='m-d-y h:i:s A';
 	$dateshort='m-d-y';
 
->>>>>>> Stashed changes
 	$race=postradar($loguserid);
 
 	$tablewidth	= '100%';
@@ -299,22 +292,16 @@
 	}
 
 	$jscripts = '';
-<<<<<<< Updated upstream
 
 	if (true) {
-		$yyy	= "
-=======
 	/*$yyy	= "
->>>>>>> Stashed changes
+
 			<img id='f_ikachan' src='images/sankachan.png' style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"It's no pointy hat, but it should work... right?\">
 			";*/
 	$yyy	= "
 			<img id='f_ikachan' src='images/squid.png' style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"I just want to let you know that you are getting coal this year. You deserve it.\">
 			";
-
-
-
-
+	}
 	$body="<body>";
 
 	if (false) {
@@ -429,10 +416,7 @@
 	$footer="	</textarea></form></embed></noembed></noscript></noembed></embed></table></table>
 <br>". 	($loguser['id'] && strpos($PHP_SELF, "index.php") === false ? adbox() ."<br>" : "") ."
 <center>
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 <br>
 	$smallfont
 	<br><br><a href=$siteurl>$sitename</a>
@@ -442,9 +426,6 @@
 	<br><small>&copy;2000-2010 Acmlm, Emuz, Blades, Xkeeper</small> <!--
 	<br><img src=\"images/4funin1.png\" title=\"totally!\" width=448 height=48> -->
 	$honeypotl
-<<<<<<< Updated upstream
-	". ($x_hacks['mmdeath'] > 0 ? "<div style='position: absolute; top: -100px; left: -100px;'>Hidden preloader for doom numbers:
-		<img src='numgfx/death/0.png'> <img src='numgfx/death/1.png'> <img src='numgfx/death/2.png'> <img src='numgfx/death/3.png'> <img src='numgfx/death/4.png'> <img src='numgfx/death/5.png'> <img src='numgfx/death/6.png'> <img src='numgfx/death/7.png'> <img src='numgfx/death/8.png'> <img src='numgfx/death/9.png'></div>" : "") ."
 <!-- Piwik -->
 <script type=\"text/javascript\">
 var pkBaseURL = ((\"https:\" == document.location.protocol) ? \"https://stats.rustedlogic.net/\" : \"http://stats.rustedlogic.net/\");
@@ -460,9 +441,8 @@ piwikTracker.enableLinkTracking();
 <!--<script type=\"text/javascript\" src=\"http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.min.js\"></script>
 <script type=\"text/javascript\" src=\"js/useful.js\"></script> -->
 
-=======
 </body></html>
->>>>>>> Stashed changes
+
   ";
 	if($ipbanned) {
 		if ($loguser['title'] == "Banned; account hijacked. Contact admin via PM to change it.") {
