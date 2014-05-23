@@ -1,15 +1,4 @@
 <?php
-	// dear xkeeper:
-	// removing most images and dropping the file size a good mobile site does not make
-	// cattishly yours,
-	// hydrapheetz
-
-	// dear hydrapheetz:
-	// trying to stuff a square peg (jul) into a round hole (mobile) does not a good idea make
-	// from russia with fun,
-	// xkeeper
-
-
 	// cache bad
 	header('Cache-Control: no-cache, max-age=0, must-revalidate');
 
@@ -20,13 +9,13 @@
 
 	if(!$windowtitle) $windowtitle=$boardname;
 	require 'colors.php';
+	require 'hacks.php';
+	
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
+	
 	$boardtitle	= "<a href='./'>$boardtitle</a>";
-
-	// PONIES!!!
-	// if($forumid==30) $boardtitle = "<a href='./'><img src=\"images/poniecentral.gif\" title=\"YAAAAAAAAAAY\"></a>";
-	// end PONIES!!!
-
+	$dateformat='m-d-y h:i:s A';
+	$dateshort='m-d-y';
 
 	$race=postradar($loguserid);
 
@@ -84,9 +73,9 @@
 		// special "null" scheme.
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
-		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
-		$dateformat = "m/d/y h:i";
-		$dateshort  = "m/d/y";
+		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'>\n<link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
+		/*$dateformat = "m/d/y h:i";
+		$dateshort  = "m/d/y"*/
 		
 		// backwards compat
 		global $bgcolor, $linkcolor;
@@ -123,9 +112,9 @@
 				font:13px $font;
 				background: #$bgcolor$bgimage;
 			}
+			/* no idea what this is for */
 			div.lastpost { font: 10px $font2 !important; white-space: nowrap; }
 			div.lastpost:first-line { font: 13px $font !important; }
-			.sparkline { display: none; }
 			.font 	{font:13px $font}
 			.fonth	{font:13px $font;color:$tableheadtext}	/* is this even used? */
 			.fonts	{font:10px $font2}
@@ -305,17 +294,14 @@
 	$jscripts = '';
 
 	if (true) {
-		$yyy	= "
+	/*$yyy	= "
+
 			<img id='f_ikachan' src='images/sankachan.png' style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"It's no pointy hat, but it should work... right?\">
-			";
-		$yyy	= "
+			";*/
+	$yyy	= "
 			<img id='f_ikachan' src='images/squid.png' style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"I just want to let you know that you are getting coal this year. You deserve it.\">
 			";
 	}
-
-
-
-
 	$body="<body>";
 
 	if (false) {
@@ -323,7 +309,7 @@
 		$css = "<link rel='stylesheet' href='/mobile.css'>";
 	}
 	$header1="<html><head><title>$windowtitle</title>
-	<link rel=\"shortcut icon\" href=\"/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
+	".$hacks['layout']['favicon']."
 	$css
 	<link rel=\"stylesheet\" href=\"http://xkeeper.net/img/layouts/fonts/stylesheet.css\" type=\"text/css\">
 	</head>
@@ -440,8 +426,6 @@
 	<br><small>&copy;2000-2010 Acmlm, Emuz, Blades, Xkeeper</small> <!--
 	<br><img src=\"images/4funin1.png\" title=\"totally!\" width=448 height=48> -->
 	$honeypotl
-	". ($x_hacks['mmdeath'] > 0 ? "<div style='position: absolute; top: -100px; left: -100px;'>Hidden preloader for doom numbers:
-		<img src='numgfx/death/0.png'> <img src='numgfx/death/1.png'> <img src='numgfx/death/2.png'> <img src='numgfx/death/3.png'> <img src='numgfx/death/4.png'> <img src='numgfx/death/5.png'> <img src='numgfx/death/6.png'> <img src='numgfx/death/7.png'> <img src='numgfx/death/8.png'> <img src='numgfx/death/9.png'></div>" : "") ."
 <!-- Piwik -->
 <script type=\"text/javascript\">
 var pkBaseURL = ((\"https:\" == document.location.protocol) ? \"https://stats.rustedlogic.net/\" : \"http://stats.rustedlogic.net/\");
@@ -456,6 +440,8 @@ piwikTracker.enableLinkTracking();
 <!-- End Piwik Tag -->
 <!--<script type=\"text/javascript\" src=\"http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.min.js\"></script>
 <script type=\"text/javascript\" src=\"js/useful.js\"></script> -->
+
+</body></html>
 
   ";
 	if($ipbanned) {
