@@ -31,7 +31,7 @@
 	// if($forumid==30) $boardtitle = "<a href='./'><img src=\"images/poniecentral.gif\" title=\"YAAAAAAAAAAY\"></a>";
 	// end PONIES!!!
 
-	$race=postradar($loguserid);
+	$race=$loguserid ? postradar($loguserid) : "";
 
 	$tablewidth='100%';
 	$fonttag='<font class="font">';
@@ -43,14 +43,14 @@
 		$cell="<td class='tbl tdbg$celltype font";
 		$celln="tccell$celltype";
 		$$celln     =$cell." center'";
-		${$celln.s} =$cell."s center'";
-		${$celln.t} =$cell."t center'";
-		${$celln.l} =$cell."'";
-		${$celln.r} =$cell." right'";
-		${$celln.ls}=$cell."s'";
-		${$celln.lt}=$cell."t'";
-		${$celln.rs}=$cell."s right'";
-		${$celln.rt}=$cell."t right'";
+		${$celln.'s'} =$cell."s center'";
+		${$celln.'t'} =$cell."t center'";
+		${$celln.'l'} =$cell."'";
+		${$celln.'r'} =$cell." right'";
+		${$celln.'ls'}=$cell."s'";
+		${$celln.'lt'}=$cell."t'";
+		${$celln.'rs'}=$cell."s right'";
+		${$celln.'rt'}=$cell."t right'";
 	}
 
 	$inpt='<input type="text" name';
