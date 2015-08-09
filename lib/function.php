@@ -8,7 +8,6 @@
 
 	require 'lib/config.php';
 	require 'lib/mysql.php';
-	require 'lib/relayout.php';
 
 	$sql	= new mysql;
 
