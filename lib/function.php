@@ -1,5 +1,8 @@
 <?php
 
+	// Set this right away to hopefully prevent fuckups
+	ini_set("default_charset", "ISO-8859-1");
+
 	$startingtime = microtime(true);
 	$id			= filter_int($_GET['id']);		// Awful old legacy thing.
 
