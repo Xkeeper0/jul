@@ -1,5 +1,7 @@
 <?php
 
+	$startingtime = microtime(true);
+	$id			= filter_int($_GET['id']);		// Awful old legacy thing.
 
 	// Wait for the midnight backup to finish...
 	if ((int)date("Gi") < 5) {
@@ -1510,7 +1512,7 @@ function gethttpheaders() {
 }
 
 function printtimedif($timestart){
-	global $x_hacks, $sql, $sqldebuggers;
+	global $x_hacks, $sql, $sqldebuggers, $smallfont;
 	
 	$exectime = microtime(true) - $timestart;
 
@@ -1532,12 +1534,14 @@ function printtimedif($timestart){
 			<tr><td align=right>Total render time:&nbsp;</td><td>{$tseconds} seconds</td></tr>
 		</table>";
 
+	/*
 	if (in_array($_SERVER['REMOTE_ADDR'], $sqldebuggers)) {
 		if (!mysql::$debug_on && $_SERVER['REQUEST_METHOD'] != 'POST')
 			print "<br><a href=".$_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? "&" : "?")."debugsql>Useless mySQL query debugging shit</a>";
 		else
 			print mysql::debugprinter();
 	}
+	*/
 
 	if (!$x_hacks['host']) {
 		$pages	= array(

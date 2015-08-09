@@ -83,7 +83,7 @@
 			$namelink = getuserlink($onuser);
 
 			if($onuser['minipic']) {
-				$onuser['minipic']='<img width="16" height="16" src="'.str_replace('"','%22',$onuser[minipic]).'" align="absmiddle"> ';
+				$onuser['minipic']='<img width="16" height="16" src="'.str_replace('"','%22',$onuser['minipic']).'" align="absmiddle"> ';
 			}
 
 			if($onuser['lastactivity']<=$onlinetime) {
@@ -186,9 +186,9 @@
 		</tr>
 	";
 
-	$forumquery = $sql->query("SELECT f.*,u.id AS uid,name,sex,powerlevel,aka FROM forums f LEFT JOIN users u ON f.lastpostuser=u.id WHERE (!minpower OR minpower<=$power) AND f.hidden = '0' ORDER BY catid,forder");
+	$forumquery = $sql->query("SELECT f.*,u.id AS uid,name,sex,powerlevel,aka,birthday FROM forums f LEFT JOIN users u ON f.lastpostuser=u.id WHERE (!minpower OR minpower<=$power) AND f.hidden = '0' ORDER BY catid,forder");
 	$catquery = $sql->query("SELECT id,name FROM categories WHERE (!minpower OR minpower<=$power) ORDER BY id");
-	$modquery = $sql->query("SELECT u.id id,name,sex,powerlevel,aka,forum FROM users u INNER JOIN forummods m ON u.id=m.user ORDER BY name");
+	$modquery = $sql->query("SELECT u.id id,name,sex,powerlevel,aka,forum,birthday FROM users u INNER JOIN forummods m ON u.id=m.user ORDER BY name");
 
 	$categories	= array();
 	$forums		= array();
@@ -211,6 +211,7 @@
 			WHERE (`read` IS NULL OR `read` != 1) AND ($qadd) GROUP BY forum", 'forum', 'unread');
 	}
 
+	$cat	= filter_int($_GET['cat']);
 	foreach ($categories as $category) {
 		$forumlist.="<tr><td class='tbl tdbgc center font' colspan=5><a href=index.php?cat=$category[id]>$category[name]</a></td></tr>";
 		if($cat && $cat != $category['id'])
@@ -243,11 +244,6 @@
 				$by='';
 			}
 
-			if($forum['lastpostdate']>$category['lastpostdate']){
-				$category['lastpostdate']=$forum['lastpostdate'];
-				$category['l']=$forumlastpost.$by;
-			}
-
 			$new='&nbsp;';
 
 			if ($forum['numposts']) {
@@ -274,7 +270,7 @@
 				$smallfont$forum[description]<br>$modlist</td>
 				$tccell1>$forum[numthreads]</td>
 				$tccell1>$forum[numposts]</td>
-				$tccell2><span class='lastpost'>$forumlastpost</span>$by$forumlastuser
+				$tccell2><span class='lastpost'>$forumlastpost</span> $by
 			</tr>
 		  ";
 

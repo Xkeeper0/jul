@@ -241,20 +241,20 @@
 	}
 
 	$headlinks2="
-	<a href='/index.php'>Main</a>
-	- <a href='/memberlist.php'>Memberlist</a>
-	- <a href='/activeusers.php'>Active users</a>
-	- <a href='/calendar.php'>Calendar</a>
+	<a href='index.php'>Main</a>
+	- <a href='memberlist.php'>Memberlist</a>
+	- <a href='activeusers.php'>Active users</a>
+	- <a href='calendar.php'>Calendar</a>
 	- <a href='http://tcrf.net'>Wiki</a>
-	- <a href='/irc.php'>IRC Chat</a>
-	- <a href='/online.php'>Online users</a><br>
-	<a href='/ranks.php'>Ranks</a>
-	- <a href='/faq.php'>Rules/FAQ</a>
-	- <a href='/acs.php'>JCS</a>
-	- <a href='/stats.php'>Stats</a>
-	- <a href='/latestposts.php'>Latest Posts</a>
-	- <a href='/hex.php' title='Color Chart' class='popout' target='_blank'>Color Chart</a>
-	- <a href='/smilies.php' title='Smilies' class='popout' target='_blank'>Smilies</a>
+	- <a href='irc.php'>IRC Chat</a>
+	- <a href='online.php'>Online users</a><br>
+	<a href='ranks.php'>Ranks</a>
+	- <a href='faq.php'>Rules/FAQ</a>
+	- <a href='acs.php'>JCS</a>
+	- <a href='stats.php'>Stats</a>
+	- <a href='latestposts.php'>Latest Posts</a>
+	- <a href='hex.php' title='Color Chart' class='popout' target='_blank'>Color Chart</a>
+	- <a href='smilies.php' title='Smilies' class='popout' target='_blank'>Smilies</a>
 	";
 
 
@@ -414,7 +414,7 @@
 	function makeheader($header1,$headlinks,$header2) {
 		global $loguser, $PHP_SELF;
 		$header	= $header1.$headlinks.$header2;
-		if (!$loguser['id'] && strpos($PHP_SELF, "index.php") === false) {
+		if (!$loguser['id'] && strpos($PHP_SELF, "index.php") !== false) {
 			$header .= adbox() ."<br>";
 		}
 		return $header;
@@ -503,26 +503,11 @@
 <br>". 	($loguser['id'] && strpos($PHP_SELF, "index.php") === false ? adbox() ."<br>" : "") ."
 <center>
 
+<!--
 <img src='adnonsense.php?m=d' title='generous donations to the first national bank of bad jokes and other dumb crap people post' style='margin-left: 44px;'><br>
 <img src='adnonsense.php' title='hotpod fund' style='margin: 0 22px;'><br>
 <img src='adnonsense.php?m=v' title='VPS slushie fund' style='margin-right: 44px;'>
-"
-.
-/* "
-<br><img src='http://valkyrie.rustedlogic.net/h/' style='padding: 8px;' alt='' title='YOU ARE NOW HALF-ASSEDLY TESTING OUR NEW SERVER.'>
-"
-. */
-/* "<script type=\"text/javascript\">
-var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");
-document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));
-</script>
-<script type=\"text/javascript\">
-try {
-var pageTracker = _gat._getTracker(\"UA-9215725-1\");
-pageTracker._trackPageview();
-} catch(err) {}</script>"
-. */
-"
+-->
 <br>
 	$smallfont
 	<br><br><a href=$siteurl>$sitename</a>
