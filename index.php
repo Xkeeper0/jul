@@ -40,14 +40,14 @@
 	if ($x_hacks['smallbrowse'] == 1 and false) {
 		require 'mobile/index.php'; // alternate markup for mobile clients.
 	} else {
-		if($action=='markforumread' and $log) {
+		if (filter_string($_GET['action']) == 'markforumread' and $log) {
 			$sql->query("DELETE FROM forumread WHERE user=$loguserid AND forum='$forumid'");
 			$sql->query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid' AND `tid` IN (SELECT `id` FROM `threads` WHERE `forum` = '$forumid')");
 			$sql->query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,".ctime().')');
 			return header("Location: index.php");
 		}
 		
-		if($action=='markallforumsread' and $log) {
+		if (filter_string($_GET['action']) == 'markallforumsread' and $log) {
 			$sql->query("DELETE FROM forumread WHERE user=$loguserid");
 			$sql->query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid'");
 			$sql->query("INSERT INTO forumread (user,forum,readdate) SELECT $loguserid,id,".ctime().' FROM forums');
@@ -57,6 +57,7 @@
 		$postread = readpostread($loguserid);
 
 		$users1 = $sql->query("SELECT id,name,birthday,sex,powerlevel,aka FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() + $tzoff)."' AND birthday ORDER BY name");
+		$blist	= "";
 		for ($numbd=0;$user=$sql->fetch($users1);$numbd++) {
 			if(!$numbd) $blist="<tr>$tccell2s colspan=5>Birthdays for ".date('F j',ctime() + $tzoff).': ';
 			else $blist.=', ';
@@ -67,19 +68,19 @@
 		}
 		
 		$onlinetime=ctime()-300;
-		$onusers=$sql->query("SELECT id,name,powerlevel,lastactivity,sex,minipic,aka FROM users WHERE lastactivity>$onlinetime OR lastposttime>$onlinetime ORDER BY name");
+		$onusers=$sql->query("SELECT id,name,powerlevel,lastactivity,sex,minipic,aka,birthday FROM users WHERE lastactivity>$onlinetime OR lastposttime>$onlinetime ORDER BY name");
 		$numonline=mysql_num_rows($onusers);
 
 		$numguests=$sql->resultq("SELECT count(*) FROM guests WHERE date>$onlinetime",0,0);
 		if ($numguests) $guestcount=" | <nobr>$numguests guest".($numguests>1?"s":"");
+		$onlineusersa	= array();
 		for ($numon=0; $onuser = $sql->fetch($onusers);$numon++) {
-			if($numon) { $onlineusers.=', '; }
 			
 			//$namecolor=explode("=", getnamecolor($onuser['sex'],$onuser['powerlevel']));
 			//$namecolor=$namecolor[1];
 			//$namelink="<a href=profile.php?id=$onuser[id] style='color: #$namecolor'>$onuser[name]</a>";
 
-      $namelink = getuserlink($onuser);
+			$namelink = getuserlink($onuser);
 
 			if($onuser['minipic']) {
 				$onuser['minipic']='<img width="16" height="16" src="'.str_replace('"','%22',$onuser[minipic]).'" align="absmiddle"> ';
@@ -89,11 +90,13 @@
 				$namelink="($namelink)";
 			}
 			
-			$onlineusers.="$onuser[minipic]$namelink";
+			$onlineusersa[]="$onuser[minipic]$namelink";
 		}
 
-		if($onlineusers) $onlineusers=': '.$onlineusers;
+		$onlineusers	= "";
+		if ($onlineusersa) $onlineusers = ': '. implode(", ", $onlineusersa);
 
+		$logmsg	= "";
 		if($log){
 			$headlinks.=' - <a href=index.php?action=markallforumsread>Mark all forums read</a>';
 			$header=makeheader($header1,$headlinks,$header2);
@@ -102,7 +105,7 @@
 			$logmsg = "You are logged in as $myurl.";
 		}
 
-		$lastuser = $sql->fetchq('SELECT id,name,sex,powerlevel,aka FROM users ORDER BY id DESC LIMIT 1');
+		$lastuser = $sql->fetchq('SELECT id,name,sex,powerlevel,aka,birthday FROM users ORDER BY id DESC LIMIT 1');
     $lastuserurl = getuserlink($lastuser);
 
 		$posts = $sql->fetchq('SELECT (SELECT COUNT( * ) FROM posts WHERE date>'.(ctime()-3600).') AS h, (SELECT COUNT( * ) FROM posts WHERE date>'.(ctime()-86400).') AS d');
@@ -124,7 +127,7 @@
 		// print_r($sprk);
 		$sprk = implode(",",$sprk); */
 
-		if ($_GET['oldcounter'])
+		if (filter_bool($_GET['oldcounter']))
 			$statsblip	= "$posts[d] posts during the last day, $posts[h] posts during the last hour.";
 		else {
 			$nthreads = $sql->resultq("SELECT COUNT(*) FROM `threads` WHERE `lastpostdate` > '". (ctime() - 86400) ."'");

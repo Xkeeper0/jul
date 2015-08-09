@@ -88,7 +88,7 @@
 
 	// Just making sure.  Don't use this anymore.
 	// (This is backup code to auto update passwords from cookies.)
-	if ($_COOKIE['loguserid'] && $_COOKIE['logpassword']) {
+	if (filter_int($_COOKIE['loguserid']) && filter_string($_COOKIE['logpassword'])) {
 		$loguserid = intval($_COOKIE['loguserid']);
 
 		$passinfo = $sql->fetchq("SELECT name,password FROM `users` WHERE `id`='$loguserid'");
@@ -109,10 +109,10 @@
 		setcookie('logpassword','', time()-3600, "/", $_SERVER['SERVER_NAME'], false, true);
 		unset($passinfo);
 	}
-	$logpassword = NULL;
-	$logpwenc = NULL;
+	$logpassword = null;
+	$logpwenc = null;
 
-	if($_COOKIE['loguserid'] && $_COOKIE['logverify']) {
+	if(filter_int($_COOKIE['loguserid']) && filter_string($_COOKIE['logverify'])) {
 		$loguserid = intval($_COOKIE['loguserid']);
 		$loguser = $sql->fetchq("SELECT * FROM `users` WHERE `id`='$loguserid'");
 
@@ -126,6 +126,8 @@
 			$loguser = NULL;
 
 	}
+
+	$tzoff		= 0;
 
 	if ($loguser) {
 		$loguserid = $loguser['id'];
@@ -152,12 +154,13 @@
 			$loguser['powerlevel'] = max($loguser['powerlevel'], 3);
 	}
 	else {
-		$loguserid            = NULL;
-		$loguser              = NULL;
-		$loguser['viewsig']   = 1;
-		$loguser['powerlevel']= 0;
-		$loguser['signsep']   = 0;
-		$log                  = 0;
+		$loguserid				= NULL;
+		$loguser				= array();
+		$loguser['viewsig']		= 1;
+		$loguser['powerlevel']	= 0;
+		$loguser['signsep']		= 0;
+		$loguser['id']			= null;
+		$log					= 0;
 	}
 
 	if ($x_hacks['superadmin']) $loguser['powerlevel'] = 4;
@@ -170,7 +173,7 @@
 
 	$specialscheme = ""; 
 	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE");
-	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || $_GET['mobile'] == 1) {
+	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || filter_int($_GET['mobile']) == 1) {
 		$loguser['layout']		= 2;
 		$loguser['viewsig']		= 0;
 		$boardtitle				= "<span style=\"font-size: 2em;\">$boardname</span>";
@@ -192,7 +195,7 @@
 	//$x_hacks['rainbownames'] = ($sql->resultq("SELECT MAX(`id`) % 100000 FROM `posts`")) <= 100;
 	$x_hacks['rainbownames'] = ($sql->resultq("SELECT `date` FROM `posts` WHERE (`id` % 100000) = 0 ORDER BY `id` DESC LIMIT 1") > ctime()-86400);
 
-	if (!$x_hacks['host'] && $_GET['namecolors']) {
+	if (!$x_hacks['host'] && filter_int($_GET['namecolors'])) {
 		//$sql->query("UPDATE `users` SET `sex` = '255' WHERE `id` = 1");
 		//$sql->query("UPDATE `users` SET `name` = 'Ninetales', `powerlevel` = '3' WHERE `id` = 24 and `powerlevel` < 3");
 		//$sql->query("UPDATE `users` SET `sex` = '9' WHERE `id` = 1");
@@ -244,6 +247,15 @@ function filter_int(&$v) {
 		return null;
 	} else {
 		$v	= intval($v);
+		return $v;
+	}
+}
+
+function filter_bool(&$v) {
+	if (!isset($v)) {
+		return null;
+	} else {
+		$v	= (bool)$v;
 		return $v;
 	}
 }

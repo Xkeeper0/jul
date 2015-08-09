@@ -53,6 +53,8 @@
 
 	// $numfil='numnes';
 	$schemepre	= false;
+
+	$scheme		= filter_int($scheme);
 	if (isset($_GET['scheme']) && is_numeric($_GET['scheme'])) {
 		$scheme		= intval($_GET['scheme']);
 		$schemepre	= true;
@@ -94,12 +96,6 @@
 	if (!$inputborder) $inputborder	= $tableborder;
 
 	$newpic					= $statusicons['new'];	# hack for compat
-
-	if (!$x_hacks['host'] && $_GET['test'] && $x_hacks['mmdeath'] > 0) {
-		$boardtitle	= "</a><center><table align=\"center\" cellspacing=1 style=\"border: 3px double #000; background: url('numgfx/red.gif');\"><td style=\"background: #000; padding: 8px;\" align='center'><span class='font' style='font-size: 20px;'><b>Say goodbye to Mega Mario and Rom Manic!</b></span>
-		<br><br><center class='stupiddoomtimerhack'><img src='numgfx.php?n=". $x_hacks['mmdeath'] ."&f=numdeath' height=32></center></td></table></center>";
-
-	}
 
 	if ($loguser['powerlevel'] < 3) {
 		$nmcol[0][1]	= $nmcol[0][0];

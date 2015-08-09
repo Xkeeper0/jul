@@ -13,14 +13,14 @@
 	// cache bad
 	header('Cache-Control: no-cache, max-age=0, must-revalidate');
 
-	$userip=$REMOTE_ADDR;
+	$userip = $_SERVER['REMOTE_ADDR'];
 	
 	if (!($clientip    = filter_var(getenv("HTTP_CLIENT_IP"),       FILTER_VALIDATE_IP))) $clientip =    "XXXXXXXXXXXXXXXXX";
 	if (!($forwardedip = filter_var(getenv("HTTP_X_FORWARDED_FOR"), FILTER_VALIDATE_IP))) $forwardedip = "XXXXXXXXXXXXXXXXX";
 //	$clientip=(getenv("HTTP_CLIENT_IP") == "" ? "XXXXXXXXXXXXXXXXX" : getenv("HTTP_CLIENT_IP"));
 //	$forwardedip=(getenv("HTTP_X_FORWARDED_FOR") == "" ? "XXXXXXXXXXXXXXXXX" : getenv("HTTP_X_FORWARDED_FOR"));
 
-	if(!$windowtitle) $windowtitle=$boardname;
+	if(!isset($windowtitle)) $windowtitle=$boardname;
 	require 'colors.php';
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
 	$boardtitle	= "<a href='./'>$boardtitle</a>";
@@ -39,7 +39,7 @@
 	$smallfont='<font class="fonts">';
 	$tinyfont='<font class="fontt">';
 
-	foreach(array(1,2,c,h) as $celltype){
+	foreach(array('1','2','c','h') as $celltype){
 		$cell="<td class='tbl tdbg$celltype font";
 		$celln="tccell$celltype";
 		$$celln     =$cell." center'";
@@ -149,10 +149,10 @@
 			}
 			code br { display: none; }
 			input[type=radio] { color: black; background: white; }
-			". ($_GET['test'] ? "td:before, body:before {content: \"\\202E\";}" : "") ."
 		";
 	}
-	$numcols=(intval($numcols) ? intval($numcols) : 60);
+
+	$numcols=(filter_int($numcols) ? $numcols : 60);
 
 	if($formcss){
 		$numcols=80;
@@ -283,7 +283,7 @@
 
 	$views=$sql->resultq('SELECT views FROM misc')+1;
 	
-	if (!$ipbanned && !$torbanned && !IS_AJAX_REQUEST) {
+	if (!$ipbanned && !$torbanned && (!defined("IS_AJAX_REQUEST") || !IS_AJAX_REQUEST)) {
 		// Don't increment the view counter for bots
 		$sql->query("UPDATE misc SET views=$views");
 		
@@ -315,7 +315,7 @@
 	//updategb();
 
 	$new='&nbsp;';
-
+	$privatebox = "";
   // Note that we ignore this in private.php (obviously) and the index page (it handles PMs itself)
   // This box only shows up when a new PM is found, so it's optimized for that
 	if ($log && strpos($PHP_SELF, "private.php") == false && strpos($PHP_SELF, "index.php") == 0) {
@@ -329,7 +329,6 @@
 
 			$privatebox = "<tr><td colspan=3 class='tbl tdbg2 center fonts'>$newpic <a href=private.php>You have $numnew new private message$ssss</a> -- $lastmsg</td></tr>";
 		}
-		else $privatebox = "";
 	}
 
 	$jscripts = '';
@@ -367,15 +366,19 @@
 	// :shepicide:
 	$body="<body>";
 
+	if (!isset($meta)) {
+		$meta	= array();
+	}
+
   $metatag = '';
 
-	if ($meta['noindex'])
+	if (filter_bool($meta['noindex']))
 		$metatag .= "<meta name=\"robots\" content=\"noindex,follow\" />";
 
-	if ($meta['description'])
+	if (filter_bool($meta['description']))
 		$metatag .= "<meta name=\"description\" content=\"{$meta[description]}\" />";
 
-	if ($x_hacks['smallbrowse'] == 1 and false) {
+	if (filter_bool($x_hacks['smallbrowse']) and false) {
 		$css = "";
 		$css = "<link rel='stylesheet' href='/mobile.css'>";
 	}
@@ -417,7 +420,7 @@
 		return $header;
 	}
 
-	$ref=$HTTP_REFERER;
+	$ref=filter_string($_SERVER['HTTP_REFERER']);
 	$url=getenv('SCRIPT_URL');
 	
 	if(!$url) $url=str_replace('/etc/board','',getenv('SCRIPT_NAME'));
@@ -523,7 +526,7 @@ pageTracker._trackPageview();
 <br>
 	$smallfont
 	<br><br><a href=$siteurl>$sitename</a>
-	<br>$affiliatelinks	
+	<br>". filter_string($affiliatelinks) ."
 	<br>
 	<table cellpadding=0 border=0 cellspacing=2><tr>
 		<td>
