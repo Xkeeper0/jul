@@ -4,7 +4,11 @@
 	ini_set("default_charset", "ISO-8859-1");
 
 	$startingtime = microtime(true);
-	$id			= filter_int($_GET['id']);		// Awful old legacy thing.
+
+	// Awful old legacy thing. Too much code relies on register globals,
+	// and doesn't distinguish between _GET and _POST, so we have to do it here. fun
+	$id			= filter_int($_POST['id']) ? $_POST['id'] : filter_int($_GET['id']);
+
 
 	// Wait for the midnight backup to finish...
 	if ((int)date("Gi") < 5) {
