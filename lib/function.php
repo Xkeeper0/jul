@@ -34,7 +34,7 @@
 		require 'lib/firewall.php';
 	}
 
-	if ($die || $_GET['sec']) {
+	if (filter_int($die) || filter_int($_GET['sec'])) {
 		if ($die) {
 			$sql -> query("INSERT INTO `minilog` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `time` = '". ctime() ."', `banflags` = '$banflags'");
 
