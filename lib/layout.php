@@ -415,7 +415,7 @@
 	function makeheader($header1,$headlinks,$header2) {
 		global $loguser, $PHP_SELF;
 		$header	= $header1.$headlinks.$header2;
-		if (!$loguser['id'] && strpos($PHP_SELF, "index.php") !== false) {
+		if (!$loguser['id'] && strpos($PHP_SELF, "index.php") === false) {
 			$header .= adbox() ."<br>";
 		}
 		return $header;
