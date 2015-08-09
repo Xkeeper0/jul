@@ -11,7 +11,8 @@
 
 
 	// cache bad
-	header('Cache-Control: no-cache, max-age=0, must-revalidate');
+	header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
+	header('Pragma: no-cache');
 
 	$userip = $_SERVER['REMOTE_ADDR'];
 	
