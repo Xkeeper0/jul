@@ -34,7 +34,7 @@
 	$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
 
 
-	if (file_exists("lib/firewall.php") && filter_int($config_firewall)) {
+	if (file_exists("lib/firewall.php") && !filter_int($disable_firewall)) {
 		trigger_error("Loading firewall", E_USER_NOTICE);
 		require 'lib/firewall.php';
 	}
