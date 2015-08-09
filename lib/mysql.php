@@ -164,6 +164,11 @@
 			return mysql_real_escape_string($s);
 		}
 
+
+		public function set_character_encoding($s) {
+			return mysql_set_charset($s, $this->connection);
+		}
+
 		//private function __construct() {}
 
 		// Debugging shit for admins
