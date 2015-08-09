@@ -160,6 +160,10 @@
 			return $ret;
 		}
 
+		public function escape($s) {
+			return mysql_real_escape_string($s);
+		}
+
 		//private function __construct() {}
 
 		// Debugging shit for admins
