@@ -29,7 +29,7 @@
 	$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
 
 
-	if (file_exists("lib/firewall.php") && t_i($config_firewall)) {
+	if (file_exists("lib/firewall.php") && filter_int($config_firewall)) {
 		trigger_error("Loading firewall", E_USER_NOTICE);
 		require 'lib/firewall.php';
 	}
@@ -239,11 +239,21 @@
 */
 
 
-function t_i(&$v) {
+function filter_int(&$v) {
 	if (!isset($v)) {
 		return null;
 	} else {
 		$v	= intval($v);
+		return $v;
+	}
+}
+
+
+function filter_string(&$v) {
+	if (!isset($v)) {
+		return null;
+	} else {
+		$v	= (string)$v;
 		return $v;
 	}
 }
