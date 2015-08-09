@@ -38,7 +38,7 @@
 	$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
 
 
-	if (file_exists("lib/firewall.php") && !filter_int($disable_firewall)) {
+	if (file_exists("lib/firewall.php") && !filter_bool($disable_firewall)) {
 		require 'lib/firewall.php';
 
 	} else {
@@ -49,9 +49,6 @@
 			$_GET = addslashes_array($_GET);
 			$_POST = addslashes_array($_POST);
 			$_COOKIE = addslashes_array($_COOKIE);
-			$HTTP_GET_VARS = addslashes_array($HTTP_GET_VARS);
-			$HTTP_POST_VARS = addslashes_array($HTTP_POST_VARS);
-			$HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
 		}
 		if(!ini_get('register_globals')){
 			$supers=array('_ENV', '_SERVER', '_GET', '_POST', '_COOKIE',);
