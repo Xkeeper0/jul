@@ -2,6 +2,6 @@
 .old/
 board/
 xkeeper/
-
+version.txt
 lib/config.php
 lib/firewall.php

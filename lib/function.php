@@ -35,7 +35,6 @@
 
 
 	if (file_exists("lib/firewall.php") && !filter_int($disable_firewall)) {
-		trigger_error("Loading firewall", E_USER_NOTICE);
 		require 'lib/firewall.php';
 	}
 

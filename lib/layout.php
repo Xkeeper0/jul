@@ -519,9 +519,8 @@
 		</td>
 		<td>
 			{$smallfont}
-			Acmlmboard -  $verupdated b". str_pad($vernumber, 3, "0", STR_PAD_LEFT) ."
-			<br>&copy;2000-2013 Acmlm, Xkeeper, Inuyasha, et al. <!-- Acmlm, Emuz, Blades, Xkeeper
-			<br><img src=\"images/4funin1.png\" title=\"totally!\" width=448 height=48> -->
+			Acmlmboard - ". (file_exists('version.txt') ? file_get_contents("version.txt") : shell_exec("git log --format='commit %h [%ad]' --date='short' -n 1")) ."
+			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al. 
 			</font>
 		</td>
 	</tr></table>
