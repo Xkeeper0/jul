@@ -40,6 +40,24 @@
 
 	if (file_exists("lib/firewall.php") && !filter_int($disable_firewall)) {
 		require 'lib/firewall.php';
+
+	} else {
+
+		// Bad Design Decisions 2001.
+		// :(
+		if (!get_magic_quotes_gpc()) {
+			$_GET = addslashes_array($_GET);
+			$_POST = addslashes_array($_POST);
+			$_COOKIE = addslashes_array($_COOKIE);
+			$HTTP_GET_VARS = addslashes_array($HTTP_GET_VARS);
+			$HTTP_POST_VARS = addslashes_array($HTTP_POST_VARS);
+			$HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
+		}
+		if(!ini_get('register_globals')){
+			$supers=array('_ENV', '_SERVER', '_GET', '_POST', '_COOKIE',);
+			foreach($supers as $__s) if (is_array($$__s)) extract($$__s, EXTR_SKIP);
+			unset($supers);
+		}
 	}
 
 	if (filter_int($die) || filter_int($_GET['sec'])) {
