@@ -1,0 +1,11 @@
+RewriteEngine on
+
+RewriteCond %{HTTP_REFERER} twilightro\.kafuka\.org [NC]
+
+# RewriteCond %{HTTP_REFERER} twilightro\.kafuka\.org [NC,OR]
+# RewriteCond %{HTTP_REFERER} anotherbadsite\.com
+#RewriteCond %{HTTP_REFERER} inanecultgamer\.cwahi\.net [NC]
+# RewriteRule .* /images/trolldra.png
+RewriteRule .* http://jul.rustedlogic.net/images/everybody_loves_dog.jpg
+
+# RewriteRule .* http://xkeeper.net/hotlinkingshithead.png

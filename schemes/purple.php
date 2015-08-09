@@ -1,0 +1,38 @@
+<?php
+  $formcss=1;
+  $inputborder='552288';
+  $numdir='num3/';
+  $numfil='numpurple';
+  $boardtitle='<img src=images/purple/purplebanner.png>';
+  $bgimage='images/purple/darkbubblebg.jpg';
+  $newthreadpic='<img src=images/purple/newthreadpurple.png border=0>';
+  $newreplypic='<img src=images/purple/newreplypurple.png border=0>';
+  $newpollpic='<img src=images/purple/newpollpurple.png border=0>';
+  $closedpic='<img src=images/purple/threadclosedpurple.png border=0>';
+  $bgcolor='100018';
+  $textcolor='EEDDFF';
+  $linkcolor='DEDAFE';
+  $linkcolor2='CECAFE';
+  $linkcolor3='FFEEFF';
+  $linkcolor4='EEEAFE';
+  $tablebg1='200030';
+  $tablebg2='300048';
+  $categorybg='400060';
+  $tableheadtext='FFEEFF';
+  $tableheadbg='662299';
+  $tableborder='000000';
+  $scr1='A040AA';
+  $scr2='701077';
+  $scr3='400044';
+  $scr4='701077';
+  $scr5='A040AA';
+  $scr6='DDCCEE';
+  $scr7='000000';
+
+	$statusicons['new']			= '<img src=images/status-classic/new.gif>';
+	$statusicons['newhot']		= '<img src=images/status-classic/hotnew.gif>';
+	$statusicons['newoff']		= '<img src=images/status-classic/off.gif>';
+	$statusicons['newhotoff']	= '<img src=images/status-classic/hotoff.gif>';
+	$statusicons['hot']			= '<img src=images/status-classic/hot.gif>';
+	$statusicons['hotoff']		= '<img src=images/status-classic/hotoff.gif>';
+	$statusicons['off']			= '<img src=images/status-classic/off.gif>';

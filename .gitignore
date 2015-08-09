@@ -1,0 +1,7 @@
+.rem/
+.old/
+board/
+xkeeper/
+
+lib/config.php
+lib/firewall.php
