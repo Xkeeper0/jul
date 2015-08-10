@@ -1,13 +1,8 @@
 <?php
-	// dear xkeeper:
-	// removing most images and dropping the file size a good mobile site does not make
-	// cattishly yours,
-	// hydrapheetz
 
-	// dear hydrapheetz:
-	// trying to stuff a square peg (jul) into a round hole (mobile) does not a good idea make
-	// from russia with fun,
-	// xkeeper
+
+	// UTF-8 time?
+	header("Content-type: text/html; charset=utf-8');");
 
 
 	// cache bad
@@ -384,7 +379,7 @@
 		$css = "<link rel='stylesheet' href='/mobile.css'>";
 	}
 
-	$header1="<html><head><title>$windowtitle</title>
+	$header1="<html><head><meta http-equiv='Content-type' content='text/html; charset=utf-8'><title>$windowtitle</title>
 	$metatag
 	<link rel=\"shortcut icon\" href=\"/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
 	$css
