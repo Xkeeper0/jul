@@ -1,4 +1,8 @@
-<html><head><title>Ugh, seriously.</title>
+<?php
+
+	http_response_code(500);
+
+?><html><head><title>Jul is offline for now</title>
 	<link rel="shortcut icon" href="/favicon3.ico" type="image/x-icon">
 		<style>
 		a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold}
@@ -74,12 +78,13 @@
 	 <table class="table font" cellspacing=0>
 		<tr>
 			<td class='tbl tdbgh center' style="padding: 3px;"><b>
-				You are the world's shittiest boomerang.
+				Down for maintenance
 			</b></td>
 		</tr>
 	  <tr>
-		  <td class='tbl tdbg1 center' style="padding: 1em;">
-				<object width="560" height="315"><param name="movie" value="http://www.youtube.com/v/uIxNLcPyvEA?version=3&amp;hl=en_US&amp;autoplay=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/uIxNLcPyvEA?version=3&amp;hl=en_US&amp;autoplay=1" type="application/x-shockwave-flash" width="560" height="315" allowscriptaccess="always" allowfullscreen="true"></embed></object>		  </td>
+		<td class='tbl tdbg1 center' style="padding: 1em;">
+			We'll be back later.
+		</td>
 	  </tr>
 	</table>
 	</body>
