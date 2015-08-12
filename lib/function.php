@@ -1,7 +1,7 @@
 <?php
 
 	// Set this right away to hopefully prevent fuckups
-	ini_set("default_charset", "ISO-8859-1");
+	ini_set("default_charset", "UTF-8");
 
 	$startingtime = microtime(true);
 
@@ -177,7 +177,7 @@
 			$loguser['powerlevel'] = max($loguser['powerlevel'], 3);
 	}
 	else {
-		$loguserid				= NULL;
+		$loguserid				= null;
 		$loguser				= array();
 		$loguser['viewsig']		= 1;
 		$loguser['powerlevel']	= 0;
@@ -367,9 +367,11 @@ function calclvl($exp){
 
 function generatenumbergfx($num,$minlen=0,$double=false){
 	global $numdir;
-	$nw	= 8;
-	if ($double) $nw *= 2;
-	$num=strval($num);
+
+	$nw			= 8 * ($double ? 2 : 1);
+	$num		= strval($num);
+	$gfxcode	= "";
+
 	if($minlen>1 && strlen($num) < $minlen) {
 		$gfxcode = '<img src=images/_.gif width='. ($nw * ($minlen - strlen($num))) .' height='. $nw .'>';
 	}
@@ -476,22 +478,6 @@ function doreplace2($msg, $options='0|0'){
 	$smiliesoff = $options[0];
 	$htmloff = $options[1];
 
-	if ($options[2] == 37 && !$_GET['lol'] && false) {
-
-		$msg	= str_split($msg);
-		foreach($msg as $n => $letter) {
-			$y		= round(sin($n / 15) * 10);
-			$letter	= htmlspecialchars($letter);
-			$rot	= "-transform:rotate({$y}deg)";
-			$msg2	.= "<span style='position:relative;top:{$y}px;line-height:400%;-o$rot;-mos$rot;-webkit$rot;'>$letter</span>";
-		}
-
-		$msg2	= str_replace("\n\n", "<br>", $msg2);
-		$msg2	= str_replace("\n", "<br>", $msg2);
-
-		return $msg2;
-	}
-
 
 	$list = array("<", "\\\"" , "\\\\" , "\\'", "[", ":", ")", "_");
 	$list2 = array("&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
@@ -549,11 +535,16 @@ function doreplace2($msg, $options='0|0'){
 	return $msg;
 }
 function settags($text,$tags){
+
+	// @TODO: FIX THIS SHIT
+	return $text;
+
 	global $hacks;
-	if ($hacks['noposts']) {
+	if (filter_bool($hacks['noposts'])) {
 		$badtags	= array("&5000&", "&20000&", "&30000&", "&numposts&", );
 	}
 
+	$p1	= 0;
 	for($i=0;$p1<strlen($tags) and $i<100;$i++){
 		$p1+=2;
 		$p2=@strpos($tags,"\xAB\xB0",$p1) or $p2=strlen($tags);
@@ -598,6 +589,7 @@ function cmicrotime(){return microtime(true)+3*3600;}
 
 function getrank($rankset,$title,$posts,$powl){
 	global $hacks, $sql;
+	$rank	= "";
 	if ($rankset == 255) {   //special code for dots
 		if (!$hacks['noposts']) {
 			$pr[5] = 5000;
@@ -899,10 +891,12 @@ function fonlineusers($id){
 		$sql->query("UPDATE users SET lastforum=$id WHERE id=$loguserid");
 	else
 		$sql->query("UPDATE guests SET lastforum=$id WHERE ip='$userip'");
-
-	$forumname=@$sql->resultq("SELECT title FROM forums WHERE id=$id",0,0);
-	$onlinetime=ctime()-300;
-	$onusers=$sql->query("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
+	
+	$forumname		=@$sql->resultq("SELECT title FROM forums WHERE id=$id",0,0);
+	$onlinetime		=ctime()-300;
+	$onusers		=$sql->query("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
+	
+	$onlineusers	= "";
 
 	for($numon=0;$onuser=$sql->fetch($onusers);$numon++){
 		if($numon) $onlineusers.=', ';
@@ -911,12 +905,12 @@ function fonlineusers($id){
 			$onuser['name'] = pick_any($hp_hacks['prefix']) . " " . $onuser['name'];
 		} */
 
-		$namelink = getuserlink($onuser);
-		$onlineusers.='<nobr>';
-		$onuser['minipic']=str_replace('>','&gt',$onuser['minipic']);
-		if($onuser['minipic']) $onlineusers.="<img width=16 height=16 src=$onuser[minipic] align=top> ";
-		if($onuser['lastactivity']<=$onlinetime) $namelink="($namelink)";
-		$onlineusers.="$namelink</nobr>";
+		$namelink							= getuserlink($onuser);
+		$onlineusers						.='<nobr>';
+		$onuser['minipic']					=str_replace('>','&gt;',$onuser['minipic']);
+		if($onuser['minipic']) $onlineusers	.="<img width=16 height=16 src=$onuser[minipic] align=top> ";
+		if($onuser['lastactivity']			<=$onlinetime) $namelink="($namelink)";
+		$onlineusers						.="$namelink</nobr>";
 	}
 	$p = ($numon ? ':' : '.');
 	$s = ($numon != 1 ? 's' : '');
@@ -1056,8 +1050,8 @@ function sizelimitjs(){
 
 function loadtlayout(){
 	global $log,$loguser,$tlayout,$sql;
-	$tlayout    = ($loguser['layout'] ? $loguser['layout'] : 1);
-	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id=$tlayout",0,0);
+	$tlayout    = (filter_int($loguser['layout']) ? $loguser['layout'] : 1);
+	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'",0,0);
 	require "tlayouts/$layoutfile.php";
 }
 
@@ -1204,7 +1198,7 @@ function include_js($fn, $as_tag = false) {
 function dofilters($p){
 	global $hacks;
 	$temp = $p;
-	if ($_GET['t'] && false) {
+	if (filter_bool($_GET['t']) && false) {
 		$p=preg_replace("'<script(.*?)</script>'si",'',$p);
 		$p=preg_replace("'<script'si",'',$p);
 		$p=preg_replace("'\b\s(on[^=]*?=.*)\b'si",'',$p);
@@ -1242,10 +1236,6 @@ function dofilters($p){
 	//$p=preg_replace("'position\s*:\s*(absolute|fixed)'si", "display:none", $p);
 	$p=preg_replace("'position\s*:\s*fixed'si", "display:none", $p);
 
-	$p=preg_replace("'filter:alpha'si",'falpha',$p);
-	$p=preg_replace("'filter:'si",'x:',$p);
-	if (!$_GET['nofilter']) $p=preg_replace("'opacity'si",'opac&#105;ty',$p);
-	$p=preg_replace("'falpha'si",'filter:alpha',$p);
 
 	//$p=preg_replace("':awesome:'","<small>[unfunny]</small>", $p);
 
@@ -1278,7 +1268,7 @@ function dofilters($p){
 //	$p=preg_replace("'card games on motorcycles'si",'bard dames on rotorcycles',$p);
 
 	$p=str_replace("ftp://teconmoon.no-ip.org", 'about:blank', $p);
-	if ($hacks['comments']) {
+	if (filter_bool($hacks['comments'])) {
 		$p=str_replace("<!--", '<font color=#80ff80>&lt;!--', $p);
 		$p=str_replace("-->", '--&gt;</font>', $p);
 	}

@@ -372,7 +372,7 @@
 		$metatag .= "<meta name=\"robots\" content=\"noindex,follow\" />";
 
 	if (filter_bool($meta['description']))
-		$metatag .= "<meta name=\"description\" content=\"{$meta[description]}\" />";
+		$metatag .= "<meta name=\"description\" content=\"{$meta['description']}\" />";
 
 	if (filter_bool($x_hacks['smallbrowse']) and false) {
 		$css = "";

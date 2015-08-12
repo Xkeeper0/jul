@@ -11,37 +11,37 @@
     $userlink = getuserlink($post, array('id'=>'uid'), $linkclass);
     unset($postuser);
 
-		$set['userrank'] = getrank($post['useranks'],str_replace("<div", "<<z>idiot", $post[title]),$post[posts],$post[powerlevel]);
+		$set['userrank'] = getrank($post['useranks'],str_replace("<div", "<<z>idiot", $post['title']),$post['posts'],$post['powerlevel']);
 		$set['userlink'] = "<a name={$p}></a>{$userlink}";
-		$set['date']  = date($dateformat,$post[date]+$tzoff);
+		$set['date']  = date($dateformat,$post['date']+$tzoff);
 
-		if($post['location']) { $set[location]="<br>From: $post[location]"; }
+		if($post['location']) { $set['location']="<br>From: {$post['location']}"; }
 
 		if($post['picture'] || ($post['moodid'] && $post['moodurl'])){
-			$post['picture']  = str_replace('>','%3E',$post[picture]);
-			$set['userpic']   = "<img src=\"$post[picture]\">";
+			$post['picture']  = str_replace('>','%3E',$post['picture']);
+			$set['userpic']   = "<img src=\"{$post['picture']}\">";
 			$set['picture']   = $post['picture'];
 
 			if ($post['moodid'] && $post['moodurl']) {
 				$set['userpic'] = "<img src=\"". str_replace(array('$', '>'), array($post['moodid'], '%3E'), $post['moodurl']) ."\">";
 				$set['picture'] = str_replace(array('$', '>'), array($post['moodid'], '%3E'), $post['moodurl']);
 			}
-			//   $userpicture="<img src=\"$user[picture]\" name=pic$p onload=sizelimit(pic$p,60,100)>";
+			//   $userpicture="<img src=\"$user['picture']\" name=pic$p onload=sizelimit(pic$p,60,100)>";
 		}
 
 		if($post['signtext']) {
-			$post[signtext]=$sep[$loguser[signsep]].$post[signtext];
+			$post['signtext']=$sep[$loguser['signsep']].$post['signtext'];
 		}
 
 		if($pthread) { 
-			$set['threadlink'] = "<a href=thread.php?id=$pthread[id]>$pthread[title]</a>";
+			$set['threadlink'] = "<a href=thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
 		}
 
-		$post[text]=doreplace2($post[text], $post[options]);
+		$post['text']=doreplace2($post['text'], $post['options']);
 	//  if (strpos($post['text'], "http://hyperhacker.no-ip.org/b/smilies/lolface.png") || strpos($post['text'], "images/smilies/roflx.gif")) $post['text'] = "<img src=images/smilies/roflx.gif><br><br><small>(Excessive post content hidden)</small>";
 
 		if ($post['editdate']) {
-			$post['edited'] = " (last edited by $post[edited] at ".date($dateformat,$post['editdate']+$tzoff).")";
+			$post['edited'] = " (last edited by {$post['edited']} at ".date($dateformat,$post['editdate']+$tzoff).")";
 		}
 
 		$return=dofilters(postcode($post,$set));
@@ -103,13 +103,14 @@
 		}
 		$post['headtext']=doreplace2($post['headtext']);
 		$post['signtext']=doreplace2($post['signtext']);
-		//	$post[text]=doreplace2($post[text], $post[options]);
+		//	$post['text']=doreplace2($post['text'], $post['options']);
 		return $post;
 	}
 
 function syndrome($num, $double=false, $bar=true){
 	$bar	= false;
-	$a='>Affected by';
+	$a		= '>Affected by';
+	$syn	= "";
 	if($num>=75)  {  $syn="83F3A3$a 'Reinfors Syndrome'";			$last=  75; $next=  25;	}
 	if($num>=100) {  $syn="FFE323$a 'Reinfors Syndrome' +";		$last= 100; $next=  50;	}
 	if($num>=150) {  $syn="FF5353$a 'Reinfors Syndrome' ++";		$last= 150; $next=  50;	}

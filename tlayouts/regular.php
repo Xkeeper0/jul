@@ -1,84 +1,86 @@
 <?php
-  function userfields(){return 'posts,sex,powerlevel,birthday,aka,picture,moodurl,title,useranks,location,lastposttime,lastactivity,imood';}
-
-  function postcode($post,$set){
-	if ($_GET['uhoh']) die($post['id']);
-    global $tzoff, $smallfont, $ip, $quote, $edit, $dateshort, $dateformat, $tlayout, $textcolor, $numdir, $numfil, $tblstart, $hacks, $x_hacks, $loguser;
-	$tblend	= "</table>";
-	$exp=calcexp($post[posts],(ctime()-$post[regdate])/86400);
-    $lvl=calclvl($exp);
-    $expleft=calcexpleft($exp);
-    if($tlayout==1){
-	$level="Level: $lvl";
-	$poststext="Posts: ";
-	$postnum="$post[num]/";
-	$posttotal=$post[posts];
-	$experience="EXP: $exp<br>For next: $expleft";
-	$totalwidth=96;
-	$barwidth=$totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
-	if($barwidth<1) $barwidth=0;
-	if($barwidth>0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
-	if($barwidth<$totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
-	$bar="<br><img src=images/$numdir"."barleft.gif height=8>$baron$baroff<img src=images/$numdir".'barright.gif height=8>';
-    }else{
-	$level="<img src=images/$numdir"."level.gif width=36 height=8><img src=numgfx.php?n=$lvl&l=3&f=$numfil height=8>";
-	$experience="<img src=images/$numdir"."exp.gif width=20 height=8><img src=numgfx.php?n=$exp&l=5&f=$numfil height=8><br><img src=images/$numdir"."fornext.gif width=44 height=8><img src=numgfx.php?n=$expleft&l=2&f=$numfil height=8>";
-	$poststext="<img src=images/_.gif height=2><br><img src=images/$numdir"."posts.gif width=28 height=8>";
-	$postnum="<img src=numgfx.php?n=$post[num]/&l=5&f=$numfil height=8>";
-	$posttotal="<img src=numgfx.php?n=$post[posts]&f=$numfil".($post[num]?'':'&l=4')." height=8>";
-	$totalwidth=56;
-	$barwidth=$totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
-	if($barwidth<1) $barwidth=0;
-	if($barwidth>0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
-	if($barwidth<$totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
-		$bar="<br><img src=images/$numdir"."barleft.gif width=2 height=8>$baron$baroff<img src=images/$numdir".'barright.gif width=2 height=8>';
-	}
-	if(!$post[num]){
-		$postnum='';
-		if($postlayout==1) $posttotal="<img src=numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
-	}
-    if($post[icq]) $icqicon="<a href=http://wwp.icq.com/$post[icq]#pager><img src=http://wwp.icq.com/scripts/online.dll?icq=$post[icq]&img=5 border=0 width=13 height=13 align=absbottom></a>";
-    if($post[imood]) $imood="<img src=http://www.imood.com/query.cgi?email=$post[imood]&type=1&fg=$textcolor&trans=1 height=15 align=absbottom>";
-    $reinf=syndrome($post[act]);
-    if ($post[lastposttime]) $sincelastpost='Since last post: '.timeunits(ctime()-$post[lastposttime]);
-    $lastactivity='Last activity: '.timeunits(ctime()-$post[lastactivity]);
-    $since='Since: '.@date($dateshort,$post[regdate]+$tzoff);
-    $postdate=date($dateformat,$post[date]+$tzoff);
-    if($set[threadlink]) $threadlink=", in $set[threadlink]";
-
-	if($post[edited]){
-//		$set[edited].="<hr>$smallfont$post[edited]";
-	}
 	
-	$sidebars	= array(1, 3, 19, 89, 387, 45, 92, 47);
-
-	$sidebars	= array(1, 19, 89, 387, 45, 92, 47, 1420, 1090, 2100, 2069);
-
-#	$edit		.= " | <a href=\"#". $post['id'] ."\" %BZZZ%". $post['id'] .")\"><img src='http://xkeeper.net/img/soccerball.png' align='absmiddle' title='guess what this does'></a>";
-
-//	global $loguser;
-//	if ($loguser['id'] == 1 || $_GET['stupid']) {
-//		$sidebars[]	= 16;
-//	}
-
-/*
-	if ($post['noob']) {
-		$noobpos				= floor(strlen($post['name']) * 2.5);
-//		$set['userlink']	= "<div style=\"display: inline; position: relative; top: 0; left: 0;\"><img src=\"xkeeper/img/noobsticker2-". mt_rand(1,6) .".png\" style=\"position: absolute; top: -3px; left: ". $noobpos ."px;\" title=\"n00b\">". $set['userlink'] ."</div>";
-
-		$set['userlink']	= $set['userlink'] ."<br><img src=\"xkeeper/img/noobsticker2-". mt_rand(1,6) .".png\" style=\"position: relative; left: ". mt_rand(4, 23) ."px; bottom: ". mt_rand(14, 22) ."px;\" title=\"n00b\">";
+	function userfields(){
+		return 'posts,sex,powerlevel,birthday,aka,picture,moodurl,title,useranks,location,lastposttime,lastactivity,imood';
 	}
 
-	if ($loguser['powerlevel'] >= 1 && $post['date'] && $post['num']) {
-		$edit		.= " | <a href=\"editpost.php?id=". $post['id'] ."&action=noob\">". ($post['noob'] ? "de-" : "") ."n00b</a>";
-	}
+	
+	function postcode($post,$set){
+		global $tzoff, $smallfont, $ip, $quote, $edit, $dateshort, $dateformat, $tlayout, $textcolor, $numdir, $numfil, $tblstart, $hacks, $x_hacks, $loguser;
+		
+		$tblend		= "</table>";
+		$exp		= calcexp($post['posts'],(ctime()-$post['regdate']) / 86400);
+		$lvl		= calclvl($exp);
+		$expleft	= calcexpleft($exp);
+		
+		if ($tlayout == 1) {
+			$level		= "Level: $lvl";
+			$poststext	= "Posts: ";
+			$postnum	= "$post[num]/";
+			$posttotal	= $post['posts'];
+			$experience	= "EXP: $exp<br>For next: $expleft";
+			$totalwidth	= 96;
+			$barwidth	= $totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
+			
+			if ($barwidth < 1) $barwidth=0;
+			
+			if ($barwidth > 0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
+			
+			if ($barwidth < $totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
+			$bar="<br><img src=images/$numdir"."barleft.gif height=8>$baron$baroff<img src=images/$numdir".'barright.gif height=8>';
 
-	if ($post[uid] == 902 && !$x_hacks['host']) {
-		$post[signtext]	.= "<div style='width: 100%; text-align: right;'><a href='sendprivate.php?userid=902&subject=Wow, you are as dumb as a brick.'><img src='http://xkeeper.net/img/sendpm.png' style='margin-bottom: -193px; position: relative; top: -100px; right: -10px;'></a></div>";
-	}
-*/
+		} else {
+			$level		= "<img src=images/$numdir"."level.gif width=36 height=8><img src=numgfx.php?n=$lvl&l=3&f=$numfil height=8>";
+			$experience	= "<img src=images/$numdir"."exp.gif width=20 height=8><img src=numgfx.php?n=$exp&l=5&f=$numfil height=8><br><img src=images/$numdir"."fornext.gif width=44 height=8><img src=numgfx.php?n=$expleft&l=2&f=$numfil height=8>";
+			$poststext	= "<img src=images/_.gif height=2><br><img src=images/$numdir"."posts.gif width=28 height=8>";
+			$postnum	= "<img src=numgfx.php?n=$post[num]/&l=5&f=$numfil height=8>";
+			$posttotal	= "<img src=numgfx.php?n=$post[posts]&f=$numfil".($post['num']?'':'&l=4')." height=8>";
+			$totalwidth	= 56;
+			$barwidth	= $totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
+			
+			if($barwidth<1) $barwidth=0;
+			
+			if($barwidth>0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
+			
+			if($barwidth<$totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
+			$bar="<br><img src=images/$numdir"."barleft.gif width=2 height=8>$baron$baroff<img src=images/$numdir".'barright.gif width=2 height=8>';
+		}
 
-	if ($post[uid] == 1 && !$x_hacks['host'] && true) {
+		
+		if(!$post['num']){
+			$postnum	= '';
+			
+			if($postlayout==1) $posttotal="<img src=numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
+		}
+
+		
+		$reinf=syndrome($post['act']);
+		
+		if ($post['lastposttime']) {
+			$sincelastpost	= 'Since last post: '.timeunits(ctime()-$post['lastposttime']);
+		}
+		$lastactivity	= 'Last activity: '.timeunits(ctime()-$post['lastactivity']);
+		$since			= 'Since: '.@date($dateshort,$post['regdate']+$tzoff);
+		$postdate		= date($dateformat,$post['date']+$tzoff);
+		
+		$threadlink		= "";
+		if (filter_string($set['threadlink'])) {
+			$threadlink	= ", in $set[threadlink]";
+		}
+
+		$post['edited']	= filter_string($post['edited']);
+		if ($post['edited']) {
+			//		.="<hr>$smallfont$post[edited]";
+		}
+
+		$sidebars	= array(1, 3, 19, 89, 387, 45, 92, 47);
+
+		$sidebars	= array(1, 19, 89, 387, 45, 92, 47, 1420, 1090, 2100, 2069);
+
+		// Large block of user-specific hacks follows //
+
+
+	if ($post['uid'] == 1 && !$x_hacks['host'] && true) {
 
 		global $numdir;
 		$numdir_	= $numdir;
@@ -107,7 +109,7 @@
 	    <td>Posted on $postdate$threadlink$post[edited]</td>
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
-	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 	$tblend";
 	}
 
@@ -162,7 +164,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-		$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+		$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 		$tblend"; */
 
 		// non-image old version
@@ -205,12 +207,12 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-		$set[tdbg]{$dstyle} height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+		$set[tdbg]{$dstyle} height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 		$tblend";
 	}
 	// End Inu's sidebar
 
-	if (($post[uid] == 18) && !$x_hacks['host'] && $x_hacks['mmdeath'] >= 0 && !$_GET['test2']) {
+	if (($post['uid'] == 18) && !$x_hacks['host'] && $x_hacks['mmdeath'] >= 0 && !$_GET['test2']) {
 	return "
 	<table style=\"background: #f00 url('numgfx/red.gif');\" cellpadding=3 cellspacing=1>
 	$set[tdbg] style='background: #000;' rowspan=2>
@@ -228,12 +230,12 @@
 	    <td>Posted on $postdate$threadlink$post[edited]</td>
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
-	$set[tdbg] style='background: #000;' height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+	$set[tdbg] style='background: #000;' height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 	$tblend";
 	}
 
   // Default layout
-	if (!(in_array($post[uid], $sidebars) && !$x_hacks['host']) || $loguser['viewsig'] == 0) {
+	if (!(in_array($post['uid'], $sidebars) && !$x_hacks['host']) || $loguser['viewsig'] == 0) {
 	return "
 	<div style='position:relative'>
 	$tblstart
@@ -242,11 +244,11 @@
 	  $set[userrank]$reinf<br>
         $level$bar<br>
 	  $set[userpic]<br>
-	  ". ($hacks['noposts'] ? "" : "$poststext$postnum$posttotal<br>") ."
+	  ". (filter_bool($hacks['noposts']) ? "" : "$poststext$postnum$posttotal<br>") ."
 	  $experience<br><br>
-	  $since<br>".str_ireplace("&lt;br&gt;", "<br>", substr(htmlspecialchars($set[location]),10))."<br><br>
+	  $since<br>".str_ireplace("&lt;br&gt;", "<br>", substr(htmlspecialchars($set['location']),10))."<br><br>
 	  $sincelastpost<br>$lastactivity<br>
-	  $icqicon$imood</font>
+	  </font>
 	  <br><img src=images/_.gif width=200 height=1>
 	</td>
 	$set[tdbg] height=1 width=100%>
@@ -254,13 +256,13 @@
 	    <td>Posted on $postdate$threadlink$post[edited]</td>
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
-	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 	$tblend
 	</div>";
 	}
 
-  elseif ($post[uid] == "1" && !$x_hacks['host']) {
-		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=#bbbbbb> ago";
+  elseif ($post['uid'] == "1" && !$x_hacks['host']) {
+		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post['lastactivity']) ."<font color=#bbbbbb> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -286,9 +288,9 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			<td valign='top' id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			<td valign='top' id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
-	} elseif ($post[uid] == "3" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "3" && !$x_hacks['host']) {
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) .'<font color=#bb0000> ago';
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -311,13 +313,13 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
 // ************************************************************
 // SYAORAN COLIN
 // ************************************************************
-	} elseif ($post[uid] == "45" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "45" && !$x_hacks['host']) {
 
 		$fcol1			= "#204080";
 		$fcol2			= "#3070a0";
@@ -347,11 +349,11 @@
 				<td style='color: $fcol1;'>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
 
-	} elseif ($post[uid] == "47" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "47" && !$x_hacks['host']) {
 		$fcol1			= "#204080";
 		$fcol2			= "#3070a0";
 		$fcol3			= "#ffffff";
@@ -387,7 +389,7 @@
 				<td style='color: $fcol1;'>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
 		return "
@@ -407,13 +409,13 @@
 			<td>Posted on $postdate$threadlink$post[edited]</td>
 			<td width=255><nobr>$quote$edit$ip
 		  </table><tr>
-		$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+		$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 		$tblend";
 
 // ************************************************************
 // SAKURA HIRYUU
 // ************************************************************
-	} elseif ($post[uid] == "4xxxxxxxxxxx7" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "4xxxxxxxxxxx7" && !$x_hacks['host']) {
 
 		$fcol1			= "#802040";
 		$fcol2			= "#a07030";
@@ -443,14 +445,14 @@
 				<td style=\"color: $fcol1;\">Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
 
 // ************************************************************
 // REAL HIRYUU
 // ************************************************************
-	} elseif ($post[uid] == "92" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "92" && !$x_hacks['host']) {
 		$fcol1			= "#e2bbff";
 		$fcol2			= "#bb70dd";
 		$fcol3			= "#220033";
@@ -491,10 +493,10 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
-	} elseif ($post[uid] == "19" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "19" && !$x_hacks['host']) {
 		$fcol1			= "#bbbbeb";
 		$fcol2			= "#8888a8";
 		$fcol3			= "#080818 url('http://bloodstar.rustedlogic.net/layout/background.png')";
@@ -524,10 +526,10 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
-	} elseif ($post[uid] == "4" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "4" && !$x_hacks['host']) {
 		$fcol1			= "#9999cc";
 		$fcol2			= "#7777aa";
 		$fcol3			= "#000011";
@@ -556,10 +558,10 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
-	} elseif ($post[uid] == "387" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "387" && !$x_hacks['host']) {
 		if (!$x_hacks['rpgstats'][$post['uid']]) {
 			$css	= "<style> .a1{ height:100%; min-height: 286px; background:#000 url(http://acmlm.rustedlogic.net/etc/nismilly/bg.jpg) 50% 0% no-repeat; } div.a2{ height:100%; min-height: 286px; background:url(http://acmlm.rustedlogic.net/etc/nismilly/map.png) 50% 226px no-repeat; font:9px tahoma; color:#FD4; text-align:center; line-height:19px; } div.a2 img{ margin-top:-5px; border:0px; } div.a2 span{ color:#DEF; } </style>";
 			$x_hacks['rpgstats'][$post['uid']] == "lol";
@@ -587,11 +589,11 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
 
-	} elseif ($post[uid] == "89" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "89" && !$x_hacks['host']) {
 		$fcol1			= "#bbbbbb";
 		$fcol2			= "#555555";
 		$fcol3			= "#181818";
@@ -607,11 +609,11 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"background: $fcol3; padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"background: $fcol3; padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
 	
-	} elseif (($post[uid] == "16" || $post[uid] == "5") && !$x_hacks['host']) {
+	} elseif (($post['uid'] == "16" || $post['uid'] == "5") && !$x_hacks['host']) {
 
 		// top bg #614735
 		// mid-bg #e1cfb6
@@ -719,7 +721,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 /*
 <!--
@@ -750,7 +752,7 @@
 			<td>Posted on $postdate$threadlink$post[edited]</td>
 			<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+			$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 			$tblend";
  
 		return $brsidebar;
@@ -771,7 +773,7 @@
 	    <td>Posted on $postdate$threadlink$post[edited]</td>
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
-	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]$set[edited]</td>
+	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 	$tblend";
 	}
 

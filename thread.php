@@ -1,22 +1,27 @@
 <?php
+
 	require_once 'lib/function.php';
-	$id = intval($_GET['id']);
-	$user = intval($_GET['user']);
+
+	$id			= filter_int($_GET['id']);
+	$user		= filter_int($_GET['user']);
+	$gotopost	= null;
 
 	// Skip to last post/end thread
-	if ($_GET['lpt'])
+	if (filter_int($_GET['lpt'])) {
 		$gotopost = $sql->resultq("SELECT MIN(`id`) FROM `posts` WHERE `thread` = '{$id}' AND `date` > '".intval($_GET['lpt'])."'");
-	if ($_GET['end'] || ($_GET['lpt'] && !$gotopost))
+	} elseif (filter_int($_GET['end']) || (filter_int($_GET['lpt']) && !$gotopost)) {
 		$gotopost = $sql->resultq("SELECT MAX(`id`) FROM `posts` WHERE `thread` = '{$id}'");
-	if ($gotopost)
+	}
+	if ($gotopost) {
 		return header("Location: ?pid={$gotopost}#{$gotopost}");
+	}
 
 	// Poll votes
-	if ($id && ($_GET['addvote'] || $_GET['delvote'])) {
-		$option = (($_GET['addvote']) ? 'addvote' : 'delvote');
-		$choice = intval($_GET[$option]);
-
-		$pollid = $sql->resultq("SELECT poll FROM threads WHERE id='{$id}'");
+	if ($id && (filter_int($_GET['addvote']) || filter_int($_GET['delvote']))) {
+		$option	= (($_GET['addvote']) ? 'addvote' : 'delvote');
+		$choice	= filter_int($_GET[$option]);
+		
+		$pollid	= $sql->resultq("SELECT poll FROM threads WHERE id='{$id}'");
 		if (!$pollid)
 			return header("Location: ?id={$id}#{$id}");
 
@@ -38,12 +43,12 @@
 		return header("Location: ?id={$id}#{$id}");
 	}
 
-	$ppp = (($_GET['ppp']) ? intval($_GET['ppp']) : (($log) ? $loguser['postsperpage'] : 20));
-	$ppp = max(min($ppp, 500), 1);
+	$ppp	= filter_int($_GET['ppp']) ? $_GET['ppp'] : ($log ? $loguser['postsperpage'] : 20);
+	$ppp	= max(min($ppp, 500), 1);
 
-	if ($_GET['pid']) {
-		$pid = intval($_GET['pid']);
-		$id = $sql->resultq("SELECT `thread` FROM `posts` WHERE `id` = '{$pid}'");
+	if (filter_int($_GET['pid'])) {
+		$pid	= $_GET['pid'];
+		$id		= $sql->resultq("SELECT `thread` FROM `posts` WHERE `id` = '{$pid}'");
 		if (!$id) {
 			$meta['noindex'] = true; // prevent search engines from indexing
 			require_once 'lib/layout.php';
@@ -179,10 +184,9 @@
 	$fonline = "";
 	if ($id && !$thread_error) {
 		$fonline = fonlineusers($forumid);
-		if (@mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forumid and user=$loguserid")))
+		if (mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'")))
 			$ismod = true;
 	}	
-
 	$modfeats = '';
 	if ($id && $ismod) {
 		$trashid = 27;
@@ -218,6 +222,7 @@
 		$errormsgs = "<tr><td style='background:#cc0000;color:#eeeeee;text-align:center;font-weight:bold;'>$errortext</td></tr>";
 	}
 
+	$polltbl	= "";
 	if ($forum['pollstyle'] != -2 && $thread['poll']) {
 		$poll = $sql->fetchq("SELECT * FROM poll WHERE id='$thread[poll]'");
 
@@ -347,7 +352,7 @@
 	}
 	$threadforumlinks .= '</table>';
 
-	$page	= max(0, $page);
+	$page	= max(0, filter_int($page));
 	$min	= $ppp * $page;
 	
 	if ($user) $searchon = "user={$user}";
@@ -379,6 +384,9 @@
 		if ($isadmin)
 			$ip = " | IP: <a href=ipsearch.php?ip=$post[ip]>$post[ip]</a>";
 
+
+		$pforum		= null;
+		$pthread	= null;
 		if (!$id) {
 			// Enable caching for these
 			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id=$post[thread]", MYSQL_BOTH, true);
@@ -386,7 +394,7 @@
 		}
 		$post['act'] = $act[$post['user']];
 
-		if ($pforum['minpower'] <= $power or ! $pforum['minpower'])
+		if (!$pforum || $pforum['minpower'] <= $power)
 			$postlist .= threadpost($post, $bg, $pthread);
 		else
 			$postlist .=
