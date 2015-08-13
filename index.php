@@ -61,7 +61,7 @@
 		for ($numbd=0;$user=$sql->fetch($users1);$numbd++) {
 			if(!$numbd) $blist="<tr>$tccell2s colspan=5>Birthdays for ".date('F j',ctime() + $tzoff).': ';
 			else $blist.=', ';
-			$users[$user[id]]=$user;
+			$users[$user['id']]=$user;
 			$y=date('Y',ctime())-date('Y',$user['birthday']);
 			$userurl = getuserlink($user);
 			$blist.= "$userurl ($y)"; 
