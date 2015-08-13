@@ -331,10 +331,11 @@
 	if (true) { // Ikachan! :D!
 		//$ikachan = 'images/ikachan/vikingikachan.png';
 		//$ikachan = 'images/sankachan.png';
-		$ikachan = 'images/ikamad.png';
-		//$ikachan = 'images/squid.png';
+		//$ikachan = 'images/ikamad.png';
+		$ikachan = 'images/squid.png';
 
-		$ikaquote = 'Someone stole my hat!';
+		$ikaquote = 'Capturing turf before it was cool';
+		//$ikaquote = 'Someone stole my hat!';
 		//$ikaquote = 'If you don\'t like Christmas music, well... it\'s time to break out the earplugs.';
 		//$ikaquote = 'This viking helmet is stuck on my head!';
 		//$ikaquote = 'Searching for hats to wear!  If you find any, please let me know...';
