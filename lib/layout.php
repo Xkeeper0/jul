@@ -343,7 +343,7 @@
 		//$ikaquote = 'Back to being a fixture now, please stop bitching.';
 		//$ikaquote = 'I just want to let you know that you are getting coal this year. You deserve it.';
 
-		$yyy = "<img id='f_ikachan' src='$ikachan' style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"$ikaquote\">";
+		$yyy = "<img id='f_ikachan' src='$ikachan' style=\"z-index: 999999; position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"$ikaquote\">";
 	}
 
 	/*if ($_GET['w']) {
