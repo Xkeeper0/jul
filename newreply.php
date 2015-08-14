@@ -207,27 +207,6 @@
 
 		if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','$message','$tagval', '$options')");
 
-		if (in_array($id, array(3424, 3425, 3426, 3816, 4907)) && !$x_hacks['host']) {
-			$lastgmpost	= $sql -> resultq("SELECT MAX(`id`) FROM `posts` WHERE `user` = '24' AND `thread` = '$id'");
-
-			if ($id == 3424) {
-				$inarray	= "49, 203, 41, 29";
-			} elseif ($id == 3425) {
-				$inarray	= "3, 25, 14, 22";
-			} elseif ($id == 3426) {
-				$inarray	= "61, 1, 18, 555";
-			} elseif ($id == 3816) {
-				$inarray	= "4, 10, 66, 125";
-			} elseif ($id == 4907) {
-				$inarray	= "18, 19, 21, 2";
-			}
-
-			$playerposts	= $sql -> resultq("SELECT COUNT(DISTINCT `user`) FROM `posts` WHERE `user` IN ($inarray) AND `thread` = '$id' AND `id` > '$lastgmpost'");
-			if ($playerposts >= 4) $stick .= " `icon` = 'images/piticon-ok.png',";
-			else  $stick .= " `icon` = 'images/piticon-wait.png',";
-
-		}
-
 		$sql->query("UPDATE `threads` SET $close $stick `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
 		$sql->query("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` ='$userid', `lastpostid` = '$pid' WHERE `id`='$forumid'");
 
@@ -242,12 +221,6 @@
 			'pid'		=> $pid,
 			'pow'		=> $forum['minpower'],
 		));
-
-		if (in_array($id, array(3426, 4907, 6358)) && !$x_hacks['host'] && false) {
-
-			relay_vgg($id, $userid, $username, $message);
-
-		}
 
 		return header("Location: thread.php?pid=$pid#$pid");
 
