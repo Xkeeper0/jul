@@ -465,33 +465,7 @@
 		$sql->query("INSERT INTO guests (ip,date,useragent,lasturl) VALUES ('$userip',".ctime().",'".addslashes($_SERVER['HTTP_USER_AGENT']) ."','". addslashes($url) ."')");
 	}
 	
-	$honeypot	= array(
-		"<a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\"><!-- bargaining-tycoon --></a>",
-		"<a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\"><img src=\"bargaining-tycoon.gif\" height=\"1\" width=\"1\" border=\"0\"></a>",
-		"<a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\" style=\"display: none;\">bargaining-tycoon</a>",
-		"<div style=\"display: none;\"><a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\">bargaining-tycoon</a></div>",
-		"<a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\"></a>",
-		"<!-- <a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\">bargaining-tycoon</a> -->",
-		"<div style=\"position: absolute; top: -250px; left: -250px;\"><a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\">bargaining-tycoon</a></div>",
-		"<a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\"><span style=\"display: none;\">bargaining-tycoon</span></a>",
-		"<a href=\"http://xkeeper.rustedlogic.net/sweetandsour.php\"><div style=\"height: 0px; width: 0px;\"></div></a>",
-		);
 
-	$honeypot2	= array(
-		"<a href=\"http://jul.rustedlogic.net/accounting.php\"><!-- fortyfive-antelope --></a>",
-		"<a href=\"http://jul.rustedlogic.net/accounting.php\"><img src=\"images/_.gif\" height=\"1\" width=\"1\" border=\"0\" style='display: none;'></a>",
-		"<a href=\"http://jul.rustedlogic.net/accounting.php\" style=\"display: none;\">fortyfive-antelope</a>",
-		"<div style=\"display: none;\"><a href=\"http://jul.rustedlogic.net/accounting.php\">fortyfive-antelope</a></div>",
-		"<a href=\"http://jul.rustedlogic.net/accounting.php\"></a>",
-		"<!-- <a href=\"http://jul.rustedlogic.net/accounting.php\">fortyfive-antelope</a> -->",
-		"<div style=\"position: absolute; top: -250px; left: -250px;\"><a href=\"http://jul.rustedlogic.net/accounting.php\">fortyfive-antelope</a></div>",
-		"<a href=\"http://jul.rustedlogic.net/accounting.php\"><span style=\"display: none;\">fortyfive-antelope</span></a>",
-		"<a href=\"http://jul.rustedlogic.net/accounting.php\"><div style=\"height: 0px; width: 0px;\"></div></a>",
-		);
-	$honeypotl	= pick_any($honeypot);
-	$honeypotl2	= pick_any($honeypot2);
-
-	$header2	.= $honeypotl2;
 
 
 	$header=makeheader($header1,$headlinks,$header2);
@@ -521,7 +495,6 @@
 			</font>
 		</td>
 	</tr></table>
-	$honeypotl
 	". ($x_hacks['mmdeath'] >= 0 ? "<div style='position: absolute; top: -100px; left: -100px;'>Hidden preloader for doom numbers:
 		<img src='numgfx/death/0.png'> <img src='numgfx/death/1.png'> <img src='numgfx/death/2.png'> <img src='numgfx/death/3.png'> <img src='numgfx/death/4.png'> <img src='numgfx/death/5.png'> <img src='numgfx/death/6.png'> <img src='numgfx/death/7.png'> <img src='numgfx/death/8.png'> <img src='numgfx/death/9.png'>" : "") ."
 <!-- Piwik -->
