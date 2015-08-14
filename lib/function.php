@@ -466,6 +466,15 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 
 	return $msg;
 }
+
+function escape_codeblock($text) {
+	$list = array("[code]", "[/code]", "<", "\\\"" , "\\\\" , "\\'", "[", ":", ")", "_");
+	$list2 = array("", "", "&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
+
+	// @TODO why not just use htmlspecialchars() or htmlentities()
+	return "[quote]<code>". str_replace($list, $list2, $text[0]) ."</code>[/quote]";	
+}
+
 function doreplace2($msg, $options='0|0'){
 	// options will contain smiliesoff|htmloff
 	$options = explode("|", $options);
@@ -475,8 +484,7 @@ function doreplace2($msg, $options='0|0'){
 
 	$list = array("<", "\\\"" , "\\\\" , "\\'", "[", ":", ")", "_");
 	$list2 = array("&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
-	$msg=preg_replace("'\[code\](.*?)\[/code\]'sie",
-	 '\''."[quote]<code>".'\''.'.str_replace($list,$list2,\'\\1\').\'</code>[/quote]\'',$msg);
+	$msg=preg_replace_callback("'\[code\](.*?)\[/code\]'si", 'escape_codeblock',$msg);
 
 
 	if ($htmloff) {
@@ -514,8 +522,6 @@ function doreplace2($msg, $options='0|0'){
 	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img src=\\1>', $msg);
 	$msg=preg_replace("'\[url\](.*?)\[/url\]'si", '<a href=\\1>\\1</a>', $msg);
 	$msg=preg_replace("'\[url=(.*?)\](.*?)\[/url\]'si", '<a href=\\1>\\2</a>', $msg);
-	$msg=preg_replace("/\[trope\](.*?)\[\/trope\]/sie", "'<a href=\'http://tvtropes.org/pmwiki/pmwiki.php/Main/\\1\'>'.formatting_trope('\\1').'</a>'", $msg);
-	$msg=preg_replace("/\[trope=(.*?)\](.*?)\[\/trope\]/sie", "'<a href=\'http://tvtropes.org/pmwiki/pmwiki.php/Main/\\1\'>\\2</a>'", $msg);
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);
 
 	do {
