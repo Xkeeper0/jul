@@ -260,14 +260,15 @@
 	}else{
 
 		loadtlayout();
-		$message = stripslashes($message);
-		$ppost=$user;
-		$ppost['uid']=$userid;
-		$ppost['num']=$numposts;
+		$message				= stripslashes($message);
+		$ppost					= $user;
 		$ppost['posts']++;
-		$ppost['lastposttime']=$currenttime;
-		$ppost['date']=$currenttime;
-		$ppost['moodid']=$_POST['moodid'];
+		$ppost['uid']			= $userid;
+		$ppost['num']			= $numposts;
+		$ppost['lastposttime']	= $currenttime;
+		$ppost['date']			= $currenttime;
+		$ppost['moodid']		= $_POST['moodid'];
+
 		if (filter_bool($nolayout)) {
 			$ppost['headtext'] = "";
 			$ppost['signtext'] = "";
@@ -275,8 +276,9 @@
 			$ppost['headtext']=$rhead;
 			$ppost['signtext']=$rsign;
 		}
-		$ppost['text']=$message;
-		$ppost['options'] = filter_int($nosmilies) . "|" . filter_int($nohtml);
+
+		$ppost['text']		= $message;
+		$ppost['options']	= filter_int($nosmilies) . "|" . filter_int($nohtml);
 
 		if($isadmin) $ip=$userip;
 
