@@ -394,84 +394,91 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 	return $gfxcode;
 }
 
-function dotag($in,$str){
-	global $tagval,$v,$tzoff,$dateformat, $hacks, $sql;
-	if(stristr($str,$in)){
-		if($in=='/me ')		$out="*<b>$v[username]</b> ";
-		elseif($in=='&numposts&')	$out=$v[posts];
-		elseif($in=='&numdays&')	$out=floor($v[days]);
-		elseif($in=='&exp&')		$out=$v[exp];
-		elseif($in=='&postrank&')	$out=$sql->resultq("SELECT count(*) FROM users WHERE posts>$v[posts]",0,0)+1;
-		elseif($in=='&postrank10k&')	$out=$sql->resultq("SELECT count(*) FROM users WHERE posts+10000>$v[posts]",0,0)+1;
-		elseif($in=='&postrank20k&')	$out=$sql->resultq("SELECT count(*) FROM users WHERE posts+20000>$v[posts]",0,0)+1;
-		elseif($in=='&postrank30k&')	$out=$sql->resultq("SELECT count(*) FROM users WHERE posts+30000>$v[posts]",0,0)+1;
-		elseif($in=='&5000&')		$out=5000-$v[posts];
-		elseif($in=='&20000&')		$out=20000-$v[posts];
-		elseif($in=='&30000&')		$out=30000-$v[posts];
-		elseif($in=='&expdone&')	$out=$v[expdone];
-		elseif($in=='&expnext&')	$out=$v[expnext];
-		elseif($in=='&expdone1k&')	$out=floor($v[expdone]/1000);
-		elseif($in=='&expnext1k&')	$out=floor($v[expnext]/1000);
-		elseif($in=='&expdone10k&')	$out=floor($v[expdone]/10000);
-		elseif($in=='&expnext10k&')	$out=floor($v[expnext]/10000);
-		elseif($in=='&exppct&')		$out=sprintf('%01.1f',@(1-$v[expnext]/$v[lvllen])*100);
-		elseif($in=='&exppct2&')	$out=sprintf('%01.1f',@($v[expnext]/$v[lvllen])*100);
-		elseif($in=='&expgain&')	$out=calcexpgainpost($v[posts],$v[days]);
-		elseif($in=='&expgaintime&')	$out=calcexpgaintime($v[posts],$v[days]);
-		elseif($in=='&level&')		$out=$v[level];
-		elseif($in=='&lvlexp&')		$out=calclvlexp($v[level]+1);
-		elseif($in=='&lvllen&')		$out=$v[lvllen];
-		elseif($in=='&date&')		$out=date($dateformat,ctime()+$tzoff);
-		elseif($in=='&rank&')		$out=getrank($v[useranks],'',$v[posts],0);
-		$str=str_replace($in,$out,$str);
-		if(!stristr($tagval,$in)) $tagval.="\xB0\xBB$in"."\xAB\xB0$out";
+
+
+function dotags($msg, $user, &$tags = array()) {
+	global $sql, $dateformat, $tzoff;
+	if (is_string($tags)) {
+		$tags	= json_decode($tags, true);
 	}
-	return $str;
+
+	if (empty($tags)) {
+		$tags	= array(
+			'/me '			=> "*<b>". $user['username'] ."</b> ",
+			'&date&'		=> date($dateformat, ctime() + $tzoff),
+			'&numdays&'		=> floor($user['days']),
+			
+			'&numposts&'	=> $user['posts'],
+			'&rank&'		=> getrank($user['useranks'], '', $user['posts'], 0),
+			'&postrank&'	=> $sql->resultq("SELECT count(*) FROM `users` WHERE posts>$user[posts]")+1,
+			'&5000&'		=>  5000 - $user['posts'],
+			'&10000&'		=> 10000 - $user['posts'],
+			'&20000&'		=> 20000 - $user['posts'],
+			'&30000&'		=> 30000 - $user['posts'],
+			
+			'&exp&'			=> $user['exp'],
+			'&expgain&'		=> calcexpgainpost($user['posts'], $user['days']),
+			'&expgaintime&'	=> calcexpgaintime($user['posts'], $user['days']),
+
+			'&expdone&'		=> $user['expdone'],
+			'&expdone1k&'	=> floor($user['expdone'] /  1000),
+			'&expdone10k&'	=> floor($user['expdone'] / 10000),
+
+			'&expnext&'		=> $user['expnext'],
+			'&expnext1k&'	=> floor($user['expnext'] /  1000),
+			'&expnext10k&'	=> floor($user['expnext'] / 10000),
+
+			'&exppct&'		=> sprintf('%01.1f', ($user['lvllen'] ? (1 - $user['expnext'] / $user['lvllen']) : 0) * 100),
+			'&exppct2&'		=> sprintf('%01.1f', ($user['lvllen'] ? (    $user['expnext'] / $user['lvllen']) : 0) * 100),
+			
+			'&level&'		=> $user['level'],
+			'&lvlexp&'		=> calclvlexp($user['level'] + 1),
+			'&lvllen&'		=> $user['lvllen'],
+			);
+	}
+
+	$msg	= strtr($msg, $tags);
+	return $msg;
 }
-function doreplace($msg,$posts,$days,$username,$min=0){
-  global $tagval,$v,$sql;
-  $user=$sql->fetchq("SELECT * FROM users WHERE name='".addslashes($username)."'", MYSQL_BOTH, true);
-  $v[useranks]=$user[useranks];
-  $v[username]=$username;
-  $msg=dotag('/me ',$msg);
-  if(!stristr($msg,'&')) return $msg;
-  $v[posts]=$posts;
-  $v[days]=$days;
-  $v[exp]=calcexp($posts,$days);
-  $v[level]=calclvl($v[exp]);
-  $v[lvllen]=totallvlexp($v[level]);
-  $v[expdone]=$v[exp]-calclvlexp($v[level]);
-  $v[expnext]=calcexpleft($v[exp]);
-  $v[id] = $user[id];
-  $msg=dotag('&numposts&',$msg);
-  $msg=dotag('&numdays&',$msg);
-  $msg=dotag('&exp&',$msg);
-  $msg=dotag('&5000&',$msg);
-  $msg=dotag('&20000&',$msg);
-  $msg=dotag('&30000&',$msg);
-  $msg=dotag('&expdone&',$msg);
-  $msg=dotag('&expnext&',$msg);
-  $msg=dotag('&expdone1k&',$msg);
-  $msg=dotag('&expnext1k&',$msg);
-  $msg=dotag('&expdone10k&',$msg);
-  $msg=dotag('&expnext10k&',$msg);
-  $msg=dotag('&exppct&',$msg);
-  $msg=dotag('&exppct2&',$msg);
-  $msg=dotag('&expgain&',$msg);
-  $msg=dotag('&expgaintime&',$msg);
-  $msg=dotag('&level&',$msg);
-  $msg=dotag('&lvlexp&',$msg);
-  $msg=dotag('&lvllen&',$msg);
-  $msg=dotag('&date&',$msg);
-  $msg=dotag('&rank&',$msg);
-  if(!$min){
-    $msg=dotag('&postrank&',$msg);
-    $msg=dotag('&postrank10k&',$msg);
-    $msg=dotag('&postrank20k&',$msg);
-    $msg=dotag('&postrank30k&',$msg);
-  }
-  return $msg;
+
+
+function doreplace($msg, $posts, $days, $username, &$tags = null) {
+	global $tagval, $sql;
+	
+	// This should probably go off of user ID but welp
+	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", MYSQL_BOTH, true);
+
+	$userdata		= array(
+		'id'		=> $user['id'],
+		'username'	=> $username,
+		'posts'		=> $posts,
+		'days'		=> $days,
+		'useranks'	=> $user['useranks'],
+		'exp'		=> calcexp($posts,$days)
+		);
+
+	$userdata['level']		= calclvl($userdata['exp']);
+	$userdata['expdone']	= $userdata['exp'] - calclvlexp($userdata['level']);
+	$userdata['expnext']	= calcexpleft($userdata['exp']);
+	$userdata['lvllen']		= totallvlexp($userdata['level']);
+
+
+	if (!$tags) {
+		$tags	= array();
+	}
+	$msg	= dotags($msg, $userdata, $tags);
+
+	return $msg;
 }
+
+function escape_codeblock($text) {
+	$list = array("[code]", "[/code]", "<", "\\\"" , "\\\\" , "\\'", "[", ":", ")", "_");
+	$list2 = array("", "", "&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
+
+	// @TODO why not just use htmlspecialchars() or htmlentities()
+	return "[quote]<code>". str_replace($list, $list2, $text[0]) ."</code>[/quote]";	
+}
+
 function doreplace2($msg, $options='0|0'){
 	// options will contain smiliesoff|htmloff
 	$options = explode("|", $options);
@@ -481,8 +488,7 @@ function doreplace2($msg, $options='0|0'){
 
 	$list = array("<", "\\\"" , "\\\\" , "\\'", "[", ":", ")", "_");
 	$list2 = array("&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
-	$msg=preg_replace("'\[code\](.*?)\[/code\]'sie",
-	 '\''."[quote]<code>".'\''.'.str_replace($list,$list2,\'\\1\').\'</code>[/quote]\'',$msg);
+	$msg=preg_replace_callback("'\[code\](.*?)\[/code\]'si", 'escape_codeblock',$msg);
 
 
 	if ($htmloff) {
@@ -520,8 +526,6 @@ function doreplace2($msg, $options='0|0'){
 	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img src=\\1>', $msg);
 	$msg=preg_replace("'\[url\](.*?)\[/url\]'si", '<a href=\\1>\\1</a>', $msg);
 	$msg=preg_replace("'\[url=(.*?)\](.*?)\[/url\]'si", '<a href=\\1>\\2</a>', $msg);
-	$msg=preg_replace("/\[trope\](.*?)\[\/trope\]/sie", "'<a href=\'http://tvtropes.org/pmwiki/pmwiki.php/Main/\\1\'>'.formatting_trope('\\1').'</a>'", $msg);
-	$msg=preg_replace("/\[trope=(.*?)\](.*?)\[\/trope\]/sie", "'<a href=\'http://tvtropes.org/pmwiki/pmwiki.php/Main/\\1\'>\\2</a>'", $msg);
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);
 
 	do {
@@ -534,32 +538,20 @@ function doreplace2($msg, $options='0|0'){
 
 	return $msg;
 }
-function settags($text,$tags){
 
-	// @TODO: FIX THIS SHIT
-	return $text;
 
-	global $hacks;
-	if (filter_bool($hacks['noposts'])) {
-		$badtags	= array("&5000&", "&20000&", "&30000&", "&numposts&", );
+function settags($text, $tags) {
+
+	if (!$tags) {
+		return $text;
+	} else {
+		$text	= dotags($text, array(), $tags);	
 	}
 
-	$p1	= 0;
-	for($i=0;$p1<strlen($tags) and $i<100;$i++){
-		$p1+=2;
-		$p2=@strpos($tags,"\xAB\xB0",$p1) or $p2=strlen($tags);
-		$tag=substr($tags,$p1,$p2-$p1);
-		$p2+=2;
-		$p1=@strpos($tags,"\xB0\xBB",$p2) or $p1=strlen($tags);
-		$val=substr($tags,$p2,$p1-$p2);
-		if ($hacks['noposts'] && in_array($tag, $badtags)) {
-			$val	= "";
-		}
-
-		$text=str_replace($tag,$val,$text);
-	}
 	return $text;
 }
+
+
 function doforumlist($id){
 	global $fonttag,$loguser,$power,$sql;
 	$forumlinks="
@@ -635,7 +627,7 @@ function getrank($rankset,$title,$posts,$powl){
 	if($title)
 		$rank .= $title;
 	elseif (in_array($powl, $powerranks))
-		$rank .= $powerranks[$powl];
+		$rank .= filter_string($powerranks[$powl]);
 
 	return $rank;
 }
@@ -1078,6 +1070,7 @@ function moodlist($sel = 0, $return = false) {
 	if ($return) return $a;
 
 	$c[$sel]	= " checked";
+	$ret		= "";
 
 	if ($log && $loguser['moodurl'])
 		$ret = '
@@ -1101,8 +1094,8 @@ function moodlist($sel = 0, $return = false) {
 
 	foreach($a as $num => $name) {
 		$jsclick = (($log && $loguser['moodurl']) ? "onclick='avatarpreview($loguserid,$num)'" : "");
-		$ret .= "<input type='radio' name='moodid' value='$num'". $c[$num] ." id='mood$num' tabindex='". (9000 + $num) ."' style=\"height: 12px;\" $jsclick>
-             <label for='mood$num' ". $c[$sel] ." style=\"font-size: 12px;\">&nbsp;$num:&nbsp;$name</label><br>\r\n";
+		$ret .= "<input type='radio' name='moodid' value='$num'". filter_string($c[$num]) ." id='mood$num' tabindex='". (9000 + $num) ."' style=\"height: 12px;\" $jsclick>
+             <label for='mood$num' ". filter_string($c[$sel]) ." style=\"font-size: 12px;\">&nbsp;$num:&nbsp;$name</label><br>\r\n";
 	}
 
 	if (!$sel || !$log || !$loguser['moodurl'])

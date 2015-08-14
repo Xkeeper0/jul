@@ -54,7 +54,7 @@
 		}
 
 		
-		$reinf=syndrome($post['act']);
+		$reinf=syndrome(filter_int($post['act']));
 		
 		if ($post['lastposttime']) {
 			$sincelastpost	= 'Since last post: '.timeunits(ctime()-$post['lastposttime']);

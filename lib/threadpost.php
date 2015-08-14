@@ -40,7 +40,7 @@
 		$post['text']=doreplace2($post['text'], $post['options']);
 	//  if (strpos($post['text'], "http://hyperhacker.no-ip.org/b/smilies/lolface.png") || strpos($post['text'], "images/smilies/roflx.gif")) $post['text'] = "<img src=images/smilies/roflx.gif><br><br><small>(Excessive post content hidden)</small>";
 
-		if ($post['editdate']) {
+		if (filter_int($post['editdate'])) {
 			$post['edited'] = " (last edited by {$post['edited']} at ".date($dateformat,$post['editdate']+$tzoff).")";
 		}
 
@@ -79,27 +79,25 @@
 			return $post;
 		}
 
-		$post['tagval'].="\xB0\xBB";
-
 		if($loguser['viewsig']!=2){
-			if($headid=$post['headid']) {
+			if($headid=filter_int($post['headid'])) {
 				// just in case
 				if($postl[$headid] === NULL) $postl[$headid]=$sql->resultq("SELECT text FROM postlayouts WHERE id=$headid");
 				$post['headtext']=$postl[$headid];
 			}
-			if($signid=$post['signid']) {
+			if($signid=filter_int($post['signid'])) {
 				// just in case
 				if($postl[$signid] === NULL) $postl[$signid]=$sql->resultq("SELECT text FROM postlayouts WHERE id=$signid");
 				$post['signtext']=$postl[$signid];
 			}
 		}
 
-		$post['headtext']=settags($post['headtext'],$post['tagval']);
-		$post['signtext']=settags($post['signtext'],$post['tagval']);
+		$post['headtext']=settags($post['headtext'],filter_string($post['tagval']));
+		$post['signtext']=settags($post['signtext'],filter_string($post['tagval']));
 
 		if($loguser['viewsig']==2){
-			$post['headtext']=doreplace($post['headtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name'],1);
-			$post['signtext']=doreplace($post['signtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name'],1);
+			$post['headtext']=doreplace($post['headtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
+			$post['signtext']=doreplace($post['signtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
 		}
 		$post['headtext']=doreplace2($post['headtext']);
 		$post['signtext']=doreplace2($post['signtext']);
