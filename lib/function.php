@@ -67,16 +67,16 @@
 				$newid	= 0 - ctime();
 
 			if ($newid) setcookie('loguserid',$newid,2147483647);
-			
+
 		}
 
 		header("HTTP/1.1 403 Forbidden");
-		
+
 		die("<title>Error</title>
 			<body style=\"background: #000; color: #fff;\">
 				<font style=\"font-family: Verdana, sans-serif;\">
 				<center>
-				Suspicious request detected (e.g. bot or malicious tool). 
+				Suspicious request detected (e.g. bot or malicious tool).
 			");
 	}
 
@@ -194,15 +194,15 @@
 	$isadmin   = ($power>=3);
 	if($banned) $power=0;
 
-	$specialscheme = ""; 
+	$specialscheme = "";
 	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE");
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || filter_int($_GET['mobile']) == 1) {
 		$loguser['layout']		= 2;
 		$loguser['viewsig']		= 0;
 		$boardtitle				= "<span style=\"font-size: 2em;\">$boardname</span>";
-		$x_hacks['smallbrowse']	= true;	
+		$x_hacks['smallbrowse']	= true;
 	}
-	
+
 //	$atempval	= $sql -> resultq("SELECT MAX(`id`) FROM `posts`");
 //	if ($atempval == 199999 && $_SERVER['REMOTE_ADDR'] != "172.130.244.60") {
 //		//print "DBG ". strrev($atempval);
@@ -375,7 +375,7 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 	if($minlen>1 && strlen($num) < $minlen) {
 		$gfxcode = '<img src=images/_.gif width='. ($nw * ($minlen - strlen($num))) .' height='. $nw .'>';
 	}
-	
+
 	for($i=0;$i<strlen($num);$i++) {
 		$code	= $num{$i};
 		switch ($code) {
@@ -385,7 +385,7 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 		}
 		if ($code == " ") {
 			$gfxcode.="<img src=images/_.gif width=$nw height=$nw>";
-			
+
 		} else {
 			$gfxcode.="<img src=numgfx/$numdir$code.png width=$nw height=$nw>";
 
@@ -407,7 +407,7 @@ function dotags($msg, $user, &$tags = array()) {
 			'/me '			=> "*<b>". $user['username'] ."</b> ",
 			'&date&'		=> date($dateformat, ctime() + $tzoff),
 			'&numdays&'		=> floor($user['days']),
-			
+
 			'&numposts&'	=> $user['posts'],
 			'&rank&'		=> getrank($user['useranks'], '', $user['posts'], 0),
 			'&postrank&'	=> $sql->resultq("SELECT count(*) FROM `users` WHERE posts>$user[posts]")+1,
@@ -415,7 +415,7 @@ function dotags($msg, $user, &$tags = array()) {
 			'&10000&'		=> 10000 - $user['posts'],
 			'&20000&'		=> 20000 - $user['posts'],
 			'&30000&'		=> 30000 - $user['posts'],
-			
+
 			'&exp&'			=> $user['exp'],
 			'&expgain&'		=> calcexpgainpost($user['posts'], $user['days']),
 			'&expgaintime&'	=> calcexpgaintime($user['posts'], $user['days']),
@@ -430,7 +430,7 @@ function dotags($msg, $user, &$tags = array()) {
 
 			'&exppct&'		=> sprintf('%01.1f', ($user['lvllen'] ? (1 - $user['expnext'] / $user['lvllen']) : 0) * 100),
 			'&exppct2&'		=> sprintf('%01.1f', ($user['lvllen'] ? (    $user['expnext'] / $user['lvllen']) : 0) * 100),
-			
+
 			'&level&'		=> $user['level'],
 			'&lvlexp&'		=> calclvlexp($user['level'] + 1),
 			'&lvllen&'		=> $user['lvllen'],
@@ -444,7 +444,7 @@ function dotags($msg, $user, &$tags = array()) {
 
 function doreplace($msg, $posts, $days, $username, &$tags = null) {
 	global $tagval, $sql;
-	
+
 	// This should probably go off of user ID but welp
 	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", MYSQL_BOTH, true);
 
@@ -476,7 +476,7 @@ function escape_codeblock($text) {
 	$list2 = array("", "", "&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
 
 	// @TODO why not just use htmlspecialchars() or htmlentities()
-	return "[quote]<code>". str_replace($list, $list2, $text[0]) ."</code>[/quote]";	
+	return "[quote]<code>". str_replace($list, $list2, $text[0]) ."</code>[/quote]";
 }
 
 function doreplace2($msg, $options='0|0'){
@@ -529,7 +529,7 @@ function doreplace2($msg, $options='0|0'){
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);
 
 	do {
-		$msg	= preg_replace("/<(\/?)t(able|h|r|d)(.*?)>(\s+?)<(\/?)t(able|h|r|d)(.*?)>/si", 
+		$msg	= preg_replace("/<(\/?)t(able|h|r|d)(.*?)>(\s+?)<(\/?)t(able|h|r|d)(.*?)>/si",
 				"<\\1t\\2\\3><\\5t\\6\\7>", $msg, -1, $replaced);
 	} while ($replaced >= 1);
 
@@ -545,7 +545,7 @@ function settags($text, $tags) {
 	if (!$tags) {
 		return $text;
 	} else {
-		$text	= dotags($text, array(), $tags);	
+		$text	= dotags($text, array(), $tags);
 	}
 
 	return $text;
@@ -779,7 +779,7 @@ function getnamecolor($sex, $powl, $prefix = true){
 	$powl = min(3, $powl);
 
 	$namecolor = (($prefix) ? 'color=' : '');
-	
+
 	if ($powl < 0) // always dull drab banned gray.
 		$namecolor .= $nmcol[0][$powl];
 
@@ -883,11 +883,11 @@ function fonlineusers($id){
 		$sql->query("UPDATE users SET lastforum=$id WHERE id=$loguserid");
 	else
 		$sql->query("UPDATE guests SET lastforum=$id WHERE ip='$userip'");
-	
+
 	$forumname		=@$sql->resultq("SELECT title FROM forums WHERE id=$id",0,0);
 	$onlinetime		=ctime()-300;
 	$onusers		=$sql->query("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
-	
+
 	$onlineusers	= "";
 
 	for($numon=0;$onuser=$sql->fetch($onusers);$numon++){
@@ -915,7 +915,7 @@ function fonlineusers($id){
 $jspcount = 0;
 function jspageexpand($start, $end) {
 	global $jspcount;
-	
+
 	if (!$jspcount) {
 		echo '
 			<script type="text/javascript">
@@ -923,11 +923,11 @@ function jspageexpand($start, $end) {
 				{
 					var elem = document.getElementById(uid);
 					var res = "";
-				}				
+				}
 			</script>
 		';
 	}
-	
+
 	$entityid = "expand" . ++$jspcount;
 
 	$js = "#todo";
@@ -1187,7 +1187,7 @@ function include_js($fn, $as_tag = false) {
 	}
 }
 
-		
+
 function dofilters($p){
 	global $hacks;
 	$temp = $p;
@@ -1216,7 +1216,7 @@ function dofilters($p){
 		$p=preg_replace("'onmouseout'si",'onmou<z>seout',$p);
 		$p=preg_replace("'onmouseover'si",'onmo<z>useover',$p);
 		$p=preg_replace("'onmouseup'si",'onmou<z>seup',$p);
-		
+
 		if ($temp != $p) {
 			nuke_js($temp, $p);
 		}
@@ -1339,7 +1339,7 @@ function addslashes_array($data) {
 //			global $sql;
 //			$res	= $sql -> resultq("SELECT COUNT(`id`) FROM `posts`");
 			$out	= "$dest|New $type by ". xk(11) . $user . xk() ." (". xk(12) . $in['forum'] .": ". xk(11) . $in['thread'] . xk() ."): http://jul.rustedlogic.net/?p=". $in['pid'];
-			
+
 		}
 
 		xk_ircsend($out);
@@ -1349,7 +1349,7 @@ function addslashes_array($data) {
 		$str = str_replace(array("%10", "%13"), array("", ""), rawurlencode($str));
 
 		$str = html_entity_decode($str);
-		
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "http://treeki.rustedlogic.net:5000/reporting.php?t=$str");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1360,7 +1360,7 @@ function addslashes_array($data) {
 
 		return true;
 	}
-	
+
 	function xk($n = -1) {
 		if ($n == -1) $k = "";
 			else $k = str_pad($n, 2, 0, STR_PAD_LEFT);
@@ -1371,7 +1371,7 @@ function addslashes_array($data) {
 		$in		= "/[A-Z][^A-Z]/";
 		$out	= " \\0";
 		$output	= preg_replace($in, $out, $input);
-		
+
 		return trim($output);
 	}
 
@@ -1382,7 +1382,7 @@ function addslashes_array($data) {
 		// We only need to do the replacing one time
 		static $bl;
 		if ($bl) return $bl;
-		
+
 		$bl = $dateformat;
 		$bl = preg_replace('/[jNwzWnLgGI]/',	'-',      $bl);
 		$bl = preg_replace('/[dSmtyaAhHis]/',	'--',     $bl);
@@ -1416,7 +1416,7 @@ function addslashes_array($data) {
 	function numrange($n, $lo, $hi) {
 		return max(min($hi, $n), $lo);
 	}
-	
+
 	function marqueeshit($str) {
 		return "<marquee scrollamount='". mt_rand(1, 50) ."' scrolldelay='". mt_rand(1, 50) ."' direction='". pick_any(array("left", "right")) ."'>$str</marquee>";
 	}
@@ -1517,13 +1517,13 @@ function gethttpheaders() {
 
 function printtimedif($timestart){
 	global $x_hacks, $sql, $sqldebuggers, $smallfont;
-	
+
 	$exectime = microtime(true) - $timestart;
 
 	$qseconds = sprintf("%01.6f", mysql::$time);
 	$sseconds = sprintf("%01.6f", $exectime - mysql::$time);
 	$tseconds = sprintf("%01.6f", $exectime);
-  
+
 	$queries = mysql::$queries;
 	$cache = mysql::$cachehits;
 
