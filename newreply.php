@@ -53,8 +53,7 @@
 	$header	= "$header
 		$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]<form action=newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
 
-	if($log) activitycheck($loguserid);
-  // Post preview
+	// Post preview
 	if (($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
 		$postlist="<tr>$tccellh colspan=2 style=\"font-weight:bold;\">Thread history</tr><tr>$tccellh width=150>User</td>$tccellh width=*>Post</tr>";
 		$qppp = $ppp + 1;
@@ -150,22 +149,12 @@
 		else
 			$userid = checkuser($username,$password);
 
-/*
-	if (stripos($message, "i hate metal man!!") !== false) {
-		xk_ircsend("1|". xk(4) ."NO BONUS!". xk() ." Seems that ". xk(11) ."'$username'". xk() ." is another rereg, so I've banned his account (". xk(11) ."$userid". xk() .") and IP (". xk(11) ."$userip". xk() .").");
-		$sql -> query("UPDATE `users` SET `power` = '-1', `title` = 'Get out.' WHERE `id` = '$userid'");
-		$sql -> query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'NO BONUS'");
-		die("Winners don't do drugs!");
-	}
-*/
 
 	$error='';
 	if($userid==-1)
 		$error="Either you didn't enter an existing username, or you haven't entered the right password for the username.";
 	else{
 	$user=@$sql->fetchq("SELECT * FROM users WHERE id=$userid");
-//      if($thread['lastposter']==$userid && $user['powerlevel']<=2)
-//        $error='You already have the last reply in this thread.';
 		if($thread['closed'])
 		$error='The thread is closed and no more replies can be posted.';
 		if($user['powerlevel']<$forum['minpowerreply'])
@@ -175,7 +164,6 @@
 	}
 
 	if (!$error) {
-	activitycheck($userid);
 
 	$sign	=$user['signature'];
 	$head	=$user['postheader'];
@@ -341,14 +329,4 @@
 
   print $footer;
   printtimedif($startingtime);
-
-function activitycheck($userid){
-  global $id,$thread,$header,$tblstart,$tccell1,$tblend,$footer,$loguser,$sql;
-  $activity=$sql->resultq("SELECT count(*) FROM posts WHERE user=$userid AND thread=$id AND date>".(ctime()-86400),0,0);
-//  if($activity>=(stristr($thread['title'],'ACS ')?5:5000))
-//    die("$tblstart$tccell1>You have posted enough in this thread today. Come back later!$tblend$footer");
-  $activity=$sql->resultq("SELECT count(*) FROM posts WHERE user=$userid AND date>".(ctime()-300),0,0);
-		if($activity && $userid == 1079)
-			die("$header$tblstart$tccell1>You can only post once every five minutes! Make it count!$tblend$footer");
-}
 
