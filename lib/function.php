@@ -1070,6 +1070,7 @@ function moodlist($sel = 0, $return = false) {
 	if ($return) return $a;
 
 	$c[$sel]	= " checked";
+	$ret		= "";
 
 	if ($log && $loguser['moodurl'])
 		$ret = '
@@ -1093,8 +1094,8 @@ function moodlist($sel = 0, $return = false) {
 
 	foreach($a as $num => $name) {
 		$jsclick = (($log && $loguser['moodurl']) ? "onclick='avatarpreview($loguserid,$num)'" : "");
-		$ret .= "<input type='radio' name='moodid' value='$num'". $c[$num] ." id='mood$num' tabindex='". (9000 + $num) ."' style=\"height: 12px;\" $jsclick>
-             <label for='mood$num' ". $c[$sel] ." style=\"font-size: 12px;\">&nbsp;$num:&nbsp;$name</label><br>\r\n";
+		$ret .= "<input type='radio' name='moodid' value='$num'". filter_string($c[$num]) ." id='mood$num' tabindex='". (9000 + $num) ."' style=\"height: 12px;\" $jsclick>
+             <label for='mood$num' ". filter_string($c[$sel]) ." style=\"font-size: 12px;\">&nbsp;$num:&nbsp;$name</label><br>\r\n";
 	}
 
 	if (!$sel || !$log || !$loguser['moodurl'])
