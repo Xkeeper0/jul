@@ -79,8 +79,6 @@
 			return $post;
 		}
 
-		$post['tagval'].="\xB0\xBB";
-
 		if($loguser['viewsig']!=2){
 			if($headid=$post['headid']) {
 				// just in case
@@ -98,8 +96,8 @@
 		$post['signtext']=settags($post['signtext'],$post['tagval']);
 
 		if($loguser['viewsig']==2){
-			$post['headtext']=doreplace($post['headtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name'],1);
-			$post['signtext']=doreplace($post['signtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name'],1);
+			$post['headtext']=doreplace($post['headtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
+			$post['signtext']=doreplace($post['signtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
 		}
 		$post['headtext']=doreplace2($post['headtext']);
 		$post['signtext']=doreplace2($post['signtext']);

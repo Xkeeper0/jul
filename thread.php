@@ -392,7 +392,8 @@
 			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id=$post[thread]", MYSQL_BOTH, true);
 			$pforum  = $sql->fetchq("SELECT minpower FROM forums WHERE id=".intval($pthread[forum]), MYSQL_BOTH, true);
 		}
-		$post['act'] = $act[$post['user']];
+		
+		$post['act'] = filter_int($act[$post['user']]);
 
 		if (!$pforum || $pforum['minpower'] <= $power)
 			$postlist .= threadpost($post, $bg, $pthread);

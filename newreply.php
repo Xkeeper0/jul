@@ -180,7 +180,9 @@
 	$numposts=$user[posts]+ 1;
 
 	$numdays=(ctime()-$user[regdate])/86400;
-	$message=doreplace($message,$numposts,$numdays,$username);
+	$tags	= array();
+	$message=doreplace($message,$numposts,$numdays,$username, $tags);
+	$tagval	= $sql->escape(json_encode($tags));
 	$rsign=doreplace($sign,$numposts,$numdays,$username);
 	$rhead=doreplace($head,$numposts,$numdays,$username);
 	$currenttime=ctime();

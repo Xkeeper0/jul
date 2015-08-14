@@ -200,9 +200,11 @@
 
 			$numposts = $user[posts] + 1;
 			$numdays = (ctime()-$user[regdate])/86400;
-			$msg = doreplace($msg, $numposts, $numdays, $username);
+			$tags	= array();
+			$msg = doreplace($msg, $numposts, $numdays, $username, $tags);
 			$rsign = doreplace($sign, $numposts, $numdays, $username);
 			$rhead = doreplace($head, $numposts, $numdays, $username);
+			$tagval	= $sql->escape(json_encode($tags));
 			$posticons = file('posticons.dat');
 			$posticon = $posticons[$iconid];
 			$currenttime = ctime();
