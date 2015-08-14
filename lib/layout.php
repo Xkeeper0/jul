@@ -527,20 +527,15 @@ piwikTracker.enableLinkTracking();
 		You are banned from this board.
 		<br>". $reason ."
 		<br>
-		<br>Contact info:
-		<br>AIM: XkeeperNaN
+		<br>If you think you have been banned in error, please contact the administrator:
 		<br>E-mail: xkeeper@gmail.com
-		<br>MSN: xkeeper6@yahoo.com
 		$tblend$footer");
 	}
 	if($torbanned) die("$header<br>$tblstart$tccell1>
-	You appear to be using a Tor proxy. For added security, Tor is banned from this board.
+	You appear to be using a Tor proxy. Due to abuse, Tor usage is forbidden.
 	<br>If you have been banned in error, please contact Xkeeper.
 	<br>
-	<br>Contact info: 
-	<br>AIM: XkeeperNaN
 	<br>E-mail: xkeeper@gmail.com
-	<br>MSN: xkeeper6@yahoo.com
 	$tblend$footer");
 
 
