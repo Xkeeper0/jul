@@ -396,7 +396,8 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 
 
 
-function dotags($msg, &$tags) {
+function dotags($msg, $user, &$tags = array()) {
+	global $sql, $dateformat, $tzoff;
 	if (is_string($tags)) {
 		$tags	= json_decode($tags, true);
 	}
@@ -446,23 +447,26 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 	
 	// This should probably go off of user ID but welp
 	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", MYSQL_BOTH, true);
+
 	$userdata		= array(
 		'id'		=> $user['id'],
 		'username'	=> $username,
 		'posts'		=> $posts,
 		'days'		=> $days,
 		'useranks'	=> $user['useranks'],
-		'exp'		=> calcexp($posts,$days),
-		'expdone'	=> $v['exp']-calclvlexp($v['level']),
-		'expnext'	=> calcexpleft($v['exp']),
-		'level'		=> calclvl($v['exp']),
-		'lvllen'	=> totallvlexp($v['level']),
+		'exp'		=> calcexp($posts,$days)
 		);
+
+	$userdata['level']		= calclvl($userdata['exp']);
+	$userdata['expdone']	= $userdata['exp'] - calclvlexp($userdata['level']);
+	$userdata['expnext']	= calcexpleft($userdata['exp']);
+	$userdata['lvllen']		= totallvlexp($userdata['level']);
+
 
 	if (!$tags) {
 		$tags	= array();
 	}
-	$msg	= dotags($msg, $tags);
+	$msg	= dotags($msg, $userdata, $tags);
 
 	return $msg;
 }
@@ -541,7 +545,7 @@ function settags($text, $tags) {
 	if (!$tags) {
 		return $text;
 	} else {
-		$text	= dotags($text, $tags);	
+		$text	= dotags($text, array(), $tags);	
 	}
 
 	return $text;
@@ -623,7 +627,7 @@ function getrank($rankset,$title,$posts,$powl){
 	if($title)
 		$rank .= $title;
 	elseif (in_array($powl, $powerranks))
-		$rank .= $powerranks[$powl];
+		$rank .= filter_string($powerranks[$powl]);
 
 	return $rank;
 }

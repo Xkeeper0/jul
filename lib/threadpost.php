@@ -92,8 +92,8 @@
 			}
 		}
 
-		$post['headtext']=settags($post['headtext'],$post['tagval']);
-		$post['signtext']=settags($post['signtext'],$post['tagval']);
+		$post['headtext']=settags($post['headtext'],filter_string($post['tagval']));
+		$post['signtext']=settags($post['signtext'],filter_string($post['tagval']));
 
 		if($loguser['viewsig']==2){
 			$post['headtext']=doreplace($post['headtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
