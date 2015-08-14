@@ -266,7 +266,7 @@
 				<FORM ACTION=newreply.php NAME=REPLIER METHOD=POST>
 				$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
 				$tccell1><b>Reply:</td>
-				$tccell2l width=800px valign=top>$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($message, ENT_QUOTES, "ISO-8859-1") ."</TEXTAREA></td>
+				$tccell2l width=800px valign=top>$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($message, ENT_QUOTES) ."</TEXTAREA></td>
 				$tccell2l width=*>".moodlist($moodid)."</td><tr>
 				$tccell1>&nbsp</td>$tccell2l colspan=2>
 				$inps=submit VALUE=\"Submit reply\">

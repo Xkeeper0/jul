@@ -756,7 +756,7 @@ function getuserlink(&$u, $substitutions = null, $urlclass = '') {
 	$alsoKnownAs = (($u[$fn['aka']] && $u[$fn['aka']] != $u[$fn['name']])
 		? " title='Also known as: {$akafield}'" : '');
 
-	$u[$fn['name']] = htmlspecialchars($u[$fn['name']], ENT_QUOTES, "ISO-8859-1");
+	$u[$fn['name']] = htmlspecialchars($u[$fn['name']], ENT_QUOTES);
 
 	global $tzoff;
 	$birthday = (date('m-d', $u[$fn['birthday']]) == date('m-d',ctime() + $tzoff));
