@@ -192,13 +192,13 @@
 				}
 
 
-				$close	= "";
-				$stick	= "";
+				$closeq	= "";
+				$stickq	= "";
 				if ($ismod) {
-					if ($close) $close = "`closed` = '1',";
-						else $close = "`closed` = '0',";
-					if ($stick) $stick = "`sticky` = '1',";
-						else $stick = "`sticky` = '0',";
+					if (filter_bool($_POST['close'])) $closeq = "`closed` = '1',";
+						else $closeq = "`closed` = '0',";
+					if (filter_bool($_POST['stick'])) $stickq = "`sticky` = '1',";
+						else $stickq = "`sticky` = '0',";
 				}
 
 				$sql->query("INSERT INTO posts (thread,user,date,ip,num,headid,signid,moodid) VALUES ($id,$userid,$currenttime,'$userip',$numposts,$headid,$signid,'". $_POST['moodid'] ."')");
@@ -208,7 +208,7 @@
 
 				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','$message','$tagval', '$options')");
 
-				$sql->query("UPDATE `threads` SET $close $stick `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
+				$sql->query("UPDATE `threads` SET $closeq $stickq `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
 				$sql->query("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` ='$userid', `lastpostid` = '$pid' WHERE `id`='$forumid'");
 
 				$sql->query("UPDATE `threadsread` SET `read` = '0' WHERE `tid` = '$id'");
