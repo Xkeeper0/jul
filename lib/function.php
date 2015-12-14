@@ -1438,6 +1438,10 @@ function addslashes_array($data) {
 
 
 function adbox() {
+
+	// no longer needed. RIP
+	return "";
+
 	global $loguser, $bgcolor, $linkcolor;
 
 /*
