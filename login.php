@@ -50,7 +50,7 @@
 				$msg = "Couldn't login.  Either you didn't enter an existing username, or you haven't entered the right password for the username.";
 			}
 		}
-		$txt.="$tccell1>$msg<br>".redirect('index.php','return to the board',0);
+		$txt.="$tccell1>$msg<br>".redirect('index.php','the board',0);
 	}
 	elseif ($_POST['action']=='logout') {
 		setcookie('loguserid','', time()-3600, "/", $_SERVER['SERVER_NAME'], false, true);
@@ -58,7 +58,7 @@
 
 		// May as well unset this as well
 		setcookie('logpassword','', time()-3600, "/", $_SERVER['SERVER_NAME'], false, true);
-		$txt.="$tccell1> You are now logged out.<br>".redirect('index.php','return to the board',0);
+		$txt.="$tccell1> You are now logged out.<br>".redirect('index.php','the board',0);
 	}
 	elseif (!$_POST['action']) {
 		$ipaddr = explode('.', $_SERVER['REMOTE_ADDR']);
