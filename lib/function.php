@@ -402,6 +402,12 @@ function dotags($msg, $user, &$tags = array()) {
 		$tags	= json_decode($tags, true);
 	}
 
+	if (empty($tags) && empty($user)) {
+		// settags sent us here and we have nothing to go off of.
+		// Shrug our shoulders, and move on.
+		return $msg;
+	}
+
 	if (empty($tags)) {
 		$tags	= array(
 			'/me '			=> "*<b>". $user['username'] ."</b> ",
