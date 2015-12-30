@@ -7,8 +7,11 @@
 
 	// Awful old legacy thing. Too much code relies on register globals,
 	// and doesn't distinguish between _GET and _POST, so we have to do it here. fun
-	$id			= filter_int($_POST['id']) ? $_POST['id'] : filter_int($_GET['id']);
-
+	$id = filter_int($_POST['id']);
+	if ($id === null)
+		$id = filter_int($_GET['id']);
+	if ($id === null)
+		$id = 0;
 
 	// Wait for the midnight backup to finish...
 	if ((int)date("Gi") < 5) {
