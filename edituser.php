@@ -101,11 +101,19 @@
 	print "
 		<br>
 			$tblstart
-			<FORM ACTION=edituser.php NAME=REPLIER METHOD=POST autocomplete=off>
+			<FORM ACTION=edituser.php NAME=REPLIER METHOD=POST autocomplete=\"off\">
+
 				$hlft Login information $hrgt
-				$lft User name		$rgt$inpt=username VALUE=\"$user[name]\" SIZE=25 MAXLENGTH=25 autocomplete=off>
-				$lft Also known as		$rgt$inpt=aka VALUE=\"$user[aka]\" SIZE=25 MAXLENGTH=25 autocomplete=off>
-				$lft Password		$rgt$inpp=password VALUE=\"\" SIZE=13 MAXLENGTH=64 autocomplete=off>
+				$lft User name		$rgt$inpt=username VALUE=\"$user[name]\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
+				$lft Also known as		$rgt$inpt=aka VALUE=\"$user[aka]\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
+
+				<!-- Hack around autocomplete, fake inputs (don't use these in the file) 
+				Web browsers think they're smarter than the web designer, so they ignore demands to not use autocomplete.
+				This is STUPID AS FUCK when you're working on another user, and not YOURSELF. -->
+				<input style=\"display:none;\" type=\"text\"     name=\"__f__usernm__\">
+				<input style=\"display:none;\" type=\"password\" name=\"__f__passwd__\">
+
+				$lft Password		$rgt$inpp=password VALUE=\"\" SIZE=13 MAXLENGTH=64 autocomplete=\"new-password\">
 
 				$hlft Administrative bells and whistles $hrgt
 				$lft Power level		$rgt$levellist

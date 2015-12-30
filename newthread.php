@@ -147,6 +147,11 @@
 				$tccell1><b>{$passhint}</td> $tccell2l colspan=2>
 					{$altloginjs}
 					<b>Username:</b> $inpt=username VALUE=\"".htmlspecialchars($username)."\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
+
+					<!-- Hack around autocomplete, fake inputs (don't use these in the file) -->
+					<input style=\"display:none;\" type=\"text\"     name=\"__f__usernm__\">
+					<input style=\"display:none;\" type=\"password\" name=\"__f__passwd__\">
+
 					<b>Password:</b> $inpp=password SIZE=13 MAXLENGTH=64 autocomplete=\"off\">
 				</span><tr>";
 			print $form;
