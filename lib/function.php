@@ -1277,7 +1277,7 @@ function dofilters($p){
 //	$p=preg_replace("'<style'si",'&lt;style',$p);
 
 
-	$p=preg_replace("'%BZZZ%'si",'onclick="bzzz(',$p);
+	//$p=preg_replace("'%BZZZ%'si",'onclick="bzzz(',$p);
 
 	$p=preg_replace("'document.cookie'si",'document.co<z>okie',$p);
 	$p=preg_replace("'eval'si",'eva<z>l',$p);
