@@ -528,8 +528,8 @@ function doreplace2($msg, $options='0|0'){
 	$msg=str_replace('[/quote]','<hr></blockquote>',$msg);
 	$msg=preg_replace("'\[sp=(.*?)\](.*?)\[/sp\]'si", '<span style="border-bottom: 1px dotted #f00;" title="did you mean: \\1">\\2</span>', $msg);
 	$msg=preg_replace("'\[abbr=(.*?)\](.*?)\[/abbr\]'si", '<span style="border-bottom: 1px dotted;" title="\\1">\\2</span>', $msg);
-	$msg=str_replace('[spoiler]','<div style=color:black;background:black class=fonts><font color=white><b>Spoiler:</b></font><br>',$msg);
-	$msg=str_replace('[/spoiler]','</div>',$msg);
+	$msg=str_replace('[spoiler]','<font class="fonts pstspl2"><b>Spoiler:</b><div class="pstspl1">',$msg);
+	$msg=str_replace('[/spoiler]','</div></font>',$msg);
 	$msg=preg_replace("'\[(b|i|u|s)\]'si",'<\\1>',$msg);
 	$msg=preg_replace("'\[/(b|i|u|s)\]'si",'</\\1>',$msg);
 	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img src=\\1>', $msg);
