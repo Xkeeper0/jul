@@ -145,6 +145,10 @@
 			}
 			code br { display: none; }
 			input[type=radio] { color: black; background: white; }
+			
+			.pstspl1 {opacity:0;}
+			.pstspl1:hover {opacity:1;}
+			.pstspl2 {background:#000;color:#FFF;display:block;}
 		";
 	}
 
