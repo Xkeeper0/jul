@@ -38,7 +38,7 @@ print "		<tr>$tccell2>";
 	
 print "
 	
-	<iframe src=\"https://kiwiirc.com/client/". $servers[$server] ."/?nick=". $name ."|?#tcrf\" style=\"border:0;width:100%;height:500px;\"></iframe>";
+	<iframe src=\"https://kiwiirc.com/client/". $servers[$server] ."/?nick=". $name ."|?#tcrf,#x\" style=\"border:0;width:100%;height:500px;\"></iframe>";
 
 	} else {
 
