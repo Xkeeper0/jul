@@ -1,5 +1,5 @@
 <?php
-  $boardtitle='<img src="http://jul.rustedlogic.net/xkeeper/img/pointlessbannerv2.png">';
+  $boardtitle='<img src="images/pointlessbannerv2.png">';
   $newthreadpic='New thread';
   $newreplypic='New reply';
   $bgimage='images/desolation/desolation.jpg';
