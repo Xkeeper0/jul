@@ -74,8 +74,11 @@
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
 		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
-		$dateformat = "m/d/y h:i";
-		$dateshort  = "m/d/y";
+		// possibly causes issue #19 - not sure why this was here
+		// likely irrelevant after addition of custom date formats
+		// (remove this later)
+		//$dateformat = "m/d/y h:i";
+		//$dateshort  = "m/d/y";
 		
 		// backwards compat
 		global $bgcolor, $linkcolor;
