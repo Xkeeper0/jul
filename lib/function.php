@@ -1342,12 +1342,12 @@ function addslashes_array($data) {
 				$extra	= " (". xk($color[1]) ."Password matches: ". xk($color[0]) . $in['pmatch'] . xk() .")";
 			}
 
-			$out	= "1|New user: #". xk(12) . $in['id'] . xk(11) ." $user ". xk() ."(IP: ". xk(12) . $in['ip'] . xk() .")$extra: http://jul.rustedlogic.net/?u=". $in['id'];
+			$out	= "1|New user: #". xk(12) . $in['id'] . xk(11) ." $user ". xk() ."(IP: ". xk(12) . $in['ip'] . xk() .")$extra: https://jul.rustedlogic.net/?u=". $in['id'];
 
 		} else {
 //			global $sql;
 //			$res	= $sql -> resultq("SELECT COUNT(`id`) FROM `posts`");
-			$out	= "$dest|New $type by ". xk(11) . $user . xk() ." (". xk(12) . $in['forum'] .": ". xk(11) . $in['thread'] . xk() ."): http://jul.rustedlogic.net/?p=". $in['pid'];
+			$out	= "$dest|New $type by ". xk(11) . $user . xk() ." (". xk(12) . $in['forum'] .": ". xk(11) . $in['thread'] . xk() ."): https://jul.rustedlogic.net/?p=". $in['pid'];
 
 		}
 
