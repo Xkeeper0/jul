@@ -11,7 +11,7 @@
 	$numcols		= 100;		# Width of text entry, just use css extra again
 
 	# Banner; comment for default
-	$boardtitle		= '<img src="http://jul.rustedlogic.net/xkeeper/img/pointlessbannerv2-2.png" title="Illegal in 10 states!">';
+	$boardtitle		= '<img src="images/pointlessbannerv2-2.png" title="Illegal in 10 states!">';
 
 	# Page background color, background image, and text color
 	$bgcolor		= '000810';

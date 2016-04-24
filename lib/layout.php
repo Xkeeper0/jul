@@ -74,8 +74,11 @@
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
 		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
-		$dateformat = "m/d/y h:i";
-		$dateshort  = "m/d/y";
+		// possibly causes issue #19 - not sure why this was here
+		// likely irrelevant after addition of custom date formats
+		// (remove this later)
+		//$dateformat = "m/d/y h:i";
+		//$dateshort  = "m/d/y";
 		
 		// backwards compat
 		global $bgcolor, $linkcolor;
@@ -145,6 +148,10 @@
 			}
 			code br { display: none; }
 			input[type=radio] { color: black; background: white; }
+			
+			.pstspl1 {opacity:0;}
+			.pstspl1:hover {opacity:1;}
+			.pstspl2 {background:#000;color:#FFF;display:block;}
 		";
 	}
 
@@ -281,20 +288,17 @@
 	
 	if (!$ipbanned && !$torbanned && (!defined("IS_AJAX_REQUEST") || !IS_AJAX_REQUEST)) {
 		// Don't increment the view counter for bots
+		// Todo: Actually check for bots and disable it because hdurfs
 		$sql->query("UPDATE misc SET views=$views");
 		
-		if($views%1000000>999000 or $views%1000000<1000) {
+		if($views%10000000>9999000 or $views%10000000<1000) {
 			$u=($loguserid?$loguserid:0);
 			$sql->query("INSERT INTO hits VALUES ($views,$u,'$userip',".ctime().')');
 		}
 		
-		if ($views%1000000>999994 || ($views % 1000000 >= 991000 && $views % 1000 == 0) || ($views % 1000000 >= 999900 && $views % 10 == 0) || $views % 1000000 < 5) {
+		// Print out a message to IRC whenever a 10-million-view milestone is hit
+		if ($views%10000000>9999994 || ($views % 10000000 >= 9991000 && $views % 1000 == 0) || ($views % 10000000 >= 9999900 && $views % 10 == 0) || $views % 10000000 < 5) {
 			xk_ircsend("0|View ". xk(11) . str_pad(number_format($views), 10, " ", STR_PAD_LEFT) . xk() ." by ". ($loguser['id'] ? xk(11) . str_pad($loguser['name'], 25, " ") : xk(12) . str_pad($_SERVER['REMOTE_ADDR'], 25, " ")) . xk() . ($views % 1000000 > 500000 ? " (". xk(12) . str_pad(number_format(1000000 - ($views % 1000000)), 5, " ", STR_PAD_LEFT) . xk(2) ." to go" . xk() .")" : ""));
-
-		}
-
-		if ($views == 44444444 || $views == 55555555 || $views == 66666666 || $views == 67108864) {
-			xk_ircsend("0|View ". xk(11) . str_pad(number_format($views), 10, " ", STR_PAD_LEFT) . xk() ." by ". ($loguser['id'] ? xk(11) . str_pad($loguser['name'], 25, " ") : xk(12) . str_pad($_SERVER['REMOTE_ADDR'], 25, " ")) . xk());
 
 		}
 	}
@@ -367,7 +371,7 @@
 		$meta	= array();
 	}
 
-  $metatag = '';
+	$metatag = '';
 
 	if (filter_bool($meta['noindex']))
 		$metatag .= "<meta name=\"robots\" content=\"noindex,follow\" />";
@@ -384,7 +388,6 @@
 	$metatag
 	<link rel=\"shortcut icon\" href=\"/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
 	$css
-	<link rel=\"stylesheet\" href=\"http://xkeeper.net/img/layouts/fonts/stylesheet.css\" type=\"text/css\">
 	</head>
 	$body
 	$yyy
