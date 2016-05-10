@@ -182,7 +182,7 @@
 	else {
 		$loguserid				= null;
 		$loguser				= array();
-		$loguser['viewsig']		= 1;
+		$loguser['viewsig']		= 0;
 		$loguser['powerlevel']	= 0;
 		$loguser['signsep']		= 0;
 		$loguser['id']			= null;
