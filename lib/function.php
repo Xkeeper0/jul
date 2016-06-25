@@ -536,6 +536,8 @@ function doreplace2($msg, $options='0|0'){
 	$msg=preg_replace("'\[url\](.*?)\[/url\]'si", '<a href=\\1>\\1</a>', $msg);
 	$msg=preg_replace("'\[url=(.*?)\](.*?)\[/url\]'si", '<a href=\\1>\\2</a>', $msg);
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);
+	$msg=preg_replace("'\[youtube\]^[a-zA-Z0-9_-]{11}$\[/youtube\]'si", '<iframe src=\"https://www.youtube.com/embed/\\1\" style=\"width:480;height:270;\" frameborder=\"0\" allowfullscreen></iframe>', $msg);
+
 
 	do {
 		$msg	= preg_replace("/<(\/?)t(able|h|r|d)(.*?)>(\s+?)<(\/?)t(able|h|r|d)(.*?)>/si",
@@ -1294,7 +1296,7 @@ function dofilters($p){
 	$p=preg_replace("'<script'si",'<<z>script',$p);
 	$p=preg_replace("'</script'si",'<<z>/script',$p);
 	$p=preg_replace("'javascript:'si",'javasc<z>ript:',$p);
-	$p=preg_replace("'<iframe'si",'<<z>iframe',$p);
+	$p=preg_replace("'<iframe'si(?! src=\"https://www.youtube.com/embed/\")",'<<z>iframe',$p);
 	$p=preg_replace("'<meta'si",'<<z>meta',$p);
 
 	return $p;
