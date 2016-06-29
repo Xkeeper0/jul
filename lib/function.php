@@ -1296,7 +1296,7 @@ function dofilters($p){
 	$p=preg_replace("'<script'si",'<<z>script',$p);
 	$p=preg_replace("'</script'si",'<<z>/script',$p);
 	$p=preg_replace("'javascript:'si",'javasc<z>ript:',$p);
-	$p=preg_replace("'<iframe(?! src=\"https://www.youtube.com/embed/\")'si",'<<z>iframe',$p);
+	$p=preg_replace("'<iframe(?! src=\"https://www.youtube.com/embed/)'si",'<<z>iframe',$p);
 	$p=preg_replace("'<meta'si",'<<z>meta',$p);
 
 	return $p;
