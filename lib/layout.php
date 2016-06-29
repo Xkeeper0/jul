@@ -297,7 +297,7 @@
 		}
 		
 		// Print out a message to IRC whenever a 10-million-view milestone is hit
-		if ($views%10000000>9999994 || ($views % 10000000 >= 9991000 && $views % 1000 == 0) || ($views % 10000000 >= 9999900 && $views % 10 == 0) || $views % 10000000 < 5) {
+		if ($views%10000000>9999994 || ($views % 10000000 >= 9991000 && $views % 1000 == 0) || ($views % 10000000 >= 9999900 && $views % 10 == 0) || ($views > 5 && $views % 10000000 < 5)) {
 			xk_ircsend("0|View ". xk(11) . str_pad(number_format($views), 10, " ", STR_PAD_LEFT) . xk() ." by ". ($loguser['id'] ? xk(11) . str_pad($loguser['name'], 25, " ") : xk(12) . str_pad($_SERVER['REMOTE_ADDR'], 25, " ")) . xk() . ($views % 1000000 > 500000 ? " (". xk(12) . str_pad(number_format(1000000 - ($views % 1000000)), 5, " ", STR_PAD_LEFT) . xk(2) ." to go" . xk() .")" : ""));
 
 		}
