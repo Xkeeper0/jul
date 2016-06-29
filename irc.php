@@ -4,13 +4,15 @@ require 'lib/function.php';
 $windowtitle = "$boardname - IRC Chat";
 require 'lib/layout.php';
 
-	$servers[1]		= "irc.badnik.net";
+	$servers[1]		= "irc.badnik.zone";
+	$servers[2]		= "irc.rustedlogic.net";
+	$servers[3]		= "irc.tcrf.net";
 	if ($server > count($servers) || $server <= -1) $server = 0;
 
 
 
 print "		$header<br>$tblstart<tr>
-		$tccellh><b>IRC Chat - BadnikNET, #tcrf</b></td></tr>
+		$tccellh><b>IRC Chat - BadnikZONE, #tcrf, #x</b></td></tr>
 		<tr>$tccell1>Server List: ";
 
 foreach ($servers as $num => $name) {
