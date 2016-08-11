@@ -147,16 +147,16 @@
 
 	// Announcements
 	if ($id) {
-		if($annc = $sql->fetchq('SELECT announcements.id,user,date,announcements.title,name,sex,powerlevel FROM announcements,users WHERE forum=0 AND user=users.id ORDER BY date DESC LIMIT 1')) {
+		if($annc = $sql->fetchq('SELECT announcements.id aid,user id,date,announcements.title,name,sex,powerlevel FROM announcements,users WHERE forum=0 AND user=users.id ORDER BY date DESC LIMIT 1')) {
 			$userlink = getuserlink($annc);
 			$threadlist .= "<tr>
 				<td colspan=7 class='tbl tdbgh center fonts'>Announcements</td>
 			</tr><tr>
-				$tccell2>". ($loguser['lastannouncement'] < $annc['id'] && $loguser['id'] ? $newpic : "&nbsp;") ."</td>
+				$tccell2>". ($loguser['lastannouncement'] < $annc['aid'] && $loguser['id'] ? $newpic : "&nbsp;") ."</td>
 				$tccell1l colspan=6><a href=announcement.php>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc[date]+$tzoff)."</td>
 			</tr>";
 		}
-		if($annc = $sql->fetchq("SELECT user,date,announcements.title,name,sex,powerlevel FROM announcements,users WHERE forum=$id AND user=users.id ORDER BY date DESC LIMIT 1")) {
+		if($annc = $sql->fetchq("SELECT user id,date,announcements.title,name,sex,powerlevel FROM announcements,users WHERE forum=$id AND user=users.id ORDER BY date DESC LIMIT 1")) {
 			$userlink = getuserlink($annc);
 			$threadlist .= "<tr>
 				$tccellhs colspan=7>Forum announcements</td>
