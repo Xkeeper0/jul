@@ -127,8 +127,8 @@
 			.sparkline { display: none; }
 			.font 	{font:13px $font}
 			.fonth	{font:13px $font;color:$tableheadtext}	/* is this even used? */
-			.fonts	{font:10px $font2}
-			.fontt	{font:10px $font3}
+			.fonts	{font:11px $font2}
+			.fontt	{font:11px $font3}
 			.tdbg1	{background:#$tablebg1}
 			.tdbg2	{background:#$tablebg2}
 			.tdbgc	{background:#$categorybg}
