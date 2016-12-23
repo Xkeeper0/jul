@@ -117,10 +117,10 @@
 	 $tccell1><b>Mood avatar:$descbr The URL of a mood avatar set. '\$' in the URL will be replaced with the mood, e.g. <b>http://your.page/here/\$.png</b>!</td>
 	 $tccell2l>$inpt=moodurl VALUE=\"$loguser[moodurl]\" SIZE=60 MAXLENGTH=100><tr>
 	 $tccell1><b>Minipic:$descbr The full URL of a small picture showing up next to your username on some pages. Leave it blank if you don't want to use a picture. The picture is resized to 16x16.</td>
-	 $tccell2l>$inpt=minipic VALUE=\"$loguser[minipic]\" SIZE=60 MAXLENGTH=100><tr>
-	 $tccell1><b>Post background:$descbr The full URL of a picture showing up in the background of your posts. Leave it blank for no background. Please make sure your text is readable on the background!</td>
-	 $tccell2l>$inpt=postbg VALUE=\"$loguser[postbg]\" SIZE=60 MAXLENGTH=250><tr>
-	 $tccell1><b>Post header:$descbr This will get added before the start of each post you make. This can be used to give a default font color and face to your posts (by putting a <<z>font> tag). This should preferably be kept small, and not contain too much text or images.</td>
+	 $tccell2l>$inpt=minipic VALUE=\"$loguser[minipic]\" SIZE=60 MAXLENGTH=100><tr>"
+//	 $tccell1><b>Post background:$descbr The full URL of a picture showing up in the background of your posts. Leave it blank for no background. Please make sure your text is readable on the background!</td>
+//	 $tccell2l>$inpt=postbg VALUE=\"$loguser[postbg]\" SIZE=60 MAXLENGTH=250><tr>
+	"$tccell1><b>Post header:$descbr This will get added before the start of each post you make. This can be used to give a default font color and face to your posts (by putting a <<z>font> tag). This should preferably be kept small, and not contain too much text or images.</td>
 	 $tccell2l>$txta=postheader ROWS=8 COLS=60>". htmlspecialchars($loguser[postheader]) ."</TEXTAREA><tr>
 	 $tccell1><b>Signature:$descbr This will get added at the end of each post you make, below an horizontal line. This should preferably be kept to a small enough size.</td>
 	 $tccell2l>$txta=signature ROWS=8 COLS=60>". htmlspecialchars($loguser[signature]) ."</TEXTAREA><tr>
