@@ -48,7 +48,11 @@
 
 		$icon=$posticons[$iconid];
 		if($custposticon) $icon=$custposticon;
-		$sql->query("UPDATE `threads` SET `forum` = '$forummove', `closed` = '$closed', `title` = '$subject', `icon` = '$icon', `sticky` = '$sticky' WHERE `id` = '$id'");
+		
+		$subject 		= htmlspecialchars($_POST['subject']);
+		$description 	= htmlspecialchars($_POST['description']);
+		
+		$sql->query("UPDATE `threads` SET `forum` = '$forummove', `closed` = '$closed', `title` = '$subject', `description` = '$description', `icon` = '$icon', `sticky` = '$sticky' WHERE `id` = '$id'");
 		if($forummove!=$forumid) {
 			$numposts=$thread['replies']+1;
 			$t1 = $sql->fetchq("SELECT lastpostdate,lastposter FROM threads WHERE forum=$forumid ORDER BY lastpostdate DESC LIMIT 1");
@@ -114,7 +118,9 @@
 
 		print "$header<br><FORM ACTION=editthread.php NAME=REPLIER METHOD=POST>$tblstart
 			<tr>$tccellh width=150>&nbsp;</td>$tccellh>&nbsp;</td></tr>
-			<tr>$tccell1><b>Thread title:</b></td>	$tccell2l>$inpt=subject VALUE=\"$thread[title]\" SIZE=40 MAXLENGTH=100></td></tr>
+			<tr>$tccell1><b>Thread title:</b></td>	$tccell2l>$inpt=subject VALUE=\"{$thread['title']}\" SIZE=40 MAXLENGTH=100></td></tr>
+			<tr>$tccell1><b>Thread description:</b></td>$tccell2l>$inpt=description VALUE=\"{$thread['description']}\" SIZE=100 MAXLENGTH=120></td></tr>
+			
 			<tr>$tccell1><b>Thread icon:</b></td>	$tccell2l>$posticonlist</td></tr>
 			<tr>$tccell1 rowspan=2>&nbsp;</td>		$tccell2l>$radio=closed value=0 $check1[0]> Open&nbsp; &nbsp;$radio=closed value=1 $check1[1]>Closed</td></tr>
 			<tr>									$tccell2l>$radio=sticky value=0 $check2[0]> Normal&nbsp; &nbsp;$radio=sticky value=1 $check2[1]>Sticky</td></tr>

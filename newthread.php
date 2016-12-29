@@ -68,9 +68,11 @@
 		<br>$radio=iconid value=-1 $checked>&nbsp;None&nbsp; &nbsp; &nbsp;
 		Custom: $inpt=custposticon SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($custposticon) ."\">
 	";
-	$subject=htmlspecialchars($subject);
-	$question=htmlspecialchars($question);
-
+	
+	$subject		= htmlspecialchars($_POST['subject']);
+	$question		= htmlspecialchars($_POST['question']);
+	$description 	= htmlspecialchars($_POST['description']);
+	
 	if ($nosmilies)	$nosmilieschk	= " checked";
 	if ($nohtml)	$nohtmlchk	= " checked";
 	if ($nolayout)	$nolayoutchk	= " checked";
@@ -78,6 +80,7 @@
 	$form=(!$poll?"
 		<tr>$tccell1><b>Thread icon:</td>	$tccell2l colspan=2>$posticonlist</td></tr>
 		<tr>$tccell1><b>Thread title:</td>$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($subject) ."\"></td></tr>
+		<tr>$tccell1><b>Thread description:</td>$tccell2l colspan=2>$inpt=description SIZE=100 MAXLENGTH=120 VALUE=\"". stripslashes($description) ."\"></td></tr>
 		<tr>$tccell1><b>Post:</td>$tccell2l width=800px valign=top>".replytoolbar(2)."
 		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". stripslashes(htmlspecialchars($message)) ."</TEXTAREA></td>
 		$tccell2l width=*>".moodlist($moodid)."</td></tr>
@@ -95,6 +98,7 @@
 	":"
 		<tr>$tccell1><b>Poll icon:</td>	$tccell2l colspan=2>$posticonlist</td></tr>
 		<tr>$tccell1><b>Poll title:</td>	$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($subject) ."\"></td></tr>
+		<tr>$tccell1><b>Poll description:</td>$tccell2l colspan=2>$inpt=description SIZE=100 MAXLENGTH=120 VALUE=\"". stripslashes($description) ."\"></td></tr>
 		<tr>$tccell1><b>Question:</td>	$tccell2l colspan=2>$inpt=question SIZE=60 MAXLENGTH=255 VALUE=\"". stripslashes($question) ."\"></td></tr>
 		<tr>$tccell1><b>Briefing:</td>	$tccell2l colspan=2>$txta=briefing ROWS=2 COLS=$numcols style=\"resize:vertical;\">". stripslashes($briefing) ."</TEXTAREA></td></tr>
 		<tr>$tccell1><b>Multi-voting:</td>$tccell2l colspan=2>$radio=mltvote value=0 $checked0> Disabled &nbsp $radio=mltvote value=1 $checked1> Enabled</td></tr>
@@ -227,8 +231,8 @@
 					$signid=getpostlayoutid($sign);
 				}
 
-				mysql_query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
-							"VALUES ('$id', '$userid', '0', '0', '$subject', '$posticon', '0', '$currenttime', '$currenttime', '$userid')");
+				mysql_query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `description`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
+							"VALUES ('$id', '$userid', '0', '0', '$subject', '$description', '$posticon', '0', '$currenttime', '$currenttime', '$userid')");
 				$t = mysql_insert_id();
 				mysql_query("INSERT INTO `posts` (`thread`, `user`, `date`, `ip`, `num`, `headid`, `signid`, `moodid`) VALUES ('$t', '$userid', '$currenttime', '$userip', '$postnum', '$headid', '$signid','". $_POST['moodid'] ."')");
 				$pid=mysql_insert_id();
