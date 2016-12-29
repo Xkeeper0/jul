@@ -281,10 +281,6 @@
 		$threadtitle	= "<a href='thread.php?id=$thread[id]'>$thread[title]</a>";
 		$belowtitle   = array(); // An extra line below the title in certain circumstances
 		
-		// The thread description has its own line though
-		if ($threaddesc = trim($thread['description']))
-			$threadtitle .= "<br><font class='fonts'>".str_replace(array('<', '>'), array('&lt;', '&gt;'), $threaddesc)."</font>";
-
 		$sicon			= "";
 		if ($thread['sticky'])	{
 			$threadtitle	= "<i>". $threadtitle ."</i>";
@@ -319,6 +315,10 @@
 			else
 				$threadtitle .= " {$smallfont}(Pages:{$pagelinks})</span>";
 		}
+		
+		// The thread description has its own line though
+		if ($threaddesc = trim($thread['description']))
+			$threadtitle .= "<br><font class='fonts'>".str_replace(array('<', '>'), array('&lt;', '&gt;'), $threaddesc)."</font>";
 
 		if (!empty($belowtitle))
 			$secondline = '<br><span class="fonts" style="position: relative; top: -1px;">&nbsp;&nbsp;&nbsp;' . implode(' - ', $belowtitle) . '</span>';
