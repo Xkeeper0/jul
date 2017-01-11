@@ -219,8 +219,13 @@
 
 			if($submit) {
 				mysql_query("UPDATE `users` SET `posts` = $numposts, `lastposttime` = '$currenttime' WHERE `id` = '$userid'");
-				$headid=getpostlayoutid($head);
-				$signid=getpostlayoutid($sign);
+				if (filter_bool($nolayout)) {
+					$headid = 0;
+					$signid = 0;
+				} else {
+					$headid=getpostlayoutid($head);
+					$signid=getpostlayoutid($sign);
+				}
 
 				mysql_query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
 							"VALUES ('$id', '$userid', '0', '0', '$subject', '$posticon', '0', '$currenttime', '$currenttime', '$userid')");
