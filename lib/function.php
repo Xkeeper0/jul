@@ -536,7 +536,7 @@ function doreplace2($msg, $options='0|0'){
 	$msg=preg_replace("'\[url\](.*?)\[/url\]'si", '<a href=\\1>\\1</a>', $msg);
 	$msg=preg_replace("'\[url=(.*?)\](.*?)\[/url\]'si", '<a href=\\1>\\2</a>', $msg);
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);
-	$msg=preg_replace("'\[youtube\](?:https://(?:www\.)?youtu(?:\.be/|be\.com/watch\?v=))?([\w-]{11}(?:(?:\?|\&)t=\w{1,})?)\[/youtube\]'si", '<iframe src="https://www.youtube.com/embed/\1" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe>', $msg);
+	$msg=preg_replace("'\[youtube\](?:https://(?:www\.)?youtu(?:\.be/|be\.com/watch\?v=))?([\w-]{11})\[/youtube\]'si", '<iframe src="https://www.youtube.com/embed/\1" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe>', $msg);
 
 
 	do {
