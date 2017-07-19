@@ -1178,14 +1178,6 @@ function adminlinkbar($sel = 'admin.php') {
 	return $r;
 }
 
-function nuke_js($before, $after) {
-
-	global $sql, $loguser;
-	$page	= addslashes($_SERVER['REQUEST_URI']);
-	$time	= ctime();
-	$sql -> query("INSERT INTO `jstrap` SET `loguser` = '". $loguser['id'] ."', `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `text` = '". addslashes($before) ."', `url` = '$page', `time` = '$time', `filtered` = '". addslashes($after) ."'");
-
-}
 function include_js($fn, $as_tag = false) {
 	// HANDY JAVASCRIPT INCLUSION FUNCTION
 	if ($as_tag) {
@@ -1207,9 +1199,6 @@ function dofilters($p){
 		$p=preg_replace("'<script(.*?)</script>'si",'',$p);
 		$p=preg_replace("'<script'si",'',$p);
 		$p=preg_replace("'\b\s(on[^=]*?=.*)\b'si",'',$p);
-		if ($temp != $p) {
-			nuke_js($temp, $p);
-		}
 	} else {
 
 		$p=preg_replace("'onload'si",'onl<z>oad',$p);
@@ -1228,10 +1217,6 @@ function dofilters($p){
 		$p=preg_replace("'onmouseout'si",'onmou<z>seout',$p);
 		$p=preg_replace("'onmouseover'si",'onmo<z>useover',$p);
 		$p=preg_replace("'onmouseup'si",'onmou<z>seup',$p);
-
-		if ($temp != $p) {
-			nuke_js($temp, $p);
-		}
 	}
 
 	//$p=preg_replace("'<object(.*?)</object>'si","",$p);
