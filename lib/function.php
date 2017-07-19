@@ -1277,6 +1277,9 @@ function dofilters($p){
 		$p=str_replace("-->", '--&gt;</font>', $p);
 	}
 
+	$p=preg_replace("'(https?://.*\.?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
+
+
 	$p=str_replace("http://insectduel.proboards82.com","http://jul.rustedlogic.net/idiotredir.php?",$p);
 //	$p=str_replace("http://imageshack.us", "imageshit", $p);
 	$p=preg_replace("'http://.{0,3}\.?tinypic\.com'si",'tinyshit',$p);
@@ -1614,5 +1617,3 @@ function ircerrors($type, $msg, $file, $line, $context) {
 	           " $typetext: ".xk()."($errorlocation) $msg");
 	return true;
 }
-
-
