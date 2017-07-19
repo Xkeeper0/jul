@@ -14,7 +14,7 @@
 		$id = 0;
 
 	// Wait for the midnight backup to finish...
-	if ((int)date("Gi") < 5) {
+	if ((int)date("Gi") < 1) {
 		require "lib/downtime.php";
 	}
 
