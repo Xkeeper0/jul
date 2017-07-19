@@ -20,7 +20,7 @@
 	if ($id && (filter_int($_GET['addvote']) || filter_int($_GET['delvote']))) {
 		$option	= (($_GET['addvote']) ? 'addvote' : 'delvote');
 		$choice	= filter_int($_GET[$option]);
-		
+
 		$pollid	= $sql->resultq("SELECT poll FROM threads WHERE id='{$id}'");
 		if (!$pollid)
 			return header("Location: ?id={$id}#{$id}");
@@ -56,6 +56,9 @@
 		}
 		$numposts = $sql->resultq("SELECT COUNT(*) FROM `posts` WHERE `thread` = '{$id}' AND `id` < '{$pid}'");
 		$page = floor($numposts / $ppp);
+
+		// Canonical page w/o ppp link (for bots)
+		$meta['canonical']	= "thread.php?id=$id&page=$page";
 	}
 
 	define('E_BADPOSTS', -1);
@@ -90,7 +93,7 @@
 		}
 
 		$thread['title'] = str_replace("<", "&lt;", $thread['title']);
-		
+
 		$forumid = intval($thread['forum']);
 		$forum = $sql->fetchq("SELECT * FROM forums WHERE id=$forumid");
 
@@ -175,7 +178,7 @@
 		$meta['noindex'] = true; // prevent search engines from indexing what they can't access
 		require_once 'lib/layout.php';
 		errorpage("No thread specified.",'the index page',"index.php");
-	}	
+	}
 
 	//temporary
 	if ($windowtitle) $windowtitle = "$boardname -- $windowtitle";
@@ -186,7 +189,7 @@
 		$fonline = fonlineusers($forumid);
 		if (mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'")))
 			$ismod = true;
-	}	
+	}
 	$modfeats = '';
 	if ($id && $ismod) {
 		$trashid = 27;
@@ -354,7 +357,7 @@
 
 	$page	= max(0, filter_int($page));
 	$min	= $ppp * $page;
-	
+
 	if ($user) $searchon = "user={$user}";
 	else       $searchon = "thread={$id}";
 
@@ -392,7 +395,7 @@
 			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id=$post[thread]", MYSQL_BOTH, true);
 			$pforum  = $sql->fetchq("SELECT minpower FROM forums WHERE id=".intval($pthread[forum]), MYSQL_BOTH, true);
 		}
-		
+
 		$post['act'] = filter_int($act[$post['user']]);
 
 		if (!$pforum || $pforum['minpower'] <= $power)
@@ -430,7 +433,7 @@
 				$pagelinks .= " ...";
 			}
 		}
-		
+
 		if ($i == $page)
 			$pagelinks	.= " ".($i + 1);
 		else
