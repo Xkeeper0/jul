@@ -323,12 +323,13 @@ function readpostread($userid){
 }
 
 function timeunits($sec){
-	if($sec<60)	return "$sec sec.";
-	if($sec<3600)	return floor($sec/60).' min.';
-	if($sec<7200)	return '1 hour';
-	if($sec<86400)	return floor($sec/3600).' hours';
-	if($sec<172800)	return '1 day';
-	return floor($sec/86400).' days';
+	if($sec<60)			return "$sec sec.";
+	if($sec<3600)		return floor($sec/60).' min.';
+	if($sec<7200)		return '1 hour';
+	if($sec<86400)		return floor($sec/3600).' hours';
+	if($sec<172800)		return '1 day';
+	if($sec<31556926)	return floor($sec/86400).' days';
+	return sprintf("%.1f years", floor($sec/31556926));
 }
 
 function timeunits2($sec){
