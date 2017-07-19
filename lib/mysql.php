@@ -1,4 +1,10 @@
 <?php
+
+	if (!function_exists("mysql_connect")) {
+		// probably php 7, load shim for it
+		require_once("lib/mysql_compat.php");
+	}
+
 	class mysql {
 		// a 'backport' of my 'static' class in not-as-static form
 		// the statistics remain static so they're global just in case this gets used for >1 connection
@@ -22,7 +28,7 @@
 			$this->connection = (($persist) ? mysql_pconnect($host,$user,$pass) : mysql_connect($host,$user,$pass));
 			$t = microtime(true)-$start;
 			$this->id = ++self::$connection_count;
-			$this->set_character_encoding("utf8");
+			$this->set_character_encoding("utf8mb4");
 
 			if (self::$debug_on) {
 				$b = self::getbacktrace();
