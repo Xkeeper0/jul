@@ -73,43 +73,25 @@
 		// special "null" scheme.
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
-		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
+		$css = "<link rel='stylesheet' href='/css/basics.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
 		// possibly causes issue #19 - not sure why this was here
 		// likely irrelevant after addition of custom date formats
 		// (remove this later)
 		//$dateformat = "m/d/y h:i";
 		//$dateshort  = "m/d/y";
-		
+
 		// backwards compat
 		global $bgcolor, $linkcolor;
 		$bgcolor = "000";
 		$linkcolor = "FFF";
 	} else {
 		$css="
+			<link rel='stylesheet' href='/css/base.css' type='text/css'>
 			<style type='text/css'>
-			html, img { image-rendering: -moz-crisp-edges; }
-/*			
-			body	{
-				cursor:	url('images/ikachanpointer.png'), default;
-				}
-			a:link {
-				cursor:	url('images/ikachanpointer2.png'), pointer;
-				}
-*/			a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold;}
-			a {
-				color: #$linkcolor;
-			}
-			a:visited {
-				color: #$linkcolor2;
-			}
-			a:active {
-				color: #$linkcolor3;
-			}
-			a:hover {
-				color: #$linkcolor4;
-			}
-			img { border:none; }
-			pre br { display: none; }
+			a			{	color: #$linkcolor;	}
+			a:visited	{	color: #$linkcolor2;	}
+			a:active	{	color: #$linkcolor3;	}
+			a:hover		{	color: #$linkcolor4;	}
 			body {
 				scrollbar-face-color:		#$scr3;
 				scrollbar-track-color:		#$scr7;
@@ -133,25 +115,11 @@
 			.tdbg2	{background:#$tablebg2}
 			.tdbgc	{background:#$categorybg}
 			.tdbgh	{background:#$tableheadbg;}
-			.center	{text-align:center}
-			.right	{text-align:right}
 			.table	{empty-cells:	show; width: $tablewidth;
 					 border-top:	#$tableborder 1px solid;
 					 border-left:	#$tableborder 1px solid;}
 			td.tbl	{border-right:	#$tableborder 1px solid;
 					 border-bottom:	#$tableborder 1px solid}
-			code {
-				overflow:		auto;
-				width:			100%;
-				white-space:	pre;
-				display:		block;
-			}
-			code br { display: none; }
-			input[type=radio] { color: black; background: white; }
-			
-			.pstspl1 {opacity:0;}
-			.pstspl1:hover {opacity:1;}
-			.pstspl2 {background:#000;color:#FFF;display:block;}
 		";
 	}
 
