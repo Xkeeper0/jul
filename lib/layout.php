@@ -114,7 +114,7 @@
 			.tdbg1	{background:#$tablebg1}
 			.tdbg2	{background:#$tablebg2}
 			.tdbgc	{background:#$categorybg}
-			.tdbgh	{background:#$tableheadbg;}
+			.tdbgh	{background:#$tableheadbg; color:$tableheadtext}
 			.table	{empty-cells:	show; width: $tablewidth;
 					 border-top:	#$tableborder 1px solid;
 					 border-left:	#$tableborder 1px solid;}
