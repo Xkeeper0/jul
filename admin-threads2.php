@@ -6,10 +6,10 @@
   require 'lib/layout.php';
 
   print "$header<br>";
-	
+
   if (!$isadmin) {
 
-	print "  
+	print "
 		$tblstart
 			$tccell1>This feature is restricted.</td>
 		$tblend
@@ -23,7 +23,7 @@
 	print adminlinkbar("admin-threads2.php");
 
 	if (!$_POST['run']) {
-		print "<form action=\"admin-threads2.php\" method=\"post\">  
+		print "<form action=\"admin-threads2.php\" method=\"post\">
 			$tblstart
 				<tr>$tccellh>Thread Repair System II</td></tr>
 				<tr>$tccell1>&nbsp;
@@ -57,8 +57,8 @@
 		";
 
 
- 
-	$q	= "SELECT `threads`.`id`, `threads`.`title` , `threads`.`lastpostdate` , `posts`.`date` as realdate, (`posts`.`date` - `threads`.`lastpostdate`) AS `diff` FROM `threads` LEFT JOIN (SELECT MAX(`date`) as `date`, `thread` FROM `posts` GROUP BY `thread`) as `posts`  ON `posts`.`thread` = `threads`.`id` ORDER BY `diff` DESC";
+
+	$q	= "SELECT `threads`.`id`, `threads`.`title` , `threads`.`lastpostdate` , `posts`.`date` as realdate FROM `threads` LEFT JOIN (SELECT MAX(`date`) as `date`, `thread` FROM `posts` GROUP BY `thread`) as `posts`  ON `posts`.`thread` = `threads`.`id` ORDER BY `threads`.`id` DESC";
 	$sql	= mysql_query($q) or die(mysql_error());
 
 	$count	= "";
@@ -68,7 +68,7 @@
 
 		if ($data['lastpostdate'] != $data['realdate']) {
 
-			if ($data['lastpostdate'] == "0" && $data['realdate'] == NULL) {
+			if ($data['lastpostdate'] == "0" && $data['realdate'] === null) {
 				$status	= "<font color=#ff8888>Broken thread</font>";
 			} else {
 
@@ -89,7 +89,7 @@
 				$tccell1>". ($data['realdate'] ? date($dateformat, $data['realdate'] + $tzoff) : "-") ."</td>
 				$tccell1>". timeunits2($data['lastpostdate'] - $data['realdate']) ."</td>
 				$tccell2l>$status</td>
-			</tr>";	
+			</tr>";
 		}
 	}
 
@@ -100,9 +100,8 @@
 	}
  }
 
-  
+
   print "$tblend
 	$footer
 	";
   printtimedif($startingtime);
-?>
