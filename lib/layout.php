@@ -10,7 +10,7 @@
 	header('Pragma: no-cache');
 
 	$userip = $_SERVER['REMOTE_ADDR'];
-	
+
 	if (!($clientip    = filter_var(getenv("HTTP_CLIENT_IP"),       FILTER_VALIDATE_IP))) $clientip =    "XXXXXXXXXXXXXXXXX";
 	if (!($forwardedip = filter_var(getenv("HTTP_X_FORWARDED_FOR"), FILTER_VALIDATE_IP))) $forwardedip = "XXXXXXXXXXXXXXXXX";
 //	$clientip=(getenv("HTTP_CLIENT_IP") == "" ? "XXXXXXXXXXXXXXXXX" : getenv("HTTP_CLIENT_IP"));
@@ -73,43 +73,25 @@
 		// special "null" scheme.
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
-		$css = "<link rel='stylesheet' href='/css/base.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
+		$css = "<link rel='stylesheet' href='/css/basics.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
 		// possibly causes issue #19 - not sure why this was here
 		// likely irrelevant after addition of custom date formats
 		// (remove this later)
 		//$dateformat = "m/d/y h:i";
 		//$dateshort  = "m/d/y";
-		
+
 		// backwards compat
 		global $bgcolor, $linkcolor;
 		$bgcolor = "000";
 		$linkcolor = "FFF";
 	} else {
 		$css="
+			<link rel='stylesheet' href='/css/base.css' type='text/css'>
 			<style type='text/css'>
-			html, img { image-rendering: -moz-crisp-edges; }
-/*			
-			body	{
-				cursor:	url('images/ikachanpointer.png'), default;
-				}
-			a:link {
-				cursor:	url('images/ikachanpointer2.png'), pointer;
-				}
-*/			a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold;}
-			a {
-				color: #$linkcolor;
-			}
-			a:visited {
-				color: #$linkcolor2;
-			}
-			a:active {
-				color: #$linkcolor3;
-			}
-			a:hover {
-				color: #$linkcolor4;
-			}
-			img { border:none; }
-			pre br { display: none; }
+			a			{	color: #$linkcolor;	}
+			a:visited	{	color: #$linkcolor2;	}
+			a:active	{	color: #$linkcolor3;	}
+			a:hover		{	color: #$linkcolor4;	}
 			body {
 				scrollbar-face-color:		#$scr3;
 				scrollbar-track-color:		#$scr7;
@@ -132,26 +114,12 @@
 			.tdbg1	{background:#$tablebg1}
 			.tdbg2	{background:#$tablebg2}
 			.tdbgc	{background:#$categorybg}
-			.tdbgh	{background:#$tableheadbg;}
-			.center	{text-align:center}
-			.right	{text-align:right}
+			.tdbgh	{background:#$tableheadbg; color:$tableheadtext}
 			.table	{empty-cells:	show; width: $tablewidth;
 					 border-top:	#$tableborder 1px solid;
 					 border-left:	#$tableborder 1px solid;}
 			td.tbl	{border-right:	#$tableborder 1px solid;
 					 border-bottom:	#$tableborder 1px solid}
-			code {
-				overflow:		auto;
-				width:			100%;
-				white-space:	pre;
-				display:		block;
-			}
-			code br { display: none; }
-			input[type=radio] { color: black; background: white; }
-			
-			.pstspl1 {opacity:0;}
-			.pstspl1:hover {opacity:1;}
-			.pstspl2 {background:#000;color:#FFF;display:block;}
 		";
 	}
 
@@ -285,17 +253,17 @@
 	}
 
 	$views=$sql->resultq('SELECT views FROM misc')+1;
-	
+
 	if (!$ipbanned && !$torbanned && (!defined("IS_AJAX_REQUEST") || !IS_AJAX_REQUEST)) {
 		// Don't increment the view counter for bots
 		// Todo: Actually check for bots and disable it because hdurfs
 		$sql->query("UPDATE misc SET views=$views");
-		
+
 		if($views%10000000>9999000 or $views%10000000<1000) {
 			$u=($loguserid?$loguserid:0);
 			$sql->query("INSERT INTO hits VALUES ($views,$u,'$userip',".ctime().')');
 		}
-		
+
 		// Print out a message to IRC whenever a 10-million-view milestone is hit
 		if ($views%10000000>9999994 || ($views % 10000000 >= 9991000 && $views % 1000 == 0) || ($views % 10000000 >= 9999900 && $views % 10 == 0) || ($views > 5 && $views % 10000000 < 5)) {
 			xk_ircsend("0|View ". xk(11) . str_pad(number_format($views), 10, " ", STR_PAD_LEFT) . xk() ." by ". ($loguser['id'] ? xk(11) . str_pad($loguser['name'], 25, " ") : xk(12) . str_pad($_SERVER['REMOTE_ADDR'], 25, " ")) . xk() . ($views % 1000000 > 500000 ? " (". xk(12) . str_pad(number_format(1000000 - ($views % 1000000)), 5, " ", STR_PAD_LEFT) . xk(2) ." to go" . xk() .")" : ""));
@@ -359,7 +327,7 @@
 			$yyy .= "<img src=images/wave/seaweed.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; bottom: -". mt_rand(24,72) ."px;\" title=\"weed\">";
 		}
 	}*/
-	
+
 	$dispviews = $views;
 //	if (($views % 1000000 >= 999000) && ($views % 1000000 < 999990))
 //		$dispviews = substr((string)$views, 0, -3) . "???";
@@ -376,15 +344,14 @@
 	if (filter_bool($meta['noindex']))
 		$metatag .= "<meta name=\"robots\" content=\"noindex,follow\" />";
 
-	if (filter_bool($meta['description']))
+	if (isset($meta['description']))
 		$metatag .= "<meta name=\"description\" content=\"{$meta['description']}\" />";
 
-	if (filter_bool($x_hacks['smallbrowse']) and false) {
-		$css = "";
-		$css = "<link rel='stylesheet' href='/mobile.css'>";
+	if (isset($meta['canonical'])) {
+		$metatag	.= "<link rel='canonical' href='{$meta['canonical']}'>";
 	}
 
-	$header1="<html><head><meta http-equiv='Content-type' content='text/html; charset=utf-8'><title>$windowtitle</title>
+	$header1="<html><head><meta http-equiv='Content-type' content='text/html; charset=utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>$windowtitle</title>
 	$metatag
 	<link rel=\"shortcut icon\" href=\"/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
 	$css
@@ -400,7 +367,7 @@
 	  </td><tr>
 		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>Views: $dispviews<br><img src=images/_.gif width=120 height=1></td>
 		  <td width='100%' class='tbl tdbg2 center fonts'>$headlinks2</td>
-		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>".  date($dateformat,ctime()+$tzoff) ."<br><img src=images/_.gif width=120 height=1><tr>" 
+		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>".  date($dateformat,ctime()+$tzoff) ."<br><img src=images/_.gif width=120 height=1><tr>"
 		: "<br>$dispviews views, ". date($dateformat,ctime()+$tzoff) ."
 		  </td><tr>
 			<td width=100% class='tbl tdbg2 center fonts' colspan=3>$headlinks2</td><tr>") ."
@@ -422,16 +389,16 @@
 
 	$ref=filter_string($_SERVER['HTTP_REFERER']);
 	$url=getenv('SCRIPT_URL');
-	
+
 	if(!$url) $url=str_replace('/etc/board','',getenv('SCRIPT_NAME'));
 	$q=getenv('QUERY_STRING');
-	
+
 	if($q) $url.="?$q";
-	
+
 	if($ref && substr($ref,7,7)!="jul.rus") $sql->query("INSERT INTO referer (time,url,ref,ip) VALUES (". ctime() .", '".addslashes($url)."', '".addslashes($ref)."', '". $_SERVER['REMOTE_ADDR'] ."')");
 
 	$sql->query("DELETE FROM guests WHERE ip='$userip' OR date<".(ctime()-300));
-	
+
 	if($log) {
 		/*
 			$ulastip=mysql_result(mysql_query("SELECT lastip FROM users WHERE id=$loguserid"),0,0);
@@ -467,7 +434,7 @@
 	} else {
 		$sql->query("INSERT INTO guests (ip,date,useragent,lasturl) VALUES ('$userip',".ctime().",'".addslashes($_SERVER['HTTP_USER_AGENT']) ."','". addslashes($url) ."')");
 	}
-	
+
 
 
 
@@ -494,7 +461,7 @@
 		<td>
 			{$smallfont}
 			Acmlmboard - <a href='https://github.com/Xkeeper0/jul'>". (file_exists('version.txt') ? file_get_contents("version.txt") : shell_exec("git log --format='commit %h [%ad]' --date='short' -n 1")) ."</a>
-			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al. 
+			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al.
 			</font>
 		</td>
 	</tr></table>
@@ -540,6 +507,3 @@ piwikTracker.enableLinkTracking();
 	<br>
 	<br>E-mail: xkeeper@gmail.com
 	$tblend$footer");
-
-
-

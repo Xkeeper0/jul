@@ -14,7 +14,7 @@
 		$id = 0;
 
 	// Wait for the midnight backup to finish...
-	if ((int)date("Gi") < 5) {
+	if ((int)date("Gi") < 1) {
 		require "lib/downtime.php";
 	}
 
@@ -323,12 +323,13 @@ function readpostread($userid){
 }
 
 function timeunits($sec){
-	if($sec<60)	return "$sec sec.";
-	if($sec<3600)	return floor($sec/60).' min.';
-	if($sec<7200)	return '1 hour';
-	if($sec<86400)	return floor($sec/3600).' hours';
-	if($sec<172800)	return '1 day';
-	return floor($sec/86400).' days';
+	if($sec<60)			return "$sec sec.";
+	if($sec<3600)		return floor($sec/60).' min.';
+	if($sec<7200)		return '1 hour';
+	if($sec<86400)		return floor($sec/3600).' hours';
+	if($sec<172800)		return '1 day';
+	if($sec<31556926)	return floor($sec/86400).' days';
+	return sprintf("%.1f years", floor($sec/31556926));
 }
 
 function timeunits2($sec){
@@ -1177,14 +1178,6 @@ function adminlinkbar($sel = 'admin.php') {
 	return $r;
 }
 
-function nuke_js($before, $after) {
-
-	global $sql, $loguser;
-	$page	= addslashes($_SERVER['REQUEST_URI']);
-	$time	= ctime();
-	$sql -> query("INSERT INTO `jstrap` SET `loguser` = '". $loguser['id'] ."', `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `text` = '". addslashes($before) ."', `url` = '$page', `time` = '$time', `filtered` = '". addslashes($after) ."'");
-
-}
 function include_js($fn, $as_tag = false) {
 	// HANDY JAVASCRIPT INCLUSION FUNCTION
 	if ($as_tag) {
@@ -1206,9 +1199,6 @@ function dofilters($p){
 		$p=preg_replace("'<script(.*?)</script>'si",'',$p);
 		$p=preg_replace("'<script'si",'',$p);
 		$p=preg_replace("'\b\s(on[^=]*?=.*)\b'si",'',$p);
-		if ($temp != $p) {
-			nuke_js($temp, $p);
-		}
 	} else {
 
 		$p=preg_replace("'onload'si",'onl<z>oad',$p);
@@ -1227,10 +1217,6 @@ function dofilters($p){
 		$p=preg_replace("'onmouseout'si",'onmou<z>seout',$p);
 		$p=preg_replace("'onmouseover'si",'onmo<z>useover',$p);
 		$p=preg_replace("'onmouseup'si",'onmou<z>seup',$p);
-
-		if ($temp != $p) {
-			nuke_js($temp, $p);
-		}
 	}
 
 	//$p=preg_replace("'<object(.*?)</object>'si","",$p);
@@ -1276,6 +1262,9 @@ function dofilters($p){
 		$p=str_replace("<!--", '<font color=#80ff80>&lt;!--', $p);
 		$p=str_replace("-->", '--&gt;</font>', $p);
 	}
+
+	$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
+
 
 	$p=str_replace("http://insectduel.proboards82.com","http://jul.rustedlogic.net/idiotredir.php?",$p);
 //	$p=str_replace("http://imageshack.us", "imageshit", $p);
@@ -1614,5 +1603,3 @@ function ircerrors($type, $msg, $file, $line, $context) {
 	           " $typetext: ".xk()."($errorlocation) $msg");
 	return true;
 }
-
-

@@ -19,26 +19,24 @@
 
 		if($post['picture'] || ($post['moodid'] && $post['moodurl'])){
 			$post['picture']  = str_replace('>','%3E',$post['picture']);
-			$set['userpic']   = "<img src=\"{$post['picture']}\">";
+			$set['userpic']   = "<img class='avatar' src=\"{$post['picture']}\">";
 			$set['picture']   = $post['picture'];
 
 			if ($post['moodid'] && $post['moodurl']) {
-				$set['userpic'] = "<img src=\"". str_replace(array('$', '>'), array($post['moodid'], '%3E'), $post['moodurl']) ."\">";
-				$set['picture'] = str_replace(array('$', '>'), array($post['moodid'], '%3E'), $post['moodurl']);
+				$set['userpic'] = "<img class='avatar' src=\"". str_replace(array('$', '>', '"'), array($post['moodid'], '%3E', '%22'), $post['moodurl']) ."\">";
+				$set['picture'] = str_replace(array('$', '>', '"'), array($post['moodid'], '%3E', '%22'), $post['moodurl']);
 			}
-			//   $userpicture="<img src=\"$user['picture']\" name=pic$p onload=sizelimit(pic$p,60,100)>";
 		}
 
 		if($post['signtext']) {
 			$post['signtext']=$sep[$loguser['signsep']].$post['signtext'];
 		}
 
-		if($pthread) { 
+		if($pthread) {
 			$set['threadlink'] = "<a href=thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
 		}
 
 		$post['text']=doreplace2($post['text'], $post['options']);
-	//  if (strpos($post['text'], "http://hyperhacker.no-ip.org/b/smilies/lolface.png") || strpos($post['text'], "images/smilies/roflx.gif")) $post['text'] = "<img src=images/smilies/roflx.gif><br><br><small>(Excessive post content hidden)</small>";
 
 		if (filter_int($post['editdate'])) {
 			$post['edited'] = " (last edited by {$post['edited']} at ".date($dateformat,$post['editdate']+$tzoff).")";
@@ -70,7 +68,7 @@
 	function setlayout($post) {
 		global $sql,$loguser,$postl;
 
-		if($loguser['viewsig']!=1) { 
+		if($loguser['viewsig']!=1) {
 			$post['headid']=$post['signid']=0;
 		}
 
