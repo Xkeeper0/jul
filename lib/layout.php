@@ -412,8 +412,8 @@
 			}
 		*/
 		//if ($loguserid != 3 && $loguserid != 2)
-		if (($loguser['powerlevel'] <= 5) and (!IS_AJAX_REQUEST)) {
-			$influencelv=calclvl(calcexp($loguser[posts],(ctime()-$loguser[regdate])/86400));
+		if (($loguser['powerlevel'] <= 5) && (!defined("IS_AJAX_REQUEST") || !IS_AJAX_REQUEST)) {
+			$influencelv=calclvl(calcexp($loguser['posts'],(ctime()-$loguser['regdate'])/86400));
 
       // Alart #defcon?
 			if ($loguser['lastip'] != $_SERVER['REMOTE_ADDR']) {
