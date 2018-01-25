@@ -162,7 +162,7 @@
 				$tccellhs colspan=7>Forum announcements</td>
 			</tr><tr>
 				$tccell2>&nbsp;</td>
-				$tccell1l colspan=6><a href=announcement.php?f=$id>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc[date]+$tzoff)."</td>
+				$tccell1l colspan=6><a href=announcement.php?f=$id>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc['date']+$tzoff)."</td>
 			</tr>";
 		}
     }
