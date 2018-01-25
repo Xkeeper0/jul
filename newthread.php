@@ -31,7 +31,7 @@
 	if ($forum['nopolls'] && $poll) {
 		print "$header
 			<br>
-			$tblstart 
+			$tblstart
 				$tccell1>
 					A for effort, but F for still failing.
 				</td>
@@ -117,7 +117,7 @@
 			$inpc=\"nohtml\" id=\"nohtml\" value=\"1\"$nohtmlchk><label for=\"nohtml\">Disable HTML</label></td></tr><tr>
 		<!-- </FORM> -->
 	");
-	if(!$_POST[action] or $_POST[paction]) {
+	if(!$_POST['action'] or $_POST['paction']) {
 		print "
 			$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
 			<form action=newthread.php name=replier method=post autocomplete=\"off\">
@@ -125,7 +125,7 @@
 		";
 		if($log and $forums[$id][minpowerthread]>$power) {
 			print "$tccell1>Sorry, but you are not allowed to post";
-			if($banned) print ", because you are banned from this board.<br>".redirect("forum.php?id=$id",'return to the forum',0); 
+			if($banned) print ", because you are banned from this board.<br>".redirect("forum.php?id=$id",'return to the forum',0);
 			else print ' in this restricted forum.<br>'.redirect('index.php','return to the board',0);
 		}
 		else {
@@ -163,7 +163,7 @@
 			$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
 			".replytoolbar(4);
 	}
-	if($_POST[action]=='postthread' and !$_POST[paction]) {
+	if($_POST['action']=='postthread' and !$_POST['paction']) {
 		print "<br>$tblstart";
 		if ($log && !$password)
 			$userid = $loguserid;
@@ -171,25 +171,14 @@
 			$userid = checkuser($username,$password);
 
 		$user=$sql->fetchq("SELECT * FROM users WHERE id=$userid");
-		if($user[powerlevel]<0) $userid=-1;
+		if($user['powerlevel']<0) $userid=-1;
 
 		// can't be posting too fast now
-		$limithit = $user[lastposttime] < (ctime()-30);
+		$limithit = $user['lastposttime'] < (ctime()-30);
 		// can they post in this forum?
-		$authorized = $user[powerlevel] >= $forum[minpowerthread];
+		$authorized = $user['powerlevel'] >= $forum['minpowerthread'];
 		// does the forum exist?
-		$forumexists = $forum[title];
-
-		// ---
-		// lol i'm eminem
-		if (strpos($message , '[Verse ') !== FALSE) {
-			$authorized = false;
-			@$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Listen to some good music for a change.'");
-			if ($_COOKIE['loguserid'] > 0)
-				@$sql->query("UPDATE `users` SET `powerlevel` = '-2' WHERE `id` = {$_COOKIE['loguserid']}");
-			xk_ircsend("1|". xk(7) ."Auto-banned another Eminem wannabe with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) .".");
-		}
-		// ---
+		$forumexists = $forum['title'];
 
 		if($userid!=-1 && $subject && $message && $forumexists && $authorized && $limithit) {
 			$msg=$message;
@@ -203,8 +192,8 @@
 				$sign = "$sign</td></table>";
 			}
 
-			$numposts = $user[posts] + 1;
-			$numdays = (ctime()-$user[regdate])/86400;
+			$numposts = $user['posts'] + 1;
+			$numdays = (ctime()-$user['regdate'])/86400;
 			$tags	= array();
 			$msg = doreplace($msg, $numposts, $numdays, $username, $tags);
 			$rsign = doreplace($sign, $numposts, $numdays, $username);
@@ -273,7 +262,7 @@
 			}
 			else {
 				if($posticon) $posticon1="<img src='". stripslashes($posticon) ."' height=15 align=absmiddle>";
-		
+
 				if($poll) {
 					for($c=1;$chtext[$c];$c++) {
 						$chtext[$c]=stripslashes($chtext[$c]);
@@ -344,7 +333,7 @@
 			if (!$message) $reason = "You haven't entered a message.";
 			if (!$subject) $reason = "You haven't entered a subject.";
 			if (!$authorized) $reason = "You aren't allowed to post in this forum.";
-	
+
 			print "
 				$tccell1>Couldn't post the thread. $reason
 				<br>".redirect("forum.php?id=$id", $forum[title], 2).$tblend;

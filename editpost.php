@@ -75,7 +75,7 @@
 			$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
 			$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[1]><label for=\"nohtml\">Disable HTML</label></td></tr>
 			</FORM>
-		$tblend$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forum[id]>".$forum[title]."</a> - $thread[title]
+		$tblend$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forum[id]>".$forum['title']."</a> - $thread[title]
 		";
 	}
 	elseif (!$action) {
@@ -183,7 +183,7 @@
 				".redirect("thread.php?pid=$id&r=1#$id",'the post',0).'</table></table>';
 		}*/
 	}
-  
+
 	elseif ($action=='delete'){
 		if (!$_POST['reallydelete'])
 			$txt	= "Are you sure you want to <b>DELETE</b> this post?<br><br><form action='editpost.php' method='post'>$inps=reallydelete value='Delete post'>$inph=action value='delete'>$inph=id value='$id'></form> - <a href='thread.php?pid=$id#$id'>Cancel</a>";
