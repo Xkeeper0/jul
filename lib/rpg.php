@@ -20,8 +20,8 @@
 	function getstats($u, $items=0, $class = 0){
 
 		$stat=array('HP','MP','Atk','Def','Int','MDf','Dex','Lck','Spd');
-		$p=$u[posts];
-		$d=(ctime()-$u[regdate])/86400;
+		$p=$u['posts'];
+		$d=(ctime()-$u['regdate'])/86400;
 		for($i=0;$i<9;$i++) {
 		$m[$i]=1;
 		}
@@ -29,7 +29,7 @@
 			$item=$items[$u['eq'.$i]];
 			for($k=0;$k<9;$k++){
 				$is=$item['s'.$stat[$k]];
-				if(substr($item[stype],$k,1)=='m') $m[$k]*=$is/100;
+				if(substr($item['stype'],$k,1)=='m') $m[$k]*=$is/100;
 				else $a[$k]+=$is;
 			}
 		}
@@ -44,9 +44,9 @@
 			}
 		}
 
-		$stats[GP]=coins($p,$d)-$u[spent];
-		$stats[exp]=calcexp($p,$d);
-		$stats[lvl]=calclvl($stats[exp]);
+		$stats['GP']=coins($p,$d)-$u['spent'];
+		$stats['exp']=calcexp($p,$d);
+		$stats['lvl']=calclvl($stats['exp']);
 		return $stats;
 	}
 	function coins($p,$d){
@@ -66,4 +66,3 @@
 	case 7: return (pow($p,0.07) * pow($d,0.20) * pow($l,1.09) * 0.29) +  1; //Int
 	case 8: return (pow($p,0.19) * pow($d,0.07) * pow($l,1.09) * 0.25) +  1; //Spd
 */
-

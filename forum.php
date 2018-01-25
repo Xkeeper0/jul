@@ -153,7 +153,7 @@
 				<td colspan=7 class='tbl tdbgh center fonts'>Announcements</td>
 			</tr><tr>
 				$tccell2>". ($loguser['lastannouncement'] < $annc['aid'] && $loguser['id'] ? $newpic : "&nbsp;") ."</td>
-				$tccell1l colspan=6><a href=announcement.php>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc[date]+$tzoff)."</td>
+				$tccell1l colspan=6><a href=announcement.php>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc['date']+$tzoff)."</td>
 			</tr>";
 		}
 		if($annc = $sql->fetchq("SELECT user id,date,announcements.title,name,sex,powerlevel FROM announcements,users WHERE forum=$id AND user=users.id ORDER BY date DESC LIMIT 1")) {
@@ -202,7 +202,7 @@
 			."LIMIT $min,$tpp");
 	else
 		$threads = $sql->query("SELECT t.*,"
-			."u1.name AS name1, u1.sex AS sex1, u1.powerlevel AS pwr1, u1.aka as aka1, u1.birthday as bd1," 
+			."u1.name AS name1, u1.sex AS sex1, u1.powerlevel AS pwr1, u1.aka as aka1, u1.birthday as bd1,"
 			."u2.name AS name2, u2.sex AS sex2, u2.powerlevel AS pwr2, u2.aka as aka2, u2.birthday as bd2 "
 			.($log ? ", r.read AS tread, r.time as treadtime " : " ")
 			."FROM threads t "
@@ -326,7 +326,7 @@
 			array('sex'=>'sex1', 'powerlevel'=>'pwr1', 'id'=>'user',       'aka'=>'aka1', 'name'=>'name1', 'birthday'=>'bd1'));
 		$userlink2 = getuserlink($thread,
 			array('sex'=>'sex2', 'powerlevel'=>'pwr2', 'id'=>'lastposter', 'aka'=>'aka2', 'name'=>'name2', 'birthday'=>'bd2'));
-		
+
 		$threadlist .= "<tr>
 			$tccell1>$new</td>
 			$tccell2 width=40px><div style=\"max-width:60px;max-height:30px;overflow:hidden;\">$posticon</div></td>
