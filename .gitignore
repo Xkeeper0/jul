@@ -1,5 +1,6 @@
 .rem/
 .old/
+.well-known/
 board/
 xkeeper/
 version.txt
