@@ -131,7 +131,7 @@
 	if(!$user['posts'] or $user['posts']>=$topposts or $projdate>2000000000 or $projdate<ctime()) $projdate="";
 	else $projdate=" -- Projected date for $topposts posts: ".date($dateformat,$projdate+$tzoff);
 
-	if($user['minipic']) $minipic="<img src=\"". htmlspecialchars($user[minipic]) ."\" width=16 height=16 align=absmiddle> ";
+	if($user['minipic']) $minipic="<img src=\"". htmlspecialchars($user['minipic']) ."\" width=16 height=16 align=absmiddle> ";
 	$homepagename=$user['homepageurl'];
 	if($user['homepagename']) $homepagename="$user[homepagename]</a> - $user[homepageurl]";
 	if($user['postbg']) $postbg="<div style='background:url($user[postbg]);' height=100%>";
