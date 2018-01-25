@@ -1266,7 +1266,6 @@ function dofilters($p){
 	$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
 
 
-	$p=str_replace("http://insectduel.proboards82.com","http://jul.rustedlogic.net/idiotredir.php?",$p);
 //	$p=str_replace("http://imageshack.us", "imageshit", $p);
 	$p=preg_replace("'http://.{0,3}\.?tinypic\.com'si",'tinyshit',$p);
 	$p=str_replace('<link href="http://pieguy1372.freeweb7.com/misc/piehills.css" rel="stylesheet">',"",$p);
@@ -1420,9 +1419,6 @@ function addslashes_array($data) {
 	function marqueeshit($str) {
 		return "<marquee scrollamount='". mt_rand(1, 50) ."' scrolldelay='". mt_rand(1, 50) ."' direction='". pick_any(array("left", "right")) ."'>$str</marquee>";
 	}
-
-	// additional includes
-	require_once "lib/datetime.php";
 
 
 	function unescape($in) {

@@ -5,8 +5,8 @@
 
 	$img	= imagecreate(45, 37);
 	$bg		= imagecolorallocate($img, 100, 100, 100);
-	$num	= imagecreatefrompng("digitstiny.png");
-	
+	$num	= imagecreatefrompng("images/digitstiny.png");
+
 	$xk		= $sql -> fetchq("SELECT * FROM `users` WHERE `id` = '1'");
 	$thread	= $sql -> resultq("SELECT COUNT(`id`) FROM `threads` WHERE `user` = '1'");
 

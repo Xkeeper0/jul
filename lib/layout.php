@@ -221,7 +221,6 @@
 	- <a href='online.php'>Online users</a><br>
 	<a href='ranks.php'>Ranks</a>
 	- <a href='faq.php'>Rules/FAQ</a>
-	- <a href='acs.php'>JCS</a>
 	- <a href='stats.php'>Stats</a>
 	- <a href='latestposts.php'>Latest Posts</a>
 	- <a href='hex.php' title='Color Chart' class='popout' target='_blank'>Color Chart</a>
@@ -353,7 +352,7 @@
 
 	$header1="<html><head><meta http-equiv='Content-type' content='text/html; charset=utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>$windowtitle</title>
 	$metatag
-	<link rel=\"shortcut icon\" href=\"/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
+	<link rel=\"shortcut icon\" href=\"/images/favicons/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
 	$css
 	</head>
 	$body
