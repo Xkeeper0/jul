@@ -92,7 +92,7 @@
 		  $tccellc>Last IP</td>
 		";
 		for($c=0;$c<500 && $user=$sql->fetch($users);$c++)
-		  if ($users['id'] != 428) print "
+		  print "
 		    <tr>
 		    $tccell2>$user[id]</td>
 		    $tccell1><a href=profile.php?id=$user[id]><font ".getnamecolor($user['sex'],$user['powerlevel']).">$user[name]</font></a></td>
@@ -115,7 +115,6 @@
 		  $tccellc>IP</td>
 		";
 		for($c=0;$c<500 && $post=$sql->fetch($posts);$c++)
-			if ($post['user'] != 428)
 			print "
 		    <tr>
 		    $tccell2>$post[id]</td>
@@ -138,7 +137,6 @@
 		  $tccellc>IP</td>
 		";
 		for($c=0;$c<500 && $pmsg=$sql->fetch($pmsgs);$c++)
-			if ($pmsg['userfrom'] != 428 && $pmsg['userto'] != 428)
 			print "
 		    <tr>
 		    $tccell2>$pmsg[id]</td>
