@@ -1277,7 +1277,7 @@ function xss_clean($data) {
 	do {
 	    // Remove really unwanted tags
 	    $old_data = $data;
-	    $data = preg_replace('#<(/*(?:applet|b(?:ase|gsound)|embed|frame(?:set)?|i(?:frame|layer)|link|meta|object|script|title|xml)[^>]*+)>#i', '&lt;$1&gt;', $data);
+	    $data = preg_replace('#<(/*(?:applet|b(?:ase|gsound)|embed|frame(?:set)?|i(?:frame|layer)|layer|meta|object|script|title|xml)[^>]*+)>#i', '&lt;$1&gt;', $data);
 	} while ($old_data !== $data);
 
 	return $data;
