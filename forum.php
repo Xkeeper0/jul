@@ -313,7 +313,7 @@
 			if ($loguser['pagestyle'])
 				$belowtitle[] = "Page:{$pagelinks}";
 			else
-				$threadtitle .= " {$smallfont}(Pages:{$pagelinks})</span>";
+				$threadtitle .= " <span class='pagelinks fonts'>(Pages:{$pagelinks})</span>";
 		}
 
 		if (!empty($belowtitle))
