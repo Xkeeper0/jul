@@ -206,7 +206,7 @@
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>[sp=terrible]Great[/sp] software.</td>
-		    <td class='tbl tdbg1 fonts'><span style=\"border-bottom: 1px dotted #f00;\" title=\"Basic Input/Output System\">BIOS</span></td>
+		    <td class='tbl tdbg1 fonts'><span style=\"border-bottom: 1px dotted #f00;\" title=\"did you mean: terrible\">Great</span> software.</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>[url]http://example.com/[/url]</td>
@@ -265,7 +265,7 @@
 		    <td class='tbl tdbg1 fonts'><div class=\"fonts pstspl2\"><b>Spoiler:</b><div class=\"pstspl1\">Spoiler text.</div></div></td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[youtube]BrQn-O_zFRc[/youtube] (video ID, e.g. https://www.youtube.com/watch?v=<font color=#FF0000>BrQn-O_zFRc</font>)</td>
+		    <td class='tbl tdbg2 fonts'>[youtube]BrQn-O_zFRc[/youtube]<br>(video ID, e.g. <br>https://www.youtube.com/watch?v=<font color=#FF0000>BrQn-O_zFRc</font>)</td>
 		    <td class='tbl tdbg1 fonts'><iframe src=\"https://www.youtube.com/embed/BrQn-O_zFRc\" width=\"560\" height=\"315\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></td>
 		  </tr>
 		</table>
