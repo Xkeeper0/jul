@@ -7,7 +7,7 @@
 	$dd = mktime(0,0,0,substr($vd,0,2),substr($vd,3,2),substr($vd,6,2));
 
 	$days = floor((ctime()-$dd)/86400);
-	$scalex	= 2;
+	$scalex	= 1;
 	$scaley	= 20;
 	$m = $max / $scaley;
 

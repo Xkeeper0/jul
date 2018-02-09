@@ -4,12 +4,12 @@
 	header("Cache-Control: no-cache");
 
 	if ($_GET['z']) {
-		die( "<body bgcolor=#111122><META HTTP-EQUIV=REFRESH CONTENT=0;URL=newyear.php?z=". rand(0,9999) ."><center><br><br><br><br><img src=newyear.php width=100%>");
+		die( "<body bgcolor=#111122><META HTTP-EQUIV=REFRESH CONTENT=1;URL=newyear.php?z=". rand(0,9999) ."><center><br><br><br><br><img src=newyear.php width=100%>");
 	}
 
 //	require "lib/function.php";
 
-	$bombday		= mktime(0, 0,  0,  1, 1, 2008);
+	$bombday		= mktime(0, 0,  0,  1, 1, 2010);
 	$time			= microtime(true) + (3600 * $_GET['to']);
 	$left			= $bombday - $time;
 	$left			= max(0, $left);
@@ -28,7 +28,7 @@
 //	$teststring		= "00d00:00:00.01";
 
 	$image			= imagecreate(64, 9);
-	$imagenum		= imagecreatefrompng("digits8.png");
+	$imagenum		= imagecreatefrompng("../images/digits8.png");
 	$bg				= imagecolorallocate($image, 255, 0, 255);
 	$black			= imagecolorallocate($image,   0, 0, 0);
 
@@ -89,7 +89,7 @@
 		}
 
 		if ($w) imagecopymerge($image, $imagenum, $ofs, 0, $p, 0, $w, 7, 100);
-		
+
 		$ofs	+= $of;
 	}
 

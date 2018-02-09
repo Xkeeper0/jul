@@ -46,7 +46,7 @@
 			$sql->query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,".ctime().')');
 			return header("Location: index.php");
 		}
-		
+
 		if (filter_string($_GET['action']) == 'markallforumsread' and $log) {
 			$sql->query("DELETE FROM forumread WHERE user=$loguserid");
 			$sql->query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid'");
@@ -64,9 +64,9 @@
 			$users[$user['id']]=$user;
 			$y=date('Y',ctime())-date('Y',$user['birthday']);
 			$userurl = getuserlink($user);
-			$blist.= "$userurl ($y)"; 
+			$blist.= "$userurl ($y)";
 		}
-		
+
 		$onlinetime=ctime()-300;
 		$onusers=$sql->query("SELECT id,name,powerlevel,lastactivity,sex,minipic,aka,birthday FROM users WHERE lastactivity>$onlinetime OR lastposttime>$onlinetime ORDER BY name");
 		$numonline=mysql_num_rows($onusers);
@@ -75,7 +75,7 @@
 		if ($numguests) $guestcount=" | <nobr>$numguests guest".($numguests>1?"s":"");
 		$onlineusersa	= array();
 		for ($numon=0; $onuser = $sql->fetch($onusers);$numon++) {
-			
+
 			//$namecolor=explode("=", getnamecolor($onuser['sex'],$onuser['powerlevel']));
 			//$namecolor=$namecolor[1];
 			//$namelink="<a href=profile.php?id=$onuser[id] style='color: #$namecolor'>$onuser[name]</a>";
@@ -89,7 +89,7 @@
 			if($onuser['lastactivity']<=$onlinetime) {
 				$namelink="($namelink)";
 			}
-			
+
 			$onlineusersa[]="$onuser[minipic]$namelink";
 		}
 
@@ -112,7 +112,7 @@
 		$count = $sql->fetchq('SELECT (SELECT COUNT( * ) FROM users) AS u, (SELECT COUNT(*) FROM threads) as t, (SELECT COUNT(*) FROM posts) as p');
 
 		$misc = $sql->fetchq('SELECT * FROM misc');
-		
+
 		if($posts['d']>$misc['maxpostsday'])  $sql->query("UPDATE misc SET maxpostsday=$posts[d],maxpostsdaydate=".ctime());
 		if($posts['h']>$misc['maxpostshour']) $sql->query("UPDATE misc SET maxpostshour=$posts[h],maxpostshourdate=".ctime());
 		if($numonline>$misc['maxusers'])      $sql->query("UPDATE misc SET maxusers=$numonline,maxusersdate=".ctime().",maxuserstext='".addslashes($onlineusers)."'");
@@ -120,7 +120,7 @@
 		/*// index sparkline
 		$sprkq = mysql_query('SELECT COUNT(id),date FROM posts WHERE date >="'.(time()-3600).'" GROUP BY (date % 60) ORDER BY date');
 		$sprk = array();
-		
+
 		while ($r = mysql_fetch_row($sprkq)) {
 			array_push($sprk,$r[0]);
 		}
@@ -204,7 +204,7 @@
   // Quicker (?) new posts calculation that's hopefully accurate v.v
   if ($log) {
 	  $qadd = array();
-	  foreach ($forums as $forum) $qadd[] = "(lastpostdate > '{$postread[$forum[id]]}' AND forum = '$forum[id]')\r\n";
+	  foreach ($forums as $forum) $qadd[] = "(lastpostdate > '{$postread[$forum['id']]}' AND forum = '{$forum['id']}')\r\n";
 	  $qadd = implode(' OR ', $qadd);
 
 		$forumnew = $sql->getresultsbykey("SELECT forum, COUNT(*) AS unread FROM threads t LEFT JOIN threadsread tr ON (tr.tid = t.id AND tr.uid = $loguser[id])
@@ -279,7 +279,7 @@
 	}
 
 		print "$tblend<br>$privatebox
-		
+
 		". adbox() ."<br>
 
 		$tblstart$forumlist$tblend$footer";

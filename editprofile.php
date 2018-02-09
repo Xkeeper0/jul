@@ -22,7 +22,7 @@
 		if ($loguser['sex'] == 255)
 			$loguser['sex'] = $loguser['oldsex'];
 
-    $descbr="</b>$smallfont<br></center>&nbsp;";
+    $descbr="</b>$smallfont<br>";
     $checked1[$loguser['sex']]='checked=1';
     $checked2[$loguser['viewsig']]='checked=1';
 //    $checked3[$loguser['posttool']]='checked=1';
@@ -51,7 +51,7 @@
 	$radio=pollstyle value=1 $checked6[1]> Influence";
     if($titleopt){
 		// this went after this block, which makes it COMPLETELY USELESS
-	    squot(0,$loguser[title]);
+	    squot(0,$loguser['title']);
 		$titleoption="
 	    $tccell1><b>Custom title:$descbr This title will be shown below your rank.</td>
 	    $tccell2l>$inpt=title VALUE=\"$loguser[title]\" SIZE=60 MAXLENGTH=255><tr>
@@ -101,32 +101,34 @@
     $rsetlist="<select name=useranks>$rsetlist</select>";
 
     print "
-	$header<br>$tblstart
-	 <FORM ACTION=editprofile.php NAME=REPLIER METHOD=POST autocomplete=off>
-	 $tccellh>Login information</td>$tccellh>&nbsp<tr>
-	 $tccell1><b>User name:</td>$tccell2l>$loguser[name]<tr>
+	$header<br>
+    <FORM ACTION=editprofile.php NAME=REPLIER METHOD=POST autocomplete=off>
+    $tblstart
+	 $tccellh colspan='2'>Login information</td><tr>
+	 $tccell1 style='width: 40%;'><b>User name:$descbr If you want to change this, ask an admin.</td>$tccell2l style='width: 60%;'>$loguser[name]<tr>
 	 $tccell1><b>Password:</b>$descbr You can change your password by entering a new one here.</td>
 	 $tccell2l>$inpp=password SIZE=13 MAXLENGTH=64 autocomplete=off><tr>
 
-	 $tccellh> Appearance</td>$tccellh>&nbsp<tr>
+	 $tccellh colspan='2'>Appearance</td><tr>
 	 $titleoption
 	 $tccell1><b>User rank:</b>$descbr You can hide your rank, or choose from different sets.</td>
 	 $tccell2l>$rsetlist<tr>
-	 $tccell1><b>User picture:$descbr The full URL of the image showing up below your username in posts. Leave it blank if you don't want to use a picture. The limits are 200x200 pixels, and about 100KB; anything over this will be removed.</td>
+	 $tccell1><b>Avatar:$descbr The full URL of the image showing up below your username in posts. Leave it blank if you don't want to use a avatar. Anything over 200&times;200 pixels will be removed.</td>
 	 $tccell2l>$inpt=picture VALUE=\"$loguser[picture]\" SIZE=60 MAXLENGTH=100><tr>
 	 $tccell1><b>Mood avatar:$descbr The URL of a mood avatar set. '\$' in the URL will be replaced with the mood, e.g. <b>http://your.page/here/\$.png</b>!</td>
 	 $tccell2l>$inpt=moodurl VALUE=\"$loguser[moodurl]\" SIZE=60 MAXLENGTH=100><tr>
 	 $tccell1><b>Minipic:$descbr The full URL of a small picture showing up next to your username on some pages. Leave it blank if you don't want to use a picture. The picture is resized to 16x16.</td>
 	 $tccell2l>$inpt=minipic VALUE=\"$loguser[minipic]\" SIZE=60 MAXLENGTH=100><tr>
-	 $tccell1><b>Post background:$descbr The full URL of a picture showing up in the background of your posts. Leave it blank for no background. Please make sure your text is readable on the background!</td>
+	 ". ($loguser['postbg'] ? "$tccell1><b>Post background:$descbr The full URL of a picture showing up in the background of your posts. Leave it blank for no background. Please make sure your text is readable on the background!</td>
 	 $tccell2l>$inpt=postbg VALUE=\"$loguser[postbg]\" SIZE=60 MAXLENGTH=250><tr>
-	 $tccell1><b>Post header:$descbr This will get added before the start of each post you make. This can be used to give a default font color and face to your posts (by putting a <<z>font> tag). This should preferably be kept small, and not contain too much text or images.</td>
-	 $tccell2l>$txta=postheader ROWS=8 COLS=60>". htmlspecialchars($loguser[postheader]) ."</TEXTAREA><tr>
-	 $tccell1><b>Signature:$descbr This will get added at the end of each post you make, below an horizontal line. This should preferably be kept to a small enough size.</td>
-	 $tccell2l>$txta=signature ROWS=8 COLS=60>". htmlspecialchars($loguser[signature]) ."</TEXTAREA><tr>
+     " : "") ."
+	 $tccell1><b>Post header:$descbr HTML added here will come before your post.</td>
+	 $tccell2l>$txta=postheader ROWS=8 COLS=60 style='width: 100%;'>". htmlspecialchars($loguser['postheader']) ."</TEXTAREA><tr>
+	 $tccell1><b>Footer/Signature:$descbr HTML and text added here will be added to the end of your post.</td>
+	 $tccell2l>$txta=signature ROWS=8 COLS=60 style='width: 100%;'>". htmlspecialchars($loguser['signature']) ."</TEXTAREA><tr>
 
-	 $tccellh>Personal information</td>$tccellh>&nbsp<tr>
-	 $tccell1><b>Sex:$descbr Male or female. (or N/A if you don't want to tell it)</td>
+	 $tccellh colspan='2'>Personal information</td><tr>
+	 $tccell1><b>Gender:$descbr This determines your name color (for now).</td>
 	 $tccell2l>$sexlist<tr>
 <!--	 $tccell1><b>Also known as:$descbr If you go by an alternate alias (or are constantly subjected to name changes), enter it here.  It will be displayed in your profile if it doesn't match your current username.</td>
 	 $tccell2l>$inpt=aka VALUE=\"$loguser[aka]\" SIZE=25 MAXLENGTH=25><tr> -->
@@ -136,10 +138,10 @@
 	 $tccell2l>$inpt=location VALUE=\"$loguser[location]\" SIZE=40 MAXLENGTH=60><tr>
 	 $tccell1><b>Birthday:$descbr Your date of birth.</td>
 	 $tccell2l>Month: $inpt=bmonth SIZE=2 MAXLENGTH=2 VALUE=$month> Day: $inpt=bday SIZE=2 MAXLENGTH=2 VALUE=$day> Year: $inpt=byear SIZE=4 MAXLENGTH=4 VALUE=$year><tr>
-	 $tccell1><b>Bio:$descbr Some information about yourself, showing up in your profile.</td>
-	 $tccell2l>$txta=bio ROWS=8 COLS=60>". htmlspecialchars($loguser[bio]) ."</TEXTAREA><tr>
+	 $tccell1><b>Bio:$descbr Some information about yourself, showing up in your profile. Accepts HTML.</td>
+	 $tccell2l>$txta=bio ROWS=8 COLS=60 style='width: 100%;'>". htmlspecialchars($loguser['bio']) ."</TEXTAREA><tr>
 
-	 $tccellh>Online services</td>$tccellh>&nbsp<tr>
+	 $tccellh colspan='2'>Online services</td><tr>
 	 $tccell1><b>Email address:$descbr This is only shown in your profile; you don't have to enter it if you don't want to.</td>
 	 $tccell2l>$inpt=email VALUE=\"$loguser[email]\" SIZE=60 MAXLENGTH=60><tr>
 	 $tccell1><b>AIM screen name:$descbr Your AIM screen name, if you have one.</td>
@@ -153,10 +155,10 @@
 	 $tccell1><b>Homepage name:$descbr Your homepage name, if you have a homepage.</td>
 	 $tccell2l>$inpt=pagename VALUE=\"$loguser[homepagename]\" SIZE=60 MAXLENGTH=100><tr>
 
-	 $tccellh> Options</td>$tccellh>&nbsp<tr>
-	 $tccell1><b>Custom date format:$descbr Edit the date format here to affect how dates are displayed.  Leave it blank to return to the default format (<b>$defaultdateformat</b>)<br>See the <a href='http://php.net/manual/en/function.date.php'>date() function in the PHP manual</a> for more information.</td>
+	 $tccellh colspan='2'> Options</td><tr>
+	 $tccell1><b>Custom date format:$descbr Change how dates are displayed. Uses <a href='http://php.net/manual/en/function.date.php'>date()</a> formatting. Leave blank to use the default.</td>
 	 $tccell2l>$inpt=eddateformat value=\"$dateformat\" size=16 maxlength=32><tr>
-	 $tccell1><b>Custom short date format:$descbr A shorter date format displayed on certain areas of the board.  Leave it blank to return to the default format (<b>$defaultdateshort</b>).</td>
+	 $tccell1><b>Custom short date format:$descbr Change how abbreviated dates are displayed. Uses the same formatting. Leave blank to reset.</td>
 	 $tccell2l>$inpt=eddateshort value=\"$dateshort\" size=8 maxlength=16><tr>
 	 $tccell1><b>Timezone offset:$descbr How many hours you're offset from the time on the board (".date($dateformat,ctime()).").</td>
 	 $tccell2l>$inpt=timezone VALUE=$loguser[timezone] SIZE=5 MAXLENGTH=5><tr>
@@ -166,14 +168,14 @@
 	 $tccell2l>$inpt=threadsperpage SIZE=4 MAXLENGTH=4 VALUE=$loguser[threadsperpage]><tr>".
 //	 $tccell1><b>Use textbox toolbar when posting:$descbr You can disable it here, preventing potential slowdowns or other minor problems when posting.</td>
 //	 $tccell2l>$vtool<tr>
-	"$tccell1><b>Signatures and post headers:$descbr You can disable them here, which can make thread pages smaller and load faster.</td>
+	"$tccell1><b>Post layouts:$descbr You can disable them here, which can make thread pages smaller and load faster.</td>
 	 $tccell2l>$vsig<tr>
 
 	 $tccell1><b>Forum page list style:$descbr Inline (Title - Pages ...) or Seperate Line (shows more pages)</td>
 	 $tccell2l>$pagestyle<tr>
 	 $tccell1><b>Poll vote system:$descbr Normal (based on users) or Influence (based on levels)</td>
 	 $tccell2l>$pollstyle<tr>
-	 
+
 	 $tccell1><b>Thread layout:$descbr You can choose from a few thread layouts here.</td>
 	 $tccell2l>$laylist<tr>
 	 $tccell1><b>Signature separator:$descbr You can choose from a few signature separators here.</td>
@@ -181,8 +183,8 @@
 	 $tccell1><b>Color scheme / layout:$descbr You can select from a few color schemes here.</td>
 	 $tccell2l>$schlist<tr>
 
-	 $tccellh>&nbsp</td>$tccellh>&nbsp<tr>
-	 $tccell1>&nbsp</td>$tccell2l>
+	 $tccellh colspan='2'>&nbsp;</td><tr>
+	 $tccell1>&nbsp;</td>$tccell2l>
 	 $inph=action VALUE=saveprofile>
 	 $inph=userid VALUE=$userid>
 	 $inps=submit VALUE=\"Edit profile\"></td></FORM>
@@ -196,7 +198,7 @@
     sbr(0,$postheader);
     sbr(0,$signature);
     sbr(0,$bio);
-    if(!isset($title) or !$titleopt) $title=$loguser[title];
+    if(!isset($title) or !$titleopt) $title=$loguser['title'];
     if($sex>2 && $sex != $loguser['sex'] && $sex != $loguser['oldsex'])
       $sex=2;
 
@@ -227,7 +229,7 @@
     $birthday=@mktime(12,0,0,$bmonth,$bday,$byear);
     if(!$bmonth && !$bday && !$byear) $birthday=0;
     if(!$icq) $icq=0;
-    if(!isset($useranks)) $useranks=$loguser[useranks];
+    if(!isset($useranks)) $useranks=$loguser['useranks'];
 
 		if ($_POST['password']) {
 			$hash = getpwhash($_POST['password'], $loguserid);
@@ -283,4 +285,3 @@
 
   print $footer;
   printtimedif($startingtime);
-?>

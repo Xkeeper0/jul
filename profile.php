@@ -37,7 +37,7 @@
 	$numvotes=mysql_num_rows($ratings);
 	if($ratetotal) {
 		$ratingstatus=(floor($ratescore*1000/$ratetotal)/100)." ($ratescore/$ratetotal, $numvotes votes)";
-	} else { 
+	} else {
 		$ratingstatus="None";
 	}
 	if($loguserid and $logpwenc and $loguserid!=$id)
@@ -77,7 +77,7 @@
 		}
 	}
 
-	$aim=str_replace(" ","+",$user[aim]);
+	$aim=str_replace(" ","+",$user['aim']);
 	$schname=$sql->resultq("SELECT name FROM schemes WHERE id=$user[scheme]");
 	$numdays=(ctime()-$user['regdate'])/86400;
 
@@ -85,17 +85,17 @@
 	//  $user['signature']=doreplace2($user['signature'],$user['posts'],$numdays,$user['name']);
 	$user['postheader']=doreplace($user['postheader'],$user['posts'],$numdays,$user['name']);
 	//  $user['postheader']=doreplace2($user['postheader'],$user['posts'],$numdays,$user['name']);
-	
+
 	if ($user['picture']) $picture = "<img src=\"$user[picture]\">";
 	if ($user['moodurl']) $moodavatar = " | <a href='avatar.php?id=$id' class=\"popout\" target=\"_blank\">Preview mood avatar</a>";
-	
+
 	$icqicon="<a href=http://wwp.icq.com/$user[icq]#pager><img src=http://wwp.icq.com/scripts/online.dll?icq=$user[icq]&img=5 border=0></a>";
-	
+
 	if(!$user['icq']){
 		$user['icq']="";
 		$icqicon="";
 	}
-	
+
 	$tccellha="<td bgcolor=$tableheadbg";
 	$tccellhb="><center>$fonthead";
 
@@ -107,9 +107,9 @@
 	$tzoffset=$user['timezone'];
 	$tzoffrel=$tzoffset-$loguser['timezone'];
 	$tzdate=date($dateformat,ctime()+$tzoffset*3600);
-	if($user[birthday]){
-		$birthday=date("l, F j, Y",$user[birthday]);
-		$age="(".floor((ctime()-$user[birthday])/86400/365.2425)." years old)";
+	if($user['birthday']){
+		$birthday=date("l, F j, Y",$user['birthday']);
+		$age="(".floor((ctime()-$user['birthday'])/86400/365.2425)." years old)";
 	}
 
 	// RPG fun shit
@@ -117,10 +117,10 @@
 	$lvl=calclvl($exp);
 	$expleft=calcexpleft($exp);
 	$expstatus="Level: $lvl<br>EXP: $exp (for next level: $expleft)";
-	if($user['posts'] > 0) $expstatus.="<br>Gain: ".calcexpgainpost($user['posts'],(ctime()-$user['regdate'])/86400)." EXP per post, ".calcexpgaintime($user[posts],(ctime()-$user[regdate])/86400)." seconds to gain 1 EXP when idle";
-	$postavg=sprintf("%01.2f",$user[posts]/(ctime()-$user[regdate])*86400);
+	if($user['posts'] > 0) $expstatus.="<br>Gain: ".calcexpgainpost($user['posts'],(ctime()-$user['regdate'])/86400)." EXP per post, ".calcexpgaintime($user['posts'],(ctime()-$user['regdate'])/86400)." seconds to gain 1 EXP when idle";
+	$postavg=sprintf("%01.2f",$user['posts']/(ctime()-$user['regdate'])*86400);
 	$totalwidth=116;
-	$barwidth=@floor(($user[posts]/$maxposts)*$totalwidth);
+	$barwidth=@floor(($user['posts']/$maxposts)*$totalwidth);
 	if($barwidth<0) $barwidth=0;
 	if($barwidth) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
 	if($barwidth<$totalwidth) $baroff="<img src=images/$numdir"."bar-off.gif width=".($totalwidth-$barwidth)." height=8>";
@@ -131,7 +131,7 @@
 	if(!$user['posts'] or $user['posts']>=$topposts or $projdate>2000000000 or $projdate<ctime()) $projdate="";
 	else $projdate=" -- Projected date for $topposts posts: ".date($dateformat,$projdate+$tzoff);
 
-	if($user['minipic']) $minipic="<img src=\"". htmlspecialchars($user[minipic]) ."\" width=16 height=16 align=absmiddle> ";
+	if($user['minipic']) $minipic="<img src=\"". htmlspecialchars($user['minipic']) ."\" width=16 height=16 align=absmiddle> ";
 	$homepagename=$user['homepageurl'];
 	if($user['homepagename']) $homepagename="$user[homepagename]</a> - $user[homepageurl]";
 	if($user['postbg']) $postbg="<div style='background:url($user[postbg]);' height=100%>";
@@ -181,9 +181,9 @@ $tblstart
 	$tccell1l width=150><b>Total threads</td>		$tccell2l>$threadsposted<tr>
 	$tccell1l width=150><b>EXP</td>					$tccell2l>$expstatus<tr>
 ". (false ? "	$tccell1l width=150><b>User rating</td>			$tccell2l>$ratingstatus<tr>" : "") ."
-	$tccell1l width=150><b>Registered on</td>		$tccell2l>".@date($dateformat,$user[regdate]+$tzoff)." (".floor((ctime()-$user[regdate])/86400)." days ago)<tr>
+	$tccell1l width=150><b>Registered on</td>		$tccell2l>".@date($dateformat,$user['regdate']+$tzoff)." (".floor((ctime()-$user['regdate'])/86400)." days ago)<tr>
 	$tccell1l width=150><b>Last post</td>			$tccell2l>$lastpostdate$lastpostlink<tr>
-	$tccell1l width=150><b>Last activity</td>		$tccell2l>".date($dateformat,$user[lastactivity]+$tzoff)."$lastip<tr>
+	$tccell1l width=150><b>Last activity</td>		$tccell2l>".date($dateformat,$user['lastactivity']+$tzoff)."$lastip<tr>
 $tblend
 <br>$tblstart
 	$tccellh colspan=2><center>Contact information<tr>
@@ -222,7 +222,7 @@ $tblend
 <br>$tblstart
 	$tccellhs colspan=2><center>Options<tr>
 	$tccell2s colspan=2>
-	<a href=thread.php?user=$id>Show posts</a> | 
+	<a href=thread.php?user=$id>Show posts</a> |
 	<a href=forum.php?user=$id>View threads by this user</a>
 	$sendpmsg
   $ratelink
@@ -231,7 +231,7 @@ $tblend
 	$tccell2s colspan=2>
 	<a href=postsbyuser.php?id=$id>List posts by this user</a> |
 	<a href=postsbytime.php?id=$id>Posts by time of day</a> |
-	<a href=postsbythread.php?id=$id>Posts by thread</a> | 
+	<a href=postsbythread.php?id=$id>Posts by thread</a> |
 	<a href=postsbyforum.php?id=$id>Posts by forum</td>$sneek
 	$tblend$footer
   ";

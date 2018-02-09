@@ -1,7 +1,7 @@
 <?php
 	header("HTTP/1.1 503 Service Unavailable");
 ?><html><head><title>Jul -- Temporarily down</title>
-	<link rel="shortcut icon" href="/favicon3x.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/images/favicons/favicon3.ico" type="image/x-icon">
 		<style>
 		a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold}
 		a {
@@ -52,7 +52,7 @@
 			display:		block;
 		}
 		code br { display: none; }
-	
+
 		textarea,input,select{
 		  border:	#663399 solid 1px;
 		  background:#000000;
@@ -67,7 +67,7 @@
 		  border:	#663399 solid 2px;
 		  font:	10pt verdana;}
 		</style>
-	
+
 	</head>
 	<body>
 	<center>

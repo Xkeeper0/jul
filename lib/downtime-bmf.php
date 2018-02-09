@@ -1,6 +1,6 @@
 <html><head><title>The COM Port -- Down</title>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-	
+
 			<style>
 			a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold}
 			a {
@@ -52,9 +52,9 @@
 			}
 			code br { display: none; }
 			input[type=radio] { color: black; background: white; }
-			
-		</style><!--[if IE]><style type='text/css'>#f_ikachan, #f_doomcounter, #f_mustbeblind { display: none; }</style><![endif]-->	
-	
+
+		</style><!--[if IE]><style type='text/css'>#f_ikachan, #f_doomcounter, #f_mustbeblind { display: none; }</style><![endif]-->
+
 	</head>
 	<body>
 	<center>
