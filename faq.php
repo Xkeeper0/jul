@@ -67,24 +67,60 @@
 		<br>
 		<table class='table' cellspacing='0' style='width: auto;'>
 		  <tr>
-		    <td class='tbl tdbgh fonts center'>Tag</th>
-		    <td class='tbl tdbgh fonts center'>Value</th>
+		    <td class='tbl tdbgh fonts center'>Tags</td>
+		    <td class='tbl tdbgh fonts center'>Description</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;numposts&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Current post count</td>
+		    <td class='tbl tdbg2 fonts'>/me</td>
+		    <td class='tbl tdbg1 fonts'>Your username (must have a space after it)</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;date&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Current date</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>&amp;numdays&amp;</td>
 		    <td class='tbl tdbg1 fonts'>Number of days since registration</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;level&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Level</td>
+		    <td class='tbl tdbg2 fonts'>&amp;numposts&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Current post count</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;rank&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Current rank, according to your amount of posts</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;postrank&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Post ranking</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;5000&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Posts left until you have 5000</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;10000&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Posts left until you have 10000</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;20000&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Posts left until you have 20000</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;30000&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Posts left until you have 30000</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>&amp;exp&amp;</td>
 		    <td class='tbl tdbg1 fonts'>EXP</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;expgain&amp;</td>
+		    <td class='tbl tdbg1 fonts'>EXP gain per post</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2 fonts'>&amp;expgaintime&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Seconds for 1 EXP when idle</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>&amp;expdone&amp;</td>
@@ -119,12 +155,8 @@
 		    <td class='tbl tdbg1 fonts'>Percentage of EXP left in the level</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;expgain&amp;</td>
-		    <td class='tbl tdbg1 fonts'>EXP gain per post</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;expgaintime&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Seconds for 1 EXP when idle</td>
+		    <td class='tbl tdbg2 fonts'>&amp;level&amp;</td>
+		    <td class='tbl tdbg1 fonts'>Level</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>&amp;lvlexp&amp;</td>
@@ -133,44 +165,6 @@
 		  <tr>
 		    <td class='tbl tdbg2 fonts'>&amp;lvllen&amp;</td>
 		    <td class='tbl tdbg1 fonts'>EXP needed to go through the current level</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;5000&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Posts left until you have 5000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;10000&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Posts left until you have 10000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;20000&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Posts left until you have 20000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;30000&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Posts left until you have 30000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;rank&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Current rank, according to your amount of<br>  posts</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;postrank&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Post ranking</td>
-		  </tr>
-		  <!--
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;postrank10k&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Post ranking you'd have with 10000 less<br>  posts</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;postrank20k&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Post ranking you'd have with 20000 less<br>  posts</td>
-		  </tr>
-		  -->
-		  <tr>
-		    <td class='tbl tdbg2 fonts'>&amp;date&amp;</td>
-		    <td class='tbl tdbg1 fonts'>Current date</td>
 		  </tr>
 		</table>
 	");
