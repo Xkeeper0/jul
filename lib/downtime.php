@@ -85,8 +85,7 @@
 				The daily backup is in progress. Check back in about five minutes.
 				<br>
 				<br>Feel free to drop by IRC:
-				<br><b>irc.badnik.zone</b> &mdash; <b>#x</b>
-				<br><small>You may also join us on either <b>irc.rustedlogic.net</b> or <b>irc.tcrf.net</b>.</small>
+				<br><b>irc.badnik.net</b> &mdash; <b>#x</b>
 			<br>&nbsp;
 		  </td>
 	  </tr>
