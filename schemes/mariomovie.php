@@ -6,8 +6,8 @@
   $threadclosedpic='<img class="post" src="images/mariomovie/threadclosed.png" alt="Thread closed" title="Thread closed">';
   $bgimage='images/mariomovie/zeroesbg3.png';
   $bgcolor='101010';
-  $font='courier new';
-  $font2='tahoma';
+  $font='\'Courier New\', monospace';
+  $font2='Tahoma, sans-serif';
   $textcolor='cccccc';
   $linkcolor='eeeeee';
   $linkcolor2='ffffff';
