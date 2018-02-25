@@ -169,7 +169,7 @@
 		</table>
 	");
 	
-	$faq	.= faqformat("bbcode", "What is BBcode?", "
+	$faq	.= faqformat("bbcode", "What is BBcode?", doreplace2("
 		BBcode is a simple syntax which you can use on your posts to format the text or add images and videos. Below is a list of the supported tags:
 		<br>
 		<br>
@@ -179,91 +179,91 @@
 		    <td class='tbl tdbgh fonts center'>Result</th>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[b]Bolded text.[/b]</td>
-		    <td class='tbl tdbg1 fonts'><b>Bolded text.</b></td>
+		    <td class='tbl tdbg2 fonts'>[b<!-- -->]Bolded text.[/b<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[b]Bolded text.[/b]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[i]Italicized text.[/i]</td>
-		    <td class='tbl tdbg1 fonts'><i>Italicized text.</i></td>
+		    <td class='tbl tdbg2 fonts'>[i<!-- -->]Italicized text.[/i<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[i]Italicized text.[/i]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[u]Underlined text.[/u]</td>
-		    <td class='tbl tdbg1 fonts'><u>Underlined text.</u></td>
+		    <td class='tbl tdbg2 fonts'>[u<!-- -->]Underlined text.[/u<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[u]Underlined text.[/u]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[s]Strikethrough text.[/s]</td>
-		    <td class='tbl tdbg1 fonts'><s>Strikethrough text.</s></td>
+		    <td class='tbl tdbg2 fonts'>[s<!-- -->]Strikethrough text.[/s<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[s]Strikethrough text.[/s]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[abbr=Basic Input/Output System]BIOS[/abbr]</td>
-		    <td class='tbl tdbg1 fonts'><span style=\"border-bottom: 1px dotted;\" title=\"Basic Input/Output System\">BIOS</span></td>
+		    <td class='tbl tdbg2 fonts'>[abbr<!-- -->=Basic Input/Output System]BIOS[/abbr<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[abbr=Basic Input/Output System]BIOS[/abbr]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[sp=terrible]Great[/sp] software.</td>
-		    <td class='tbl tdbg1 fonts'><span style=\"border-bottom: 1px dotted #f00;\" title=\"did you mean: terrible\">Great</span> software.</td>
+		    <td class='tbl tdbg2 fonts'>[sp<!-- -->=terrible]Great[/sp<!-- -->] software.</td>
+		    <td class='tbl tdbg1 fonts'>[sp=terrible]Great[/sp] software.</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[url]http://example.com/[/url]</td>
-		    <td class='tbl tdbg1 fonts'><a href=http://example.com/>http://example.com/</a></td>
+		    <td class='tbl tdbg2 fonts'>[url<!-- -->]http://example.com/[/url<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[url]http://example.com/[/url]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[url=http://example.com/]Link text here.[/url]</td>
-		    <td class='tbl tdbg1 fonts'><a href=http://example.com/>Link text here.</a></td>
+		    <td class='tbl tdbg2 fonts'>[url<!-- -->=http://example.com/]Link text here.[/url<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[url=http://example.com/]Link text here.[/url]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[img]https://tcrf.net/images/c/c4/SMB2-smiley.png[/img]</td>
-		    <td class='tbl tdbg1 fonts'><img src=https://tcrf.net/images/c/c4/SMB2-smiley.png></td>
+		    <td class='tbl tdbg2 fonts'>[img<!-- -->]https://tcrf.net/images/c/c4/SMB2-smiley.png[/img<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[img]https://tcrf.net/images/c/c4/SMB2-smiley.png[/img]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[red]Red color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=FFC0C0>Red color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[red<!-- -->]Red color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[red]Red color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[green]Green color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=C0FFC0>Green color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[green<!-- -->]Green color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[green]Green color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[blue]Blue color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=C0C0FF>Blue color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[blue<!-- -->]Blue color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[blue]Blue color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[orange]Orange color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=FFC080>Orange color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[orange<!-- -->]Orange color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[orange]Orange color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[yellow]Yellow color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=FFEE20>Yellow color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[yellow<!-- -->]Yellow color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[yellow]Yellow color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[pink]Pink color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=FFC0FF>Pink color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[pink<!-- -->]Pink color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[pink]Pink color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[white]White color.[/color]</td>
-		    <td class='tbl tdbg1 fonts'><font color=white>White color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[white<!-- -->]White color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[white]White color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[black]Black color.[/color] (bad idea)</td>
-		    <td class='tbl tdbg1 fonts'><font color=0>Black color.</font></td>
+		    <td class='tbl tdbg2 fonts'>[black<!-- -->]Black color.[/color<!-- -->] (bad idea)</td>
+		    <td class='tbl tdbg1 fonts'>[black]Black color.[/color] (bad idea)</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[quote=user]Quoted text.[/quote]</td>
-		    <td class='tbl tdbg1 fonts'><blockquote><font class=fonts><i>Originally posted by user</i></font><hr>Quoted text.<hr></blockquote></td>
+		    <td class='tbl tdbg2 fonts'>[quote<!-- -->=user]Quoted text.[/quote<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[quote=user]Quoted text.[/quote]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[code]<span style=\"color: #88F;\">Check it out, it's <b>sample code</b></span>[/code]</td>
-		    <td class='tbl tdbg1 fonts'>" . escape_codeblock("<span style=\"color: #88F;\">Check it out, it's <b>sample code</b></span>") . "</td>
+		    <td class='tbl tdbg2 fonts'>[code<!-- -->]Sample &lt;b&gt;code&lt;/b&gt;.[/code<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[code]Sample <b>code</b>.[/code]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[spoiler]Spoiler text.[/spoiler]</td>
-		    <td class='tbl tdbg1 fonts'><div class=\"fonts pstspl2\"><b>Spoiler:</b><div class=\"pstspl1\">Spoiler text.</div></div></td>
+		    <td class='tbl tdbg2 fonts'>[spoiler<!-- -->]Spoiler text.[/spoiler<!-- -->]</td>
+		    <td class='tbl tdbg1 fonts'>[spoiler]Spoiler text.[/spoiler]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2 fonts'>[youtube]BrQn-O_zFRc[/youtube]<br>(video ID, e.g. <br>https://www.youtube.com/watch?v=<font color=#FF0000>BrQn-O_zFRc</font>)</td>
-		    <td class='tbl tdbg1 fonts'><iframe src=\"https://www.youtube.com/embed/BrQn-O_zFRc\" width=\"560\" height=\"315\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></td>
+		    <td class='tbl tdbg2 fonts'>[youtube<!-- -->]BrQn-O_zFRc[/youtube<!-- -->] (video ID)</td>
+		    <td class='tbl tdbg1 fonts'>[youtube]BrQn-O_zFRc[/youtube]</td>
 		  </tr>
 		</table>
-	");
+	"));
 
 /*
 	$faq	.= faqformat("n00b", "I have this <img src='http://xkeeper.net/img/noobsticker2-4.png' alt='n00b' title='TKEP regulars know this one' align='absmiddle' style='margin-top: -4px; margin-bottom: -4px;'> sticker on my post. What's up with that?", "
