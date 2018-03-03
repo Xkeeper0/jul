@@ -24,9 +24,9 @@
 	$linkcolor4='FFFFFF';
 	$textcolor='E0E0E0';
 
-	$font	='verdana';
-	$font2	='verdana';
-	$font3	='tahoma';
+	$font	='Verdana, sans-serif';
+	$font2	='Verdana, sans-serif';
+	$font3	='Tahoma, sans-serif';
 
 	$newpollpic		= '<img src="images/newpoll.png" alt="New poll" align="absmiddle">';
 	$newreplypic	= '<img src="images/newreply.png" alt="New reply" align="absmiddle">';
