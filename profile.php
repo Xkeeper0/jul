@@ -211,6 +211,7 @@ $tblend
 <br>$tblstart
 	$tccellh colspan=2><center>Personal information<tr>
 	$tccell1l width=150><b>Real name</td>			$tccell2l>$user[realname]&nbsp;<tr>
+	$tccell1l width=150><b>Pronouns</td>			$tccell2l>". htmlspecialchars($user['pronouns']) ."&nbsp;<tr>
 	$tccell1l width=150><b>Location</td>			$tccell2l>$user[location]&nbsp;<tr>
 	$tccell1l width=150><b>Birthday</td>			$tccell2l>$birthday $age&nbsp;<tr>
 	$tccell1l width=150><b>User bio</td>			$tccell2l>". dofilters(doreplace2(doreplace($user['bio'], $user['posts'], (ctime()-$user['regdate'])/86400, $user['name']))) ."&nbsp;<tr>

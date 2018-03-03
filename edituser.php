@@ -135,6 +135,7 @@
 
 				$hlft Personal information $hrgt
 				$lft Sex			$rgt$sexlist
+				$lft Pronouns		$rgt$inpt=pronouns VALUE=\"$user[pronouns]\" SIZE=40 MAXLENGTH=50>
 				$lft Real name		$rgt$inpt=realname VALUE=\"$user[realname]\" SIZE=40 MAXLENGTH=60>
 				$lft Location		$rgt$inpt=location VALUE=\"$user[location]\" SIZE=40 MAXLENGTH=60>
 				$lft Birthday		$rgt Month: $inpt=bmonth SIZE=2 MAXLENGTH=2 VALUE=$month> Day: $inpt=bday SIZE=2 MAXLENGTH=2 VALUE=$day> Year: $inpt=byear SIZE=4 MAXLENGTH=4 VALUE=$year>

@@ -30,9 +30,9 @@
     $checked5[$loguser['pagestyle']]='checked=1';
     $checked6[$loguser['pollstyle']]='checked=1';
     $sexlist="
-	$radio=sex value=0 $checked1[0]> Male &nbsp;&nbsp;
-	$radio=sex value=1 $checked1[1]> Female &nbsp;&nbsp;
-	$radio=sex value=2 $checked1[2]> N/A";
+	$radio=sex value=0 $checked1[0]> <strong style='color: #". getnamecolor(0, $loguser['powerlevel'], false) ."'>Male</strong> &nbsp;&nbsp;
+	$radio=sex value=1 $checked1[1]> <strong style='color: #". getnamecolor(1, $loguser['powerlevel'], false) ."'>Female</strong> &nbsp;&nbsp;
+	$radio=sex value=2 $checked1[2]> <strong style='color: #". getnamecolor(2, $loguser['powerlevel'], false) ."'>Other / N/A</strong>";
 	if ($loguser['sex'] > 2)
 		$sexlist .= "$radio=sex value=$loguser[sex] checked style=\"display:none;\">";
 
@@ -128,8 +128,10 @@
 	 $tccell2l>$txta=signature ROWS=8 COLS=60 style='width: 100%;'>". htmlspecialchars($loguser['signature']) ."</TEXTAREA><tr>
 
 	 $tccellh colspan='2'>Personal information</td><tr>
-	 $tccell1><b>Gender:$descbr This determines your name color (for now).</td>
+     $tccell1><b>Gender/Name color:$descbr This mostly determines your name color.</td>
 	 $tccell2l>$sexlist<tr>
+     $tccell1><b>Pronouns:$descbr You can put your pronouns here (e.g. they/them, he/his, she/hers, etc).</td>
+	 $tccell2l>$inpt=pronouns VALUE=\"". htmlspecialchars($loguser['pronouns']) ."\" SIZE=40 MAXLENGTH=50><tr>
 <!--	 $tccell1><b>Also known as:$descbr If you go by an alternate alias (or are constantly subjected to name changes), enter it here.  It will be displayed in your profile if it doesn't match your current username.</td>
 	 $tccell2l>$inpt=aka VALUE=\"$loguser[aka]\" SIZE=25 MAXLENGTH=25><tr> -->
 	 $tccell1><b>Real name:$descbr Your real name (you can leave this blank).</td>
@@ -272,9 +274,9 @@
       `threadsperpage` = '$threadsperpage',
       `viewsig` = '$viewsig',
       `layout` = '$tlayout',
-      `moodurl` = '". $_POST['moodurl'] ."',".
-//      `posttool` = '$posttool',
-     "`imood` = '$imood',
+      `moodurl` = '". $_POST['moodurl'] ."',
+      `imood` = '$imood',
+      `pronouns` = '{$_POST['pronouns']}',
       `signsep` = '$signsep',
       `pagestyle` = '$pagestyle',
       `pollstyle` = '$pollstyle'

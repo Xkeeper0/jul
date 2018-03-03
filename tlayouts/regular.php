@@ -1,18 +1,18 @@
 <?php
-	
+
 	function userfields(){
-		return 'posts,sex,powerlevel,birthday,aka,picture,moodurl,title,useranks,location,lastposttime,lastactivity,imood';
+		return 'posts,sex,powerlevel,birthday,aka,picture,moodurl,title,useranks,location,lastposttime,lastactivity,imood,pronouns';
 	}
 
-	
+
 	function postcode($post,$set){
 		global $tzoff, $smallfont, $ip, $quote, $edit, $dateshort, $dateformat, $tlayout, $textcolor, $numdir, $numfil, $tblstart, $hacks, $x_hacks, $loguser;
-		
+
 		$tblend		= "</table>";
 		$exp		= calcexp($post['posts'],(ctime()-$post['regdate']) / 86400);
 		$lvl		= calclvl($exp);
 		$expleft	= calcexpleft($exp);
-		
+
 		if ($tlayout == 1) {
 			$level		= "Level: $lvl";
 			$poststext	= "Posts: ";
@@ -21,11 +21,11 @@
 			$experience	= "EXP: $exp<br>For next: $expleft";
 			$totalwidth	= 96;
 			$barwidth	= $totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
-			
+
 			if ($barwidth < 1) $barwidth=0;
-			
+
 			if ($barwidth > 0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
-			
+
 			if ($barwidth < $totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
 			$bar="<br><img src=images/$numdir"."barleft.gif height=8>$baron$baroff<img src=images/$numdir".'barright.gif height=8>';
 
@@ -37,32 +37,32 @@
 			$posttotal	= "<img src=numgfx.php?n=$post[posts]&f=$numfil".($post['num']?'':'&l=4')." height=8>";
 			$totalwidth	= 56;
 			$barwidth	= $totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
-			
+
 			if($barwidth<1) $barwidth=0;
-			
+
 			if($barwidth>0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
-			
+
 			if($barwidth<$totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
 			$bar="<br><img src=images/$numdir"."barleft.gif width=2 height=8>$baron$baroff<img src=images/$numdir".'barright.gif width=2 height=8>';
 		}
 
-		
+
 		if(!$post['num']){
 			$postnum	= '';
-			
+
 			if($postlayout==1) $posttotal="<img src=numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
 		}
 
-		
+
 		$reinf=syndrome(filter_int($post['act']));
-		
+
 		if ($post['lastposttime']) {
 			$sincelastpost	= 'Since last post: '.timeunits(ctime()-$post['lastposttime']);
 		}
 		$lastactivity	= 'Last activity: '.timeunits(ctime()-$post['lastactivity']);
 		$since			= 'Since: '.@date($dateshort,$post['regdate']+$tzoff);
 		$postdate		= date($dateformat,$post['date']+$tzoff);
-		
+
 		$threadlink		= "";
 		if (filter_string($set['threadlink'])) {
 			$threadlink	= ", in $set[threadlink]";
@@ -75,17 +75,17 @@
 
 		$sidebars	= array(1, 3, 19, 89, 387, 45, 92, 47);
 
-		$sidebars	= array(1, 19, 89, 387, 45, 92, 47, 1420, 1090, 2100, 2069);
+		$sidebars	= array(19, 89, 387, 45, 92, 47, 1420, 1090, 2100, 2069);
 
 		// Large block of user-specific hacks follows //
 
 
-	if ($post['uid'] == 1 && !$x_hacks['host'] && true) {
+	if (false && $post['uid'] == 1 && !$x_hacks['host'] && true) {
 
 		global $numdir;
 		$numdir_	= $numdir;
 		$numdir		= "num3/";
-		
+
 		if ($post['num']) {
 			$numtext	= generatenumbergfx($post['num'], 1, true) ."<br>". generatenumbergfx($post['posts']);
 		} else {
@@ -246,7 +246,11 @@
 	  $set[userpic]<br>
 	  ". (filter_bool($hacks['noposts']) ? "" : "$poststext$postnum$posttotal<br>") ."
 	  $experience<br><br>
-	  $since<br>".str_ireplace("&lt;br&gt;", "<br>", substr(htmlspecialchars($set['location']),10))."<br><br>
+	  $since<br>
+	  ". (isset($set['pronouns']) ? "<br>".$set['pronouns'] : "")."
+	  ". (isset($set['location']) ? "<br>".$set['location'] : "")."
+	  <br>
+	  <br>
 	  $sincelastpost<br>$lastactivity<br>
 	  </font>
 	  <br><img src=images/_.gif width=200 height=1>
@@ -325,7 +329,7 @@
 		$fcol2			= "#3070a0";
 		$fcol3			= "#f0f8ff";
 
-		
+
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -366,7 +370,7 @@
 			$fcol2			= "#eebbff";
 			$fcol3			= "#000000";
 		}
-		
+
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -421,7 +425,7 @@
 		$fcol2			= "#a07030";
 		$fcol3			= "#fff0f8";
 
-		
+
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -469,7 +473,7 @@
 		$fcol2			= "#eeeeee";
 		$fcol3			= "#000000";
 
-		
+
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -612,7 +616,7 @@
 			$set[tdbg] style=\"background: $fcol3; padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
 		";
 
-	
+
 	} elseif (($post['uid'] == "16" || $post['uid'] == "5") && !$x_hacks['host']) {
 
 		// top bg #614735
@@ -622,9 +626,9 @@
 		if (!function_exists("basestat")) {
 			 require 'lib/rpg.php';
 		}
-		
+
 		if (!$x_hacks['rpgstats'][$post['uid']]) {
-			
+
 			$eq	= array(
 				'1' => "<center style=\"text-align: center; color: #b09080;\">(Weapon)</center>",
 				'2' => "<center style=\"text-align: center; color: #b09080;\">(Armor)</center>",
@@ -686,7 +690,7 @@
 								<tr style=\"font-weight: bold;\"><td colspan=2 width=50% style=\"font-variant: small-caps;\">Post$postss</td><td style=\"text-align: right;\" colspan=2 width=50%>$postnum$posttotal</tr>
 								<tr style=\"font-weight: bold;\"><td colspan=2 width=50% style=\"font-variant: small-caps;\">Counter</td><td style=\"text-align: right;\" colspan=2 width=50%>2</td></tr>
 								<tr style=\"font-weight: bold;\"><td>Mv</td><td style=\"text-align: right;\">7</td><td style=\"padding: 0 0 0 5px;\">Jm</td><td style=\"text-align: right;\">26</td></tr>
-							</table>				
+							</table>
 
 							<table width=100% cellspacing=0 cellpadding=0 style=\"color: #000; font-size: 12px; font-weight: bold;\">
 								<tr style=\"background: #d0bca4;\"><td style=\"font-variant: small-caps;\">Hp</td><td style=\"text-align: right;\" colspan=3>". $st['HP'] ."/". $st['HP'] ."</td></tr>
@@ -709,7 +713,7 @@
 								<tr                               ><td colspan=4>". $st['eq'][4] ."</td></tr>
 								<tr                               ><td colspan=4>". $st['eq'][5] ."</td></tr>
 								<tr                               ><td colspan=4>". $st['eq'][6] ."</td></tr>
-							</table>				
+							</table>
 						</td>
 					</tr>
 				</table>
@@ -729,7 +733,7 @@
 				<br>$joindate
 				<br>$lastactivity</font>
 */
-	
+
 	}
 
 	// BlackRose/Lain's sidebar
@@ -754,7 +758,7 @@
 			</table><tr>
 			$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
 			$tblend";
- 
+
 		return $brsidebar;
 	}
 
