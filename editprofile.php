@@ -130,7 +130,7 @@
 	 $tccellh colspan='2'>Personal information</td><tr>
      $tccell1><b>Gender/Name color:$descbr This mostly determines your name color.</td>
 	 $tccell2l>$sexlist<tr>
-     $tccell1><b>Pronouns:$descbr You can put your pronouns here (e.g. they/them, he/his, she/hers, etc).</td>
+     $tccell1><b>Pronouns:$descbr You can put your pronouns here (e.g. they/them, he/him, she/her, etc).</td>
 	 $tccell2l>$inpt=pronouns VALUE=\"". htmlspecialchars($loguser['pronouns']) ."\" SIZE=40 MAXLENGTH=50><tr>
 <!--	 $tccell1><b>Also known as:$descbr If you go by an alternate alias (or are constantly subjected to name changes), enter it here.  It will be displayed in your profile if it doesn't match your current username.</td>
 	 $tccell2l>$inpt=aka VALUE=\"$loguser[aka]\" SIZE=25 MAXLENGTH=25><tr> -->
