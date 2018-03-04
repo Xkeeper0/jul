@@ -194,6 +194,14 @@
     ";
   }
   if($action=='saveprofile'){
+
+      if (stripos($_POST['pronouns'], "helicopter") !== false) {
+          // A wise guy, ey?
+          // Real original, asshole.
+          header("Location: https://www.youtube.com/embed/0WrFZAf6EEE?autoplay=1");
+          die();
+      }
+
     if ($eddateformat == $defaultdateformat) $eddateformat = '';
     if ($eddateshort  == $defaultdateshort)  $eddateshort  = '';
 
