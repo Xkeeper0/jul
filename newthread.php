@@ -119,7 +119,7 @@
 	");
 	if(!$_POST['action'] or $_POST['paction']) {
 		print "
-			$fonttag<a href=index.php>$GLOBALS['jul_settings']['board_name']</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
+			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
 			<form action=newthread.php name=replier method=post autocomplete=\"off\">
 			$tblstart
 		";
@@ -160,7 +160,7 @@
 			</table>
 			</table>
 			</form>
-			$fonttag<a href=index.php>$GLOBALS['jul_settings']['board_name']</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
+			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
 			".replytoolbar(4);
 	}
 	if($_POST['action']=='postthread' and !$_POST['paction']) {
