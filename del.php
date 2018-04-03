@@ -1,19 +1,10 @@
 <?php
 
   require 'lib/function.php';
-
-	$allowedusers	= array(
-		$x_hacks['adminip'],		// Xkeeper
-		"24.234.157.232",			// also me
-		
-		);
-	
-	if (!in_array($_SERVER['REMOTE_ADDR'], $allowedusers)) die("Nein.");
-  
-
   require 'lib/layout.php';
+  
   if($_POST['deluser'] and $isadmin) { //($loguserid==1 or $loguserid==2)){
- 
+
 		foreach($_POST['deluser'] as $id => $junk) {
 
 			$query = "SELECT id,name,posts,sex,powerlevel FROM users WHERE id=$id";
@@ -48,7 +39,7 @@
 	<tr><td class='tbl tdbgc font center' colspan=2><b>$delusercnt user(s) deleted.</b></td></tr>$delusertext
 	$tblend<br>";
 
-	
+
 	}
 
 
@@ -57,7 +48,7 @@
   $powerselect[$_POST['sortpowerlevel']]	= 'selected';
   $sortsel[$_POST['sorttype']]				= 'selected';
   $ordsel[$_POST['sortord']]				= 'checked';
- 
+
   print "
     $header<br>
 
@@ -91,7 +82,7 @@ $deltext
 				<option value='2' $sortsel[2]> Posts </option>
 				<option value='3' $sortsel[3]> Powerlevel </option>
 				<option value='4' $sortsel[4]> IP address</option>
-			</select>, 
+			</select>,
 				$radio=sortord value='0' $ordsel[0]> Descending&nbsp;&nbsp;
 				$radio=sortord value='1' $ordsel[1]> Ascending
 			</td></tr>
@@ -120,7 +111,7 @@ $deltext
 	if ($_POST['sortpowerlevel'] != "aa") {
 		if ($sqlquery)	$sqlquery	.= " AND ";
 
-		if ($_POST['sortpowerlevel'] == "ab") 
+		if ($_POST['sortpowerlevel'] == "ab")
 			$sqlquery	.= "`powerlevel` < '0'";
 		else
 			$sqlquery	.= "`powerlevel` = '". str_replace("s", "", $_POST['sortpowerlevel']) ."'";

@@ -1,5 +1,5 @@
 <?php
-  $boardtitle='<img src="images/pointlessbannerv2.png">';
+  $GLOBALS['jul_settings']['board_title']='<img src="images/pointlessbannerv2.png">';
   $newthreadpic='New thread';
   $newreplypic='New reply';
   $bgimage='images/desolation/desolation.jpg';

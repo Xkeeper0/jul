@@ -1,5 +1,5 @@
 <?php
-    $boardtitle='<img src="http://i.imgur.com/gVDZW7x.png">';
+    $GLOBALS['jul_settings']['board_title']='<img src="http://i.imgur.com/gVDZW7x.png">';
 
     $formcss=0;
     $inputborder='000000';

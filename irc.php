@@ -1,18 +1,17 @@
 <?php
 
 require 'lib/function.php';
-$windowtitle = "$boardname - IRC Chat";
+$windowtitle = "{$GLOBALS['jul_settings']['board_name']} - IRC Chat";
 require 'lib/layout.php';
 
-	$servers[1]		= "irc.badnik.zone";
-	$servers[2]		= "irc.rustedlogic.net";
-	$servers[3]		= "irc.tcrf.net";
+	// We want this to be 1-indexed I guess.
+	$servers = array_merge(array(null), $GLOBALS['jul_settings']['irc_servers']);
 	if ($server > count($servers) || $server <= -1) $server = 0;
 
 
 
 print "		$header<br>$tblstart<tr>
-		$tccellh><b>IRC Chat - BadnikZONE, #tcrf, #x</b></td></tr>
+		$tccellh><b>{$GLOBALS['jul_settings']['irc_header_title']}</b></td></tr>
 		<tr>$tccell1>Server List: ";
 
 foreach ($servers as $num => $name) {
@@ -33,14 +32,14 @@ print "		<tr>$tccell2>";
 
 	$name = str_replace(" ", "", $loguser[name]);
 	$name = str_replace($badchars, "_", $name);
-	if (!$name) { 
+	if (!$name) {
 		$name = "J-Guest";
 		$guestmsg	= "<br>Welcome, guest. When you connect to the IRC network, please use the command <tt>/nick NICKNAME</tt>.<br>&nbsp;<br>";
 	}
-	
+
 print "
-	
-	<iframe src=\"https://kiwiirc.com/client/". $servers[$server] ."/?nick=". $name ."|?#tcrf,#x\" style=\"border:0;width:100%;height:500px;\"></iframe>";
+
+	<iframe src=\"https://kiwiirc.com/client/". $servers[$server] ."/?nick=". $name ."|?". $GLOBALS['jul_settings']['irc_channels'] ."\" style=\"border:0;width:100%;height:500px;\"></iframe>";
 
 	} else {
 
@@ -63,4 +62,3 @@ print "
 
  printtimedif($startingtime);
 ?>
-

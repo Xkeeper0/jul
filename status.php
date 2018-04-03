@@ -4,14 +4,21 @@
 
 	if(!intval($u)) die();
 
-	$user = $sql->fetchq("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='$u' AND uid=id");
+	$user = $sql->fetchq("SELECT name,posts,regdate,users_rpg.* FROM users left join users_rpg on uid=id WHERE id='$u'");
 	$p = $user['posts'];
 	$d = (ctime()-$user['regdate'])/86400;
 
 	if(!$it)
 		$it=0;
-	if(!$ne)
-		$items = $sql->getarraybykey("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6] OR id=$it", 'id');
+	if(!$ne) {
+		$eq1 = $user['eq1'] || 'null';
+		$eq2 = $user['eq2'] || 'null';
+		$eq3 = $user['eq3'] || 'null';
+		$eq4 = $user['eq4'] || 'null';
+		$eq5 = $user['eq5'] || 'null';
+		$eq6 = $user['eq6'] || 'null';
+		$items = $sql->getarraybykey("SELECT * FROM items WHERE id=$eq1 OR id=$eq2 OR id=$eq3 OR id=$eq4 OR id=$eq5 OR id=$eq6 OR id=$it", 'id');
+	}
 	if(!$nc)
 		$class = $sql->fetchq("SELECT * FROM `rpg_classes` WHERE `id` = '". $user['class'] ."'");
 
@@ -228,4 +235,3 @@ function nlimiter($n) {
 	if ($n <= 99999999999) return number_format(floor($n / 100000000) / 10, 1, ".", "") ."B";
 	return number_format(floor($n / 1000000000), 0, ".", "") ."B";
 }
-

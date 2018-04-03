@@ -3,6 +3,9 @@
 	// Set this right away to hopefully prevent fuckups
 	ini_set("default_charset", "UTF-8");
 
+	// The base path we're currently in. If the forum is located at http://example.com/jul/, this will be '/jul'.
+	$GLOBALS['jul_base_path'] = dirname($_SERVER['PHP_SELF']);
+
 	$startingtime = microtime(true);
 
 	// Awful old legacy thing. Too much code relies on register globals,
@@ -13,32 +16,30 @@
 	if ($id === null)
 		$id = 0;
 
-	// Wait for the midnight backup to finish...
-	if ((int)date("Gi") < 1) {
-		require "lib/downtime.php";
-	}
+	require 'lib/error.php';
 
+	if (!is_file('lib/config.php')) {
+		early_html_die('Could not find a configuration file. Make sure you have a <tt>lib/config.php</tt> file and it contains <tt>$sql_settings</tt> and <tt>$forum_settings</tt>. See <tt>lib/config.example.php</tt>.');
+	}
+	require 'lib/defaults.php';
 	require 'lib/config.php';
+
+	// Merge defaults and user supplied config.
+	if (!isset($sql_settings) || !isset($forum_settings)) {
+		early_html_die('Your forum settings are not correct. Make sure you have a <tt>lib/config.php</tt> file and it contains <tt>$sql_settings</tt> and <tt>$forum_settings</tt>. See <tt>lib/config.example.php</tt>.');
+	}
+	$GLOBALS['jul_sql_settings'] = array_merge($default_sql_settings, $sql_settings);
+	$GLOBALS['jul_settings'] = array_merge($default_forum_settings, $forum_settings);
+
+	require 'lib/routing.php';
+	require 'lib/helpers.php';
 	require 'lib/mysql.php';
 
 	$sql	= new mysql;
 
-
-
-
-	$sql->connect($sqlhost, $sqluser, $sqlpass) or
-		die("<title>Damn</title>
-			<body style=\"background: #000 url('images/bombbg.png'); color: #f00;\">
-				<font style=\"font-family: Verdana, sans-serif;\">
-				<center>
-				<img src=\"http://xkeeper.shacknet.nu:5/docs/temp/mysqlbucket.png\" title=\"bought the farm, too\">
-				<br><br><font style=\"color: #f88; size: 175%;\"><b>The MySQL server has exploded.</b></font>
-				<br>
-				<br><font style=\"color: #f55;\">Error: ". mysql_error() ."</font>
-				<br>
-				<br><small>This is not a hack attempt; it is a server problem.</small>
-			");
-	$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
+	$sql->connect($GLOBALS['jul_sql_settings']['host'], $GLOBALS['jul_sql_settings']['user'], $GLOBALS['jul_sql_settings']['pass']) or
+		early_html_die('The MySQL server has exploded.', true);
+	$sql->selectdb($sql_settings['name']) or early_html_die('Another stupid MySQL error happened, panic', true);
 
 
 	if (file_exists("lib/firewall.php") && !filter_bool($disable_firewall)) {
@@ -73,44 +74,23 @@
 
 		}
 
-		header("HTTP/1.1 403 Forbidden");
-
-		die("<title>Error</title>
-			<body style=\"background: #000; color: #fff;\">
-				<font style=\"font-family: Verdana, sans-serif;\">
-				<center>
-				Suspicious request detected (e.g. bot or malicious tool).
-			");
+		suspicious_die();
 	}
 
 	if ($sql -> resultq("SELECT `disable` FROM `misc` WHERE 1")) {
-		if ($x_hacks['host'])
-			require "lib/downtime-bmf.php";
-		else
-			require "lib/downtime2.php";
-
-		die("
-		<title>Damn</title>
-			<body style=\"background: #000 url('images/bombbg.png'); color: #f00;\">
-				<font style=\"font-family: Verdana, sans-serif;\">
-				<center>
-				<br><font style=\"color: #f88; size: 175%;\"><b>The board has been taken offline for a while.</b></font>
-				<br>
-				<br><font style=\"color: #f55;\">This is probably because:
-				<br>&bull; we're trying to prevent something from going wrong,
-				<br>&bull; abuse of the forum was taking place and needs to be stopped,
-				<br>&bull; some idiot thought it'd be fun to disable the board
-				</font>
-				<br>
-				<br>The forum should be back up within a short time. Until then, please do not panic;
-				<br>if something bad actually happened, we take backups often.
-			");
+		unexpected_downtime_die();
 	}
 
-	$dateformat = $defaultdateformat;
-	$dateshort  = $defaultdateshort;
+	$dateformat = $GLOBALS['jul_settings']['date_format_long'];
+	$dateshort  = $GLOBALS['jul_settings']['date_format_short'];
 
 	$loguser = array();
+
+	// This function was not included in the original code.
+	// I have no idea what the idea behind it was so I'll just use this for now.
+	function getpwhash($name, $id) {
+		return password_hash("{$name}{$id}", PASSWORD_DEFAULT);
+	}
 
 	// Just making sure.  Don't use this anymore.
 	// (This is backup code to auto update passwords from cookies.)
@@ -174,7 +154,7 @@
 		if ($loguser['viewsig'] >= 3)
 			return header("Location: /?sec=1");
 		if ($loguser['powerlevel'] >= 1)
-			$boardtitle .= $submessage;
+			$GLOBALS['jul_settings']['board_title'] .= $submessage;
 
 		if ($loguser['id'] == 175 && !$x_hacks['host'])
 			$loguser['powerlevel'] = max($loguser['powerlevel'], 3);
@@ -202,7 +182,7 @@
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || filter_int($_GET['mobile']) == 1) {
 		$loguser['layout']		= 2;
 		$loguser['viewsig']		= 0;
-		$boardtitle				= "<span style=\"font-size: 2em;\">$boardname</span>";
+		$GLOBALS['jul_settings']['board_title'] = "<span style=\"font-size: 2em;\">{$GLOBALS['jul_settings']['board_name']}</span>";
 		$x_hacks['smallbrowse']	= true;
 	}
 
@@ -675,7 +655,7 @@ function checkuser($name,$pass){
 	$user = $sql->fetchq("SELECT id,password FROM users WHERE name='$name'");
 
 	if (!$user) return -1;
-	if ($user['password'] !== getpwhash($pass, $user['id'])) {
+	if (!password_verify("{$pass}{$user['id']}", $user['password'])) {
 		// Also check for the old md5 hash, allow a login and update it if successful
 		// This shouldn't impact security (in fact it should improve it)
 		if (!$hacks['password_compatibility'])
@@ -1058,20 +1038,6 @@ function loadtlayout(){
 	require "tlayouts/$layoutfile.php";
 }
 
-function errorpage($text, $redir = '', $redirurl = '') {
-	global $header,$tblstart,$tccell1,$tblend,$footer,$startingtime;
-
-	print "{$header}<br>{$tblstart}{$tccell1}>{$text}";
-
-	if ($redir)
-		print '<br>'.redirect($redirurl,$redir,0);
-
-	print "{$tblend}{$footer}";
-
-	printtimedif($startingtime);
-	die();
-}
-
 function moodlist($sel = 0, $return = false) {
 	global $loguserid, $log, $loguser;
 	$sel		= floor($sel);
@@ -1132,6 +1098,21 @@ function admincheck() {
 		";
 		die();
 	}
+}
+
+// Generic error page.
+function errorpage($text, $redir = '', $redirurl = '') {
+	global $header,$tblstart,$tccell1,$tblend,$footer,$startingtime;
+
+	print "{$header}<br>{$tblstart}{$tccell1}>{$text}";
+
+	if ($redir)
+		print '<br>'.redirect($redirurl,$redir,0);
+
+	print "{$tblend}{$footer}";
+
+	printtimedif($startingtime);
+	die();
 }
 
 function adminlinkbar($sel = 'admin.php') {
@@ -1338,6 +1319,9 @@ function addslashes_array($data) {
 	}
 
 	function xk_ircsend($str) {
+		// Only continue if IRC notifications are enabled.
+		if (!$GLOBALS['jul_settings']['irc_enable_notifications']) return;
+
 		$str = str_replace(array("%10", "%13"), array("", ""), rawurlencode($str));
 
 		$str = html_entity_decode($str);

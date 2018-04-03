@@ -1,7 +1,7 @@
 <?php
 
 	require 'lib/function.php';
-	$windowtitle	= "FAQ / Rules -- $boardname";
+	$windowtitle	= "FAQ / Rules -- {$GLOBALS['jul_settings']['board_name']}";
 	require 'lib/layout.php';
 
 

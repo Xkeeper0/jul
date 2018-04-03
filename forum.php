@@ -64,6 +64,7 @@
 		$threadcount = $sql->resultq("SELECT COUNT(*) FROM threads where user=$user");
 	}
 	elseif ($id) { # Default case, show forum with id
+		error_log("asdf.$id.");
 		$id	= intval($id);
 		$forum = $sql->fetchq("SELECT title,minpower,numthreads,specialscheme,pollstyle FROM forums WHERE id=$id");
 
@@ -95,7 +96,7 @@
 	}
 
 
-	$windowtitle = "$boardname -- $forum[title]";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- $forum[title]";
 	require 'lib/layout.php';
 
 	$hotcount = $sql->resultq('SELECT hotcount FROM misc',0,0);
@@ -127,7 +128,7 @@
 	}
 	$infotable =
 		"<table width=100%><tr>
-			<td align=left class='font'><a href=index.php>$boardname</a> - $forum[title]</td>
+			<td align=left class='font'><a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - $forum[title]</td>
 			$newthreadbar
 		</tr></table>";
 

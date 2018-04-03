@@ -3,7 +3,7 @@
   $inputborder='773311';
   $numdir='num2/';
   $numfil='numkafuka';
-  $boardtitle='<img src=images/kafuka/kafuka.jpg>';
+  $GLOBALS['jul_settings']['board_title']='<img src=images/kafuka/kafuka.jpg>';
   $font='Arial, sans-serif';
   $bgimage='images/firebg4.jpg';
   $bgcolor='220000';

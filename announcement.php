@@ -199,7 +199,7 @@
     $postnew="<a href=announcement.php?action=new&f=$f>Post new announcement</a>";
   }
   print "$header
-	<table width=100%><td align=left>$fonttag<a href=index.php>$boardname</a> - Announcements</td><td align=right>$smallfont$postnew</table>
+	<table width=100%><td align=left>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - Announcements</td><td align=right>$smallfont$postnew</table>
 	$pagelinks$tblstart$annclist$tblend$pagelinks$footer
   ";
   printtimedif($startingtime);

@@ -202,8 +202,8 @@
           die();
       }
 
-    if ($eddateformat == $defaultdateformat) $eddateformat = '';
-    if ($eddateshort  == $defaultdateshort)  $eddateshort  = '';
+    if ($eddateformat == $GLOBALS['jul_settings']['date_format_long']) $eddateformat = '';
+    if ($eddateshort  == $GLOBALS['jul_settings']['date_format_short']) $eddateshort  = '';
 
     sbr(0,$postheader);
     sbr(0,$signature);

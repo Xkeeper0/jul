@@ -1,14 +1,14 @@
 <?php
 
 	require 'lib/function.php';
-	$windowtitle	= "Admin Cruft -- $boardname";
+	$windowtitle	= "Admin Cruft -- {$GLOBALS['jul_settings']['board_name']}";
 	require 'lib/layout.php';
 
 	print "$header<br>";
-	
+
 	if (!$isadmin) {
 
-		print "  
+		print "
 			$tblstart
 				$tccell1>Uh oh, you are not the admin go away.</td>
 			$tblend
@@ -19,7 +19,7 @@
 		die();
 	}
 
-	
+
 	$misc	= $sql -> fetchq("SELECT * FROM `misc`");
 
 	print adminlinkbar("admin.php") ."
@@ -34,7 +34,7 @@
 		$tblend
 
 		<br>
-		
+
 		<form action='admin.php' method='post'>
 		$tblstart
 			<tr>$tccellh colspan=2><b>Setting up the Soft Dip</b></td></tr>
@@ -74,7 +74,7 @@
 							$inph='maxusers' value='". $misc['maxusers'] ."'>$inph='maxusersdate' value='". $misc['maxusersdate'] ."'>
 				</td></tr>
 
-	
+
 			<tr>$tccellc colspan=2><img src=\"images/ihateglennbeckbutistillthinkthisimagefitsquitenicelyundertheadminpanelmoneycounter.jpg\" title=\"longest file name ever\"><br>Monetary settings</td></tr>
 
 			<tr>$tccell1 width='200'><b>Donations</b></td>
@@ -95,7 +95,7 @@
 				<br><s><strong>(Only saves the money settings though.)</strong></s> just kidding, it doesn't work.
 				</td></tr>
 
-		
+
 		$tblend
 		</form>
 
@@ -103,14 +103,14 @@
 
 
 
-	print "$footer";  
+	print "$footer";
 	printtimedif($startingtime);
 
 
 	// returns several field names with hours/date/time all set up and that jazz etc blah blah blah
 	function timetofields($fname, $time) {
-	
-		
+
+
 
 		return;
 	}

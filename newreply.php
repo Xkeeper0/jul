@@ -24,7 +24,7 @@
 		$thread['title'] = '(restricted thread)';
 	}
 	$specialscheme = $forum['specialscheme'];
-	$windowtitle="$boardname -- $forum[title]: $thread[title] -- New Reply";
+	$windowtitle="{$GLOBALS['jul_settings']['board_name']} -- $forum[title]: $thread[title] -- New Reply";
 
 	$thread['title']=str_replace('<','&lt;',$thread['title']);
 
@@ -51,7 +51,7 @@
 		$restricted		= true;
 
 	$header	= "$header
-		$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]<form action=newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
+		$fonttag<a href=index.php>$GLOBALS['jul_settings']['board_name']</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]<form action=newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
 
 	// Post preview
 	if (($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
@@ -139,7 +139,7 @@
 			$tblstart$postlist$tblend
 		</table>
 			</form>
-		$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]";
+		$fonttag<a href=index.php>$GLOBALS['jul_settings']['board_name']</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]";
 	} elseif(!$_POST['action']) {
 		print $header;
 		print "$tccell1>You are not allowed to post in this thread.
@@ -308,4 +308,3 @@
 	}
   print $footer;
   printtimedif($startingtime);
-

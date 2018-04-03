@@ -25,7 +25,7 @@
 		$year  = $eventdata['y'];
 	}
 
-	$windowtitle = "{$boardname} -- Calendar for {$mn[$month]} {$year}";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Calendar for {$mn[$month]} {$year}";
 	require 'lib/layout.php';
 
 	$date = getdate(mktime(0,0,0,$month,1,$year));
@@ -48,7 +48,7 @@
 	while($event1 = $sql->fetch($events))
 		$eventtext[$event1['d']] .= "<br>- <a href='calendar.php?event=$event1[id]'>$event1[title]</a>";
 
-	print "$header$fonttag<a href=index.php>$boardname</a> - Calendar
+	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - Calendar
 		$tblstart";
 
 	if ($eventdata) {

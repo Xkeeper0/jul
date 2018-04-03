@@ -1,7 +1,7 @@
 <?php
 
 require 'lib/function.php';
-$windowtitle = "$boardname - EZ Ban Hammer";
+$windowtitle = "{$GLOBALS['jul_settings']['board_name']} - EZ Ban Hammer";
 require 'lib/layout.php';
 
 print $header."<br>";

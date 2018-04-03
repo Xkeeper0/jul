@@ -5,7 +5,7 @@
 	$meta['noindex'] = true; // Never index
 
 	$smilies=readsmilies();
-	
+
 	if(!$log) {
 		print "
 			$header$tblstart
@@ -27,7 +27,7 @@
 		printtimedif($startingtime);
 		die();
 	}
-	
+
 	if($id) {
 		$msg = $sql->fetchq("SELECT * FROM pmsgs,pmsgs_text WHERE id=$id AND id=pid");
 
@@ -43,7 +43,7 @@
 		}
 	}
 
-	print "$header$fonttag<a href=index.php>$boardname</a> - <a href=private.php>Private messages</a>$tblstart";
+	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=private.php>Private messages</a>$tblstart";
 
 	if (!$action) {
 		print '<body onload=window.document.REPLIER.message.focus()><FORM ACTION=sendprivate.php NAME=REPLIER METHOD=POST>';
@@ -84,7 +84,7 @@
 			$tblend
 			</FORM>
 			<br>$tblstart$postlist$tblend
-			$fonttag<a href=index.php>$boardname</a> - <a href=private.php>Private messages</a>
+			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=private.php>Private messages</a>
 		";
 	}
 	if($action=='sendmsg') {

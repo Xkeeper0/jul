@@ -2,7 +2,7 @@
 	require 'lib/function.php';
 	if (!$id)
 		return header("Location: private.php");
-	$windowtitle = "$boardname -- Private Messages";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages";
 	$meta['noindex'] = true;
 
 	$msg = $sql->fetchq("SELECT * FROM pmsgs,pmsgs_text WHERE id=$id AND id=pid");
@@ -21,10 +21,10 @@
 	else $pmlinktext = "<a href=private.php>Private messages</a>";
 
 	$user = $sql->fetchq("SELECT * FROM users WHERE id=$msg[userfrom]");
-	$windowtitle = "$boardname -- Private Messages: $msg[title]";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages: $msg[title]";
 	require_once 'lib/layout.php';
 
-	$top = "<table width=100%><td align=left>$fonttag<a href=index.php>$boardname</a> - <a href=private.php>$pmlinktext</a> - $msg[title]</table>";
+	$top = "<table width=100%><td align=left>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=private.php>$pmlinktext</a> - $msg[title]</table>";
 	if ($msg['userto'] == $loguserid)
 		$sql->query("UPDATE pmsgs SET msgread=1 WHERE id=$id");
 

@@ -1,7 +1,7 @@
 <?php
 	require 'lib/function.php';
 
-	$windowtitle	= "$boardname -- Active users";
+	$windowtitle	= "{$GLOBALS['jul_settings']['board_name']} -- Active users";
 	require 'lib/layout.php';
 
 	if (($type == 'pm' || $type == 'pms') && !$log)
@@ -76,7 +76,7 @@
 		Most active users by:<br>
 		".implode(" - ", $linklist)."
 		$tblend
-	"; 
+	";
 
 	if ($time)
 		$timespan = " during the last ". timeunits2($time);

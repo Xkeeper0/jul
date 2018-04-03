@@ -1,7 +1,7 @@
 <?php
 	require 'lib/function.php';
 	$user=@$sql->fetchq("SELECT * FROM users WHERE id=$id");
-	$windowtitle="$boardname -- Profile for $user[name]";
+	$windowtitle="{$GLOBALS['jul_settings']['board_name']} -- Profile for $user[name]";
 	require 'lib/layout.php';
 
 //	if ($_GET['id'] == 1 && !$x_hacks['host']) {
@@ -151,14 +151,18 @@
 	$eq=$sql->fetchq("SELECT * FROM users_rpg WHERE uid=$id");
 	$itemids=array_unique(array($eq['eq1'], $eq['eq2'], $eq['eq3'], $eq['eq4'], $eq['eq5'], $eq['eq6'], $eq['eq7']));
 	$itemids=implode(',', $itemids);
-	$eqitems=$sql->query("SELECT * FROM items WHERE id IN ({$itemids})");
-	while($item=$sql->fetch($eqitems)) $items[$item['id']]=$item;
-	while($shop=$sql->fetch($shops))
-		$shoplist.="
-			<tr>
-			$tccell1s>$shop[name]</td>
-			$tccell2s width=100%>".$items[$eq['eq'.$shop['id']]]['name']."&nbsp;</td>
-		";
+	$items = array();
+	$shoplist='';
+	if (!empty($itemids)) {
+		$eqitems=$sql->query("SELECT * FROM items WHERE id IN ({$itemids})");
+		while($item=$sql->fetch($eqitems)) $items[$item['id']]=$item;
+		while($shop=$sql->fetch($shops))
+			$shoplist.="
+				<tr>
+				$tccell1s>$shop[name]</td>
+				$tccell2s width=100%>".$items[$eq['eq'.$shop['id']]]['name']."&nbsp;</td>
+			";
+	}
 
 	/* extra munging for whatever reason */
 	$user['email'] = urlencode($user['email']);

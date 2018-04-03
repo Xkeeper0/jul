@@ -1,7 +1,7 @@
 <?php
 	require 'lib/function.php';
 
-	$windowtitle = "$boardname -- Biggest posters";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Biggest posters";
 	require 'lib/layout.php';
 
 	if ($_GET['sort'] == "posts")   { $sort = "posts";   $headertext = 'sorted by post count'; }
@@ -38,7 +38,7 @@
 			$tccellh width=130><a href=\"?\">Size</a></td>
 			$tccellh width=130><a href=\"?sort=avg\">Average</a></td>
 	";
-	
+
 	for($i=1; $user = $sql -> fetch($posters); $i++) {
 
 		if($i == 1) $max = $user['waste'];

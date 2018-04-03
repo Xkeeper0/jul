@@ -3,7 +3,7 @@
   $inputborder='552288';
   $numdir='num3/';
   $numfil='numpurple';
-  $boardtitle='<img src=images/purple/purplebanner.png>';
+  $GLOBALS['jul_settings']['board_title']='<img src=images/purple/purplebanner.png>';
   $bgimage='images/purple/darkbubblebg.jpg';
   $newthreadpic='<img src=images/purple/newthreadpurple.png border=0>';
   $newreplypic='<img src=images/purple/newreplypurple.png border=0>';

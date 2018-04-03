@@ -28,6 +28,6 @@
 		$loguser['powerlevel'] = 3;
 	}
 
-//	$boardtitle='<img src="images/attitudebarn.png">';
+//	$GLOBALS['jul_settings']['board_title']='<img src="images/attitudebarn.png">';
 
 ?>

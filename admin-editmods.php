@@ -1,7 +1,7 @@
 <?php
 
 require 'lib/function.php';
-$windowtitle = "$boardname - Forum Moderators";
+$windowtitle = "{$GLOBALS['jul_settings']['board_name']} - Forum Moderators";
 require 'lib/layout.php';
 
 print $header."<br>";
@@ -100,7 +100,7 @@ $tccell1>            Forum ID: <input type=\"text\" name=\"nm_fid\">
 	    $tccell1> <input type=\"submit\" name=\"action\" value=\"Delete Mod\"></td>
 $tccell1>            <input type=\"submit\" name=\"action\" value=\"Add Mod\">*/
 "<tr>$tccellh colspan=\"2\">Add Moderator:</td></tr>
-<tr>$tccell1 width=15%>Forum:</td>$tccell2l width=85%><select name=\"addmodforum\" size=\"1\">$forumselect</select></td></tr> 
+<tr>$tccell1 width=15%>Forum:</td>$tccell2l width=85%><select name=\"addmodforum\" size=\"1\">$forumselect</select></td></tr>
 <tr>$tccell1 width=15%>User:</td>$tccell2l width=85%><select name=\"addmoduser\" size=\"1\">$userlist</select> $smallfont(note: this only shows Member+ and above)</font></td></tr>
 <tr>$tccell1 width=15%>&nbsp;</td>$tccell2l width=85%>$inps=\"addmodsubmit\" value=\"Add Moderator\"></td></tr>$tblend</form>"
 .
@@ -122,7 +122,7 @@ $tccell1>            Forum ID: <input type=\"text\" name=\"nm_fid\">
 	    $tccell1> <input type=\"submit\" name=\"action\" value=\"Delete Mod\"></td>
 $tccell1>            <input type=\"submit\" name=\"action\" value=\"Add Mod\">*/
 ($forumselectforrem!=""?"<form action=\"admin-editmods.php\" method=\"POST\">$inph=\"action\" value=\"remove\">$tblstart"."<tr>$tccellh colspan=\"2\">Remove Moderator:</td></tr>
-<tr>$tccell1 width=15%>Forum and Moderator:</td>$tccell2l width=85%><select name=\"removemod\" size=\"1\">$forumselectforrem</select></td></tr> 
+<tr>$tccell1 width=15%>Forum and Moderator:</td>$tccell2l width=85%><select name=\"removemod\" size=\"1\">$forumselectforrem</select></td></tr>
 <tr>$tccell1 width=15%>&nbsp;</td>$tccell2l width=85%>$inps=\"removemodsubmit\" value=\"Remove Moderator\"></td></tr>$tblend</form>":"");
 
 }

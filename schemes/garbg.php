@@ -11,7 +11,7 @@
 	$numcols		= 100;		# Width of text entry, just use css extra again
 
 	# Banner; comment for default
-	$boardtitle		= '<img src="images/garbg/garbanner.png" title="IT\'S CRAP">';
+	$GLOBALS['jul_settings']['board_title']		= '<img src="images/garbg/garbanner.png" title="IT\'S CRAP">';
 
 	# Page background color, background image, and text color
 	$bgcolor		= '000810';

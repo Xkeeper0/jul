@@ -1,5 +1,5 @@
 <?php
-  $boardtitle="
+  $GLOBALS['jul_settings']['board_title']="
 	Ninja AE is a moron!
 	<embed src=images/css-auth.mid autostart=true loop=true autoplay=true hidden=true>
 	<br>a special gift to you from acmlm and xkeeper

@@ -181,7 +181,7 @@
 	}
 
 	//temporary
-	if ($windowtitle) $windowtitle = "$boardname -- $windowtitle";
+	if ($windowtitle) $windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- $windowtitle";
 	require_once 'lib/layout.php';
 
 	$fonline = "";
@@ -340,7 +340,7 @@
 	}
 
 	$threadforumlinks = "
-		<table width=100%><td align=left>$fonttag<a href=index.php>".$boardname."</a>"
+		<table width=100%><td align=left>$fonttag<a href=index.php>".$GLOBALS['jul_settings']['board_name']."</a>"
 		.
 		(($forum['title']) ? " - <a href=forum.php?id=$forumid>$forum[title]</a>" : "")
 		.

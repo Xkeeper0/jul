@@ -6,9 +6,9 @@
 //	require 'lib/config.php';
 	header("Content-type: text/plain");
 
-	@mysql_connect($sqlhost, $sqluser, $sqlpass) or 
+	@mysql_connect($GLOBALS['jul_sql_settings']['host'], $GLOBALS['jul_sql_settings']['user'], $GLOBALS['jul_sql_settings']['pass']) or
 		die('Database error.');
-	@mysql_select_db($dbname) or
+	@mysql_select_db($sql_settings['name']) or
 		die('Database error.');
 
 	$threads	= explode(",", $_GET['data']);

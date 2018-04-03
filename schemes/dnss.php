@@ -3,7 +3,7 @@
 	$numcols		= 100;		# same thing, more or less
 
 	$bgimage		= 'images/dnss/darkest.png';
-	$boardtitle		= '<img src="images/dnss/banner.png" title="Darkest Night">';	# comment this out for normal banner
+	$GLOBALS['jul_settings']['board_title']		= '<img src="images/dnss/banner.png" title="Darkest Night">';	# comment this out for normal banner
 
 	$bgcolor		= '220000';   
 	$textcolor		= 'FFDDDD';   

@@ -27,7 +27,7 @@
 		$outchunks = Array();
 	}
 
-	$windowtitle	= "$boardname - A revolution in posting technology&trade;";
+	$windowtitle	= "{$GLOBALS['jul_settings']['board_name']} - A revolution in posting technology&trade;";
 	require 'lib/layout.php';
 
 	if($log && !$_GET['raw']) {

@@ -1,6 +1,6 @@
 <?php
 	require 'lib/function.php';
-	$windowtitle = "$boardname -- Private Messages";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages";
 	require 'lib/layout.php';
 
 	if (!$log)
@@ -59,7 +59,7 @@
 		$viewlink="<a href=private.php?{$idparam}>View received messages</a>";
 
 	print "$header
-		<table width=100%><td>$fonttag<a href=index.php>$boardname</a> - "
+		<table width=100%><td>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - "
 			.(($u != $loguserid) ? $sql->resultq("SELECT `name` FROM `users` WHERE `id` = '$u'")."'s private messages" : "Private messages")
 			." - "
 			.((!$view) ? 'Inbox' : 'Outbox').": $msgtotal</td>

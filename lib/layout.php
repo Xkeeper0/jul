@@ -16,15 +16,15 @@
 //	$clientip=(getenv("HTTP_CLIENT_IP") == "" ? "XXXXXXXXXXXXXXXXX" : getenv("HTTP_CLIENT_IP"));
 //	$forwardedip=(getenv("HTTP_X_FORWARDED_FOR") == "" ? "XXXXXXXXXXXXXXXXX" : getenv("HTTP_X_FORWARDED_FOR"));
 
-	if(!isset($windowtitle)) $windowtitle=$boardname;
+	if(!isset($windowtitle)) $windowtitle=$GLOBALS['jul_settings']['board_name'];
 	require 'colors.php';
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
-	$boardtitle	= "<a href='./'>$boardtitle</a>";
+	$GLOBALS['jul_settings']['board_title']	= "<a href='./'>{$GLOBALS['jul_settings']['board_title']}</a>";
 
-	//$boardtitle = "<a href='./'><img src=\"images/christmas-banner-blackroseII.png\" title=\"Not even Christmas in July, no. It's May.\"></a>";
+	//$GLOBALS['jul_settings']['board_title'] = "<a href='./'><img src=\"images/christmas-banner-blackroseII.png\" title=\"Not even Christmas in July, no. It's May.\"></a>";
 
 	// PONIES!!!
-	// if($forumid==30) $boardtitle = "<a href='./'><img src=\"images/poniecentral.gif\" title=\"YAAAAAAAAAAY\"></a>";
+	// if($forumid==30) $GLOBALS['jul_settings']['board_title'] = "<a href='./'><img src=\"images/poniecentral.gif\" title=\"YAAAAAAAAAAY\"></a>";
 	// end PONIES!!!
 
 	$race=$loguserid ? postradar($loguserid) : "";
@@ -202,30 +202,25 @@
 		$xminilog	= $sql -> fetchq("SELECT COUNT(*) as count, MAX(`time`) as time FROM `minilog`");
 		if ($xminilog['count']) {
 			$xminilogip	= $sql -> fetchq("SELECT `ip`, `banflags` FROM `minilog` ORDER BY `time` DESC LIMIT 1");
-			$boardtitle	.= "<br><a href='shitbugs.php'><span class=font style=\"color: #f00\"><b>". $xminilog['count'] ."</b> suspicious request(s) logged, last at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ." (". $xminilogip['banflags'] .")</b></span></a>";
+			$GLOBALS['jul_settings']['board_title']	.= "<br><a href='shitbugs.php'><span class=font style=\"color: #f00\"><b>". $xminilog['count'] ."</b> suspicious request(s) logged, last at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ." (". $xminilogip['banflags'] .")</b></span></a>";
 		}
 		$xminilog	= $sql -> fetchq("SELECT COUNT(*) as count, MAX(`time`) as time FROM `pendingusers`");
 		if ($xminilog['count']) {
 			$xminilogip	= $sql -> fetchq("SELECT `username`, `ip` FROM `pendingusers` ORDER BY `time` DESC LIMIT 1");
-			$boardtitle	.= "<br><span class='font' style=\"color: #ff0\"><b>". $xminilog['count'] ."</b> pending user(s), last <b>'". $xminilogip['username'] ."'</b> at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ."</b></span>";
+			$GLOBALS['jul_settings']['board_title']	.= "<br><span class='font' style=\"color: #ff0\"><b>". $xminilog['count'] ."</b> pending user(s), last <b>'". $xminilogip['username'] ."'</b> at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ."</b></span>";
 		}
 	}
 
-	$headlinks2="
-	<a href='index.php'>Main</a>
-	- <a href='memberlist.php'>Memberlist</a>
-	- <a href='activeusers.php'>Active users</a>
-	- <a href='calendar.php'>Calendar</a>
-	- <a href='http://tcrf.net'>Wiki</a>
-	- <a href='irc.php'>IRC Chat</a>
-	- <a href='online.php'>Online users</a><br>
-	<a href='ranks.php'>Ranks</a>
-	- <a href='faq.php'>Rules/FAQ</a>
-	- <a href='stats.php'>Stats</a>
-	- <a href='latestposts.php'>Latest Posts</a>
-	- <a href='hex.php' title='Color Chart' class='popout' target='_blank'>Color Chart</a>
-	- <a href='smilies.php' title='Smilies' class='popout' target='_blank'>Smilies</a>
-	";
+
+	$headlinks2 = array();
+	foreach ($GLOBALS['jul_settings']['top_menu_items'] as $row) {
+		$rowlinks = array();
+		foreach ($row as $item) {
+			$rowlinks[] = '<a href="'.to_route($item[0]).'">'.$item[1].'</a>';
+		}
+		$headlinks2[] = implode(' - ', $rowlinks);
+	}
+	$headlinks2 = implode('<br>', $headlinks2);
 
 
 	$ipbanned	= $torbanned = 0;
@@ -240,7 +235,7 @@
 	if($sql->resultq("SELECT count(*) FROM `tor` WHERE `ip` = '". $_SERVER['REMOTE_ADDR'] ."' AND `allowed` = '0'")) $torbanned=1;
 
 	if ($ipbanned || $torbanned)
-		$windowtitle = $boardname;
+		$windowtitle = $GLOBALS['jul_settings']['board_name'];
 
 	if($ipbanned) {
 		$url .=' (IP banned)';
@@ -299,7 +294,7 @@
 	}
 
 	$jscripts = '';
-	if (true) { // Ikachan! :D!
+	if ($GLOBALS['jul_settings']['display_ikachan']) { // Ikachan! :D!
 		//$ikachan = 'images/ikachan/vikingikachan.png';
 		//$ikachan = 'images/sankachan.png';
 		//$ikachan = 'images/ikamad.png';
@@ -360,7 +355,7 @@
 	<center>
 	 $tblstart
 	  <form action='login.php' method='post' name='logout'><input type='hidden' name='action' value='logout'></form>
-	  <td class='tbl tdbg1 center' colspan=3>$boardtitle";
+	  <td class='tbl tdbg1 center' colspan=3>{$GLOBALS['jul_settings']['board_title']}";
   $header2="
 	  ". (!$x_hacks['smallbrowse'] ? "
 	  </td><tr>
@@ -450,7 +445,7 @@
 -->
 <br>
 	$smallfont
-	<br><br><a href=$siteurl>$sitename</a>
+	<br><br><a href={$GLOBALS['jul_settings']['site_url']}>{$GLOBALS['jul_settings']['site_name']}</a>
 	<br>". filter_string($affiliatelinks) ."
 	<br>
 	<table cellpadding=0 border=0 cellspacing=2><tr>

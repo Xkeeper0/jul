@@ -1,6 +1,6 @@
 <?php
 	require 'lib/function.php';
-	$windowtitle="$boardname -- Milestones";
+	$windowtitle="{$GLOBALS['jul_settings']['board_name']} -- Milestones";
 	require 'lib/layout.php';
 
   $posts   = max(10000, intval($_GET['p']));

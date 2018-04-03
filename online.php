@@ -1,7 +1,7 @@
 <?php
 	require 'lib/function.php';
 
-	$windowtitle = "$boardname -- Online users";
+	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Online users";
 	require 'lib/layout.php';
 
 /*
@@ -151,7 +151,7 @@
 			print "</td>$tccell1$marker>
 			<a href=ipsearch.php?ip=$guest[ip]>$guest[ip]</a>$smallfont
 			<br>[$ipban<a href=http://google.com/search?q=$guest[ip]>G</a>-<a href=http://en.wikipedia.org/wiki/User:$guest[ip]>W</a>-<a href=http://$guest[ip]/>H</a>]</a></font>";
-  
+
 		print "</tr>";
 	}
 
