@@ -12,17 +12,7 @@ $default_sql_settings = array(
 	'host' => 'localhost',
 	'user' => '',
 	'pass' => '',
-	'name' => '',
-	// Table prefix: use this to run multiple installations on the same database.
-	'prefix' => 'jul_', // FIXME: this isn't used yet.
-
-	// Character encoding settings should probably not be altered.
-	// If you are working with legacy data, you might potentially run into problems.
-	// To convert your tables: alter table `table_name` convert to character set utf8mb4 collate utf8mb4_bin
-	'connection' => 'utf8mb4', // FIXME: this isn't used yet.
-	'db_collation' => 'utf8mb4',
-	't_charset' => 'utf8mb4',
-	't_collation' => 'utf8mb4_bin',
+	'name' => '', // Database name
 );
 
 $default_forum_settings = array(

@@ -10,8 +10,6 @@ $sql_settings = array(
 	'user' => '',
 	'pass' => '',
 	'name' => '', // Database name
-	// Table prefix: use this to run multiple installations on the same database.
-	'prefix' => 'jul_',
 );
 
 $forum_settings = array(
