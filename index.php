@@ -201,11 +201,15 @@
   // Quicker (?) new posts calculation that's hopefully accurate v.v
   if ($log) {
 	  $qadd = array();
-	  foreach ($forums as $forum) $qadd[] = "(lastpostdate > '{$postread[$forum['id']]}' AND forum = '{$forum['id']}')\r\n";
-	  $qadd = implode(' OR ', $qadd);
+		if (empty($forums)) {
+			$forumnew = array();
+		} else {
+		  foreach ($forums as $forum) $qadd[] = "(lastpostdate > '{$postread[$forum['id']]}' AND forum = '{$forum['id']}')\r\n";
+		  $qadd = implode(' OR ', $qadd);
 
-		$forumnew = $sql->getresultsbykey("SELECT forum, COUNT(*) AS unread FROM threads t LEFT JOIN threadsread tr ON (tr.tid = t.id AND tr.uid = $loguser[id])
-			WHERE (`read` IS NULL OR `read` != 1) AND ($qadd) GROUP BY forum", 'forum', 'unread');
+			$forumnew = $sql->getresultsbykey("SELECT forum, COUNT(*) AS unread FROM threads t LEFT JOIN threadsread tr ON (tr.tid = t.id AND tr.uid = $loguser[id])
+				WHERE (`read` IS NULL OR `read` != 1) AND ($qadd) GROUP BY forum", 'forum', 'unread');
+		}
 	}
 
 	$cat	= filter_int($_GET['cat']);
