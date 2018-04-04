@@ -33,10 +33,6 @@
 	require 'lib/function.php';
 	require 'lib/layout.php';
 
-	$sql->query("UPDATE `users` SET `name` = 'Xkeeper' WHERE `id` = 1"); # I'm hiding it here too as a 'last resort'. Remove this and I'll make that Z-line a month instead.
-	// You know me, I find it more fun to hide code to replace your name everywhere instead of altering the DB <3
-//	$sql->query("UPDATE `users` SET `sex` = '1' WHERE `id` = 2100");  // Me too <3 ~Ras
-
 	if ($x_hacks['smallbrowse'] == 1 and false) {
 		require 'mobile/index.php'; // alternate markup for mobile clients.
 	} else {
