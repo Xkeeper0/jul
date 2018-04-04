@@ -39,7 +39,8 @@
 		if (filter_string($_GET['action']) == 'markforumread' and $log) {
 			$sql->query("DELETE FROM forumread WHERE user=$loguserid AND forum='$forumid'");
 			$sql->query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid' AND `tid` IN (SELECT `id` FROM `threads` WHERE `forum` = '$forumid')");
-			$sql->query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,".ctime().')');
+			$ct = ctime();
+			$sql->query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,{$ct})");
 			return header("Location: index.php");
 		}
 
