@@ -1035,6 +1035,7 @@ function loadtlayout(){
 	global $log,$loguser,$tlayout,$sql;
 	$tlayout    = (filter_int($loguser['layout']) ? $loguser['layout'] : 1);
 	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'",0,0);
+	if (!$layoutfile) $layoutfile = 'regular';
 	require "tlayouts/$layoutfile.php";
 }
 
