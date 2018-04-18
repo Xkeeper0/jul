@@ -5,6 +5,9 @@
 
 	// The base path we're currently in. If the forum is located at http://example.com/jul/, this will be '/jul'.
 	$GLOBALS['jul_base_path'] = dirname($_SERVER['PHP_SELF']);
+	// Path where we can find the views, e.g. thread.php, forum.php.
+	// Same as the base path for now.
+	$GLOBALS['jul_views_path'] = $GLOBALS['jul_base_path'];
 
 	$startingtime = microtime(true);
 
