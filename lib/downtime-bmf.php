@@ -1,5 +1,5 @@
 <html><head><title>The COM Port -- Down</title>
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/images/favicons/favicon.ico" type="image/x-icon">
 
 			<style>
 			a:link,a:visited,a:active,a:hover{text-decoration:none;font-weight:bold}
