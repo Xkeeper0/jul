@@ -255,7 +255,8 @@
 
 		if($views%10000000>9999000 or $views%10000000<1000) {
 			$u=($loguserid?$loguserid:0);
-			$sql->query("INSERT INTO hits VALUES ($views,$u,'$userip',".ctime().')');
+			$ct = ctime();
+			$sql->query("INSERT INTO hits VALUES ({$views},{$u},'{$userip}',{$ct})");
 		}
 
 		// Print out a message to IRC whenever a 10-million-view milestone is hit
@@ -292,13 +293,16 @@
 			$privatebox = "<tr><td colspan=3 class='tbl tdbg2 center fonts'>$newpic <a href={$GLOBALS['jul_views_path']}/private.php>You have $numnew new private message$ssss</a> -- $lastmsg</td></tr>";
 		}
 	}
-	
+
   // Pass on some PHP variables to JS.
+	$base_json = json_encode($GLOBALS['jul_base_path']);
+	$views_json = json_encode($GLOBALS['jul_views_path']);
+	$settings_json = json_encode($GLOBALS['jul_settings']);
 	$GLOBALS['jul_js_vars'] = "
 	<script>
-	window.jul_base_path = {json_encode($GLOBALS['jul_base_path'])};
-	window.jul_views_path = {json_encode($GLOBALS['jul_views_path'])};
-	window.jul_settings = {json_encode($GLOBALS['jul_settings'])};
+	window.jul_base_path = {$base_json};
+	window.jul_views_path = {$views_json};
+	window.jul_settings = {$settings_json};
 	</script>
 	";
 
