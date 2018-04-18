@@ -179,7 +179,7 @@
 			$post['headtext'] = str_replace(
 				array('class="inu-bg"','class="inu-tx"'),
 				array('class="inu-dbg"','class="inu-dtx"'), $post['headtext']);
-			$set['userlink'] =" <a name='.$post['id'].'></a><a class=\"url2100\" href=\"{$GLOBALS['jul_views_path']}/profile.php?id=2100\"><font color=\"FF0202\">[D]Inuyasha</font></a>";
+			$set['userlink'] =" <a name={$post['id']}></a><a class=\"url2100\" href=\"{$GLOBALS['jul_views_path']}/profile.php?id=2100\"><font color=\"FF0202\">[D]Inuyasha</font></a>";
 			$set['userrank'] = 'Now you\'ve done it...!';
 			$set['userpic'] = '<img src="http://inuyasha.rustedlogic.net/personal/moodav/5.png">';
 			$dstyle = ' style="color:#b671e8;background:black;"';

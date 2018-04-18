@@ -1,6 +1,10 @@
 <?php
 
 function base_dir() {
+  return $GLOBALS['jul_base_dir'];
+}
+
+function base_path() {
   return $GLOBALS['jul_base_path'];
 }
 

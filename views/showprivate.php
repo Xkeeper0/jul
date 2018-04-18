@@ -24,7 +24,7 @@
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages: $msg[title]";
 	require_once '../lib/layout.php';
 
-	$top = "<table width=100%><td align=left>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>$pmlinktext</a> - $msg[title]</table>";
+	$top = "<table width=100%><td align=left>$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>$pmlinktext</a> - $msg[title]</table>";
 	if ($msg['userto'] == $loguserid)
 		$sql->query("UPDATE pmsgs SET msgread=1 WHERE id=$id");
 

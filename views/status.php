@@ -2,6 +2,7 @@
 	require '../lib/function.php';
 	require '../lib/rpg.php';
 
+	$base = base_path().'/';
 	if(!intval($u)) die();
 
 	$user = $sql->fetchq("SELECT name,posts,regdate,users_rpg.* FROM users left join users_rpg on uid=id WHERE id='$u'");
@@ -156,7 +157,8 @@ function twrite($font,$x,$y,$l,$text){
 }
 
 function fontc($r1,$g1,$b1,$r2,$g2,$b2,$r3,$g3,$b3){
-	$font=ImageCreateFromPNG('images/rpg/font.png');
+	global $base;
+	$font=ImageCreateFromPNG($base.'images/rpg/font.png');
 	ImageColorTransparent($font,1);
 	ImageColorSet($font,6,$r1,$g1,$b1);
 	ImageColorSet($font,5,($r1*2+$r2)/3,($g1*2+$g2)/3,($b1*2+$b2)/3);

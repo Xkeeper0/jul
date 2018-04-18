@@ -10,7 +10,7 @@
 		print "
 			$header$tblstart
 			$tccell1>Can't send a private message, because you are not logged in.
-			<br>".redirect("index.php", 'return to the index page', 0)."
+			<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php", 'return to the index page', 0)."
 			$tblend$footer
 		";
 		printtimedif($startingtime);
@@ -43,7 +43,7 @@
 		}
 	}
 
-	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>$tblstart";
+	print "$header$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>$tblstart";
 
 	if (!$action) {
 		print "<body onload=window.document.REPLIER.message.focus()><FORM ACTION={$GLOBALS['jul_views_path']}/sendprivate.php NAME=REPLIER METHOD=POST>";
@@ -84,7 +84,7 @@
 			$tblend
 			</FORM>
 			<br>$tblstart$postlist$tblend
-			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>
+			$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>
 		";
 	}
 	if($action=='sendmsg') {

@@ -117,7 +117,7 @@
 		$fonline = fonlineusers($id);
 
 		if($log) {
-			$headlinks.=" - <a href=index.php?action=markforumread&forumid=$id>Mark forum read</a>";
+			$headlinks.=" - <a href={$GLOBALS['jul_base_dir']}/index.php?action=markforumread&forumid=$id>Mark forum read</a>";
 			$header = makeheader($header1,$headlinks,$header2 .(($fonline) ? "$tblstart$tccell1s>$fonline$tblend" : ""));
 		}
 
@@ -128,7 +128,7 @@
 	}
 	$infotable =
 		"<table width=100%><tr>
-			<td align=left class='font'><a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - $forum[title]</td>
+			<td align=left class='font'><a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - $forum[title]</td>
 			$newthreadbar
 		</tr></table>";
 

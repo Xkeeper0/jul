@@ -8,7 +8,7 @@
 
 		print "$header
 		<br>$tblstart$tccell1>You must be logged in to edit your post radar.<br>
-		".redirect('index.php','return to the board',0).$tblend.$footer;
+		".redirect("{$GLOBALS['jul_base_dir']}/index.php",'return to the board',0).$tblend.$footer;
 
 		printtimedif($startingtime);
 		die();
@@ -25,7 +25,7 @@
 
 			print "$header
 			<br>$tblstart$tccell1>Thank you, $user, for editing your post radar.<br>
-			".redirect('index.php','return to the board',0).$tblend.$footer;
+			".redirect("{$GLOBALS['jul_base_dir']}/index.php",'return to the board',0).$tblend.$footer;
 
 			printtimedif($startingtime);
 			die();

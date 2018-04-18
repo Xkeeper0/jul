@@ -335,12 +335,12 @@
 	";
 
 	if ($log && $id && $forum['id']) {
-		$headlinks	.= " - <a href=index.php?action=markforumread&forumid=$forum[id]>Mark forum read</a>";
+		$headlinks	.= " - <a href='.$GLOBALS['jul_base_dir'].'/index.php?action=markforumread&forumid=$forum[id]>Mark forum read</a>";
 		$header = makeheader($header1, $headlinks, $header2 . (($fonline) ? "$tblstart$tccell1s>$fonline$tblend" : ""));
 	}
 
 	$threadforumlinks = "
-		<table width=100%><td align=left>$fonttag<a href=index.php>".$GLOBALS['jul_settings']['board_name']."</a>"
+		<table width=100%><td align=left>$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>".$GLOBALS['jul_settings']['board_name']."</a>"
 		.
 		(($forum['title']) ? " - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a>" : "")
 		.

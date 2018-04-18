@@ -95,7 +95,7 @@
 
 		$logmsg	= "";
 		if($log){
-			$headlinks.=' - <a href=index.php?action=markallforumsread>Mark all forums read</a>';
+			$headlinks.=' - <a href='.$GLOBALS['jul_base_dir'].'/index.php?action=markallforumsread>Mark all forums read</a>';
 			$header=makeheader($header1,$headlinks,$header2);
 
 			$myurl = getuserlink($loguser);
@@ -214,7 +214,7 @@
 
 	$cat	= filter_int($_GET['cat']);
 	foreach ($categories as $category) {
-		$forumlist.="<tr><td class='tbl tdbgc center font' colspan=5><a href=index.php?cat=$category[id]>$category[name]</a></td></tr>";
+		$forumlist.="<tr><td class='tbl tdbgc center font' colspan=5><a href={$GLOBALS['jul_base_dir']}/index.php?cat=$category[id]>$category[name]</a></td></tr>";
 		if($cat && $cat != $category['id'])
 		  continue;
 

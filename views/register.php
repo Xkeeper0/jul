@@ -43,7 +43,7 @@
 	if ($_POST['name'] == "Blaster") {
 		$sql -> query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Idiot'");
 		@xk_ircsend("1|". xk(7) ."Auto-IP banned Blaster with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." on registration.");
-		die("$tccell1>Thank you, $username, for registering your account.<br>".redirect('index.php','the board',0).$footer);
+		die("$tccell1>Thank you, $username, for registering your account.<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php",'the board',0).$footer);
 	}
 
 	/* do curl here */
@@ -81,7 +81,7 @@
 
 		$sql -> query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Reregistering fuckwit'");
 		@xk_ircsend("1|". xk(7) ."Auto-IP banned proxy-abusing $adjectives[0] with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." on registration. (Tried to register with username $name)");
-		die("$tccell1>Thank you, $name, for registering your account.<br>".redirect('index.php','the board',0).$footer);
+		die("$tccell1>Thank you, $name, for registering your account.<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php",'the board',0).$footer);
 	}
 
 
@@ -113,7 +113,7 @@
 
 //		$sql->query("INSERT INTO `ipbans` SET `ip` = '$ipaddr', `reason` = 'Automagic ban', `banner` = 'Acmlmboard'");
 
-		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect('index.php','the board',0);
+		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php",'the board',0);
 	} else {
 
 		$ircout['name']		= stripslashes($name);
@@ -130,12 +130,12 @@
 		xk_ircout("user", $ircout['name'], $ircout);
 
 		$sql->query("INSERT INTO `users_rpg` (`uid`) VALUES ('". $newuserid ."')") or print mysql_error();
-		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect('index.php','the board',0);
+		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php",'the board',0);
 	}
     }else{
 
 /*	if ($password == "123") {
-		echo	"$tccell1>Thank you, $username, for registering your account.<img src=cookieban.php width=1 height=1><br>".redirect('index.php','the board',0);
+		echo	"$tccell1>Thank you, $username, for registering your account.<img src=cookieban.php width=1 height=1><br>".redirect("{$GLOBALS['jul_base_dir']}/index.php",'the board',0);
 		mysql_query("INSERT INTO `ipbans` (`ip`, `reason`, `date`) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', 'blocked password of 123', '". ctime() ."')");
 		die();
 	}
@@ -155,7 +155,7 @@
 
 	print "
 	 $tccell1>Couldn't register the account. $reason
-	 <br>".redirect("index.php","the board",0);
+	 <br>".redirect("{$GLOBALS['jul_base_dir']}/index.php","the board",0);
     }
     print $tblend;
   }

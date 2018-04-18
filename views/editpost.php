@@ -39,7 +39,7 @@
 	if (@mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forum[id] and user=$loguserid")))
 		$ismod = 1;
 
-	print "$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum['title']."</a> - <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
+	print "$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum['title']."</a> - <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
 		$tblstart
 		<FORM ACTION='{$GLOBALS['jul_views_path']}/editpost.php' NAME=REPLIER METHOD=POST>";
 
@@ -75,7 +75,7 @@
 			$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
 			$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[1]><label for=\"nohtml\">Disable HTML</label></td></tr>
 			</FORM>
-		$tblend$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum['title']."</a> - $thread[title]
+		$tblend$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum['title']."</a> - $thread[title]
 		";
 	}
 	elseif (!$action) {
@@ -164,7 +164,7 @@
 					$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
 					$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[1]><label for=\"nohtml\">Disable HTML</label></td></tr>
 					</FORM>
-					$tblend$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum[title]."</a> - $thread[title]
+					$tblend$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum[title]."</a> - $thread[title]
 				";
 			}
 		}

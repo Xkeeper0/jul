@@ -4,11 +4,21 @@
 	ini_set("default_charset", "UTF-8");
 
 	// The base path we're currently in. If the forum is located at http://example.com/jul/, this will be '/jul'.
-	$GLOBALS['jul_base_path'] = dirname($_SERVER['PHP_SELF']);
+	// Take the current directory and pop off the last two items to get the containing dir.
+	// This removes /lib and /jul (or whatever the containing directory is named, e.g. 'www').
+	$containing_dir = implode('/', array_splice(explode('/', __DIR__), 0, -2));
+	// The base directory contains the project root.
+	$base_dir = implode('/', array_splice(explode('/', __DIR__), 0, -1));
+
+	$GLOBALS['jul_base_path'] = $base_dir;
+	$GLOBALS['jul_base_dir'] = str_replace($containing_dir, '', $base_dir);
 	// Path where we can find the views, e.g. thread.php, forum.php.
-	$GLOBALS['jul_views_path'] = "{$GLOBALS['jul_base_path']}/views";
+	$GLOBALS['jul_views_path'] = "{$GLOBALS['jul_base_dir']}/views";
 
 	$startingtime = microtime(true);
+
+	// Allow us to include from lib/ wherever we are.
+	set_include_path($GLOBALS['jul_base_path']);
 
 	// Awful old legacy thing. Too much code relies on register globals,
 	// and doesn't distinguish between _GET and _POST, so we have to do it here. fun
@@ -20,7 +30,7 @@
 
 	require 'lib/error.php';
 
-	if (!is_file('lib/config.php')) {
+	if (!is_file("{$GLOBALS['jul_base_path']}/lib/config.php")) {
 		early_html_die('Could not find a configuration file. Make sure you have a <tt>lib/config.php</tt> file and it contains <tt>$sql_settings</tt> and <tt>$forum_settings</tt>. See <tt>lib/config.example.php</tt>.');
 	}
 	require 'lib/defaults.php';
@@ -281,18 +291,16 @@ function filter_string(&$v) {
 
 function readsmilies(){
 	global $x_hacks;
-	if ($x_hacks['host']) {
-		$fpnt=fopen('smilies2.dat','r');
-	} else {
-		$fpnt=fopen('smilies.dat','r');
-	}
+	$smile = base_path().'/resources/smilies.dat';
+	$fpnt=fopen($smile,'r');
 	for ($i=0;$smil[$i]=fgetcsv($fpnt,300,',');$i++);
 	$r=fclose($fpnt);
 	return $smil;
 }
 
 function numsmilies(){
-	$fpnt=fopen('smilies.dat','r');
+	$smile = base_path().'/resources/smilies.dat';
+	$fpnt=fopen($smile,'r');
 	for($i=0;fgetcsv($fpnt,300,'');$i++);
 	$r=fclose($fpnt);
 	return $i;
@@ -357,9 +365,10 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 	$nw			= 8 * ($double ? 2 : 1);
 	$num		= strval($num);
 	$gfxcode	= "";
+	$img_base = base_dir().'/';
 
 	if($minlen>1 && strlen($num) < $minlen) {
-		$gfxcode = '<img src=images/_.gif width='. ($nw * ($minlen - strlen($num))) .' height='. $nw .'>';
+		$gfxcode = "<img src=\"{$img_base}images/_.gif\" width=". ($nw * ($minlen - strlen($num))) ." height=". $nw .">";
 	}
 
 	for($i=0;$i<strlen($num);$i++) {
@@ -370,10 +379,10 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 				break;
 		}
 		if ($code == " ") {
-			$gfxcode.="<img src=images/_.gif width=$nw height=$nw>";
+			$gfxcode.="<img src={$img_base}images/_.gif width=$nw height=$nw>";
 
 		} else {
-			$gfxcode.="<img src=numgfx/$numdir$code.png width=$nw height=$nw>";
+			$gfxcode.="<img src={$img_base}numgfx/$numdir$code.png width=$nw height=$nw>";
 
 		}
 	}
@@ -597,7 +606,7 @@ function getrank($rankset,$title,$posts,$powl){
 
 			foreach($dotnum as $dot => $num) {
 				for ($x = 0; $x < $num; $x++) {
-					$rank .= "<img src=images/dot". $dot .".gif align=\"absmiddle\">";
+					$rank .= "<img src={$img_base}images/dot". $dot .".gif align=\"absmiddle\">";
 				}
 			}
 			if ($posts >= 10) $rank = floor($posts / 10) * 10 ." ". $rank;
@@ -1043,6 +1052,7 @@ function loadtlayout(){
 
 function moodlist($sel = 0, $return = false) {
 	global $loguserid, $log, $loguser;
+	$img_base = base_dir().'/';
 	$sel		= floor($sel);
 
 	$a	= array("None", "neutral", "angry", "tired/upset", "playful", "doom", "delight", "guru", "hope", "puzzled", "whatever", "hyperactive", "sadness", "bleh", "embarrassed", "amused", "afraid");
@@ -1064,7 +1074,7 @@ function moodlist($sel = 0, $return = false) {
 					}
 					else
 					{
-						document.getElementById(\'prev\').src="images/_.gif";
+						document.getElementById(\'prev\').src="'.$img_base.'images/_.gif";
 					}
 				}
 			</script>
@@ -1079,7 +1089,7 @@ function moodlist($sel = 0, $return = false) {
 	}
 
 	if (!$sel || !$log || !$loguser['moodurl'])
-		$startimg = 'images/_.gif';
+		$startimg = $img_base.'images/_.gif';
 	else
 		$startimg = htmlspecialchars(str_replace('$', $sel, $loguser['moodurl']));
 
@@ -1090,10 +1100,11 @@ function moodlist($sel = 0, $return = false) {
 function admincheck() {
 	global $tblstart, $tccell1, $tblend, $footer, $isadmin;
 	if (!$isadmin) {
+		$home = base_dir().'/';
 		print "
 			$tblstart
 				$tccell1>This feature is restricted to administrators.<br>You aren't one, so go away.<br>
-        ".redirect('index.php','return to the board',0)."
+        ".redirect("{$home}index.php",'return to the board',0)."
         </td>
 			$tblend
 
@@ -1177,6 +1188,8 @@ function include_js($fn, $as_tag = false) {
 
 function dofilters($p){
 	global $hacks;
+	$img_base = base_dir().'/';
+	die('a');
 	$temp = $p;
 
 	$p=preg_replace("'position\s*:\s*fixed'si", "display:none", $p);
@@ -1184,20 +1197,20 @@ function dofilters($p){
 
 	//$p=preg_replace("':awesome:'","<small>[unfunny]</small>", $p);
 
-	$p=preg_replace("':facepalm:'si",'<img src=images/facepalm.jpg>',$p);
-	$p=preg_replace("':facepalm2:'si",'<img src=images/facepalm2.jpg>',$p);
-	$p=preg_replace("':epicburn:'si",'<img src=images/epicburn.png>',$p);
-	$p=preg_replace("':umad:'si",'<img src=images/umad.jpg>',$p);
-	$p=preg_replace("':gamepro5:'si",'<img src=http://xkeeper.net/img/gamepro5.gif title="FIVE EXPLODING HEADS OUT OF FIVE">',$p);
-	$p=preg_replace("':headdesk:'si",'<img src=http://xkeeper.net/img/headdesk.jpg title="Steven Colbert to the rescue">',$p);
-	$p=preg_replace("':rereggie:'si",'<img src=images/rereggie.png>',$p);
-	$p=preg_replace("':tmyk:'si",'<img src=http://xkeeper.net/img/themoreyouknow.jpg title="do doo do doooooo~">',$p);
-	$p=preg_replace("':jmsu:'si",'<img src=images/jmsu.png>',$p);
-	$p=preg_replace("':noted:'si",'<img src=images/noted.png title="NOTED, THANKS!!">',$p);
-	$p=preg_replace("':apathy:'si",'<img src=http://xkeeper.net/img/stickfigure-notext.png title="who cares">',$p);
-	$p=preg_replace("':spinnaz:'si", '<img src="images/smilies/spinnaz.gif">', $p);
-	$p=preg_replace("':trolldra:'si", '<img src="/images/trolldra.png">', $p);
-	$p=preg_replace("':reggie:'si",'<img src=http://xkeeper.net/img/reggieshrug.jpg title="REGGIE!">',$p);
+	$p=preg_replace("':facepalm:'si","<img src={$img_base}images/facepalm.jpg>",$p);
+	$p=preg_replace("':facepalm2:'si","<img src={$img_base}images/facepalm2.jpg>",$p);
+	$p=preg_replace("':epicburn:'si","<img src={$img_base}images/epicburn.png>",$p);
+	$p=preg_replace("':umad:'si","<img src={$img_base}images/umad.jpg>",$p);
+	$p=preg_replace("':gamepro5:'si","<img src=http://xkeeper.net/img/gamepro5.gif title=\"FIVE EXPLODING HEADS OUT OF FIVE\">",$p);
+	$p=preg_replace("':headdesk:'si","<img src=http://xkeeper.net/img/headdesk.jpg title=\"Steven Colbert to the rescue\">",$p);
+	$p=preg_replace("':rereggie:'si","<img src={$img_base}images/rereggie.png>",$p);
+	$p=preg_replace("':tmyk:'si","<img src=http://xkeeper.net/img/themoreyouknow.jpg title=\"do doo do doooooo~\">",$p);
+	$p=preg_replace("':jmsu:'si","<img src={$img_base}images/jmsu.png>",$p);
+	$p=preg_replace("':noted:'si","<img src={$img_base}images/noted.png title=\"NOTED, THANKS!!\">",$p);
+	$p=preg_replace("':apathy:'si","<img src=http://xkeeper.net/img/stickfigure-notext.png title=\"who cares\">",$p);
+	$p=preg_replace("':spinnaz:'si", "<img src=\"{$img_base}images/smilies/spinnaz.gif\">", $p);
+	$p=preg_replace("':trolldra:'si", "<img src=\"/{$img_base}images/trolldra.png\">", $p);
+	$p=preg_replace("':reggie:'si","<img src=http://xkeeper.net/img/reggieshrug.jpg title=\"REGGIE!\">",$p);
 
 	$p=preg_replace("'zeon'si",'shit',$p);
 
@@ -1206,7 +1219,7 @@ function dofilters($p){
 		$p=str_replace("-->", '--&gt;</font>', $p);
 	}
 
-	$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
+	$p=preg_replace("'(https?://.*?photobucket.com/)'si","{$img_base}images/photobucket.png#\\1",$p);
 	$p=preg_replace("'http://.{0,3}\.?tinypic\.com'si",'tinyshit',$p);
 	$p=str_replace('<link href="http://pieguy1372.freeweb7.com/misc/piehills.css" rel="stylesheet">',"",$p);
 	$p=str_replace("tabindex=\"0\" ","title=\"the owner of this button is a fucking dumbass\" ",$p);

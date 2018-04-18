@@ -59,7 +59,7 @@
 		$viewlink="<a href={$GLOBALS['jul_views_path']}/private.php?{$idparam}>View received messages</a>";
 
 	print "$header
-		<table width=100%><td>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - "
+		<table width=100%><td>$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - "
 			.(($u != $loguserid) ? $sql->resultq("SELECT `name` FROM `users` WHERE `id` = '$u'")."'s private messages" : "Private messages")
 			." - "
 			.((!$view) ? 'Inbox' : 'Outbox').": $msgtotal</td>

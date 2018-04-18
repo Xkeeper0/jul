@@ -119,14 +119,14 @@
 	");
 	if(!$_POST['action'] or $_POST['paction']) {
 		print "
-			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>".$forum[title]."</a>
+			$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>".$forum[title]."</a>
 			<form action={$GLOBALS['jul_views_path']}/newthread.php name=replier method=post autocomplete=\"off\">
 			$tblstart
 		";
 		if($log and $forums[$id][minpowerthread]>$power) {
 			print "$tccell1>Sorry, but you are not allowed to post";
 			if($banned) print ", because you are banned from this board.<br>".redirect("{$GLOBALS['jul_views_path']}/forum.php?id=$id",'return to the forum',0);
-			else print ' in this restricted forum.<br>'.redirect('index.php','return to the board',0);
+			else print ' in this restricted forum.<br>'.redirect("{$GLOBALS['jul_base_dir']}/index.php",'return to the board',0);
 		}
 		else {
 			if ($log) {
@@ -160,7 +160,7 @@
 			</table>
 			</table>
 			</form>
-			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>".$forum[title]."</a>
+			$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>".$forum[title]."</a>
 			".replytoolbar(4);
 	}
 	if($_POST['action']=='postthread' and !$_POST['paction']) {

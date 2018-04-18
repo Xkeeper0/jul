@@ -1,8 +1,8 @@
 <?php
 $formcss=1;
 $inputborder='663399';
-$bgimage='images/nightscheme_starsbg.png';
-$bgimage='images/starsbg.png';
+$bgimage=$GLOBALS['jul_base_dir'].'/images/nightscheme_starsbg.png';
+$bgimage=$GLOBALS['jul_base_dir'].'/images/starsbg.png';
 $bgcolor='000F1F';
 $textcolor='DDDDDD';
 /*

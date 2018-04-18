@@ -8,7 +8,7 @@
 
 		$GLOBALS['jul_settings']['board_title']	.= "<br><font class=font color=#ff0000><b>If you got banned, PM an admin for a password change</b></font><br><font class=fonts>". $autobancount['cnt'] ." automatic IP bans have been issued, last ". timeunits2(ctime() - $autobancount['time']) ." ago"
 			."<br>". $totalbancount['cnt'] ." IP bans have been issued in total, last ". timeunits2(ctime() - $totalbancount['time']) ." ago";
-	
+
 		$GLOBALS['jul_settings']['board_title']= "<span style='font-size: 40pt; font-variant: small-caps; color: #f33;'>The Hivemind Collective</span><br><span style='font-size: 6pt; font-variant: small-caps; color: #c00'>(because a group of friends sharing a similar opinion is totally hivemind, dood!)</span>";
 	}
 */
@@ -28,22 +28,22 @@
 	$font2	='Verdana, sans-serif';
 	$font3	='Tahoma, sans-serif';
 
-	$newpollpic		= '<img src="images/newpoll.png" alt="New poll" align="absmiddle">';
-	$newreplypic	= '<img src="images/newreply.png" alt="New reply" align="absmiddle">';
-	$newthreadpic	= '<img src="images/newthread.png" alt="New thread" align="absmiddle">';
-	$closedpic		= '<img src="images/threadclosed.png" alt="Thread closed" align="absmiddle">';
+	$newpollpic		= '<img src="'.$GLOBALS['jul_base_dir'].'/images/newpoll.png" alt="New poll" align="absmiddle">';
+	$newreplypic	= '<img src="'.$GLOBALS['jul_base_dir'].'/images/newreply.png" alt="New reply" align="absmiddle">';
+	$newthreadpic	= '<img src="'.$GLOBALS['jul_base_dir'].'/images/newthread.png" alt="New thread" align="absmiddle">';
+	$closedpic		= '<img src="'.$GLOBALS['jul_base_dir'].'/images/threadclosed.png" alt="Thread closed" align="absmiddle">';
 	$numdir			='jul/';
 
-	$statusicons['new']			= '<img src=images/new.gif>';
-	$statusicons['newhot']		= '<img src=images/hotnew.gif>';
-	$statusicons['newoff']		= '<img src=images/off.gif>';
-	$statusicons['newhotoff']	= '<img src=images/hotoff.gif>';
-	$statusicons['hot']			= '<img src=images/hot.gif>';
-	$statusicons['hotoff']		= '<img src=images/hotoff.gif>';
-	$statusicons['off']			= '<img src=images/off.gif>';
+	$statusicons['new']			= '<img src='.$GLOBALS['jul_base_dir'].'/images/new.gif>';
+	$statusicons['newhot']		= '<img src='.$GLOBALS['jul_base_dir'].'/images/hotnew.gif>';
+	$statusicons['newoff']		= '<img src='.$GLOBALS['jul_base_dir'].'/images/off.gif>';
+	$statusicons['newhotoff']	= '<img src='.$GLOBALS['jul_base_dir'].'/images/hotoff.gif>';
+	$statusicons['hot']			= '<img src='.$GLOBALS['jul_base_dir'].'/images/hot.gif>';
+	$statusicons['hotoff']		= '<img src='.$GLOBALS['jul_base_dir'].'/images/hotoff.gif>';
+	$statusicons['off']			= '<img src='.$GLOBALS['jul_base_dir'].'/images/off.gif>';
 
-	$statusicons['getnew']		= '<img src=images/getnew.png title="Go to new posts" align="absmiddle">';
-	$statusicons['getlast']		= '<img src=images/getlast.png title="Go to last post" style="position:relative;top:1px;">';
+	$statusicons['getnew']		= '<img src='.$GLOBALS['jul_base_dir'].'/images/getnew.png title="Go to new posts" align="absmiddle">';
+	$statusicons['getlast']		= '<img src='.$GLOBALS['jul_base_dir'].'/images/getlast.png title="Go to last post" style="position:relative;top:1px;">';
 
 	$statusicons['sticky']		= 'Sticky:';
 	$statusicons['poll']		= 'Poll:';
@@ -124,6 +124,3 @@
 		$cycler		= str_replace("color=", "#", getnamecolor(0, 0));
 		$GLOBALS['jul_settings']['board_title']	.= "</a><br><a href='/thread.php?id=5866'><span style='color: $cycler; font-size: 14px;'>Mosts Results posted. Go view.</span></a>";
 	} */
-
-
-

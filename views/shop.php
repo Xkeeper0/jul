@@ -11,7 +11,7 @@
   if(!$log){
     print "
 	$tblstart$tccell1>You must be logged in to access the Item Shop.<br>".
-	redirect('index.php','return to the main page',0).
+	redirect("{$GLOBALS['jul_base_dir']}/index.php",'return to the main page',0).
 	$tblend;
   }else{
     $user=mysql_fetch_array(mysql_query("SELECT posts,regdate,users_rpg.* FROM users,users_rpg WHERE id=$loguserid AND uid=id"));

@@ -10,7 +10,7 @@
 		require_once '../lib/layout.php';
 		print "
 			$header<br>$tblstart
-			$tccell1>Nice try. Next time, wait until someone makes the thread <i>before</i> trying to reply to it.<br>".redirect("index.php", 'return to the index page', 0)."
+			$tccell1>Nice try. Next time, wait until someone makes the thread <i>before</i> trying to reply to it.<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php", 'return to the index page', 0)."
 			$tblend$footer
 		";
 		printtimedif($startingtime);
@@ -51,7 +51,7 @@
 		$restricted		= true;
 
 	$header	= "$header
-		$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a> - $thread[title]<form action={$GLOBALS['jul_views_path']}/newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
+		$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a> - $thread[title]<form action={$GLOBALS['jul_views_path']}/newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
 
 	// Post preview
 	if (($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
@@ -139,11 +139,11 @@
 			$tblstart$postlist$tblend
 		</table>
 			</form>
-		$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a> - $thread[title]";
+		$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a> - $thread[title]";
 	} elseif(!$_POST['action']) {
 		print $header;
 		print "$tccell1>You are not allowed to post in this thread.
-		<br>".redirect("index.php", 'return to the index page', 0)."</table>";
+		<br>".redirect("{$GLOBALS['jul_base_dir']}/index.php", 'return to the index page', 0)."</table>";
 	}
 
 

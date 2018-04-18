@@ -2,7 +2,7 @@
 
 // I don't know. Maybe someday these can be nice URLs.
 $GLOBALS['jul_routes'] = array(
-  '@home' => "index.php",
+  '@home' => "{$GLOBALS['jul_base_dir']}/",
   '@memberlist' => "{$GLOBALS['jul_views_path']}/memberlist.php",
   '@activeusers' => "{$GLOBALS['jul_views_path']}/activeusers.php",
   '@calendar' => "{$GLOBALS['jul_views_path']}/calendar.php",

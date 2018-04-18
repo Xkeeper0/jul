@@ -31,7 +31,7 @@
 	require '../lib/layout.php';
 
 	if($log && !$_GET['raw']) {
-		$headlinks.=' - <a href=index.php?action=markallforumsread>Mark all posts read</a>';
+		$headlinks.=' - <a href='.$GLOBALS['jul_base_dir'].'/index.php?action=markallforumsread>Mark all posts read</a>';
 		$header=makeheader($header1,$headlinks,$header2);
 
 		$forumread = $sql->getresultsbykey("SELECT forum,readdate FROM forumread WHERE user=$loguserid", 'forum', 'readdate');

@@ -19,7 +19,8 @@
 	if(!isset($windowtitle)) $windowtitle=$GLOBALS['jul_settings']['board_name'];
 	require 'colors.php';
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
-	$GLOBALS['jul_settings']['board_title']	= "<a href='./'>{$GLOBALS['jul_settings']['board_title']}</a>";
+	$home = base_dir().'/';
+	$GLOBALS['jul_settings']['board_title']	= "<a href='{$home}'>{$GLOBALS['jul_settings']['board_title']}</a>";
 
 	//$GLOBALS['jul_settings']['board_title'] = "<a href='./'><img src=\"images/christmas-banner-blackroseII.png\" title=\"Not even Christmas in July, no. It's May.\"></a>";
 
@@ -73,7 +74,7 @@
 		// special "null" scheme.
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
-		$css = "<link rel='stylesheet' href='{$GLOBALS['jul_base_path']}/css/basics.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
+		$css = "<link rel='stylesheet' href='{$GLOBALS['jul_base_dir']}/css/basics.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
 		// possibly causes issue #19 - not sure why this was here
 		// likely irrelevant after addition of custom date formats
 		// (remove this later)
@@ -86,7 +87,7 @@
 		$linkcolor = "FFF";
 	} else {
 		$css="
-			<link rel='stylesheet' href='{$GLOBALS['jul_base_path']}/css/base.css' type='text/css'>
+			<link rel='stylesheet' href='{$GLOBALS['jul_base_dir']}/css/base.css' type='text/css'>
 			<style type='text/css'>
 			a			{	color: #$linkcolor;	}
 			a:visited	{	color: #$linkcolor2;	}
@@ -295,12 +296,12 @@
 	}
 
   // Pass on some PHP variables to JS.
-	$base_json = json_encode($GLOBALS['jul_base_path']);
+	$base_json = json_encode($GLOBALS['jul_base_dir']);
 	$views_json = json_encode($GLOBALS['jul_views_path']);
 	$settings_json = json_encode($GLOBALS['jul_settings']);
 	$GLOBALS['jul_js_vars'] = "
 	<script>
-	window.jul_base_path = {$base_json};
+	window.jul_base_dir = {$base_json};
 	window.jul_views_path = {$views_json};
 	window.jul_settings = {$settings_json};
 	</script>
@@ -373,9 +374,9 @@
   $header2="
 	  ". (!$x_hacks['smallbrowse'] ? "
 	  </td><tr>
-		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>Views: $dispviews<br><img src=images/_.gif width=120 height=1></td>
+		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>Views: $dispviews<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=120 height=1></td>
 		  <td width='100%' class='tbl tdbg2 center fonts'>$headlinks2</td>
-		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>".  date($dateformat,ctime()+$tzoff) ."<br><img src=images/_.gif width=120 height=1><tr>"
+		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>".  date($dateformat,ctime()+$tzoff) ."<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=120 height=1><tr>"
 		: "<br>$dispviews views, ". date($dateformat,ctime()+$tzoff) ."
 		  </td><tr>
 			<td width=100% class='tbl tdbg2 center fonts' colspan=3>$headlinks2</td><tr>") ."
@@ -464,7 +465,7 @@
 	<br>
 	<table cellpadding=0 border=0 cellspacing=2><tr>
 		<td>
-			<img src=images/poweredbyacmlm.gif>
+			<img src={$GLOBALS['jul_base_dir']}/images/poweredbyacmlm.gif>
 		</td>
 		<td>
 			{$smallfont}

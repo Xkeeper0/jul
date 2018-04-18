@@ -48,7 +48,7 @@
 	while($event1 = $sql->fetch($events))
 		$eventtext[$event1['d']] .= "<br>- <a href='{$GLOBALS['jul_views_path']}/calendar.php?event=$event1[id]'>$event1[title]</a>";
 
-	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - Calendar
+	print "$header$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - Calendar
 		$tblstart";
 
 	if ($eventdata) {
