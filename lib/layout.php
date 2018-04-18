@@ -73,7 +73,7 @@
 		// special "null" scheme.
 		$css = "";
 	} elseif (isset($schemetype) && $schemetype == 1) {
-		$css = "<link rel='stylesheet' href='/css/basics.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
+		$css = "<link rel='stylesheet' href='{$GLOBALS['jul_base_path']}/css/basics.css' type='text/css'><link rel='stylesheet' type='text/css' href='/css/$schemefile.css'>";
 		// possibly causes issue #19 - not sure why this was here
 		// likely irrelevant after addition of custom date formats
 		// (remove this later)
@@ -86,7 +86,7 @@
 		$linkcolor = "FFF";
 	} else {
 		$css="
-			<link rel='stylesheet' href='/css/base.css' type='text/css'>
+			<link rel='stylesheet' href='{$GLOBALS['jul_base_path']}/css/base.css' type='text/css'>
 			<style type='text/css'>
 			a			{	color: #$linkcolor;	}
 			a:visited	{	color: #$linkcolor2;	}
