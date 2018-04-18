@@ -17,7 +17,7 @@
 		$ismod = 0;
 
 	if (!$ismod)
-		errorpage("You aren't allowed to edit this thread.",'the thread',"thread.php?id={$id}");
+		errorpage("You aren't allowed to edit this thread.",'the thread',"{$GLOBALS['jul_views_path']}/thread.php?id={$id}");
 
 	// Quickmod
 	if (substr($_GET['action'], 0, 1) == 'q') {
@@ -26,11 +26,11 @@
 			case 'qunstick': $update = 'sticky=0'; break;
 			case 'qclose':   $update = 'closed=1'; break;
 			case 'qunclose': $update = 'closed=0'; break;
-			default: return header("Location: thread.php?id={$id}");
+			default: return header("Location: {$GLOBALS['jul_views_path']}/thread.php?id={$id}");
 		}
 
 		$sql->query("UPDATE threads SET {$update} WHERE id={$id}");
-		return header("Location: thread.php?id={$id}");
+		return header("Location: {$GLOBALS['jul_views_path']}/thread.php?id={$id}");
 	}
 	elseif ($_POST['action'] == "trashthread") {
 		$sql->query("UPDATE threads SET sticky=0, closed=1, forum=$trashid WHERE id='$id'");
@@ -41,7 +41,7 @@
 		$sql->query("UPDATE forums SET numposts=numposts+$numposts,numthreads=numthreads+1,lastpostdate=$t2[lastpostdate],lastpostuser=$t2[lastposter] WHERE id=$trashid");
 
 		// Yeah whatever
-		errorpage("Thread successfully trashed.",'return to the thread',"thread.php?id=$id");
+		errorpage("Thread successfully trashed.",'return to the thread',"{$GLOBALS['jul_views_path']}/thread.php?id=$id");
 	}
 	elseif ($_POST['action'] == 'editthread') {
 		$posticons[$iconid]=str_replace("\n",'',$posticons[$iconid]);
@@ -56,7 +56,7 @@
 			$sql->query("UPDATE forums SET numposts=numposts-$numposts,numthreads=numthreads-1,lastpostdate=$t1[lastpostdate],lastpostuser=$t1[lastposter] WHERE id=$forumid");
 			$sql->query("UPDATE forums SET numposts=numposts+$numposts,numthreads=numthreads+1,lastpostdate=$t2[lastpostdate],lastpostuser=$t2[lastposter] WHERE id=$forummove");
 		}
-		errorpage("Thank you, $loguser[name], for editing the thread.",'return to the thread',"thread.php?id=$id");
+		errorpage("Thank you, $loguser[name], for editing the thread.",'return to the thread',"{$GLOBALS['jul_views_path']}/thread.php?id=$id");
 	}
 	// Deletion disallowed for now
 /*	elseif ($_POST['action'] == 'deletethread') {
@@ -65,11 +65,11 @@
 		$numdeletedposts=$thread[replies]+1;
 		$t1 = $sql->fetchq("SELECT lastpostdate,lastposter FROM threads WHERE forum=$forumid ORDER BY lastpostdate DESC LIMIT 1");
 		$sql->query("UPDATE forums SET numposts=numposts-$numdeletedposts,numthreads=numthreads-1,lastpostdate=$t1[lastpostdate],lastpostuser=$t1[lastposter] WHERE id=$forumid");
-		errorpage("Thank you, $loguser[name], for deleting the thread.",'return to the thread',"thread.php?id=$id");
+		errorpage("Thank you, $loguser[name], for deleting the thread.",'return to the thread',"{$GLOBALS['jul_views_path']}/thread.php?id=$id");
 	} */
 	elseif ($_GET['action'] == 'trashthread') {
 		print "$header<br>$tblstart
-			<form action='editthread.php' name='trashcompactor' method='post'>
+			<form action='{$GLOBALS['jul_views_path']}/editthread.php' name='trashcompactor' method='post'>
 				<tr>$tccell1><input type='hidden' value='trashthread' name='action'>
 				Are you sure you want to trash this thread?<br>
 				<input type='hidden' value='$id' name='id'>
@@ -82,18 +82,18 @@
 
 		for ($i=0;$posticons[$i];) {
 			$posticons[$i] = str_replace($br,"",$posticons[$i]);
-			
+
 			if($thread['icon']==$posticons[$i]){
 				$checked='checked=1';
 				$customicon='';
 			}
-			
+
 			$posticonlist.="<INPUT type=radio class=radio name=iconid value=$i $checked>&nbsp;<IMG SRC=$posticons[$i] HEIGHT=15 WIDTH=15>&nbsp; &nbsp;";
 			$i++;
 			if($i%10==0) $posticonlist.='<br>';
 			$checked='';
 		}
-		
+
 		if (!$thread['icon'])
 			$checked='checked=1';
 
@@ -112,7 +112,7 @@
 			$forummovelist.="<option value=$forum[id] $checked>$forum[title]</option>";
 		}
 
-		print "$header<br><FORM ACTION=editthread.php NAME=REPLIER METHOD=POST>$tblstart
+		print "$header<br><FORM ACTION='{$GLOBALS['jul_views_path']}/editthread.php' NAME=REPLIER METHOD=POST>$tblstart
 			<tr>$tccellh width=150>&nbsp;</td>$tccellh>&nbsp;</td></tr>
 			<tr>$tccell1><b>Thread title:</b></td>	$tccell2l>$inpt=subject VALUE=\"$thread[title]\" SIZE=40 MAXLENGTH=100></td></tr>
 			<tr>$tccell1><b>Thread icon:</b></td>	$tccell2l>$posticonlist</td></tr>

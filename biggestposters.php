@@ -62,7 +62,7 @@
 			<tr>
 			$tccell1>$rank</td>
 			$tccell1 width=16>". ($user['minipic'] ? "<img src=\"". htmlspecialchars($user['minipic']) ."\" width=16 height=16>" : "&nbsp;") ."</td>
-			$tccell2l><a href=\"profile.php?id=". $user['id'] ."\"><font $namecolor>". $user['name'] ."</font></a></td>
+			$tccell2l><a href=\"{$GLOBALS['jul_views_path']}/profile.php?id=". $user['id'] ."\"><font $namecolor>". $user['name'] ."</font></a></td>
 			$tccell1>".date($dateformat, $user['regdate'] + $tzoff) ."</td>
 			$tccell1r>". $user['posts'] ."</td>
 			$tccell1r><b>". number_format($user['waste']) ."</b></td>

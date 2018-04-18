@@ -8,7 +8,6 @@ print $header."<br>";
 echo "<div style='white-space:pre;'>";
 
 admincheck();
-//print adminlinkbar('admin-slammer.php');
 
 $target_id = $sql->resultq('SELECT id FROM users ORDER BY id DESC LIMIT 1');
 $uinfo = $sql->fetchq("SELECT name, lastip FROM users WHERE id = '{$target_id}'");
@@ -16,7 +15,7 @@ $uinfo = $sql->fetchq("SELECT name, lastip FROM users WHERE id = '{$target_id}'"
 if ($_POST['knockout'] && $_POST['knockout'] != $target_id)
 {
 	echo "Whoops! Someone else took that user to the slammer before you did.\n";
-	echo "\n</div>".redirect("admin-slammer.php", 'the slammer (for another go)', 2);
+	echo "\n</div>".redirect("{$GLOBALS['jul_views_path']}/admin-slammer.php", 'the slammer (for another go)', 2);
 	die();
 }
 else if ($_POST['knockout'])
@@ -43,7 +42,7 @@ else if ($_POST['knockout'])
 
 	xk_ircsend("1|". xk(8) . $uinfo['name'] . xk(7). " (IP " . xk(8) . $uinfo['lastip'] . xk(7) .") is the latest victim of the new EZ BAN button(tm).");
 
-	echo "\n</div>".redirect("admin-slammer.php", 'the slammer (for another go)', 2);
+	echo "\n</div>".redirect("{$GLOBALS['jul_views_path']}/admin-slammer.php", 'the slammer (for another go)', 2);
 	die();
 }
 else

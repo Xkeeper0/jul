@@ -101,7 +101,7 @@
 	print "
 		<br>
 			$tblstart
-			<FORM ACTION=edituser.php NAME=REPLIER METHOD=POST autocomplete=\"off\">
+			<FORM ACTION='{$GLOBALS['jul_views_path']}/edituser.php' NAME=REPLIER METHOD=POST autocomplete=\"off\">
 
 				$hlft Login information $hrgt
 				$lft User name		$rgt$inpt=username VALUE=\"$user[name]\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
@@ -237,7 +237,7 @@
 	print "
 	$tblstart
 	 $tccell1>Thank you, $loguser[name], for editing this user.<br>
-	 ".redirect("profile.php?id=$userid","view $username's profile",0)."
+	 ".redirect("{$GLOBALS['jul_views_path']}/profile.php?id=$userid","view $username's profile",0)."
 	$tblend";
   }
   print $footer;

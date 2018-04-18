@@ -16,7 +16,7 @@
 
 		if (!$log) {
 			require_once 'lib/layout.php';
-			errorpage("You need to be logged in to edit your favorites!",'return to the forum',"forum.php?id=$t[forum]");
+			errorpage("You need to be logged in to edit your favorites!",'return to the forum',"{$GLOBALS['jul_views_path']}/forum.php?id=$t[forum]");
 		}
 
 		$sql->query("DELETE FROM favorites WHERE user=$loguserid AND thread=$thread");
@@ -33,7 +33,7 @@
 			$tx = "\"$t[title]\" has been removed from your favorites.";
 
 		require_once 'lib/layout.php';
-		errorpage($tx,'return to the forum',"forum.php?id=$t[forum]");
+		errorpage($tx,'return to the forum',"{$GLOBALS['jul_views_path']}/forum.php?id=$t[forum]");
 	}
 
 	// Forum Setup
@@ -41,7 +41,7 @@
 		if (!$log) {
 			$meta['noindex'] = true; // prevent search engines from indexing what they can't access
 			require_once 'lib/layout.php';
-			errorpage("You need to be logged in to view your favorites.",'log in (then try again)','login.php');
+			errorpage("You need to be logged in to view your favorites.",'log in (then try again)',"{$GLOBALS['jul_views_path']}/login.php");
 		}
 
 		$forum['title'] = 'Favorites';
@@ -123,8 +123,8 @@
 
 		$newthreadbar =
 			"<td align=right class=fonts>".
-			(($forum['pollstyle'] != -2) ? "<a href=newthread.php?poll=1&id=$id>$newpollpic</a>" : "<img src=\"images/nopolls.png\" align=\"absmiddle\">")
-			." - <a href=newthread.php?id=$id>$newthreadpic</a></td>";
+			(($forum['pollstyle'] != -2) ? "<a href={$GLOBALS['jul_views_path']}/newthread.php?poll=1&id=$id>$newpollpic</a>" : "<img src=\"images/nopolls.png\" align=\"absmiddle\">")
+			." - <a href={$GLOBALS['jul_views_path']}/newthread.php?id=$id>$newthreadpic</a></td>";
 	}
 	$infotable =
 		"<table width=100%><tr>
@@ -154,7 +154,7 @@
 				<td colspan=7 class='tbl tdbgh center fonts'>Announcements</td>
 			</tr><tr>
 				$tccell2>". ($loguser['lastannouncement'] < $annc['aid'] && $loguser['id'] ? $newpic : "&nbsp;") ."</td>
-				$tccell1l colspan=6><a href=announcement.php>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc['date']+$tzoff)."</td>
+				$tccell1l colspan=6><a href='{$GLOBALS['jul_views_path']}/announcement.php'>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc['date']+$tzoff)."</td>
 			</tr>";
 		}
 		if($annc = $sql->fetchq("SELECT user id,date,announcements.title,name,sex,powerlevel FROM announcements,users WHERE forum=$id AND user=users.id ORDER BY date DESC LIMIT 1")) {
@@ -163,7 +163,7 @@
 				$tccellhs colspan=7>Forum announcements</td>
 			</tr><tr>
 				$tccell2>&nbsp;</td>
-				$tccell1l colspan=6><a href=announcement.php?f=$id>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc['date']+$tzoff)."</td>
+				$tccell1l colspan=6><a href='{$GLOBALS['jul_views_path']}/announcement.php?f=$id'>$annc[title]</a> -- Posted by {$userlink} on ".date($dateformat,$annc['date']+$tzoff)."</td>
 			</tr>";
 		}
     }
@@ -279,7 +279,7 @@
 		else
 			$thread['title'] = str_replace(array('<', '>'), array('&lt;', '&gt;'), trim($thread['title']));
 
-		$threadtitle	= "<a href='thread.php?id=$thread[id]'>$thread[title]</a>";
+		$threadtitle	= "<a href='{$GLOBALS['jul_views_path']}/thread.php?id=$thread[id]'>$thread[title]</a>";
 		$belowtitle   = array(); // An extra line below the title in certain circumstances
 
 		$sicon			= "";
@@ -293,7 +293,7 @@
 
 		// Show forum name if not in a forum
 		if (!$id)
-			$belowtitle[] = "In <a href='forum.php?id=$thread[forumid]'>".$forumnames[$thread['forumid']]."</a>";
+			$belowtitle[] = "In <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$thread[forumid]'>".$forumnames[$thread['forumid']]."</a>";
 
 		// Extra pages
 		if($thread['replies']>=$ppp) {
@@ -308,7 +308,7 @@
 				  $k = ($totalpages - $maxfromend);
 					$pagelinks .= " ...";
 				}
-				$pagelinks.=" <a href='thread.php?id=$thread[id]&page=$k'>".($k+1).'</a>';
+				$pagelinks.=" <a href='{$GLOBALS['jul_views_path']}/thread.php?id=$thread[id]&page=$k'>".($k+1).'</a>';
 			}
 
 			if ($loguser['pagestyle'])
@@ -331,13 +331,13 @@
 		$threadlist .= "<tr>
 			$tccell1>$new</td>
 			$tccell2 width=40px><div style=\"max-width:60px;max-height:30px;overflow:hidden;\">$posticon</div></td>
-			$tccell2l>". ($newpost ? "<a href='thread.php?id=$thread[id]&lpt=". $newpostt ."'>". $statusicons['getnew'] ."</a> " : "") ."$threadtitle$secondline</td>
+			$tccell2l>". ($newpost ? "<a href='{$GLOBALS['jul_views_path']}/thread.php?id=$thread[id]&lpt=". $newpostt ."'>". $statusicons['getnew'] ."</a> " : "") ."$threadtitle$secondline</td>
 			$tccell2>{$userlink1}</td>
 			$tccell1>$thread[replies]</td>
 			$tccell1>$thread[views]</td>
 			$tccell2><div class='lastpost'>".date($dateformat,$thread['lastpostdate']+$tzoff)."<br>
 				by {$userlink2}
-				<a href='thread.php?id=$thread[id]&end=1'>$statusicons[getlast]</a>
+				<a href='{$GLOBALS['jul_views_path']}/thread.php?id=$thread[id]&end=1'>$statusicons[getlast]</a>
 			</div></td></tr>";
 	}
 	$threadlist .= "{$tblend}";
@@ -357,7 +357,7 @@
 function notAuthorizedError() {
 	global $log;
 	$rreason = (($log) ? 'don\'t have access to it' : 'are not logged in');
-	$redir = (($log) ? 'index.php' : 'login.php');
+	$redir = (($log) ? 'index.php' : "{$GLOBALS['jul_views_path']}/login.php");
 	$rtext = (($log) ? 'the index page' : 'log in (then try again)');
 	errorpage("Couldn't enter this restricted forum, as you {$rreason}.", $rtext, $redir);
 }

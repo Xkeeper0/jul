@@ -41,7 +41,7 @@ function linkify(text, attrs) {
 	return "<a "+(attrStrings.join(" "))+">"+htmlchars(text)+"</a>";
 }
 
-var postlist = function() {$.get("latestposts.php", {raw: 1}, function(data) {
+var postlist = function() {$.get(window.jul_views_path+"latestposts.php", {raw: 1}, function(data) {
 		var ctime = new Date();
 		var lines   = data.split("\n");
 		var splitter = /"(.*?)"/gi;
@@ -114,4 +114,3 @@ $(document).ready(function() {
 				postlist();
 		}, 30000);
 });
-

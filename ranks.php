@@ -17,7 +17,7 @@
 
 	print "
 		$header
-		<FORM ACTION=ranks.php NAME=REPLIER>
+		<FORM ACTION={$GLOBALS['jul_views_path']}/ranks.php NAME=REPLIER>
 		$tblstart
 		$tccellh colspan=2>&nbsp;<tr>
 		$tccell1><b>Rank set</b></td>
@@ -55,7 +55,7 @@
 		$user  = $sql->fetch($users);
 		$total = mysql_num_rows($users);
 	}
-	
+
 	for($i=0; $i<$totalranks; ++$i) {
 		$rankn=$sql->fetch($ranks);
 		if(!$rankn['num']) $rankn['num']=8388607;

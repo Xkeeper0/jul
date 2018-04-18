@@ -1,6 +1,6 @@
 <?php
   require 'lib/function.php';
-  
+
   $windowtitle = "Editing Post Radar";
 
   if (!$log) {
@@ -80,7 +80,7 @@
     ";
 
 	print "$header<br>
-	<FORM ACTION=postradar.php NAME=REPLIER METHOD=POST>
+	<FORM ACTION={$GLOBALS['jul_views_path']}/postradar.php NAME=REPLIER METHOD=POST>
 	$tblstart$prtable$tblend$footer";
 	printtimedif($startingtime);
 ?>

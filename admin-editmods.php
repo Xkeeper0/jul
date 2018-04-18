@@ -7,7 +7,7 @@ require 'lib/layout.php';
 print $header."<br>";
 
 admincheck();
-print adminlinkbar('admin-editmods.php');
+print adminlinkbar("{$GLOBALS['jul_views_path']}/admin-editmods.php");
 
 $donotprint = false;
 if ($action) {
@@ -24,7 +24,7 @@ if ($action) {
 				print "$tblstart$tccell1> ERROR: $err.";
 			else {
 				$sql->query("INSERT INTO actionlog (atime, adesc, aip) VALUES (".ctime().", \"User ".$loguserid." removed mod $removemoduser from forum $removemodforum\", \"$userip\")");
-				print "$tblstart$tccell1> You successfully deleted user $removemoduser from forum $removemodforum.<br>".redirect("admin-editmods.php",'go back to Edit Mods',0);
+				print "$tblstart$tccell1> You successfully deleted user $removemoduser from forum $removemodforum.<br>".redirect("{$GLOBALS['jul_views_path']}/admin-editmods.php",'go back to Edit Mods',0);
 			}
 		break;
 		case "add":
@@ -33,7 +33,7 @@ if ($action) {
 				print "$tblstart$tccell1> ERROR: $err.";
 			else {
  				$sql->query("INSERT INTO actionlog (atime, adesc, aip) VALUES (".ctime().", \"User ".$loguserid." added mod $addmoduser to forum $addmodforum\", \"$userip\")");
-				print "$tblstart$tccell1> You successfully added user $addmoduser to forum $addmodforum.<br>".redirect("admin-editmods.php",'go back to Edit Mods',0);
+				print "$tblstart$tccell1> You successfully added user $addmoduser to forum $addmodforum.<br>".redirect("{$GLOBALS['jul_views_path']}/admin-editmods.php",'go back to Edit Mods',0);
 			}
 		break;
 		default:
@@ -82,7 +82,7 @@ $tblstart
 <td class='tbl tdbgh center fonts' width=30%>Forum Name</td>
 <td class='tbl tdbgh center fonts' width=65%>Moderators</td></tr>$fa$tblend
 
-<form action=\"admin-editmods.php\" method=\"POST\">$inph=\"action\" value=\"add\"><br>$tblstart".
+<form action=\"{$GLOBALS['jul_views_path']}/admin-editmods.php\" method=\"POST\">$inph=\"action\" value=\"add\"><br>$tblstart".
 /*            <tr>
 	 $tccellh><b>$smallfont Delete a mod.</td>
          $tccellh><b>$smallfont Add Moderator.</td>
@@ -121,7 +121,7 @@ $tccell1>            Forum ID: <input type=\"text\" name=\"nm_fid\">
 <tr>
 	    $tccell1> <input type=\"submit\" name=\"action\" value=\"Delete Mod\"></td>
 $tccell1>            <input type=\"submit\" name=\"action\" value=\"Add Mod\">*/
-($forumselectforrem!=""?"<form action=\"admin-editmods.php\" method=\"POST\">$inph=\"action\" value=\"remove\">$tblstart"."<tr>$tccellh colspan=\"2\">Remove Moderator:</td></tr>
+($forumselectforrem!=""?"<form action=\"{$GLOBALS['jul_views_path']}/admin-editmods.php\" method=\"POST\">$inph=\"action\" value=\"remove\">$tblstart"."<tr>$tccellh colspan=\"2\">Remove Moderator:</td></tr>
 <tr>$tccell1 width=15%>Forum and Moderator:</td>$tccell2l width=85%><select name=\"removemod\" size=\"1\">$forumselectforrem</select></td></tr>
 <tr>$tccell1 width=15%>&nbsp;</td>$tccell2l width=85%>$inps=\"removemodsubmit\" value=\"Remove Moderator\"></td></tr>$tblend</form>":"");
 

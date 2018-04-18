@@ -50,7 +50,7 @@
 		else {
 			if($ppp != 50) $postperpage = "&ppp=$ppp";
 			if($forumquery) $forumlink = '&forum='.intval($_GET['forum']);
-			$pagelinks.=" <a href=postsbyuser.php?id=$id$postperpage$forumlink&page=$i>".($i+1).'</a>';
+			$pagelinks.=" <a href={$GLOBALS['jul_views_path']}/postsbyuser.php?id=$id$postperpage$forumlink&page=$i>".($i+1).'</a>';
 		}
 	}
 
@@ -63,7 +63,7 @@
 
 	while(($post = $sql->fetch($posts)) && $ppp--) {
 		if($post['minpower']<=$power or !$post['minpower'])
-			$threadlink="<a href=thread.php?pid=$post[0]#$post[0]>".str_replace('<','&lt',$post['title']).'</a>';
+			$threadlink="<a href={$GLOBALS['jul_views_path']}/thread.php?pid=$post[0]#$post[0]>".str_replace('<','&lt',$post['title']).'</a>';
 		else $threadlink='(restricted)';
 
 		if(!$post['num']) $post['num']='?';
@@ -72,7 +72,7 @@
 			$tccell1s>$post[0]</td>
 			$tccell1s>$post[num]</td>
 			$tccell1s>".date($dateformat,$post[3]+$tzoff)."</td>
-			$tccell1ls>#<a href=thread.php?id=$post[thread]>$post[1]</a> - $threadlink
+			$tccell1ls>#<a href={$GLOBALS['jul_views_path']}/thread.php?id=$post[thread]>$post[1]</a> - $threadlink
 			" . (($isadmin) ? "</td>$tccell1s>$post[2]" : "") ."
 		</tr>";
 	 }

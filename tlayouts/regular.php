@@ -30,11 +30,11 @@
 			$bar="<br><img src=images/$numdir"."barleft.gif height=8>$baron$baroff<img src=images/$numdir".'barright.gif height=8>';
 
 		} else {
-			$level		= "<img src=images/$numdir"."level.gif width=36 height=8><img src=numgfx.php?n=$lvl&l=3&f=$numfil height=8>";
-			$experience	= "<img src=images/$numdir"."exp.gif width=20 height=8><img src=numgfx.php?n=$exp&l=5&f=$numfil height=8><br><img src=images/$numdir"."fornext.gif width=44 height=8><img src=numgfx.php?n=$expleft&l=2&f=$numfil height=8>";
+			$level		= "<img src=images/$numdir"."level.gif width=36 height=8><img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$lvl&l=3&f=$numfil height=8>";
+			$experience	= "<img src=images/$numdir"."exp.gif width=20 height=8><img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$exp&l=5&f=$numfil height=8><br><img src=images/$numdir"."fornext.gif width=44 height=8><img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$expleft&l=2&f=$numfil height=8>";
 			$poststext	= "<img src=images/_.gif height=2><br><img src=images/$numdir"."posts.gif width=28 height=8>";
-			$postnum	= "<img src=numgfx.php?n=$post[num]/&l=5&f=$numfil height=8>";
-			$posttotal	= "<img src=numgfx.php?n=$post[posts]&f=$numfil".($post['num']?'':'&l=4')." height=8>";
+			$postnum	= "<img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$post[num]/&l=5&f=$numfil height=8>";
+			$posttotal	= "<img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$post[posts]&f=$numfil".($post['num']?'':'&l=4')." height=8>";
 			$totalwidth	= 56;
 			$barwidth	= $totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
 
@@ -50,7 +50,7 @@
 		if(!$post['num']){
 			$postnum	= '';
 
-			if($postlayout==1) $posttotal="<img src=numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
+			if($postlayout==1) $posttotal="<img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
 		}
 
 
@@ -145,7 +145,7 @@
 		return "$tblstart
 			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"font-size: 12px;\">
 				".inu_hexclock()."
-				 <a name=$post[id]></a><a href=\"profile.php?id=2100\"><img src=\"/images/inu/7sd.php?s=- >EC1Inuyasha>0f0 -\"></a>
+				 <a name=$post[id]></a><a href=\"{$GLOBALS['jul_views_path']}/profile.php?id=2100\"><img src=\"/images/inu/7sd.php?s=- >EC1Inuyasha>0f0 -\"></a>
 				$smallfont
 				<br><marquee scrolldelay=250 scrollamount=30 width=30 height=8 behavior=alternate><img src=\"/images/inu/7sd.php?s=>f0012=00\"><img src=\"/images/inu/7sd.php?s=>f00  =%20%20\"></marquee>
 				<br>$reinf
@@ -179,7 +179,7 @@
 			$post['headtext'] = str_replace(
 				array('class="inu-bg"','class="inu-tx"'),
 				array('class="inu-dbg"','class="inu-dtx"'), $post['headtext']);
-			$set['userlink'] =' <a name='.$post['id'].'></a><a class="url2100" href="profile.php?id=2100"><font color="FF0202">[D]Inuyasha</font></a>';
+			$set['userlink'] =" <a name='.$post['id'].'></a><a class=\"url2100\" href=\"{$GLOBALS['jul_views_path']}/profile.php?id=2100\"><font color=\"FF0202\">[D]Inuyasha</font></a>";
 			$set['userrank'] = 'Now you\'ve done it...!';
 			$set['userpic'] = '<img src="http://inuyasha.rustedlogic.net/personal/moodav/5.png">';
 			$dstyle = ' style="color:#b671e8;background:black;"';
@@ -214,9 +214,9 @@
 
 	if (($post['uid'] == 18) && !$x_hacks['host'] && $x_hacks['mmdeath'] >= 0 && !$_GET['test2']) {
 	return "
-	<table style=\"background: #f00 url('numgfx/red.gif');\" cellpadding=3 cellspacing=1>
+	<table style=\"background: #f00 url('{$GLOBALS['jul_views_path']}/numgfx/red.gif');\" cellpadding=3 cellspacing=1>
 	$set[tdbg] style='background: #000;' rowspan=2>
-		<br><center class='stupiddoomtimerhack'><img src='numgfx.php?f=numdeath&n=". $x_hacks['mmdeath'] ."' height=32 style=\"background: #f00 url('numgfx/red.gif');\" title=\"Doom.\"></center>
+		<br><center class='stupiddoomtimerhack'><img src='{$GLOBALS['jul_views_path']}/numgfx.php?f=numdeath&n=". $x_hacks['mmdeath'] ."' height=32 style=\"background: #f00 url('{$GLOBALS['jul_views_path']}/numgfx/red.gif');\" title=\"Doom.\"></center>
 		<br>
 	  <center>$set[userlink]$smallfont<br>
 		<br>
@@ -284,7 +284,7 @@
 				<br>$set[userpic]
 				<br>". ($hacks['noposts'] ? "<font color=#cccccc>" : "<br>Post$postss $postnum<font color=#cccccc>$posttotal") ."
 				<br>$lastactivity</font>
-				". (false ? "<br><a href=sendprivate.php?uid=1>PM</a> - <a href=rateuser.php?id=1>Rate</a>" : "") ."
+				". (false ? "<br><a href={$GLOBALS['jul_views_path']}/sendprivate.php?uid=1>PM</a> - <a href=rateuser.php?id=1>Rate</a>" : "") ."
 				<br><img src=images/_.gif width=200 height=1>
 			</td>
 			<td height=1 width=100% style=\"font-size: 12px; color: #ddd; font-family: Verdana, sans-serif; background: #004c5a; border-bottom: 1px solid #000;\">

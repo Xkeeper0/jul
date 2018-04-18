@@ -51,7 +51,7 @@
 		$restricted		= true;
 
 	$header	= "$header
-		$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]<form action=newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
+		$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a> - $thread[title]<form action={$GLOBALS['jul_views_path']}/newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
 
 	// Post preview
 	if (($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
@@ -67,14 +67,14 @@
 				$tcellbg="<td class='tbl $bg font' valign=top>";
 				$namecolor=getnamecolor($post['sex'],$post['powerlevel']);
 				$postlist.="<tr>
-					$tcellbg<a href=profile.php?id=$post[user]><font $namecolor>$post[name]</font></a>$smallfont<br>
+					$tcellbg<a href={$GLOBALS['jul_views_path']}/profile.php?id=$post[user]><font $namecolor>$post[name]</font></a>$smallfont<br>
 					Posts: $postnum$post[posts]</td>
 					$tcellbg".doreplace2(dofilters($post['text']), $post['options'])."</tr>
 				";
 			}
 			else{
 				$tcellbg="<td bgcolor=$tablebg1 valign=top colspan=2";
-				$postlist.="<tr>$tccellh colspan=2>This is a long thread. Click <a href=thread.php?id=$id>here</a> to view it.</td></tr>";
+				$postlist.="<tr>$tccellh colspan=2>This is a long thread. Click <a href={$GLOBALS['jul_views_path']}/thread.php?id=$id>here</a> to view it.</td></tr>";
 			}
 		}
 	}
@@ -139,7 +139,7 @@
 			$tblstart$postlist$tblend
 		</table>
 			</form>
-		$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]";
+		$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a> - $thread[title]";
 	} elseif(!$_POST['action']) {
 		print $header;
 		print "$tccell1>You are not allowed to post in this thread.
@@ -228,7 +228,7 @@
 					'pow'		=> $forum['minpower'],
 				));
 
-				return header("Location: thread.php?pid=$pid#$pid");
+				return header("Location: {$GLOBALS['jul_views_path']}/thread.php?pid=$pid#$pid");
 
 
 
@@ -268,7 +268,7 @@
 				$tblend$tblstart
 				".threadpost($ppost,1)."
 				$tblend<br>$tblstart
-				<FORM ACTION=newreply.php NAME=REPLIER METHOD=POST>
+				<FORM ACTION={$GLOBALS['jul_views_path']}/newreply.php NAME=REPLIER METHOD=POST>
 				$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
 				$tccell1><b>Reply:</td>
 				$tccell2l width=800px valign=top>$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($message, ENT_QUOTES) ."</TEXTAREA></td>
@@ -293,18 +293,18 @@
 				";
 			}
 		} else {
-			print "$header$tccell1>Couldn't enter the post. $error<br>".redirect("thread.php?id=$id", $thread['title'], 0);
+			print "$header$tccell1>Couldn't enter the post. $error<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$id", $thread['title'], 0);
 		}
 	}
 
 	if ($thread['closed']) {
 		print "
 		$tccell1>Sorry, but this thread is closed, and no more replies can be posted in it.
-		<br>".redirect("thread.php?id=$id",$thread['title'],0);
+		<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$id",$thread['title'],0);
 	} elseif($banned and $log) {
 		print "
 		$tccell1>Sorry, but you are banned from the board, and can not post.
-		<br>".redirect("thread.php?id=$id",$thread['title'],0);
+		<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$id",$thread['title'],0);
 	}
   print $footer;
   printtimedif($startingtime);

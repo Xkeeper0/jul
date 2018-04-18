@@ -31,7 +31,7 @@
 		<br>
 		<br>We are a relaxed community, but constantly breaking the rules will get you banned fast.
 		<br>
-		<br>If you have any questions, feel free to ask <a href='memberlist.php?pow=3'>one of the admins</a> for help.
+		<br>If you have any questions, feel free to ask <a href='{$GLOBALS['jul_views_path']}/memberlist.php?pow=3'>one of the admins</a> for help.
 	");
 
 
@@ -42,13 +42,13 @@
 	$faq	.= faqformat("newbies", "I'm new here. Where should I start?", "
 		Always, by reading the rules... but since you're here, it's <i>probably</i> a safe bet that you've already done that. (If you haven't, <i>now is a great time.</i>)
 		<br>
-		<br>Once you've done that, <a href='register.php'>sign up for an account</a> (or <a href='login.php'>log in</a> if you've already made one). It's simple and very easy to do. After you're registered, you're more than welcome to just <a href='forum.php?id=1'>jump in and say hi</a> by posting in the Introductions thread, or even making your own. We're friendly people and won't bite (usually). Let us know about yourself, how you found us, or whatever's on your mind &mdash; or just jump in and start contributing to discussions.
+		<br>Once you've done that, <a href='{$GLOBALS['jul_views_path']}/register.php'>sign up for an account</a> (or <a href='{$GLOBALS['jul_views_path']}/login.php'>log in</a> if you've already made one). It's simple and very easy to do. After you're registered, you're more than welcome to just <a href='{$GLOBALS['jul_views_path']}/forum.php?id=1'>jump in and say hi</a> by posting in the Introductions thread, or even making your own. We're friendly people and won't bite (usually). Let us know about yourself, how you found us, or whatever's on your mind &mdash; or just jump in and start contributing to discussions.
 	");
 
 	$faq	.= faqformat("layoutlowdown", "What are post layouts?", "
 	Post layouts are like signatures on other forums, but on steroids. Rather than just some text, an image, and maybe a link, post layouts allow you to style your <em>entire post</em>! You too can turn your wonderful contributions into a GeoCities&trade;-esque abomination.
 	<br>
-	<br>You can enable or disable the showing of post layouts by choosing the relevant option in your <a href='editprofile.php'>profile settings</a>.
+	<br>You can enable or disable the showing of post layouts by choosing the relevant option in your <a href='{$GLOBALS['jul_views_path']}/editprofile.php'>profile settings</a>.
 	<br>
 	<br>(Particularly egregious/unreadable layouts will be removed by admins. Abuse of this feature will lead to you no longer being able to use one.)
 	<br>
@@ -260,17 +260,17 @@
 	"));
 
 	$faq	.= faqformat("halp", "I've got a question and I need some help, or I found a bug somewhere.", "
-		<a href='forum.php?id=39'>Post it in the forum here</a>, or alternatively just message the <a href='sendprivate.php?userid=1'>main administrator</a>. If it's a security bug in the code, we <i>really</i> recommend the latter.
+		<a href='{$GLOBALS['jul_views_path']}/forum.php?id=39'>Post it in the forum here</a>, or alternatively just message the <a href='{$GLOBALS['jul_views_path']}/sendprivate.php?userid=1'>main administrator</a>. If it's a security bug in the code, we <i>really</i> recommend the latter.
 	");
 
 	$faq	.= faqformat("band", "I've been banned. Now what?", "
-		You can try checking your title (under your username in your posts) to find out the reason and when it expires. If there's no expiration, it's probably <i>permanent</i>. If you're post due for unbanning, <a href='sendprivate.php?userid=1'>let an admin know</a> and they'll take care of it.
+		You can try checking your title (under your username in your posts) to find out the reason and when it expires. If there's no expiration, it's probably <i>permanent</i>. If you're post due for unbanning, <a href='{$GLOBALS['jul_views_path']}/sendprivate.php?userid=1'>let an admin know</a> and they'll take care of it.
 		<br>
 		<br>On the other hand, if it's permanent, you can always try to show us you've changed and request a <i>second chance</i>... but any further antics after that will usually get your account <b>deleted</b>.
 	");
 
 	$faq	.= faqformat("cantpass", "I've lost/forgotten my password. Now what?", "
-		The best thing you can do is to <a href='profile.php?id=1'>contact Xkeeper directly</a>. He can help you get it fixed.
+		The best thing you can do is to <a href='{$GLOBALS['jul_views_path']}/profile.php?id=1'>contact Xkeeper directly</a>. He can help you get it fixed.
 	");
 
 

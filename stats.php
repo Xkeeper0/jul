@@ -28,17 +28,17 @@
 	<tr>$tccell1l>
 		<img src='ext/ppdgauge.php' alt='Posts in last 24 hours' title='Posts in last 24 hours' style='display: block; float: right;'>
 		<ul>
-			<li><a href='activeusers.php'>Recently active posters</a></li>
-			<li><a href='acs.php'>Daily poster rankings</a></li>
-			<li><a href='milestones.php'>Post milestones</a></li>
-			<li><a href='sigsize.php'>Biggest posters</a></li>
-			<li><a href='sigsize.php'>Largest post layouts</a></li>
-			<li><a href='sigsize.php?bio=1'>Largest bios</a></li>
-			<li><a href='activity.php?u=". ($loguserid ? $loguserid : 1) ."'>Graph of your posting history</a> (change the ID in the URL to see others)</li>
-			<li><a href='activity2.php'>Graph of the top 10 posters</a></li>
-			<li><a href='activity3.php'>Graph of total post count and posts per day</a></li>
-			<li><a href='activity3u.php'>Graph of active users per day</a></li>
-			<li><a href='avatar.php'>Mood avatars</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/activeusers.php'>Recently active posters</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/acs.php'>Daily poster rankings</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/milestones.php'>Post milestones</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/sigsize.php'>Biggest posters</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/sigsize.php'>Largest post layouts</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/sigsize.php?bio=1'>Largest bios</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/activity.php?u=". ($loguserid ? $loguserid : 1) ."'>Graph of your posting history</a> (change the ID in the URL to see others)</li>
+			<li><a href='{$GLOBALS['jul_views_path']}/activity2.php'>Graph of the top 10 posters</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/activity3.php'>Graph of total post count and posts per day</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/activity3u.php'>Graph of active users per day</a></li>
+			<li><a href='{$GLOBALS['jul_views_path']}/avatar.php'>Mood avatars</a></li>
 		</ul>
 	</td>
 	</tr>

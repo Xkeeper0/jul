@@ -7,7 +7,7 @@
 
 	if (!$log) {
 		require_once 'lib/layout.php';
-		errorpage("You are not logged in.",'log in (then try again)','login.php');
+		errorpage("You are not logged in.",'log in (then try again)',"{$GLOBALS['jul_views_path']}/login.php");
 	}
 	if ($loguser['editing_locked'] == 1) {
 		require_once 'lib/layout.php';
@@ -39,9 +39,9 @@
 	if (@mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forum[id] and user=$loguserid")))
 		$ismod = 1;
 
-	print "$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href=forum.php?id=$forum[id]>".$forum['title']."</a> - <a href='thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
+	print "$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum['title']."</a> - <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
 		$tblstart
-		<FORM ACTION=editpost.php NAME=REPLIER METHOD=POST>";
+		<FORM ACTION='{$GLOBALS['jul_views_path']}/editpost.php' NAME=REPLIER METHOD=POST>";
 
 	if(!$action && $log && ($ismod || ($loguserid==$post['user'] && $loguser['powerlevel'] > -1 && !$thread['closed'])) && (!$forum['minpower'] or $power>=$forum['minpower'])) {
 		$message=$post['text'];
@@ -75,13 +75,13 @@
 			$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
 			$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[1]><label for=\"nohtml\">Disable HTML</label></td></tr>
 			</FORM>
-		$tblend$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forum[id]>".$forum['title']."</a> - $thread[title]
+		$tblend$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum['title']."</a> - $thread[title]
 		";
 	}
 	elseif (!$action) {
 		print "
 		$tccell1>You are not allowed to edit this post.<br>
-		".redirect("thread.php?id=$threadid","the thread",0);
+		".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$threadid","the thread",0);
 	}
 
 	if($_POST['action']=='editpost') {
@@ -118,7 +118,7 @@
 
 				print "
 					$tccell1>Post edited successfully.<br>
-					".redirect("thread.php?pid=$id#$id",'return to the thread',0).'</table></table>';
+					".redirect("{$GLOBALS['jul_views_path']}/thread.php?pid=$id#$id",'return to the thread',0).'</table></table>';
 			}
 			else {
 				loadtlayout();
@@ -164,13 +164,13 @@
 					$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
 					$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[1]><label for=\"nohtml\">Disable HTML</label></td></tr>
 					</FORM>
-					$tblend$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forum[id]>".$forum[title]."</a> - $thread[title]
+					$tblend$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>".$forum[title]."</a> - $thread[title]
 				";
 			}
 		}
 		else print "
 			$tccell1>You are not allowed to edit this post.<br>
-			".redirect("thread.php?id=$threadid","the thread",0);
+			".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$threadid","the thread",0);
 		print $tblend;
 	}
 
@@ -180,17 +180,17 @@
 			mysql_query("UPDATE `posts` SET `noob` = '1' - `noob` WHERE `id` = '$id'");
 			print "
 				$tblstart$tccell1>Post n00bed!<br>
-				".redirect("thread.php?pid=$id&r=1#$id",'the post',0).'</table></table>';
+				".redirect("{$GLOBALS['jul_views_path']}/thread.php?pid=$id&r=1#$id",'the post',0).'</table></table>';
 		}*/
 	}
 
 	elseif ($action=='delete'){
 		if (!$_POST['reallydelete'])
-			$txt	= "Are you sure you want to <b>DELETE</b> this post?<br><br><form action='editpost.php' method='post'>$inps=reallydelete value='Delete post'>$inph=action value='delete'>$inph=id value='$id'></form> - <a href='thread.php?pid=$id#$id'>Cancel</a>";
+			$txt	= "Are you sure you want to <b>DELETE</b> this post?<br><br><form action='{$GLOBALS['jul_views_path']}/editpost.php' method='post'>$inps=reallydelete value='Delete post'>$inph=action value='delete'>$inph=id value='$id'></form> - <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=$id#$id'>Cancel</a>";
 		else {
 			if ($loguserid == 1162) { // not like it matters since he's banned anyway <:3
 				xk_ircsend("1|The jceggbert5 dipshit tried to delete another post: ". $id);
-				$txt="Thank you, $loguser[name], for deleting the post.<br>".redirect("thread.php?id=$threadid","the thread",0);
+				$txt="Thank you, $loguser[name], for deleting the post.<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$threadid","the thread",0);
 			}
 			elseif ($ismod || ($loguserid == $post['user'] && $loguser['powerlevel'] >= 0)) {
 				$sql->query("DELETE FROM posts WHERE id='$id'");
@@ -198,10 +198,10 @@
 				$p = $sql->fetchq("SELECT id,user,date FROM posts WHERE thread=$threadid ORDER BY date DESC");
 				$sql->query("UPDATE threads SET replies=replies-1, lastposter=$p[user], lastpostdate=$p[date] WHERE id=$threadid");
 				$sql->query("UPDATE forums SET numposts=numposts-1 WHERE id=$forum[id]");
-				$txt="Thank you, $loguser[name], for deleting the post.<br>".redirect("thread.php?id=$threadid","return to the thread",0);
+				$txt="Thank you, $loguser[name], for deleting the post.<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$threadid","return to the thread",0);
 			}
 			else
-				$txt="Couldn't delete the post. You are not allowed to delete this post.<br>".redirect("thread.php?id=$threadid","the thread",0);
+				$txt="Couldn't delete the post. You are not allowed to delete this post.<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$threadid","the thread",0);
 	  }
 		print "$tblstart$tccell1>$txt$tblend";
 	}

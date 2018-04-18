@@ -21,7 +21,7 @@
 	else $qwhere = implode(' AND ', $qstrings);
 
 	$posts = $sql->query("SELECT count(*) AS cnt, FROM_UNIXTIME(date,'%k') AS hour FROM posts WHERE {$qwhere} GROUP BY hour");
-	$link = "<a href=postsbytime.php?" . (($id) ? "id=$id&" : "") . "posttime";
+	$link = "<a href={$GLOBALS['jul_views_path']}/postsbytime.php?" . (($id) ? "id=$id&" : "") . "posttime";
 	print "$header$smallfont
 		Timeframe:
 		$link=86400>Last day</a> |

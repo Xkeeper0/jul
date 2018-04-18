@@ -1,7 +1,7 @@
 <?php
 	require 'lib/function.php';
 	if (!$id)
-		return header("Location: private.php");
+		return header("Location: {$GLOBALS['jul_views_path']}/private.php");
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages";
 	$meta['noindex'] = true;
 
@@ -9,22 +9,22 @@
 
 	if (!$log) {
 		require_once 'lib/layout.php';
-		errorpage("Couldn't get the private message.  You are not logged in.",'log in (then try again)','login.php');
+		errorpage("Couldn't get the private message.  You are not logged in.",'log in (then try again)',"{$GLOBALS['jul_views_path']}/login.php");
 	}
 	elseif (!$msg || (($msg['userto'] != $loguserid && $msg['userfrom'] != $loguserid) && !$isadmin)) {
 		require_once 'lib/layout.php';
-		errorpage("Couldn't get the private message.  It either doesn't exist or was not sent to you.",'your private message inbox','private.php');
+		errorpage("Couldn't get the private message.  It either doesn't exist or was not sent to you.",'your private message inbox',"{$GLOBALS['jul_views_path']}/private.php");
 	}
 
 	if ($isadmin && $msg['userto'] != $loguserid)
-		$pmlinktext = "<a href='private.php?id=$msg[userto]'>".$sql->resultq("SELECT name FROM users WHERE id=$msg[userto]") . '\'s private messages</a>';
-	else $pmlinktext = "<a href=private.php>Private messages</a>";
+		$pmlinktext = "<a href='{$GLOBALS['jul_views_path']}/private.php?id=$msg[userto]'>".$sql->resultq("SELECT name FROM users WHERE id=$msg[userto]") . '\'s private messages</a>';
+	else $pmlinktext = "<a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>";
 
 	$user = $sql->fetchq("SELECT * FROM users WHERE id=$msg[userfrom]");
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages: $msg[title]";
 	require_once 'lib/layout.php';
 
-	$top = "<table width=100%><td align=left>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=private.php>$pmlinktext</a> - $msg[title]</table>";
+	$top = "<table width=100%><td align=left>$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>$pmlinktext</a> - $msg[title]</table>";
 	if ($msg['userto'] == $loguserid)
 		$sql->query("UPDATE pmsgs SET msgread=1 WHERE id=$id");
 
@@ -46,9 +46,9 @@
 	}
 
 	if ($msg['userto'] == $loguserid)
-		$quote = "<a href=sendprivate.php?id=$id>Reply</a>";
+		$quote = "<a href={$GLOBALS['jul_views_path']}/sendprivate.php?id=$id>Reply</a>";
 	if ($isadmin)
-		$ip = (($quote) ? ' | ' : '') . "IP: <a href=ipsearch.php?ip=$msg[ip]>$msg[ip]</a>";
+		$ip = (($quote) ? ' | ' : '') . "IP: <a href='{$GLOBALS['jul_views_path']}/ipsearch.php?ip=$msg[ip]'>$msg[ip]</a>";
 
 	print $header.$top.$tblstart.threadpost($post,1).$tblend.$top.$footer;
 	printtimedif($startingtime);

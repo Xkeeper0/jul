@@ -46,7 +46,7 @@
 
 	$events = $sql->query("SELECT id,d,title FROM events WHERE m=$month AND y=$year ORDER BY id");
 	while($event1 = $sql->fetch($events))
-		$eventtext[$event1['d']] .= "<br>- <a href='calendar.php?event=$event1[id]'>$event1[title]</a>";
+		$eventtext[$event1['d']] .= "<br>- <a href='{$GLOBALS['jul_views_path']}/calendar.php?event=$event1[id]'>$event1[title]</a>";
 
 	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - Calendar
 		$tblstart";
@@ -76,7 +76,7 @@
     print "<tr>\r\n";
     for($dn=0;$dn<=6;$dn++){
       $dd=$i+$dn;
-      $daytext="<a href='calendar.php?y=$year&m=$month&d=$dd'>$dd</a>";
+      $daytext="<a href='{$GLOBALS['jul_views_path']}/calendar.php?y=$year&m=$month&d=$dd'>$dd</a>";
 
       $tccell = $tccell1l;
       if ($dd==$day && $day!=0) $tccell = $tccellcl;
@@ -92,11 +92,11 @@
 
   for($i=1;$i<=12;$i++){
     if($i==$month) $monthlinks.=" $i";
-    else $monthlinks.=" <a href='calendar.php?y=$year&m=$i'>$i</a>";
+    else $monthlinks.=" <a href='{$GLOBALS['jul_views_path']}/calendar.php?y=$year&m=$i'>$i</a>";
   }
   for($i=$year-2;$i<=$year+2;$i++){
     if($i==$year) $yearlinks.=" $i";
-    else $yearlinks.=" <a href='calendar.php?y=$i'>$i</a>";
+    else $yearlinks.=" <a href='{$GLOBALS['jul_views_path']}/calendar.php?y=$i'>$i</a>";
   }
 
   print "<tr>

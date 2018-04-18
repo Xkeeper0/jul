@@ -1,13 +1,13 @@
 <?php
 
 	if (isset($_GET['u']) && $_GET['u']) {
-		header("Location: profile.php?id=". $_GET['u']);
+		header("Location: {$GLOBALS['jul_views_path']}/profile.php?id=". $_GET['u']);
 		die();
 	} elseif (isset($_GET['p']) && $_GET['p']) {
-		header("Location: thread.php?pid=". $_GET['p'] ."#". $_GET['p']);
+		header("Location: {$GLOBALS['jul_views_path']}/thread.php?pid=". $_GET['p'] ."#". $_GET['p']);
 		die();
 	} elseif (isset($_GET['t']) && $_GET['t']) {
-		header("Location: thread.php?id=". $_GET['t']);
+		header("Location: {$GLOBALS['jul_views_path']}/thread.php?id=". $_GET['t']);
 		die();
 	}
 
@@ -75,7 +75,7 @@
 
 			//$namecolor=explode("=", getnamecolor($onuser['sex'],$onuser['powerlevel']));
 			//$namecolor=$namecolor[1];
-			//$namelink="<a href=profile.php?id=$onuser[id] style='color: #$namecolor'>$onuser[name]</a>";
+			//$namelink="<a href={$GLOBALS['jul_views_path']}/profile.php?id=$onuser[id] style='color: #$namecolor'>$onuser[name]</a>";
 
 			$namelink = getuserlink($onuser);
 
@@ -166,7 +166,7 @@
 				$tblstart<tr>
 				$tccellhs colspan=2>Private messages</tr><tr>
 				$tccell1>$new</td>
-				$tccell2l><a href='private.php'>Private messages</a> -- You have $totalpms private messages (".intval($pms[0])." new). $lastmsg</td></tr>
+				$tccell2l><a href='{$GLOBALS['jul_views_path']}/private.php'>Private messages</a> -- You have $totalpms private messages (".intval($pms[0])." new). $lastmsg</td></tr>
 				$tblend<br>
 			";
 
@@ -239,7 +239,7 @@
 			$namelink = getuserlink($forum, array('id'=>'uid'));
 			if($forum['numposts']){
 				$forumlastpost="<nobr>". date($dateformat,$forum['lastpostdate']+$tzoff);
-				$by="$smallfont<br>by $namelink". ($forum['lastpostid'] ? " <a href='thread.php?pid=". $forum['lastpostid'] ."#". $forum['lastpostid'] ."'>". $statusicons['getlast'] ."</a>" : "") ."</nobr></font>";
+				$by="$smallfont<br>by $namelink". ($forum['lastpostid'] ? " <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=". $forum['lastpostid'] ."#". $forum['lastpostid'] ."'>". $statusicons['getlast'] ."</a>" : "") ."</nobr></font>";
 			} else {
 				$forumlastpost=getblankdate();
 				$by='';
@@ -267,7 +267,7 @@
 		  $forumlist.="
 			<tr>
 				$tccell1>$new</td>
-				$tccell2l><a href=forum.php?id=$forum[id]>$forum[title]</a><br>
+				$tccell2l><a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>$forum[title]</a><br>
 				$smallfont$forum[description]<br>$modlist</td>
 				$tccell1>$forum[numthreads]</td>
 				$tccell1>$forum[numposts]</td>

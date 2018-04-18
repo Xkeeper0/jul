@@ -21,7 +21,7 @@
 		print "
 			$header$tblstart
 			$tccell1>You are permabanned and cannot send private messages.
-			<br>".redirect('private.php','your private message box',0)."
+			<br>".redirect("{$GLOBALS['jul_views_path']}/private.php",'your private message box',0)."
 			$tblend$footer
 		";
 		printtimedif($startingtime);
@@ -35,7 +35,7 @@
 			print "
 				$header$tblstart
 				$tccell1>Can't reply to this private message, because it was not sent to you.
-				<br>".redirect('private.php','your private message box',0)."
+				<br>".redirect("{$GLOBALS['jul_views_path']}/private.php",'your private message box',0)."
 				$tblend$footer
 			";
 			printtimedif($startingtime);
@@ -43,10 +43,10 @@
 		}
 	}
 
-	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=private.php>Private messages</a>$tblstart";
+	print "$header$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>$tblstart";
 
 	if (!$action) {
-		print '<body onload=window.document.REPLIER.message.focus()><FORM ACTION=sendprivate.php NAME=REPLIER METHOD=POST>';
+		print "<body onload=window.document.REPLIER.message.focus()><FORM ACTION={$GLOBALS['jul_views_path']}/sendprivate.php NAME=REPLIER METHOD=POST>";
 
 		if ($log && $id) {
 			$user = loaduser($msg['userfrom'],1);
@@ -57,7 +57,7 @@
 			$postlist="
 				$tccellh width=150>User</td>
 				$tccellh>Message<tr>
-				$tcellbg><a href=profile.php?id=$user[id]>$user[name]</a>$smallfont<br>
+				$tcellbg><a href={$GLOBALS['jul_views_path']}/profile.php?id=$user[id]>$user[name]</a>$smallfont<br>
 				Posts: $postnum$user[posts]</td>
 				$tcellbg>".doreplace2($msg[text])."<tr>
 			";
@@ -84,7 +84,7 @@
 			$tblend
 			</FORM>
 			<br>$tblstart$postlist$tblend
-			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=private.php>Private messages</a>
+			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>
 		";
 	}
 	if($action=='sendmsg') {
@@ -93,10 +93,10 @@
 
 		if ($userid == -1)
 			print "$tccell1>Couldn't send the message. You didn't enter an existing username to send the message to.
-				<br>".redirect('private.php','your private message box',2);
+				<br>".redirect("{$GLOBALS['jul_views_path']}/private.php",'your private message box',2);
 		elseif (!$subject)
 			print "$tccell1>Couldn't send the message. You didn't enter a subject.
-				<br>".redirect('private.php','your private message box',2);
+				<br>".redirect("{$GLOBALS['jul_views_path']}/private.php",'your private message box',2);
 		else {
 			$subject=str_replace('<','&lt;',$subject);
 
@@ -119,7 +119,7 @@
 				$sql->query("INSERT INTO pmsgs_text (pid,title,text,tagval) VALUES (".mysql_insert_id().",'$subject','$message','$tagval')");
 
 				print "$tccell1>Private message to $username sent successfully!
-					<br>".redirect('private.php','your private message box',0).$tblend;
+					<br>".redirect("{$GLOBALS['jul_views_path']}/private.php",'your private message box',0).$tblend;
 			}
 			else {
 				loadtlayout();
@@ -142,7 +142,7 @@
 					$tblend$tblstart
 					".threadpost($ppost,1)."
 					$tblend<br>$tblstart
-					<FORM ACTION=sendprivate.php NAME=REPLIER METHOD=POST>
+					<FORM ACTION={$GLOBALS['jul_views_path']}/sendprivate.php NAME=REPLIER METHOD=POST>
 					$tccellh width=150>&nbsp</td>$tccellh>&nbsp<tr>
 					$tccell1><b>Subject:</td>	 $tccell2l>$inpt=subject value=\"$subject\" size=60 maxlength=100><tr>
 					$tccell1><b>Message:</td>
@@ -162,7 +162,7 @@
     mysql_query("DELETE FROM pmsgs_text WHERE pid=$id");
     print "
       $tccell1>Thank you, $loguser[name], for deleting the message.
-      <br>".redirect('private.php','return to the private message box',0).$tblend;
+      <br>".redirect("{$GLOBALS['jul_views_path']}/private.php",'return to the private message box',0).$tblend;
   } */
   print $footer;
   printtimedif($startingtime);

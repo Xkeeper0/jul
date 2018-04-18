@@ -181,28 +181,28 @@
 	$headlinks = '';
 	if($loguserid) {
 		if($isadmin)
-			$headlinks.='<a href="admin.php" style="font-style:italic;">Admin</a> - ';
+			$headlinks.="<a href=\"{$GLOBALS['jul_views_path']}/admin.php\" style=\"font-style:italic;\">Admin</a> - ";
 
 		if($power >= 1)
-			$headlinks.='<a href="shoped.php" style="font-style:italic;">Shop Editor</a> - ';
+			$headlinks.="<a href='{$GLOBALS['jul_views_path']}/shoped.php' style=\"font-style:italic;\">Shop Editor</a> - ";
 
-		$headlinks.='
-		<a href="javascript:document.logout.submit()">Logout</a>
-		- <a href="editprofile.php">Edit profile</a>
-		- <a href="postradar.php">Post radar</a>
-		- <a href="shop.php">Item shop</a>
-		- <a href="forum.php?fav=1">Favorites</a>';
+		$headlinks.="
+		<a href=\"javascript:document.logout.submit()\">Logout</a>
+		- <a href=\"{$GLOBALS['jul_views_path']}/editprofile.php\">Edit profile</a>
+		- <a href=\"{$GLOBALS['jul_views_path']}/postradar.php\">Post radar</a>
+		- <a href=\"{$GLOBALS['jul_views_path']}/shop.php\">Item shop</a>
+		- <a href=\"{$GLOBALS['jul_views_path']}/forum.php?fav=1\">Favorites</a>";
 	} else {
-		$headlinks.='
-		  <a href="register.php">Register</a>
-		- <a href="login.php">Login</a>';
+		$headlinks.="
+		  <a href=\"{$GLOBALS['jul_views_path']}/register.php\">Register</a>
+		- <a href=\"{$GLOBALS['jul_views_path']}/login.php\">Login</a>";
 	}
 
 	if (in_array($loguserid,array(1,5,2100))) {
 		$xminilog	= $sql -> fetchq("SELECT COUNT(*) as count, MAX(`time`) as time FROM `minilog`");
 		if ($xminilog['count']) {
 			$xminilogip	= $sql -> fetchq("SELECT `ip`, `banflags` FROM `minilog` ORDER BY `time` DESC LIMIT 1");
-			$GLOBALS['jul_settings']['board_title']	.= "<br><a href='shitbugs.php'><span class=font style=\"color: #f00\"><b>". $xminilog['count'] ."</b> suspicious request(s) logged, last at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ." (". $xminilogip['banflags'] .")</b></span></a>";
+			$GLOBALS['jul_settings']['board_title']	.= "<br><a href='{$GLOBALS['jul_views_path']}/shitbugs.php'><span class=font style=\"color: #f00\"><b>". $xminilog['count'] ."</b> suspicious request(s) logged, last at <b>". date($dateformat, $xminilog['time'] + $tzoff) ."</b> by <b>". $xminilogip['ip'] ." (". $xminilogip['banflags'] .")</b></span></a>";
 		}
 		$xminilog	= $sql -> fetchq("SELECT COUNT(*) as count, MAX(`time`) as time FROM `pendingusers`");
 		if ($xminilog['count']) {
@@ -289,9 +289,18 @@
       $numnew = mysql_num_rows($newmsgquery);
 			if ($numnew > 1) $ssss = "s";
 
-			$privatebox = "<tr><td colspan=3 class='tbl tdbg2 center fonts'>$newpic <a href=private.php>You have $numnew new private message$ssss</a> -- $lastmsg</td></tr>";
+			$privatebox = "<tr><td colspan=3 class='tbl tdbg2 center fonts'>$newpic <a href={$GLOBALS['jul_views_path']}/private.php>You have $numnew new private message$ssss</a> -- $lastmsg</td></tr>";
 		}
 	}
+	
+  // Pass on some PHP variables to JS.
+	$GLOBALS['jul_js_vars'] = "
+	<script>
+	window.jul_base_path = {json_encode($GLOBALS['jul_base_path'])};
+	window.jul_views_path = {json_encode($GLOBALS['jul_views_path'])};
+	window.jul_settings = {json_encode($GLOBALS['jul_settings'])};
+	</script>
+	";
 
 	$jscripts = '';
 	if ($GLOBALS['jul_settings']['display_ikachan']) { // Ikachan! :D!
@@ -346,6 +355,7 @@
 	}
 
 	$header1="<html><head><meta http-equiv='Content-type' content='text/html; charset=utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>$windowtitle</title>
+	{$GLOBALS['jul_js_vars']}
 	$metatag
 	<link rel=\"shortcut icon\" href=\"/images/favicons/favicon". (!$x_hacks['host'] ? rand(1,8) ."" : "" ) .".ico\" type=\"image/x-icon\">
 	$css
@@ -354,7 +364,7 @@
 	$yyy
 	<center>
 	 $tblstart
-	  <form action='login.php' method='post' name='logout'><input type='hidden' name='action' value='logout'></form>
+	  <form action='{$GLOBALS['jul_views_path']}/login.php' method='post' name='logout'><input type='hidden' name='action' value='logout'></form>
 	  <td class='tbl tdbg1 center' colspan=3>{$GLOBALS['jul_settings']['board_title']}";
   $header2="
 	  ". (!$x_hacks['smallbrowse'] ? "
@@ -439,9 +449,9 @@
 <center>
 
 <!--
-<img src='adnonsense.php?m=d' title='generous donations to the first national bank of bad jokes and other dumb crap people post' style='margin-left: 44px;'><br>
-<img src='adnonsense.php' title='hotpod fund' style='margin: 0 22px;'><br>
-<img src='adnonsense.php?m=v' title='VPS slushie fund' style='margin-right: 44px;'>
+<img src='{$GLOBALS['jul_views_path']}/adnonsense.php?m=d' title='generous donations to the first national bank of bad jokes and other dumb crap people post' style='margin-left: 44px;'><br>
+<img src='{$GLOBALS['jul_views_path']}/adnonsense.php' title='hotpod fund' style='margin: 0 22px;'><br>
+<img src='{$GLOBALS['jul_views_path']}/adnonsense.php?m=v' title='VPS slushie fund' style='margin-right: 44px;'>
 -->
 <br>
 	$smallfont

@@ -61,19 +61,19 @@
 			if ($forum['minpower']>$loguser['powerlevel'] and $forum['minpower'])
 				$lastpostlink=", in a restricted forum";
 			else
-				$lastpostlink=", in <a href=thread.php?pid=$post[0]#$post[0]>$thread[0]</a> (<a href=forum.php?id=$forum[id]>$forum[title]</a>)";
+				$lastpostlink=", in <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=$post[0]#$post[0]'>$thread[0]</a> (<a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>$forum[title]</a>)";
 		}
 	}
 
 	if($log) {
-		$sendpmsg=" | <a href=sendprivate.php?userid=$id>Send private message</a>";
+		$sendpmsg=" | <a href='{$GLOBALS['jul_views_path']}/sendprivate.php?userid=$id'>Send private message</a>";
 		if($isadmin){
 			if($user['lastip'])
-				$lastip=" <br>with IP: <a href='ipsearch.php?ip={$user['lastip']}' style='font-style:italic;'>$user[lastip]</a>";
-			$sneek="<tr>$tccell1s colspan=2><a href='private.php?id={$id}' style='font-style:italic;'>View private messages</a> |"
-				." <a href='forum.php?fav=1&user={$id}' style='font-style:italic;'>View favorites</a> |"
-				//." <a href='rateuser.php?action=viewvotes&id={$id}' style='font-style:italic;'>View votes</a> |"
-				." <a href='edituser.php?id={$id}' style='font-style:italic;'>Edit user</a>";
+				$lastip=" <br>with IP: <a href='{$GLOBALS['jul_views_path']}/ipsearch.php?ip={$user['lastip']}' style='font-style:italic;'>$user[lastip]</a>";
+			$sneek="<tr>$tccell1s colspan=2><a href='{$GLOBALS['jul_views_path']}/private.php?id={$id}' style='font-style:italic;'>View private messages</a> |"
+				." <a href='{$GLOBALS['jul_views_path']}/forum.php?fav=1&user={$id}' style='font-style:italic;'>View favorites</a> |"
+				//." <a href='{$GLOBALS['jul_views_path']}/rateuser.php?action=viewvotes&id={$id}' style='font-style:italic;'>View votes</a> |"
+				." <a href='{$GLOBALS['jul_views_path']}/edituser.php?id={$id}' style='font-style:italic;'>Edit user</a>";
 		}
 	}
 
@@ -87,7 +87,7 @@
 	//  $user['postheader']=doreplace2($user['postheader'],$user['posts'],$numdays,$user['name']);
 
 	if ($user['picture']) $picture = "<img src=\"$user[picture]\">";
-	if ($user['moodurl']) $moodavatar = " | <a href='avatar.php?id=$id' class=\"popout\" target=\"_blank\">Preview mood avatar</a>";
+	if ($user['moodurl']) $moodavatar = " | <a href='{$GLOBALS['jul_views_path']}/avatar.php?id=$id' class=\"popout\" target=\"_blank\">Preview mood avatar</a>";
 
 	$icqicon="<a href=http://wwp.icq.com/$user[icq]#pager><img src=http://wwp.icq.com/scripts/online.dll?icq=$user[icq]&img=5 border=0></a>";
 
@@ -205,7 +205,7 @@ $tblend
 </td><td>&nbsp;&nbsp;&nbsp;</td><td valign=top>
 $tblstart
 	$tccellh><center>RPG status<tr>
-	$tccell1l><img src='status.php?u=$id'>
+	$tccell1l><img src='{$GLOBALS['jul_views_path']}/status.php?u=$id'>
 $tblend
 <br>$tblstart
 	$tccellh colspan=2><center>Equipped Items<tr>
@@ -227,17 +227,17 @@ $tblend
 <br>$tblstart
 	$tccellhs colspan=2><center>Options<tr>
 	$tccell2s colspan=2>
-	<a href=thread.php?user=$id>Show posts</a> |
-	<a href=forum.php?user=$id>View threads by this user</a>
+	<a href='{$GLOBALS['jul_views_path']}/thread.php?user=$id'>Show posts</a> |
+	<a href='{$GLOBALS['jul_views_path']}/forum.php?user=$id'>View threads by this user</a>
 	$sendpmsg
   $ratelink
   $moodavatar
   <tr>
 	$tccell2s colspan=2>
-	<a href=postsbyuser.php?id=$id>List posts by this user</a> |
-	<a href=postsbytime.php?id=$id>Posts by time of day</a> |
-	<a href=postsbythread.php?id=$id>Posts by thread</a> |
-	<a href=postsbyforum.php?id=$id>Posts by forum</td>$sneek
+	<a href='{$GLOBALS['jul_views_path']}/postsbyuser.php?id=$id'>List posts by this user</a> |
+	<a href='{$GLOBALS['jul_views_path']}/postsbytime.php?id=$id'>Posts by time of day</a> |
+	<a href='{$GLOBALS['jul_views_path']}/postsbythread.php?id=$id'>Posts by thread</a> |
+	<a href='{$GLOBALS['jul_views_path']}/postsbyforum.php?id=$id'>Posts by forum</td>$sneek
 	$tblend$footer
   ";
 

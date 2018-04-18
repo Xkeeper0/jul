@@ -2,7 +2,7 @@
 
   require 'lib/function.php';
   require 'lib/layout.php';
-  
+
   if($_POST['deluser'] and $isadmin) { //($loguserid==1 or $loguserid==2)){
 
 		foreach($_POST['deluser'] as $id => $junk) {
@@ -54,7 +54,7 @@
 
 $deltext
 
-	<form action=del.php method=post>
+	<form action='{$GLOBALS['jul_views_path']}/del.php' method=post>
 	$tblstart
 		<tr>$tccellh colspan=2>Sort Options</td></tr>
 		<tr>$tccell1 width=300><b>User Search:</b></td>
@@ -151,7 +151,7 @@ $deltext
 	$users		= mysql_query("SELECT * FROM `users` $sqlquery");
 	$usercount	= mysql_num_rows($users);
   print "
-	<form action=del.php method=post>
+	<form action='{$GLOBALS['jul_views_path']}/del.php' method=post>
     $tblstart
 	<tr><td class='tbl tdbgc font center' colspan=8><b>$usercount user(s) found.</b></td></tr>
 	<tr>
@@ -181,7 +181,7 @@ $deltext
     print "
       <tr>
       $tccell1><input type=checkbox name=deluser[". $user['id'] ."] value='1'>
-      $tccell2l>$textid - <a href=profile.php?id=$user[id]><font $namecolor>$user[name]
+      $tccell2l>$textid - <a href={$GLOBALS['jul_views_path']}/profile.php?id=$user[id]><font $namecolor>$user[name]
 	  $tccell1 width=0>$user[posts]
 	$tccell1 width=120>$regdate
 	$tccell1 width=120>$lastpost

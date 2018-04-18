@@ -41,7 +41,7 @@
 	$desc="</b><br>$smallfont";
 	print "
 		$header
-		<br><form action=acs.php>
+		<br><form action='{$GLOBALS['jul_views_path']}/acs.php'>
 		$tblstart
 		$tccellh colspan=2>Currently viewing ".date('m-d-y',$dd)."<tr>
 		$tccell1><b>Day:$desc Select the day to view rankings from. (mm-dd-yy format)</td>
@@ -91,7 +91,7 @@
 				print "
 					<tr>
 					$td>$b$r$slashb</td>
-					$tdl><a href=profile.php?id=$user[id]><font ".getnamecolor($user['sex'],$user['powerlevel']).">". (!$_GET['dur'] ? $user['name'] : "DU". str_repeat("R", mt_rand(1,25))) ."</font></a></td>
+					$tdl><a href={$GLOBALS['jul_views_path']}/profile.php?id=$user[id]><font ".getnamecolor($user['sex'],$user['powerlevel']).">". (!$_GET['dur'] ? $user['name'] : "DU". str_repeat("R", mt_rand(1,25))) ."</font></a></td>
 					$td>$b$user[cnt]$slashb</td>
 					$tdl><img src=images/$numdir"."bar-on.gif width=".($user[cnt]*100/$max)."% height=8></td>
 					</tr>";

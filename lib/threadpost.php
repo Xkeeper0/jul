@@ -34,7 +34,7 @@
 		}
 
 		if($pthread) {
-			$set['threadlink'] = "<a href=thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
+			$set['threadlink'] = "<a href={$GLOBALS['jul_views_path']}/thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
 		}
 
 		$post['text']=doreplace2($post['text'], $post['options']);

@@ -4,7 +4,7 @@
   require_once('lib/layout.php');
   print "$header<br>";
   admincheck();
-  print adminlinkbar('ipsearch.php');
+  print adminlinkbar("{$GLOBALS['jul_views_path']}/ipsearch.php");
   print "$tblstart";
 
 	if(!$su) $su='n';
@@ -17,7 +17,7 @@
 	$ch4[$d]=' checked';
 
 	print "
-	  <form action=ipsearch.php method=post>
+	  <form action='{$GLOBALS['jul_views_path']}/ipsearch.php' method=post>
 	  $tccellh colspan=2>IP search<tr>
 	  $tccell1 width=20%><b>IP to search:</b></td>
 	  $tccell2l>$inpt=ip size=15 maxlength=15 value=$ip><tr>
@@ -95,7 +95,7 @@
 		  print "
 		    <tr>
 		    $tccell2>$user[id]</td>
-		    $tccell1><a href=profile.php?id=$user[id]><font ".getnamecolor($user['sex'],$user['powerlevel']).">$user[name]</font></a></td>
+		    $tccell1><a href={$GLOBALS['jul_views_path']}/profile.php?id=$user[id]><font ".getnamecolor($user['sex'],$user['powerlevel']).">$user[name]</font></a></td>
 		    $tccell1>".@date($dateformat,$user['regdate'])."</td>
 		    $tccell1>".date($dateformat,$user['lastposttime'])."</td>
 		    $tccell1>".date($dateformat,$user['lastactivity'])."</td>
@@ -118,8 +118,8 @@
 			print "
 		    <tr>
 		    $tccell2>$post[id]</td>
-		    $tccell1><a href=profile.php?id=$post[user]><font ".getnamecolor($post['sex'],$post['powerlevel']).">$post[name]</font></a></td>
-		    $tccell1><a href=thread.php?id=$post[thread]>$post[title]</a></td>
+		    $tccell1><a href={$GLOBALS['jul_views_path']}/profile.php?id=$post[user]><font ".getnamecolor($post['sex'],$post['powerlevel']).">$post[name]</font></a></td>
+		    $tccell1><a href={$GLOBALS['jul_views_path']}/thread.php?id=$post[thread]>$post[title]</a></td>
 		    $tccell1><nobr>".date($dateformat,$post['date'])."</nobr></td>
 		    $tccell2>$post[ip]</td>
 		  ";
@@ -140,9 +140,9 @@
 			print "
 		    <tr>
 		    $tccell2>$pmsg[id]</td>
-		    $tccell1><a href=profile.php?id=$pmsg[userfrom]><font ".getnamecolor($pmsg['sex1'],$pmsg['pow1']).">$pmsg[name1]</font></a></td>
-		    $tccell1><a href=profile.php?id=$pmsg[userto]><font ".getnamecolor($pmsg['sex2'],$pmsg['pow2']).">$pmsg[name2]</font></a></td>
-		    $tccell1><a href=showprivate.php?id=$pmsg[id]>$pmsg[title]</a></td>
+		    $tccell1><a href={$GLOBALS['jul_views_path']}/profile.php?id=$pmsg[userfrom]><font ".getnamecolor($pmsg['sex1'],$pmsg['pow1']).">$pmsg[name1]</font></a></td>
+		    $tccell1><a href={$GLOBALS['jul_views_path']}/profile.php?id=$pmsg[userto]><font ".getnamecolor($pmsg['sex2'],$pmsg['pow2']).">$pmsg[name2]</font></a></td>
+		    $tccell1><a href={$GLOBALS['jul_views_path']}/showprivate.php?id=$pmsg[id]>$pmsg[title]</a></td>
 		    $tccell1><nobr>".date($dateformat,$pmsg['date'])."</nobr></td>
 		    $tccell2>$pmsg[ip]</td>
 		  ";

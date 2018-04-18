@@ -5,9 +5,9 @@ require 'lib/layout.php';
 $a	= array(1 => "neutral", "angry", "tired/upset", "playful", "doom", "delight", "guru", "hope", "puzzled", "whatever", "hyperactive", "sadness", "bleh", "embarrassed", "amused", "afraid");
 
 $me = false;
-$form = '<b>Preview mood avatar for user...</b><br>
-  <form><select onChange="parent.location=this.options[this.selectedIndex].value" style="width:500px;">
-  <option value=avatar.php>&lt;Select a user&gt;</option>';
+$form = "<b>Preview mood avatar for user...</b><br>
+  <form><select onChange=\"parent.location=this.options[this.selectedIndex].value\" style=\"width:500px;\">
+  <option value='{$GLOBALS['jul_views_path']}/avatar.php'>&lt;Select a user&gt;</option>";
 
 $users = $sql->query("SELECT id, name, moodurl FROM users WHERE moodurl != '' ORDER BY id ASC");
 while ($u = $sql->fetch($users)) {
@@ -18,7 +18,7 @@ while ($u = $sql->fetch($users)) {
   }
   //if (strpos($u['moodurl'], '$') === FALSE)
   //  $fails = " (improper URL)";
-  $form .= "\r\n  <option value='avatar.php?id=$u[id]'$selected>$u[id]: $u[name]$fails</option>";
+  $form .= "\r\n  <option value='{$GLOBALS['jul_views_path']}/avatar.php?id=$u[id]'$selected>$u[id]: $u[name]$fails</option>";
 }
 $form .= "\r\n  </select></form>";
 
@@ -57,7 +57,7 @@ else {
 	$ret = '';
 }
   print "
-<html><head><title>Mood Avatar Preview</title></head>
+<html><head><title>Mood Avatar Preview</title>{$GLOBALS['jul_js_vars']}</head>
 $body
 $css
 $script

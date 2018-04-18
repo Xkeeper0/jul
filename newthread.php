@@ -119,13 +119,13 @@
 	");
 	if(!$_POST['action'] or $_POST['paction']) {
 		print "
-			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
-			<form action=newthread.php name=replier method=post autocomplete=\"off\">
+			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>".$forum[title]."</a>
+			<form action={$GLOBALS['jul_views_path']}/newthread.php name=replier method=post autocomplete=\"off\">
 			$tblstart
 		";
 		if($log and $forums[$id][minpowerthread]>$power) {
 			print "$tccell1>Sorry, but you are not allowed to post";
-			if($banned) print ", because you are banned from this board.<br>".redirect("forum.php?id=$id",'return to the forum',0);
+			if($banned) print ", because you are banned from this board.<br>".redirect("{$GLOBALS['jul_views_path']}/forum.php?id=$id",'return to the forum',0);
 			else print ' in this restricted forum.<br>'.redirect('index.php','return to the board',0);
 		}
 		else {
@@ -160,7 +160,7 @@
 			</table>
 			</table>
 			</form>
-			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
+			$fonttag<a href=index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>".$forum[title]."</a>
 			".replytoolbar(4);
 	}
 	if($_POST['action']=='postthread' and !$_POST['paction']) {
@@ -228,7 +228,7 @@
 				if(!$poll) {
 					print "
 						$tccell1>Thread posted successfully!
-						<br>".redirect("thread.php?id=$t", stripslashes($subject), 0).$tblend;
+						<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$t", stripslashes($subject), 0).$tblend;
 
 					xk_ircout("thread", $user['name'], array(
 						'forum'		=> $forum['title'],
@@ -249,7 +249,7 @@
 					}
 					print "
 						$tccell1>Poll created successfully!
-						<br>".redirect("thread.php?id=$t", stripslashes($subject), 0).$tblend;
+						<br>".redirect("{$GLOBALS['jul_views_path']}/thread.php?id=$t", stripslashes($subject), 0).$tblend;
 
 					xk_ircout("poll", $user['name'], array(
 						'forum'		=> $forum['title'],
@@ -317,7 +317,7 @@
 					$tblend$tblstart
 					".threadpost($ppost,1)."
 					$tblend<br>$tblstart
-					<FORM ACTION=newthread.php NAME=REPLIER METHOD=POST>
+					<FORM ACTION={$GLOBALS['jul_views_path']}/newthread.php NAME=REPLIER METHOD=POST>
 					$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
 					$inph=username VALUE=\"".htmlspecialchars($username)."\">
 					$inph=password VALUE=\"".htmlspecialchars($password)."\">
@@ -336,7 +336,7 @@
 
 			print "
 				$tccell1>Couldn't post the thread. $reason
-				<br>".redirect("forum.php?id=$id", $forum[title], 2).$tblend;
+				<br>".redirect("{$GLOBALS['jul_views_path']}/forum.php?id=$id", $forum[title], 2).$tblend;
 		}
 	}
 

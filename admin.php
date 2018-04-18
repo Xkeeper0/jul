@@ -22,7 +22,7 @@
 
 	$misc	= $sql -> fetchq("SELECT * FROM `misc`");
 
-	print adminlinkbar("admin.php") ."
+	print adminlinkbar("{$GLOBALS['jul_views_path']}/admin.php") ."
 		$tblstart
 			<tr>$tccellh><b>Panel de Admin<br></td></tr>
 			<tr>$tccell1>&nbsp;
@@ -35,7 +35,7 @@
 
 		<br>
 
-		<form action='admin.php' method='post'>
+		<form action='{$GLOBALS['jul_views_path']}/admin.php' method='post'>
 		$tblstart
 			<tr>$tccellh colspan=2><b>Setting up the Soft Dip</b></td></tr>
 			<tr>$tccellc colspan=2>Board settings</td></tr>

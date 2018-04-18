@@ -19,7 +19,7 @@
 	if(!$ppp) $ppp=50;
 	if(!$page) $page=0;
 
-	$lnk='<a href=memberlist.php?sort';
+	$lnk="<a href={$GLOBALS['jul_views_path']}/memberlist.php?sort";
 
 	$qwhere = array();
 	if($sex=='m') $qwhere[] = '(sex=0)';
@@ -41,7 +41,7 @@
 	}
 
 	$where = 'WHERE '.((empty($qwhere)) ? '1' : implode(' AND ', $qwhere));
-	
+
 	if (!in_array($sort, array('name','reg','exp','age','posts')))
 		$sort = 'posts';
 
@@ -66,7 +66,7 @@
 
 	$pagelinks=$smallfont.'Pages:';
 	for($i=0;$i<($numusers/$ppp);$i++)
-		$pagelinks.=($i==$page?' '.($i+1):" <a href=memberlist.php?sort=$sort$qsex$qpow$qrpg$qppp&page=$i>".($i+1).'</a>');
+		$pagelinks.=($i==$page?' '.($i+1):" <a href={$GLOBALS['jul_views_path']}/memberlist.php?sort=$sort$qsex$qpow$qrpg$qppp&page=$i>".($i+1).'</a>');
 
 	if($numusers>1) $s="s";
 	print "

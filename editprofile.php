@@ -102,7 +102,7 @@
 
     print "
 	$header<br>
-    <FORM ACTION=editprofile.php NAME=REPLIER METHOD=POST autocomplete=off>
+    <FORM ACTION='{$GLOBALS['jul_views_path']}/editprofile.php' NAME=REPLIER METHOD=POST autocomplete=off>
     $tblstart
 	 $tccellh colspan='2'>Login information</td><tr>
 	 $tccell1 style='width: 40%;'><b>User name:$descbr If you want to change this, ask an admin.</td>$tccell2l style='width: 60%;'>$loguser[name]<tr>
@@ -290,7 +290,7 @@
       `pollstyle` = '$pollstyle'
     WHERE `id` = '$loguserid'") OR print mysql_error();
 
-    print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>".redirect("profile.php?id=$loguserid",'view your profile',0).$tblend;
+    print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>".redirect("{$GLOBALS['jul_views_path']}/profile.php?id=$loguserid",'view your profile',0).$tblend;
   }
 
   print $footer;

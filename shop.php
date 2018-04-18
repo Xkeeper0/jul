@@ -1,7 +1,7 @@
 <?php
 
 	if ($_GET['action'] == "buy" && $_GET['id'] == 286) {
-		return header("Location: shoph.php");
+		return header("Location: {$GLOBALS['jul_views_path']}/shoph.php");
 	}
 
   require 'lib/function.php';
@@ -28,13 +28,13 @@
 	  while($shop=mysql_fetch_array($shops))
 	    $shoplist.="
 		<tr>
-		$tccell1><a href=shop.php?action=items&cat=$shop[id]#status>$shop[name]</a></td>
+		$tccell1><a href={$GLOBALS['jul_views_path']}/shop.php?action=items&cat=$shop[id]#status>$shop[name]</a></td>
 		$tccell2s>$shop[description]
 		$tccell1s>".$items[$eq['eq'.$shop[id]]][name]."
 	    ";
 	  print "
 		<table width=100%><td valign=top width=120>
-		 <img src=status.php?u=$loguserid>
+		 <img src={$GLOBALS['jul_views_path']}/status.php?u=$loguserid>
 		</td><td valign=top>
 		$tblstart
 		 $tccellh colspan=3>Shop list<tr>
@@ -50,7 +50,7 @@
         print "
 		<script>
 		  function preview(user,item,cat,name){
-		    document.getElementById('prev').src='status.php?u='+user+'&it='+item+'&ct='+cat+'&'+Math.random();
+		    document.getElementById('prev').src='{$GLOBALS['jul_views_path']}/status.php?u='+user+'&it='+item+'&ct='+cat+'&'+Math.random();
 		    document.getElementById('pr').innerHTML='Equipped with<br>'+name+'<br>---------->';
 		  }
 		</script>
@@ -61,11 +61,11 @@
 			.lower	{color:#ca8765}
 		</style>
 		$tblstart
-		  $tccell1><a href=shop.php>Return to shop list</a>
+		  $tccell1><a href={$GLOBALS['jul_views_path']}/shop.php>Return to shop list</a>
 		$tblend
 		<a name=status>
 		<table><td width=256>
-		 <img src=status.php?u=$loguserid>
+		 <img src={$GLOBALS['jul_views_path']}/status.php?u=$loguserid>
 		</td><td width=150>
 		 <center><font class=fonts>
 		  <div id=pr></div>
@@ -89,9 +89,9 @@
 	  while($item=mysql_fetch_array($items)){
 	    $preview="<a href=#status onclick='preview($loguserid,$item[id],$cat,\"". htmlentities($item[name], ENT_QUOTES) ."\")'>Preview</a>";
 	    if($item[id]==$eq[e] && $item[id]){
-		$comm="width=80 colspan=2><a href=shop.php?action=sell&cat=$cat>Sell</a>";
+		$comm="width=80 colspan=2><a href={$GLOBALS['jul_views_path']}/shop.php?action=sell&cat=$cat>Sell</a>";
 	    }elseif($item[id] && $item[coins]<=$GP && $item[gcoins] <= $user['gcoins']){
-		$comm="width=30><a href=shop.php?action=buy&id=$item[id]>Buy</a></td>$tccell1 width=50>$preview";
+		$comm="width=30><a href={$GLOBALS['jul_views_path']}/shop.php?action=buy&id=$item[id]>Buy</a></td>$tccell1 width=50>$preview";
 	    }elseif(!$eq[e] && !$item[id]){
 		$comm="width=80 colspan=2>-";
 	    }else{
@@ -146,7 +146,7 @@
 	    print "
 		$tblstart
 		  $tccell1>The $item[name] has been bought and equipped.<br>
-		  ".redirect('shop.php','return to the shop',0)."
+		  ".redirect("{$GLOBALS['jul_views_path']}/shop.php",'return to the shop',0)."
 		$tblend
 	    ";
 	  }
@@ -157,7 +157,7 @@
 	  print "
 	    $tblstart
 		$tccell1>The $item[name] has been unequipped and sold.<br>
-		".redirect('shop.php','return to the shop',0)."
+		".redirect("{$GLOBALS['jul_views_path']}/shop.php",'return to the shop',0)."
 	    $tblend
 	  ";
 	break;

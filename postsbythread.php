@@ -28,7 +28,7 @@
 		"WHERE p.thread=t.id AND t.forum=f.id AND $qwhere " .
 		"GROUP BY t.id ORDER BY cnt DESC,t.firstpostdate DESC LIMIT 1000");
 
-	$lnk="<a href=postsbythread.php?id=$id&posttime";
+	$lnk="<a href={$GLOBALS['jul_views_path']}/postsbythread.php?id=$id&posttime";
 
 	print "$header$smallfont
 		$lnk=3600>During last hour</a> |
@@ -54,8 +54,8 @@
 			$thread = '(private thread)';
 		}
 		else {
-			$forum  = "<a href='forum.php?id={$t['forum']}'>{$t['ftitle']}</a>";
-			$thread = "<a href='thread.php?id={$t['id']}'>{$t['title']}</a>";
+			$forum  = "<a href='{$GLOBALS['jul_views_path']}/forum.php?id={$t['forum']}'>{$t['ftitle']}</a>";
+			$thread = "<a href='{$GLOBALS['jul_views_path']}/thread.php?id={$t['id']}'>{$t['title']}</a>";
 		}
 
 		print "<tr>

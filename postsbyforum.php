@@ -31,15 +31,15 @@
 		"GROUP BY forums.id ORDER BY cnt DESC");
 
 	$userposts = $sql->resultq("SELECT COUNT(*) FROM posts WHERE $qwhere");
-	$lnk="<a href=postsbyforum.php?id=$id&posttime";
+	$lnk="<a href='{$GLOBALS['jul_views_path']}/postsbyforum.php?id=$id&posttime";
 
 	print "$header
 		$smallfont
-		$lnk=3600>During last hour</a> |
-		$lnk=86400>During last day</a> |
-		$lnk=604800>During last week</a> |
-		$lnk=2592000>During last 30 days</a>".
-		((!$id) ? "" : " | $lnk=0>Total</a>").
+		$lnk=3600'>During last hour</a> |
+		$lnk=86400'>During last day</a> |
+		$lnk=604800'>During last week</a> |
+		$lnk=2592000'>During last 30 days</a>".
+		((!$id) ? "" : " | $lnk=0'>Total</a>").
 		"<br>
 		$fonttag Posts $by in forums$during:
 		$tblstart<tr>
@@ -58,9 +58,9 @@
 			$viewall="(<s><b>view</b></s>)";
 		}
 		else {
-			$link="<a href='forum.php?id=$f[id]'>$f[title]</a>";
+			$link="<a href='{$GLOBALS['jul_views_path']}/forum.php?id=$f[id]'>$f[title]</a>";
 			$timeid = (($posttime !== 0) ? "&time={$posttime}" : '');
-			$viewall="(<a href='postsbyuser.php?id={$id}&forum={$f['id']}{$timeid}'>View</a>)";
+			$viewall="(<a href='{$GLOBALS['jul_views_path']}/postsbyuser.php?id={$id}&forum={$f['id']}{$timeid}'>View</a>)";
 		}
 
    if (!$id) $viewall = '';

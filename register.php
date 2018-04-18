@@ -13,15 +13,15 @@
 
 	if ($adminconfig['registrationdisable'])
 		die("$tblstart<br>$tccell2>Registration is disabled. Please contact an admin if you have any questions.$tblend$footer");
-  
+
 
   if (!$_POST[action]){
     $descbr="</b>$smallfont<br></center>&nbsp";
     print "
 	<body onload=window.document.REPLIER.username.focus()>
-	<form ACTION=register.php NAME=REPLIER METHOD=POST>
+	<form ACTION={$GLOBALS['jul_views_path']}/register.php NAME=REPLIER METHOD=POST>
 	<br>$tblstart
-	
+
 	$tccellh colspan=2>Login information</td><tr>
 	$tccell1><b>User name:</b>$descbr The name you want to use on the board.</td>
 	$tccell2l width=50%>$inpt=name SIZE=25 MAXLENGTH=25><tr>
@@ -63,7 +63,7 @@
 		|| stristr($file_contents, "filter")
 		|| stristr($file_contents, "panel")
 		) {
-	
+
 		$adjectives	= array(
 			"shitlord",
 			"shitheel",
@@ -76,16 +76,16 @@
 			"script-kiddie",
 			"dumbfuck extraordinare",
 			);
-		
+
 		shuffle($adjectives);
-	
+
 		$sql -> query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Reregistering fuckwit'");
 		@xk_ircsend("1|". xk(7) ."Auto-IP banned proxy-abusing $adjectives[0] with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." on registration. (Tried to register with username $name)");
 		die("$tccell1>Thank you, $name, for registering your account.<br>".redirect('index.php','the board',0).$footer);
 	}
 
-	
-	
+
+
 
 	$users = $sql->query('SELECT name FROM users');
 	$username = substr(trim($name),0,25);
@@ -118,7 +118,7 @@
 
 		$ircout['name']		= stripslashes($name);
 		$ircout['ip']		= $ipaddr;
-		
+
 		// No longer useful
 		//$ircout['pmatch']	= $sql -> resultq("SELECT COUNT(*) FROM `users` WHERE `password` = '". md5($pass) ."'");
 
@@ -133,7 +133,7 @@
 		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect('index.php','the board',0);
 	}
     }else{
-	
+
 /*	if ($password == "123") {
 		echo	"$tccell1>Thank you, $username, for registering your account.<img src=cookieban.php width=1 height=1><br>".redirect('index.php','the board',0);
 		mysql_query("INSERT INTO `ipbans` (`ip`, `reason`, `date`) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', 'blocked password of 123', '". ctime() ."')");
@@ -144,7 +144,7 @@
 	if ($userid != -1) {
 		$reason = "That username is already in use.";
 	} elseif ($nomultis) {
-		$reason = "You have already registered! (<a href=profile.php?id=$nomultis[id]>here</a>)";
+		$reason = "You have already registered! (<a href={$GLOBALS['jul_views_path']}/profile.php?id=$nomultis[id]>here</a>)";
 	} elseif (!$username || !$password) {
 		$reason = "You haven't entered a username or password.";
 	} elseif ( (stripos($username, '3112')) === true || (stripos($username, '3776')) === true || (stripos($username, '460')) ) {
@@ -152,7 +152,7 @@
 	} else {
 		$reason = "Unknown reason.";
 	}
-	
+
 	print "
 	 $tccell1>Couldn't register the account. $reason
 	 <br>".redirect("index.php","the board",0);

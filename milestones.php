@@ -41,9 +41,9 @@
 			$userlink = "????";
 		}
 		else {
-			$forumlink = "<a href='forum.php?id=$ms[fid]'>$ms[ftitle]</a>";
-			$threadlink = "<a href='thread.php?pid=$ms[id]#$ms[id]'>$ms[threadname]</a>";
-			$userlink = "<a href='profile.php?id=$ms[user]'><font ". getnamecolor($ms['usex'], $ms['upowerlevel']) .">$ms[uname]</font></a>";
+			$forumlink = "<a href='{$GLOBALS['jul_views_path']}/forum.php?id=$ms[fid]'>$ms[ftitle]</a>";
+			$threadlink = "<a href='{$GLOBALS['jul_views_path']}/thread.php?pid=$ms[id]#$ms[id]'>$ms[threadname]</a>";
+			$userlink = "<a href='{$GLOBALS['jul_views_path']}/profile.php?id=$ms[user]'><font ". getnamecolor($ms['usex'], $ms['upowerlevel']) .">$ms[uname]</font></a>";
 		}
 
     if ($last)
@@ -103,14 +103,14 @@
 			$lastpost = "????$smallfont<br>by ????";
 		}
 		else {
-			$threadlink = "<a href='thread.php?id=$ms[id]'>$ms[title]</a>";
+			$threadlink = "<a href='{$GLOBALS['jul_views_path']}/thread.php?id=$ms[id]'>$ms[title]</a>";
 			$threadlink .= '<br><span class="fonts" style="position: relative; top: -1px;">&nbsp;&nbsp;&nbsp;'
-       ."In <a href='forum.php?id=$ms[forum]'>".$ms['forumtitle']."</a>"
+       ."In <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$ms[forum]'>".$ms['forumtitle']."</a>"
        .'</span>';
-			$userlink = "<a href='profile.php?id=$ms[user]'><font ". getnamecolor($ms['sex1'], $ms['power1']) .">$ms[name1]</font></a>";
+			$userlink = "<a href='{$GLOBALS['jul_views_path']}/profile.php?id=$ms[user]'><font ". getnamecolor($ms['sex1'], $ms['power1']) .">$ms[name1]</font></a>";
 			$lastpost = date($dateformat,$ms['lastpostdate']+$tzoff)."
-        $smallfont<br>by <a href='profile.php?id=$ms[user]'><font ". getnamecolor($ms['sex2'], $ms['power2']) .">$ms[name2]</font></a>
-				<a href='thread.php?id=$ms[id]&end=1'>$statusicons[getlast]</a>
+        $smallfont<br>by <a href='{$GLOBALS['jul_views_path']}/profile.php?id=$ms[user]'><font ". getnamecolor($ms['sex2'], $ms['power2']) .">$ms[name2]</font></a>
+				<a href='{$GLOBALS['jul_views_path']}/thread.php?id=$ms[id]&end=1'>$statusicons[getlast]</a>
       ";
 
       $replies = $ms['replies'];

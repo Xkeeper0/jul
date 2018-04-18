@@ -560,7 +560,7 @@ function doforumlist($id){
 
 	$forum1= $sql->query("SELECT id,title,catid FROM forums WHERE (minpower<=$power OR minpower<=0) AND `hidden` = '0' AND `id` != '0' OR `id` = '$id' ORDER BY forder") or print mysql_error();
 	while($forum=$sql->fetch($forum1)) {
-		$fjump[$forum['catid']]	.="<option value=forum.php?id=$forum[id]".($forum['id']==$id?' selected':'').">$forum[title]</option>";
+		$fjump[$forum['catid']]	.="<option value='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]".($forum['id']==$id?' selected':'')."'>$forum[title]</option>";
 	}
 
 	foreach($fjump as $jtext) {
@@ -761,7 +761,7 @@ function getuserlink(&$u, $substitutions = null, $urlclass = '') {
 	if ($urlclass)
 		$class = " class='{$urlclass}'";
 	else $class = '';
-	return "<a style='color:#{$namecolor};'{$class} href='profile.php?id="
+	return "<a style='color:#{$namecolor};'{$class} href='{$GLOBALS['jul_views_path']}/profile.php?id="
 		. $u[$fn['id']] ."'{$alsoKnownAs}>". $u[$fn['name']] ."</a>";
 }
 
@@ -1126,17 +1126,17 @@ function adminlinkbar($sel = 'admin.php') {
 
 	$links	= array(
 		array(
-			'admin.php'	=> "Admin Control Panel",
+			"{$GLOBALS['jul_views_path']}/admin.php"	=> "Admin Control Panel",
 		),
 		array(
 //			'admin-todo.php'       => "To-do list",
-			'announcement.php'     => "Go to Announcements",
-			'admin-editforums.php' => "Edit Forum List",
-			'admin-editmods.php'   => "Edit Forum Moderators",
-			'ipsearch.php'   => "IP Search",
-			'admin-threads.php'    => "ThreadFix",
-			'admin-threads2.php'   => "ThreadFix 2",
-			'del.php'    => "Delete User",
+			"{$GLOBALS['jul_views_path']}/announcement.php"     => "Go to Announcements",
+			"{$GLOBALS['jul_views_path']}/admin-editforums.php" => "Edit Forum List",
+			"{$GLOBALS['jul_views_path']}/admin-editmods.php"   => "Edit Forum Moderators",
+			"{$GLOBALS['jul_views_path']}/ipsearch.php"   => "IP Search",
+			"{$GLOBALS['jul_views_path']}/admin-threads.php"    => "ThreadFix",
+			"{$GLOBALS['jul_views_path']}/admin-threads2.php"   => "ThreadFix 2",
+			"{$GLOBALS['jul_views_path']}/del.php"    => "Delete User",
 		)
 	);
 
@@ -1151,7 +1151,7 @@ function adminlinkbar($sel = 'admin.php') {
 
 		foreach($linkrow as $link => $name) {
 			$cell = $tccell1;
-			if ($link == $sel) $cell = $tccellc;
+			if (strpos($link, $sel) !== false) $cell = $tccellc;
 			$r .= "$cell width=\"$w%\"><a href=\"$link\">$name</a></td>";
 		}
 

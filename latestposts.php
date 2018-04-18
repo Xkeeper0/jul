@@ -45,9 +45,9 @@
 			else $newpost = "";
 			$output	.= "<tr>
 					$tccell2>". $in['id'] ."</td>
-					$tccell2><a href='forum.php?id=". $in['fid'] ."'>". $in['ftitle'] ."</a></td>
-					$tccell1l>$newpost<a href='thread.php?pid=". $in['id'] ."&r=1#". $in['id'] ."'>". $in['title'] ."</a></td>
-					$tccell1><a href='profile.php?id=". $in['user'] ."'><font ". getnamecolor($in['usex'], $in['upowerlevel']) .">". $in['uname'] ."</font></a></td>
+					$tccell2><a href='{$GLOBALS['jul_views_path']}/forum.php?id=". $in['fid'] ."'>". $in['ftitle'] ."</a></td>
+					$tccell1l>$newpost<a href='{$GLOBALS['jul_views_path']}/thread.php?pid=". $in['id'] ."&r=1#". $in['id'] ."'>". $in['title'] ."</a></td>
+					$tccell1><a href='{$GLOBALS['jul_views_path']}/profile.php?id=". $in['user'] ."'><font ". getnamecolor($in['usex'], $in['upowerlevel']) .">". $in['uname'] ."</font></a></td>
 					$tccell2>". timeunits(ctime() - $in['date']) ."</td>
 				</tr>\n";
 		}

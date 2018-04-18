@@ -104,7 +104,7 @@ if (!in_array($loguser['id'], array(175, 1)) && $loguser['powerlevel'] < 1) {
 		$combocount++;
 		
 		if ($combocount == 1) {
-			$tempout	= "<tr>$tccell1>". date("m-d-y H:i:s", $data['time']) ."</td>$tccell1>%%%COMBO%%%</td>$tccell1><a href='ipsearch.php?ip=". $data['ip'] ."'>". $data['ip'] ."</a></td>";
+			$tempout	= "<tr>$tccell1>". date("m-d-y H:i:s", $data['time']) ."</td>$tccell1>%%%COMBO%%%</td>$tccell1><a href='{$GLOBALS['jul_views_path']}/ipsearch.php?ip=". $data['ip'] ."'>". $data['ip'] ."</a></td>";
 
 			if ($data['banned'])
 				$tempout .= "$tccell1s><span style='color: #f88; font-weight: bold;'>Banned</span></td>";

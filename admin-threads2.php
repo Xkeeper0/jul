@@ -20,10 +20,10 @@
 	die();
   }
 
-	print adminlinkbar("admin-threads2.php");
+	print adminlinkbar("{$GLOBALS['jul_views_path']}/admin-threads2.php");
 
 	if (!$_POST['run']) {
-		print "<form action=\"admin-threads2.php\" method=\"post\">
+		print "<form action=\"{$GLOBALS['jul_views_path']}/admin-threads2.php\" method=\"post\">
 			$tblstart
 				<tr>$tccellh>Thread Repair System II</td></tr>
 				<tr>$tccell1>&nbsp;
@@ -84,7 +84,7 @@
 			print "
 			<tr>
 				$tccell1>". $data['id'] ."</td>
-				$tccell2l><a href=\"thread.php?id=". $data['id'] ."\">". $data['title'] ."</a></td>
+				$tccell2l><a href=\"{$GLOBALS['jul_views_path']}/thread.php?id=". $data['id'] ."\">". $data['title'] ."</a></td>
 				$tccell1>". ($data['lastpostdate'] ? date($dateformat, $data['lastpostdate'] + $tzoff) : "-") ."</td>
 				$tccell1>". ($data['realdate'] ? date($dateformat, $data['realdate'] + $tzoff) : "-") ."</td>
 				$tccell1>". timeunits2($data['lastpostdate'] - $data['realdate']) ."</td>

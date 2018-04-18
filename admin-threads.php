@@ -21,10 +21,10 @@
   }
 
 
-	print adminlinkbar("admin-threads.php");
+	print adminlinkbar("{$GLOBALS['jul_views_path']}/admin-threads.php");
 
 	if (!$_POST['run']) {
-		print "<form action=\"admin-threads.php\" method=\"post\">
+		print "<form action=\"{$GLOBALS['jul_views_path']}/admin-threads.php\" method=\"post\">
 			$tblstart
 				<tr>$tccellh>Thread Repair System</td></tr>
 				<tr>$tccell1>&nbsp;
@@ -77,8 +77,8 @@
 
 			print "
 			<tr>
-				$tccell1><a href=\"thread.php?id=". $data['thread'] ."\">". $data['thread'] ."</a></td>
-				$tccell2l><a href=\"thread.php?id=". $data['thread'] ."\">". ($data['threadname'] !== null ? $data['threadname'] : "<em>(Deleted thread)</em>") ."</a></td>
+				$tccell1><a href=\"{$GLOBALS['jul_views_path']}/thread.php?id=". $data['thread'] ."\">". $data['thread'] ."</a></td>
+				$tccell2l><a href=\"{$GLOBALS['jul_views_path']}/thread.php?id=". $data['thread'] ."\">". ($data['threadname'] !== null ? $data['threadname'] : "<em>(Deleted thread)</em>") ."</a></td>
 				$tccell1>". ($data['replies'] !== null ? $data['replies'] + 1 : "&mdash;") ."</td>
 				$tccell1>". ($data['real']) ."</td>
 				$tccell2><b>". ($data['offset'] !== null ? $data['offset'] : "&mdash;") ."</b></td>

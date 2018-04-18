@@ -83,7 +83,7 @@ require_once('lib/layout.php');
 print "$header<br>";
 
 admincheck();
-print adminlinkbar('admin-editforums.php');
+print adminlinkbar("{$GLOBALS['jul_views_path']}/admin-editforums.php");
 
 foreach($pwlnames as $pwl=>$pwlname) {
 	if ($pwl < 0) continue;
@@ -233,7 +233,7 @@ else if (isset($_GET['id'])) {
 	while ($res = $sql->fetch($modquery))
 		$mods[] = $res;
 
-	$forumlist .= "<tr><td class='tbl tdbgc center font' colspan=5>&lt; <a href=admin-editforums.php?id=-1$prevtext>Create a new forum</a> &gt;</td></tr>";
+	$forumlist .= "<tr><td class='tbl tdbgc center font' colspan=5>&lt; <a href='{$GLOBALS['jul_views_path']}/admin-editforums.php?id=-1$prevtext'>Create a new forum</a> &gt;</td></tr>";
 
 	foreach ($categories as $category) {
 		$forumlist.="<tr><td class='tbl tdbgc center font' colspan=5><b>$category[name]</b></td></tr>";
@@ -249,7 +249,7 @@ else if (isset($_GET['id'])) {
 					continue;
 
 				$namecolor=getnamecolor($mod['sex'],$mod['powerlevel']);
-				$modlist.=($m++?', ':'')."<a href=profile.php?id=$mod[id]><font $namecolor>$mod[name]</font></a>";
+				$modlist.=($m++?', ':'')."<a href={$GLOBALS['jul_views_path']}/profile.php?id=$mod[id]><font $namecolor>$mod[name]</font></a>";
 				unset($mods[$modplace]);
 			}
 
@@ -259,7 +259,7 @@ else if (isset($_GET['id'])) {
 			$namecolor = getnamecolor($forum['sex'],$forum['powerlevel']);
 			if($forum['numposts']){
 				$forumlastpost="<nobr>". date($dateformat,$forum['lastpostdate']+$tzoff);
-				$by="$smallfont<br>by <a href=profile.php?id=$forum[uid]><font $namecolor>$forum[name]</font></a>". ($forum['lastpostid'] ? " <a href='thread.php?pid=". $forum['lastpostid'] ."#". $forum['lastpostid'] ."'>". $statusicons['getlast'] ."</a>" : "") ."</nobr></font>";
+				$by="$smallfont<br>by <a href={$GLOBALS['jul_views_path']}/profile.php?id=$forum[uid]><font $namecolor>$forum[name]</font></a>". ($forum['lastpostid'] ? " <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=". $forum['lastpostid'] ."#". $forum['lastpostid'] ."'>". $statusicons['getlast'] ."</a>" : "") ."</nobr></font>";
 			} else {
 				$forumlastpost=getblankdate();
 				$by='';
@@ -288,8 +288,8 @@ else if (isset($_GET['id'])) {
 
 		  $forumlist.="
 			<tr>
-				$tc1><small><a href=admin-editforums.php?id=$forum[id]$prevtext>Edit</a> / <a href=admin-editforums.php?delete=$forum[id]$prevtext>Delete</a></small></td>
-				$tc2l><a href=forum.php?id=$forum[id]>$forum[title]</a>$hidden<br>
+				$tc1><small><a href='{$GLOBALS['jul_views_path']}/admin-editforums.php?id=$forum[id]$prevtext'>Edit</a> / <a href='{$GLOBALS['jul_views_path']}/admin-editforums.php?delete=$forum[id]$prevtext'>Delete</a></small></td>
+				$tc2l><a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>$forum[title]</a>$hidden<br>
 				$smallfont$forum[description]<br>$modlist</td>
 				$tc1>$forum[numthreads]</td>
 				$tc1>$forum[numposts]</td>
@@ -312,7 +312,7 @@ if (!isset($_GET['preview']) && count($forums)) {
 				continue;
 
 			$namecolor=getnamecolor($mod['sex'],$mod['powerlevel']);
-			$modlist.=($m++?', ':'')."<a href=profile.php?id=$mod[id]><font $namecolor>$mod[name]</font></a>";
+			$modlist.=($m++?', ':'')."<a href={$GLOBALS['jul_views_path']}/profile.php?id=$mod[id]><font $namecolor>$mod[name]</font></a>";
 			unset($mods[$modplace]);
 		}
 
@@ -322,7 +322,7 @@ if (!isset($_GET['preview']) && count($forums)) {
 		$namecolor = getnamecolor($forum['sex'],$forum['powerlevel']);
 		if($forum['numposts']){
 			$forumlastpost="<nobr>". date($dateformat,$forum['lastpostdate']+$tzoff);
-			$by="$smallfont<br>by <a href=profile.php?id=$forum[uid]><font $namecolor>$forum[name]</font></a>". ($forum['lastpostid'] ? " <a href='thread.php?pid=". $forum['lastpostid'] ."#". $forum['lastpostid'] ."'>". $statusicons['getlast'] ."</a>" : "") ."</nobr></font>";
+			$by="$smallfont<br>by <a href={$GLOBALS['jul_views_path']}/profile.php?id=$forum[uid]><font $namecolor>$forum[name]</font></a>". ($forum['lastpostid'] ? " <a href='{$GLOBALS['jul_views_path']}/thread.php?pid=". $forum['lastpostid'] ."#". $forum['lastpostid'] ."'>". $statusicons['getlast'] ."</a>" : "") ."</nobr></font>";
 		} else {
 			$forumlastpost=getblankdate();
 			$by='';
@@ -340,8 +340,8 @@ if (!isset($_GET['preview']) && count($forums)) {
 
 		$forumlist.="
 		<tr>
-			$tccell1><small><a href=admin-editforums.php?id=$forum[id]$prevtext>Edit</a> / <a href=admin-editforums.php?delete=$forum[id]$prevtext>Delete</a></small></td>
-			$tccell2l><a href=forum.php?id=$forum[id]>$forum[title]</a>$hidden<br>
+			$tccell1><small><a href='{$GLOBALS['jul_views_path']}/admin-editforums.php?id=$forum[id]$prevtext'>Edit</a> / <a href='{$GLOBALS['jul_views_path']}/admin-editforums.php?delete=$forum[id]$prevtext'>Delete</a></small></td>
+			$tccell2l><a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forum[id]'>$forum[title]</a>$hidden<br>
 			$smallfont$forum[description]<br>$modlist</td>
 			$tccell1>$forum[numthreads]</td>
 			$tccell1>$forum[numposts]</td>
@@ -375,12 +375,12 @@ function previewbox(){
 	}
 
 	return "<form><select onChange=parent.location=this.options[this.selectedIndex].value>
-			<option value='admin-editforums.php{$idtxt2}' ".((!$_GET['preview'] || $_GET['preview'] < 0 || $_GET['preview'] > 4) ? 'selected' : '') ."'>Disable</option>
-			<option value='admin-editforums.php?{$idtxt}preview=0' ".((isset($_GET['preview']) && $_GET['preview'] == 0) ? 'selected' : '') .">Normal</option>
-			<option value='admin-editforums.php?{$idtxt}preview=1' ".($_GET['preview'] == 1 ? 'selected' : '') .">Normal +</option>
-			<option value='admin-editforums.php?{$idtxt}preview=2' ".($_GET['preview'] == 2 ? 'selected' : '') .">Moderator</option>
-			<option value='admin-editforums.php?{$idtxt}preview=3' ".($_GET['preview'] == 3 ? 'selected' : '') .">Administrator</option>
-			<option value='admin-editforums.php?{$idtxt}preview=4' ".($_GET['preview'] == 4 ? 'selected' : '') .">Administrator (hidden)</option>
+			<option value='{$GLOBALS['jul_views_path']}/admin-editforums.php{$idtxt2}' ".((!$_GET['preview'] || $_GET['preview'] < 0 || $_GET['preview'] > 4) ? 'selected' : '') ."'>Disable</option>
+			<option value='{$GLOBALS['jul_views_path']}/admin-editforums.php?{$idtxt}preview=0' ".((isset($_GET['preview']) && $_GET['preview'] == 0) ? 'selected' : '') .">Normal</option>
+			<option value='{$GLOBALS['jul_views_path']}/admin-editforums.php?{$idtxt}preview=1' ".($_GET['preview'] == 1 ? 'selected' : '') .">Normal +</option>
+			<option value='{$GLOBALS['jul_views_path']}/admin-editforums.php?{$idtxt}preview=2' ".($_GET['preview'] == 2 ? 'selected' : '') .">Moderator</option>
+			<option value='{$GLOBALS['jul_views_path']}/admin-editforums.php?{$idtxt}preview=3' ".($_GET['preview'] == 3 ? 'selected' : '') .">Administrator</option>
+			<option value='{$GLOBALS['jul_views_path']}/admin-editforums.php?{$idtxt}preview=4' ".($_GET['preview'] == 4 ? 'selected' : '') .">Administrator (hidden)</option>
 		</select></form>";
 }
 ?>

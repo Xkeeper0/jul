@@ -18,7 +18,7 @@ foreach ($servers as $num => $name) {
 
 	if ($num != 1) print " | ";
 	if ($server == $num) print "<u>";
-	print "<a href=irc.php?server=". $num .">". $name ."</a>";
+	print "<a href='{$GLOBALS['jul_views_path']}/irc.php?server=". $num ."'>". $name ."</a>";
 	if ($server == $num) print "</u>";
 	if ($num == 1) print " (preferred)";
 

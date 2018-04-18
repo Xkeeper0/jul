@@ -58,7 +58,7 @@
 		$page = floor($numposts / $ppp);
 
 		// Canonical page w/o ppp link (for bots)
-		$meta['canonical']	= "thread.php?id=$id&page=$page";
+		$meta['canonical']	= "{$GLOBALS['jul_views_path']}/thread.php?id=$id&page=$page";
 	}
 
 	define('E_BADPOSTS', -1);
@@ -138,9 +138,9 @@
 		// Favorites
 		if ($log) {
 			if ($sql->fetchq("SELECT * FROM favorites WHERE user={$loguserid} AND thread={$id}"))
-				$tlinks[] = "<a href='forum.php?act=rem&thread={$id}' style='white-space:nowrap;'>Remove from favorites</a>";
+				$tlinks[] = "<a href='{$GLOBALS['jul_views_path']}/forum.php?act=rem&thread={$id}' style='white-space:nowrap;'>Remove from favorites</a>";
 			else
-				$tlinks[] = "<a href='forum.php?act=add&thread={$id}' style='white-space:nowrap;'>Add to favorites</a>";
+				$tlinks[] = "<a href='{$GLOBALS['jul_views_path']}/forum.php?act=add&thread={$id}' style='white-space:nowrap;'>Add to favorites</a>";
 		}
 
 		$tnext = $sql->resultq("SELECT id FROM threads WHERE forum=$forumid AND lastpostdate>$thread[lastpostdate] ORDER BY lastpostdate ASC LIMIT 1");
@@ -194,9 +194,9 @@
 	if ($id && $ismod) {
 		$trashid = 27;
 
-		$fulledit = "<a href='editthread.php?id={$id}'>Edit thread<a>";
+		$fulledit = "<a href='{$GLOBALS['jul_views_path']}/editthread.php?id={$id}'>Edit thread<a>";
 		$linklist = array();
-		$link = "<a href='editthread.php?id={$id}&action";
+		$link = "<a href='{$GLOBALS['jul_views_path']}/editthread.php?id={$id}&action";
 
 		if (!$thread['sticky'])
 			$linklist[] = "$link=qstick'>Stick</a>";
@@ -342,15 +342,15 @@
 	$threadforumlinks = "
 		<table width=100%><td align=left>$fonttag<a href=index.php>".$GLOBALS['jul_settings']['board_name']."</a>"
 		.
-		(($forum['title']) ? " - <a href=forum.php?id=$forumid>$forum[title]</a>" : "")
+		(($forum['title']) ? " - <a href='{$GLOBALS['jul_views_path']}/forum.php?id=$forumid'>$forum[title]</a>" : "")
 		.
 		" - $thread[title]</td><td align=right>$smallfont
 	";
 	if ($forumid) {
-		if ($forum['pollstyle'] != -2) $threadforumlinks .= "<a href=newthread.php?poll=1&id=$forumid>$newpollpic</a> - ";
+		if ($forum['pollstyle'] != -2) $threadforumlinks .= "<a href='{$GLOBALS['jul_views_path']}/newthread.php?poll=1&id=$forumid'>$newpollpic</a> - ";
 		else                           $threadforumlinks .= "<img src=\"images/nopolls.png\" align=\"absmiddle\"> - ";
-		$threadforumlinks .= "<a href=newthread.php?id=$forumid>$newthreadpic</a>";
-		if (!$thread['closed']) $threadforumlinks .= " - <a href=newreply.php?id=$id>$newreplypic</a>";
+		$threadforumlinks .= "<a href='{$GLOBALS['jul_views_path']}/newthread.php?id=$forumid'>$newthreadpic</a>";
+		if (!$thread['closed']) $threadforumlinks .= " - <a href='{$GLOBALS['jul_views_path']}/newreply.php?id=$id'>$newreplypic</a>";
 		else                    $threadforumlinks .= " - $closedpic";
 	}
 	$threadforumlinks .= '</table>';
@@ -375,17 +375,17 @@
 
 		$quote = "<a href=\"?pid=$post[id]#$post[id]\">Link</a>";
 		if ($id and ! $thread['closed'])
-			$quote	.= " | <a href=newreply.php?id=$id&postid=$post[id]>Quote</a>";
+			$quote	.= " | <a href='{$GLOBALS['jul_views_path']}/newreply.php?id=$id&postid=$post[id]'>Quote</a>";
 
 		$edit = '';
 		if ($ismod || (!$banned && $post['user'] == $loguserid)) {
         	if (!$thread['closed'])
-				$edit = ($quote ? ' | ' : '')        . "<a href=editpost.php?id=$post[id]>Edit</a>";
-			$edit .= ($quote || $edit ? ' | ' : ''). "<a href=editpost.php?id=$post[id]&action=delete>Delete</a>";
+				$edit = ($quote ? ' | ' : '')        . "<a href='{$GLOBALS['jul_views_path']}/editpost.php?id=$post[id]'>Edit</a>";
+			$edit .= ($quote || $edit ? ' | ' : ''). "<a href='{$GLOBALS['jul_views_path']}/editpost.php?id=$post[id]&action=delete'>Delete</a>";
 		}
 
 		if ($isadmin)
-			$ip = " | IP: <a href=ipsearch.php?ip=$post[ip]>$post[ip]</a>";
+			$ip = " | IP: <a href='{$GLOBALS['jul_views_path']}/ipsearch.php?ip=$post[ip]'>$post[ip]</a>";
 
 
 		$pforum		= null;
@@ -455,7 +455,7 @@
 
 function notAuthorizedError() {
 	global $log;
-	$redir = (($log) ? 'index.php' : 'login.php');
+	$redir = (($log) ? 'index.php' : "{$GLOBALS['jul_views_path']}/login.php");
 	$rtext = (($log) ? 'the index page' : 'log in (then try again)');
 	errorpage("Couldn't enter the forum. You don't have access to this restricted forum.", $rtext, $redir);
 }

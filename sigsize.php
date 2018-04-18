@@ -26,7 +26,7 @@
 	print "<tr>
 	$tccell2>". ($lm ? "<img src=\"images/smilies/denied.gif\" title=\"Say no to the layout maker!\" align=absmiddle> $r <img src=\"images/smilies/denied.gif\" title=\"Say no to the layout maker!\" align=absmiddle>" : "$r") ."</td>
 	$tccell2 width=16>". ($u['minipic'] ? "<img src=\"". htmlspecialchars($u['minipic']) ."\" width=16 height=16>" : "") ."</td>
-	$tccell1><a href=profile.php?id=$u[id]><font ". getnamecolor($u['sex'], $u['powerlevel']) .">$u[name]</font></a></td>
+	$tccell1><a href={$GLOBALS['jul_views_path']}/profile.php?id=$u[id]><font ". getnamecolor($u['sex'], $u['powerlevel']) .">$u[name]</font></a></td>
 	". (!$_GET['bio'] ? "$tccell2 width=100>". number_format($u['hsize']) ."</td>
 	$tccell2 width=100>". number_format($u['ssize']) ."</td>" : "") ."
 	$tccell1 width=100><b>". number_format($u['tsize']) ."</b><br><img src=images/minibar.png width=\"". number_format($u['tsize'] / $max * 200) ."\" align=left height=3></td></tr>";
