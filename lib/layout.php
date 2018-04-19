@@ -17,7 +17,7 @@
 //	$forwardedip=(getenv("HTTP_X_FORWARDED_FOR") == "" ? "XXXXXXXXXXXXXXXXX" : getenv("HTTP_X_FORWARDED_FOR"));
 
 	if(!isset($windowtitle)) $windowtitle=$GLOBALS['jul_settings']['board_name'];
-	require 'colors.php';
+	require_once 'colors.php';
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
 	$home = base_dir().'/';
 	$GLOBALS['jul_settings']['board_title']	= "<a href='{$home}'>{$GLOBALS['jul_settings']['board_title']}</a>";

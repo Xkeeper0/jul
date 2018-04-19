@@ -4,9 +4,9 @@
 		return header("Location: {$GLOBALS['jul_views_path']}/shoph.php");
 	}
 
-  require '../lib/function.php';
-  require '../lib/layout.php';
-  require '../lib/rpg.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
+  require_once '../lib/rpg.php';
   print "$header<br>";
   if(!$log){
     print "

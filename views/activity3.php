@@ -1,5 +1,5 @@
 <?php
- require '../lib/function.php';
+ require_once '../lib/function.php';
 
 
  $user['regdate']	= $sql -> resultq("SELECT MIN(`regdate`) FROM users");

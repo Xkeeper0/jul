@@ -624,7 +624,7 @@
 		// darker #d0bca4
 
 		if (!function_exists("basestat")) {
-			 require 'lib/rpg.php';
+			 require_once 'lib/rpg.php';
 		}
 
 		if (!$x_hacks['rpgstats'][$post['uid']]) {

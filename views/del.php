@@ -1,7 +1,7 @@
 <?php
 
-  require '../lib/function.php';
-  require '../lib/layout.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
 
   if($_POST['deluser'] and $isadmin) { //($loguserid==1 or $loguserid==2)){
 

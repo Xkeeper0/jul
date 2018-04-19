@@ -1,6 +1,6 @@
 <?php
-	require '../lib/function.php';
-	require '../lib/layout.php';
+	require_once '../lib/function.php';
+	require_once '../lib/layout.php';
 
 	$set = (($_GET['set']) ? (int)$_GET['set'] : -1);
 	$showall = (($_GET['showall']) ? 1 : 0);

@@ -1,8 +1,8 @@
 <?php
 
-require '../lib/function.php';
+require_once '../lib/function.php';
 $windowtitle = "{$GLOBALS['jul_settings']['board_name']} - EZ Ban Hammer";
-require '../lib/layout.php';
+require_once '../lib/layout.php';
 
 print $header."<br>";
 echo "<div style='white-space:pre;'>";

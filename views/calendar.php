@@ -1,5 +1,5 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 
 	$mn=array(1=>'January','February','March','April','May','June','July','August','September','October','November','December');
 
@@ -26,7 +26,7 @@
 	}
 
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Calendar for {$mn[$month]} {$year}";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	$date = getdate(mktime(0,0,0,$month,1,$year));
 	$i    = 1 - $date['wday'];

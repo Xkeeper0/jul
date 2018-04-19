@@ -1,5 +1,5 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 
 	$u = intval($_GET['u']);
 	if (!$u) die();
@@ -21,7 +21,7 @@
 
 /*
 	if($_GET['debugsql']) {
-		require '../lib/layout.php';
+		require_once '../lib/layout.php';
 		print $header.$footer;
 		printtimedif(time());
 		die(1);

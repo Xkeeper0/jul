@@ -1,6 +1,6 @@
 <?php
-  require '../lib/function.php';
-  require '../lib/layout.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
   if(!$log) errorpage('You must be logged in to edit your profile.');
   if($_GET['lol'] || ($loguserid == 1420)) errorpage('<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;"><object width="100%" height="100%"><param name="movie" value="http://www.youtube.com/v/lSNeL0QYfqo&hl=en_US&fs=1&color1=0x2b405b&color2=0x6b8ab6&autoplay=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/lSNeL0QYfqo&hl=en_US&fs=1&color1=0x2b405b&color2=0x6b8ab6&autoplay=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="100%" height="100%"></embed></object></div>');
   if($banned) errorpage('Sorry, but banned users aren\'t allowed to edit their profile.');

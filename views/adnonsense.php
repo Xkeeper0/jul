@@ -2,7 +2,7 @@
 
 //	die();
 
-	require "../lib/function.php";
+	require_once "../lib/function.php";
 	
 	header("Cache-Control: max-age=43200");
 	header('Expires: '.gmdate('D, d M Y H:i:s', time() + 43200).' GMT');

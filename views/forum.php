@@ -97,7 +97,7 @@
 
 
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- $forum[title]";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	$hotcount = $sql->resultq('SELECT hotcount FROM misc',0,0);
 	if ($hotcount <= 0) $hotcount = 0xFFFF;

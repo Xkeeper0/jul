@@ -1,5 +1,5 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
   $maxtime  = (($_GET['t']) ? max(min($_GET['t'], 86400), 60) : false);
   $maxposts = (($_GET['p']) ? max(min($_GET['p'], 100),   1)  : false);
   if ($maxtime === false && $maxposts === false) $maxposts = 50; // Default
@@ -28,7 +28,7 @@
 	}
 
 	$windowtitle	= "{$GLOBALS['jul_settings']['board_name']} - A revolution in posting technology&trade;";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	if($log && !$_GET['raw']) {
 		$headlinks.=' - <a href='.$GLOBALS['jul_base_dir'].'/index.php?action=markallforumsread>Mark all posts read</a>';

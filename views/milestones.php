@@ -1,7 +1,7 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$windowtitle="{$GLOBALS['jul_settings']['board_name']} -- Milestones";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
   $posts   = max(10000, intval($_GET['p']));
   $threads = max(1000,  intval($_GET['t']));

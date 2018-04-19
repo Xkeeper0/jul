@@ -1,5 +1,5 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
  	$user['regdate']	= $sql -> resultq("SELECT MIN(`regdate`) FROM users WHERE regdate > 0") or die();
 	$max				= ceil(($sql -> resultq("SELECT MAX(`posts`) FROM users") + 1) / 50) * 50;
 
@@ -61,7 +61,7 @@
 	}
 
 /*	if($_GET['debugsql']) {
-		require '../lib/layout.php';
+		require_once '../lib/layout.php';
 		print $header.$footer;
 		printtimedif(time());
 		die(1);

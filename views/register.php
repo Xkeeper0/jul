@@ -6,8 +6,8 @@
   }
 
 
-  require '../lib/function.php';
-  require '../lib/layout.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
   $ipstart=substr($userip,0,6);
   print $header;
 

@@ -1,8 +1,8 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 
 	$windowtitle	= "{$GLOBALS['jul_settings']['board_name']} -- Active users";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	if (($type == 'pm' || $type == 'pms') && !$log)
 		unset($type);

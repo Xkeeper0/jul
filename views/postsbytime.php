@@ -1,7 +1,7 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$windowtitle = "Posts by time of day";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	if (!isset($_GET['posttime'])) $posttime = 86400;
 	else $posttime = intval($_GET['posttime']);

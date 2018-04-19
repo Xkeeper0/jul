@@ -1,8 +1,8 @@
 <?php
 
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$windowtitle	= "FAQ / Rules -- {$GLOBALS['jul_settings']['board_name']}";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 
 	$topiclist	= "";

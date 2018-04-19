@@ -1,6 +1,6 @@
 <?php
-	require '../lib/function.php';
-	require '../lib/layout.php';
+	require_once '../lib/function.php';
+	require_once '../lib/layout.php';
 
 	$misc   = $sql->fetchq('SELECT * FROM misc');
 	$tstats = $sql->query('SHOW TABLE STATUS');

@@ -1,9 +1,9 @@
 <?php
 
 	chdir("../");
-//	require 'lib/config.php';
-	require 'lib/function.php';
-//	require 'lib/config.php';
+//	require_once 'lib/config.php';
+	require_once 'lib/function.php';
+//	require_once 'lib/config.php';
 	header("Content-type: text/plain");
 
 	@mysql_connect($GLOBALS['jul_sql_settings']['host'], $GLOBALS['jul_sql_settings']['user'], $GLOBALS['jul_sql_settings']['pass']) or

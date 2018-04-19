@@ -1,6 +1,6 @@
 <?php
 	// die("Disabled.");
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$thread=$sql->fetchq("SELECT forum, closed, sticky,title,lastposter FROM threads WHERE id=$id");
 
 	// Stop this insanity.  Never index newreply.

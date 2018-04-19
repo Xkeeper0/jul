@@ -1,5 +1,5 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$forum = $sql->fetchq("SELECT * FROM forums WHERE id=$id");
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- $forum[title] -- New Thread";
 	$specialscheme	= $forum['specialscheme'];
@@ -7,7 +7,7 @@
 	// Stop this insanity.  Never index newthread.
 	$meta['noindex'] = true;
 
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	$forumid=$id;
 	$fonline=fonlineusers($forumid);

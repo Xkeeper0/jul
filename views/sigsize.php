@@ -1,7 +1,7 @@
 <?php
   $windowtitle	= ($_GET['bio'] ? "Bio" : "Layout") ." size comparison";
-  require '../lib/function.php';
-  require '../lib/layout.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
   print "
 	$header
 	$fonttag

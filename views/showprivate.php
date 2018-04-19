@@ -1,5 +1,5 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	if (!$id)
 		return header("Location: {$GLOBALS['jul_views_path']}/private.php");
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages";

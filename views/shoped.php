@@ -1,7 +1,7 @@
 <?php
 
 #	die();
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$stats		= array(
 		0	=> "sHP",
 		1	=> "sMP",
@@ -17,7 +17,7 @@
 
 	if ($loguser['powerlevel'] < 1) {
 		$windowtitle	= "nope.avi";
-		require "../lib/layout.php";
+		require_once "../lib/layout.php";
 		print $header ."<br>$tblstart
 			$tccell1>No.</td><table>". $footer;
 		die();
@@ -65,7 +65,7 @@
 
 
 	$windowtitle	= "Shop Editor";
-	require "../lib/layout.php";
+	require_once "../lib/layout.php";
 	print $header ."<br>";
 
 	echo "$tblstart<tr>$tccellh><b>WARNING</b></td></tr><tr>$tccell1>

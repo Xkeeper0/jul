@@ -1,6 +1,6 @@
 <?php
-  require '../lib/function.php';
-  require '../lib/layout.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
   if(!$f) $f=0;
   if(@mysql_num_rows(mysql_query("SELECT user FROM forummods WHERE forum=$f and user=$loguserid"))) $ismod=1;
   $canpost=($isadmin or ($ismod && $f>0));

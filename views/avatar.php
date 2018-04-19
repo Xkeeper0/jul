@@ -1,6 +1,6 @@
 <?php
-require '../lib/function.php';
-require '../lib/layout.php';
+require_once '../lib/function.php';
+require_once '../lib/layout.php';
 
 $a	= array(1 => "neutral", "angry", "tired/upset", "playful", "doom", "delight", "guru", "hope", "puzzled", "whatever", "hyperactive", "sadness", "bleh", "embarrassed", "amused", "afraid");
 

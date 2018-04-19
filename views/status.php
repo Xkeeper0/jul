@@ -1,6 +1,6 @@
 <?php
-	require '../lib/function.php';
-	require '../lib/rpg.php';
+	require_once '../lib/function.php';
+	require_once '../lib/rpg.php';
 
 	$base = base_path().'/';
 	if(!intval($u)) die();

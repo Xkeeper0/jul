@@ -1,8 +1,8 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$user=@$sql->fetchq("SELECT * FROM users WHERE id=$id");
 	$windowtitle="{$GLOBALS['jul_settings']['board_name']} -- Profile for $user[name]";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 //	if ($_GET['id'] == 1 && !$x_hacks['host']) {
 //		print "$header<br><center><img src='http://earthboundcentral.com/wp-content/uploads/2009/01/m3deletede.png'></center><br>$footer";

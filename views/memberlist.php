@@ -1,7 +1,7 @@
 <?php
-	require '../lib/function.php';
-	require '../lib/rpg.php';
-	require '../lib/layout.php';
+	require_once '../lib/function.php';
+	require_once '../lib/rpg.php';
+	require_once '../lib/layout.php';
 
 	function sortbyexp($a,$b) {
 		$cmpa = (($a['exp'] === 'NaN') ? -1 : intval($a['exp']));

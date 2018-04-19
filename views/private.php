@@ -1,7 +1,7 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 	$windowtitle = "{$GLOBALS['jul_settings']['board_name']} -- Private Messages";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	if (!$log)
 		errorpage("You need to be logged in to read your private messages.", 'log in (then try again)', "{$GLOBALS['jul_views_path']}/login.php");

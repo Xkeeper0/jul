@@ -28,13 +28,13 @@
 	if ($id === null)
 		$id = 0;
 
-	require 'lib/error.php';
+	require_once 'lib/error.php';
 
 	if (!is_file("{$GLOBALS['jul_base_path']}/lib/config.php")) {
 		early_html_die('Could not find a configuration file. Make sure you have a <tt>lib/config.php</tt> file and it contains <tt>$sql_settings</tt> and <tt>$forum_settings</tt>. See <tt>lib/config.example.php</tt>.');
 	}
-	require 'lib/defaults.php';
-	require 'lib/config.php';
+	require_once 'lib/defaults.php';
+	require_once 'lib/config.php';
 
 	// Merge defaults and user supplied config.
 	if (!isset($sql_settings) || !isset($forum_settings)) {
@@ -43,9 +43,9 @@
 	$GLOBALS['jul_sql_settings'] = array_merge($default_sql_settings, $sql_settings);
 	$GLOBALS['jul_settings'] = array_merge($default_forum_settings, $forum_settings);
 
-	require 'lib/routing.php';
-	require 'lib/helpers.php';
-	require 'lib/mysql.php';
+	require_once 'lib/routing.php';
+	require_once 'lib/helpers.php';
+	require_once 'lib/mysql.php';
 
 	$sql	= new mysql;
 
@@ -55,7 +55,7 @@
 
 
 	if (file_exists("lib/firewall.php") && !filter_bool($disable_firewall)) {
-		require 'lib/firewall.php';
+		require_once 'lib/firewall.php';
 
 	} else {
 
@@ -201,14 +201,14 @@
 //	$atempval	= $sql -> resultq("SELECT MAX(`id`) FROM `posts`");
 //	if ($atempval == 199999 && $_SERVER['REMOTE_ADDR'] != "172.130.244.60") {
 //		//print "DBG ". strrev($atempval);
-//		require "dead.php";
+//		require_once "dead.php";
 //		die();
 //	}
 
 //  $hacks['noposts'] = true;
 
 	$getdoom	= true;
-	require "ext/mmdoom.php";
+	require_once "ext/mmdoom.php";
 
 	//$x_hacks['rainbownames'] = ($sql->resultq("SELECT MAX(`id`) % 100000 FROM `posts`")) <= 100;
 	$x_hacks['rainbownames'] = ($sql->resultq("SELECT `date` FROM `posts` WHERE (`id` % 100000) = 0 ORDER BY `id` DESC LIMIT 1") > ctime()-86400);
@@ -1047,7 +1047,7 @@ function loadtlayout(){
 	$tlayout    = (filter_int($loguser['layout']) ? $loguser['layout'] : 1);
 	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'",0,0);
 	if (!$layoutfile) $layoutfile = 'regular';
-	require "tlayouts/$layoutfile.php";
+	require_once "tlayouts/$layoutfile.php";
 }
 
 function moodlist($sel = 0, $return = false) {
@@ -1281,8 +1281,8 @@ function xss_clean($data) {
 }
 
 
-require 'lib/threadpost.php';
-// require 'lib/replytoolbar.php';
+require_once 'lib/threadpost.php';
+// require_once 'lib/replytoolbar.php';
 
 function replytoolbar() { return; }
 

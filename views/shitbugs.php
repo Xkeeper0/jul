@@ -2,8 +2,8 @@
 
   $windowtitle	= "Admin Cruft";
 
-  require '../lib/function.php';
-  require '../lib/layout.php';
+  require_once '../lib/function.php';
+  require_once '../lib/layout.php';
 
 if (!in_array($loguser['id'], array(175, 1)) && $loguser['powerlevel'] < 1) {
 

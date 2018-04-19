@@ -1,9 +1,9 @@
 <?php
-	require '../lib/function.php';
+	require_once '../lib/function.php';
 
 	$user = $sql->resultq("SELECT name FROM users WHERE id=$id");
 	$windowtitle = "Listing posts by $user";
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	if (!$id)
 		errorpage('No user specified.', 'return to the board', 'index.php');

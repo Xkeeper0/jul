@@ -1,7 +1,7 @@
 <?php
 
 	chdir("../");
-	require "lib/function.php";
+	require_once "lib/function.php";
 
 	set_time_limit(0);
 	ini_set("memory_limit", "256M");

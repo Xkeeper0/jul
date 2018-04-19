@@ -1,6 +1,6 @@
 <?php
-	require '../lib/function.php';
-	require '../lib/layout.php';
+	require_once '../lib/function.php';
+	require_once '../lib/layout.php';
 
 	// Bots don't need to be on this page
 	$meta['noindex'] = true;

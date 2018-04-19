@@ -1,10 +1,10 @@
 <?php
-  require '../lib/function.php';
+  require_once '../lib/function.php';
 
   $windowtitle = "Editing Post Radar";
 
   if (!$log) {
-		require '../lib/layout.php';
+		require_once '../lib/layout.php';
 
 		print "$header
 		<br>$tblstart$tccell1>You must be logged in to edit your post radar.<br>
@@ -21,7 +21,7 @@
 		if ($rem) $sql->query("DELETE FROM postradar WHERE user=$loguserid and comp=". intval($rem) ."");
 		if ($add) $sql->query("INSERT INTO postradar (user,comp) VALUES ($loguserid,". intval($add) .")");
 		if ($submit2) {
-			require '../lib/layout.php';
+			require_once '../lib/layout.php';
 
 			print "$header
 			<br>$tblstart$tccell1>Thank you, $user, for editing your post radar.<br>
@@ -34,7 +34,7 @@
 
 	// Form
 	// Include layout now so post radar on top of page is properly updated
-	require '../lib/layout.php';
+	require_once '../lib/layout.php';
 
 	// Deletions before additions
 	$users1 = $sql->query("SELECT p.comp, u.name, u.posts FROM postradar p, users u WHERE u.id=p.comp AND user=$loguserid");

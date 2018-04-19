@@ -1,8 +1,8 @@
 <?php
 
-require '../lib/function.php';
+require_once '../lib/function.php';
 $windowtitle = "{$GLOBALS['jul_settings']['board_name']} - IRC Chat";
-require '../lib/layout.php';
+require_once '../lib/layout.php';
 
 	// We want this to be 1-indexed I guess.
 	$servers = array_merge(array(null), $GLOBALS['jul_settings']['irc_servers']);

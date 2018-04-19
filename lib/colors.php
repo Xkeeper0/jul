@@ -82,7 +82,7 @@
 #		$filename	= "ymar.php";
 #	}
 
-	require "schemes/$filename";
+	require_once "schemes/$filename";
 
 	if ($schemepre) {
 		$GLOBALS['jul_settings']['board_title']	.= "</a><br><span class='font'>Previewing scheme \"<b>". $schemerow['name'] ."</b>\"</span>";
