@@ -1,5 +1,5 @@
 <?php
-  $boardtitle='<img src=\'images/zen/zentitle.png\'>';
+  $GLOBALS['jul_settings']['board_title']='<img src=\'images/zen/zentitle.png\'>';
 
 	$formcss=1;
 	$inputborder='000000';

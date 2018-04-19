@@ -1,5 +1,5 @@
 <?php
-  $boardtitle='<img src="images/mariomovie/thedata.png">';
+  $GLOBALS['jul_settings']['board_title']='<img src="images/mariomovie/thedata.png">';
   $newthreadpic='<img class="post" src="images/mariomovie/newthread.png" alt="New thread" title="New thread">';
   $newreplypic='<img class="post" src="images/mariomovie/newreply.png" alt="New reply" title="New reply">';
   $newpollpic='<img class="post" src="images/mariomovie/newpoll.png" alt="New poll" title="New poll">';

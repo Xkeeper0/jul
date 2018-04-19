@@ -3,7 +3,7 @@
 	$nmcol[1]=array('-1'=>'888888','FB6060','FB9191','FB9191','FB9191');
 	$nmcol[2]=array('-1'=>'888888','7C60B0','EEB9BA','47B53C','F0C413');
 	$numfil='numxmas';
-	//  $boardtitle='<img src=xkeeper/img/pointlessbannerv2-1a.gif width=600 height=100 title="FORCED SCHEMEEEEEEE">';
+	//  $GLOBALS['jul_settings']['board_title']='<img src=xkeeper/img/pointlessbannerv2-1a.gif width=600 height=100 title="FORCED SCHEMEEEEEEE">';
 	$formcss=1;
 	$inputborder='8090C0';
 	$bgcolor='020335';
@@ -30,7 +30,7 @@
 	$statusicons['off']			= '<img src=images/status-classic/off.gif>';
 
 
-	$boardtitle='<img src="images/christmasbanner-cpubasic.png" width=600 height=100 title="Looks like Sakura is taking a break this year...">';
+	$GLOBALS['jul_settings']['board_title']='<img src="images/christmasbanner-cpubasic.png" width=600 height=100 title="Looks like Sakura is taking a break this year...">';
 
 
 	$numdir						= 'num3/';

@@ -1,27 +1,27 @@
 <?php
-$formcss=1;  
-$inputborder='663399';  
-$bgimage='images/nightscheme_starsbg.png';
-$bgimage='images/starsbg.png';
-$bgcolor='000F1F';   
-$textcolor='DDDDDD';   
+$formcss=1;
+$inputborder='663399';
+$bgimage=$GLOBALS['jul_base_dir'].'/images/nightscheme_starsbg.png';
+$bgimage=$GLOBALS['jul_base_dir'].'/images/starsbg.png';
+$bgcolor='000F1F';
+$textcolor='DDDDDD';
 /*
-	$linkcolor='DEDAFE';   
-	$linkcolor2='CECAFE';   
-	$linkcolor3='FFEEFF';   
-	$linkcolor4='EEEAFE';   
+	$linkcolor='DEDAFE';
+	$linkcolor2='CECAFE';
+	$linkcolor3='FFEEFF';
+	$linkcolor4='EEEAFE';
 */
-$linkcolor='BEBAFE';   
-$linkcolor2='9990c0';   
-$linkcolor3='CFBEFF';   
-$linkcolor4='CECAFE';   
+$linkcolor='BEBAFE';
+$linkcolor2='9990c0';
+$linkcolor3='CFBEFF';
+$linkcolor4='CECAFE';
 
-$tablebg1='111133';   
-$tablebg2='11112B';   
-$categorybg='2F2F5F';   
-$tableheadtext='FFEEFF';   
-$tableheadbg='302048';   
-$tableborder='000000';   
+$tablebg1='111133';
+$tablebg2='11112B';
+$categorybg='2F2F5F';
+$tableheadtext='FFEEFF';
+$tableheadbg='302048';
+$tableborder='000000';
 $scr1='d4d3eb';
 $scr2='a9a7d6';
 $scr3='7d7bc1';

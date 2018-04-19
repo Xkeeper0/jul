@@ -20,6 +20,6 @@
 	$scr6='210456';
 	$scr7='000020';
 
-	$boardtitle='<img src="images/attitudebarn.png">';
+	$GLOBALS['jul_settings']['board_title']='<img src="images/attitudebarn.png">';
 
 ?>

@@ -34,7 +34,7 @@
 		}
 
 		if($pthread) {
-			$set['threadlink'] = "<a href=thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
+			$set['threadlink'] = "<a href={$GLOBALS['jul_views_path']}/thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
 		}
 
 		$post['text']=doreplace2($post['text'], $post['options']);
@@ -137,7 +137,7 @@ function syndrome($num, $double=false, $bar=true){
 			}
 
 			if ($next	>= 100) $barimg	= "special.gif";
-			$bar	= "<br><nobr>". generatenumbergfx($num, 3, $double) ."<img src=images/num1/barleft.png height=$hi><img src=images/num1/bar-on$barimg width=$barw1 height=$hi><img src=images/num1/bar-off.png width=$barw2 height=$hi><img src=images/num1/barright.png height=$hi>". generatenumbergfx($next - ($num - $last), 3, $double) ."</nobr>";
+			$bar	= "<br><nobr>". generatenumbergfx($num, 3, $double) ."<img src={$GLOBALS['jul_base_dir']}/images/num1/barleft.png height=$hi><img src={$GLOBALS['jul_base_dir']}/images/num1/bar-on$barimg width=$barw1 height=$hi><img src={$GLOBALS['jul_base_dir']}/images/num1/bar-off.png width=$barw2 height=$hi><img src={$GLOBALS['jul_base_dir']}/images/num1/barright.png height=$hi>". generatenumbergfx($next - ($num - $last), 3, $double) ."</nobr>";
 		}
 		$syn="<br><i><font color=$syn</font></i>$bar<br>";
 	}

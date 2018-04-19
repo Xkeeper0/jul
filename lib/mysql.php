@@ -70,9 +70,12 @@
 				}
 			}
 			else {
-				// the huge SQL warning text sucks
-				$err = str_replace("You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use", "SQL syntax error", mysql_error());
-				trigger_error("MySQL error: $err", E_USER_ERROR);
+				ob_start();
+        debug_print_backtrace();
+        $trace = ob_get_contents();
+        ob_end_clean();
+				error_log($trace);
+				trigger_error(mysql_error(), E_USER_ERROR);
 			}
 
 			$t = microtime(true)-$start;
@@ -193,7 +196,7 @@
 				$altcell = "tccell" . (($i & 1)+1);
 				$cell = $$altcell;
 				if ($oldid && $oldid != $d[0])
-					$out .= "<tr>$tccellc colspan=5><img src='images/_.gif' height='4' width='1'></td></tr>";
+					$out .= "<tr>$tccellc colspan=5><img src='{$GLOBALS['jul_base_dir']}/images/_.gif' height='4' width='1'></td></tr>";
 				$oldid = $d[0];
 				$out .= "<tr>
 					$cell>$i</td>

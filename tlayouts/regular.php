@@ -24,33 +24,33 @@
 
 			if ($barwidth < 1) $barwidth=0;
 
-			if ($barwidth > 0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
+			if ($barwidth > 0) $baron="<img src={$GLOBALS['jul_base_dir']}/images/$numdir"."bar-on.gif width=$barwidth height=8>";
 
-			if ($barwidth < $totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
-			$bar="<br><img src=images/$numdir"."barleft.gif height=8>$baron$baroff<img src=images/$numdir".'barright.gif height=8>';
+			if ($barwidth < $totalwidth) $baroff="<img src={$GLOBALS['jul_base_dir']}/images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
+			$bar="<br><img src={$GLOBALS['jul_base_dir']}/images/$numdir"."barleft.gif height=8>$baron$baroff<img src={$GLOBALS['jul_base_dir']}/images/$numdir".'barright.gif height=8>';
 
 		} else {
-			$level		= "<img src=images/$numdir"."level.gif width=36 height=8><img src=numgfx.php?n=$lvl&l=3&f=$numfil height=8>";
-			$experience	= "<img src=images/$numdir"."exp.gif width=20 height=8><img src=numgfx.php?n=$exp&l=5&f=$numfil height=8><br><img src=images/$numdir"."fornext.gif width=44 height=8><img src=numgfx.php?n=$expleft&l=2&f=$numfil height=8>";
-			$poststext	= "<img src=images/_.gif height=2><br><img src=images/$numdir"."posts.gif width=28 height=8>";
-			$postnum	= "<img src=numgfx.php?n=$post[num]/&l=5&f=$numfil height=8>";
-			$posttotal	= "<img src=numgfx.php?n=$post[posts]&f=$numfil".($post['num']?'':'&l=4')." height=8>";
+			$level		= "<img src={$GLOBALS['jul_base_dir']}/images/$numdir"."level.gif width=36 height=8><img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$lvl&l=3&f=$numfil height=8>";
+			$experience	= "<img src={$GLOBALS['jul_base_dir']}/images/$numdir"."exp.gif width=20 height=8><img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$exp&l=5&f=$numfil height=8><br><img src={$GLOBALS['jul_base_dir']}/images/$numdir"."fornext.gif width=44 height=8><img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$expleft&l=2&f=$numfil height=8>";
+			$poststext	= "<img src={$GLOBALS['jul_base_dir']}/images/_.gif height=2><br><img src={$GLOBALS['jul_base_dir']}/images/$numdir"."posts.gif width=28 height=8>";
+			$postnum	= "<img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$post[num]/&l=5&f=$numfil height=8>";
+			$posttotal	= "<img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$post[posts]&f=$numfil".($post['num']?'':'&l=4')." height=8>";
 			$totalwidth	= 56;
 			$barwidth	= $totalwidth-round(@($expleft/totallvlexp($lvl))*$totalwidth);
 
 			if($barwidth<1) $barwidth=0;
 
-			if($barwidth>0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
+			if($barwidth>0) $baron="<img src={$GLOBALS['jul_base_dir']}/images/$numdir"."bar-on.gif width=$barwidth height=8>";
 
-			if($barwidth<$totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
-			$bar="<br><img src=images/$numdir"."barleft.gif width=2 height=8>$baron$baroff<img src=images/$numdir".'barright.gif width=2 height=8>';
+			if($barwidth<$totalwidth) $baroff="<img src={$GLOBALS['jul_base_dir']}/images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
+			$bar="<br><img src={$GLOBALS['jul_base_dir']}/images/$numdir"."barleft.gif width=2 height=8>$baron$baroff<img src={$GLOBALS['jul_base_dir']}/images/$numdir".'barright.gif width=2 height=8>';
 		}
 
 
 		if(!$post['num']){
 			$postnum	= '';
 
-			if($postlayout==1) $posttotal="<img src=numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
+			if($postlayout==1) $posttotal="<img src={$GLOBALS['jul_views_path']}/numgfx.php?n=$post[posts]&f=$numfil&l=4 height=8>";
 		}
 
 
@@ -102,7 +102,7 @@
 		<br>
 		<br>$set[userpic]
 		<br><br>$numtext</center>
-	  <br><img src=images/_.gif width=200 height=1>
+	  <br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 	</td>
 	$set[tdbg] height=1 width=100%>
 	  <table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -145,7 +145,7 @@
 		return "$tblstart
 			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"font-size: 12px;\">
 				".inu_hexclock()."
-				 <a name=$post[id]></a><a href=\"profile.php?id=2100\"><img src=\"/images/inu/7sd.php?s=- >EC1Inuyasha>0f0 -\"></a>
+				 <a name=$post[id]></a><a href=\"{$GLOBALS['jul_views_path']}/profile.php?id=2100\"><img src=\"/images/inu/7sd.php?s=- >EC1Inuyasha>0f0 -\"></a>
 				$smallfont
 				<br><marquee scrolldelay=250 scrollamount=30 width=30 height=8 behavior=alternate><img src=\"/images/inu/7sd.php?s=>f0012=00\"><img src=\"/images/inu/7sd.php?s=>f00  =%20%20\"></marquee>
 				<br>$reinf
@@ -157,7 +157,7 @@
 				<br>
 				<br><img src=\"/images/inu/7sd.php?s=$lp\">
 				<br><img src=\"/images/inu/7sd.php?s=$la\"></font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 		$set[tdbg] height=1 width=100%>
 			<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -179,7 +179,7 @@
 			$post['headtext'] = str_replace(
 				array('class="inu-bg"','class="inu-tx"'),
 				array('class="inu-dbg"','class="inu-dtx"'), $post['headtext']);
-			$set['userlink'] =' <a name='.$post['id'].'></a><a class="url2100" href="profile.php?id=2100"><font color="FF0202">[D]Inuyasha</font></a>';
+			$set['userlink'] =" <a name={$post['id']}></a><a class=\"url2100\" href=\"{$GLOBALS['jul_views_path']}/profile.php?id=2100\"><font color=\"FF0202\">[D]Inuyasha</font></a>";
 			$set['userrank'] = 'Now you\'ve done it...!';
 			$set['userpic'] = '<img src="http://inuyasha.rustedlogic.net/personal/moodav/5.png">';
 			$dstyle = ' style="color:#b671e8;background:black;"';
@@ -200,7 +200,7 @@
 				<br>
 				<br>$lp
 				<br>$la</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 		$set[tdbg]{$dstyle} height=1 width=100%>
 			<table cellspacing=0 cellpadding=2 width=100% class=fonts{$dstyle}>
@@ -214,16 +214,16 @@
 
 	if (($post['uid'] == 18) && !$x_hacks['host'] && $x_hacks['mmdeath'] >= 0 && !$_GET['test2']) {
 	return "
-	<table style=\"background: #f00 url('numgfx/red.gif');\" cellpadding=3 cellspacing=1>
+	<table style=\"background: #f00 url('{$GLOBALS['jul_views_path']}/numgfx/red.gif');\" cellpadding=3 cellspacing=1>
 	$set[tdbg] style='background: #000;' rowspan=2>
-		<br><center class='stupiddoomtimerhack'><img src='numgfx.php?f=numdeath&n=". $x_hacks['mmdeath'] ."' height=32 style=\"background: #f00 url('numgfx/red.gif');\" title=\"Doom.\"></center>
+		<br><center class='stupiddoomtimerhack'><img src='{$GLOBALS['jul_views_path']}/numgfx.php?f=numdeath&n=". $x_hacks['mmdeath'] ."' height=32 style=\"background: #f00 url('{$GLOBALS['jul_views_path']}/numgfx/red.gif');\" title=\"Doom.\"></center>
 		<br>
 	  <center>$set[userlink]$smallfont<br>
 		<br>
 		<br>$set[userpic]
 		</center>
 
-		<br><img src=images/_.gif width=194 height=1>
+		<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=194 height=1>
 	</td>
 	$set[tdbg] style='background: #000;'height=1 width=100%>
 	  <table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -253,7 +253,7 @@
 	  <br>
 	  $sincelastpost<br>$lastactivity<br>
 	  </font>
-	  <br><img src=images/_.gif width=200 height=1>
+	  <br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 	</td>
 	$set[tdbg] height=1 width=100%>
 	  <table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -284,8 +284,8 @@
 				<br>$set[userpic]
 				<br>". ($hacks['noposts'] ? "<font color=#cccccc>" : "<br>Post$postss $postnum<font color=#cccccc>$posttotal") ."
 				<br>$lastactivity</font>
-				". (false ? "<br><a href=sendprivate.php?uid=1>PM</a> - <a href=rateuser.php?id=1>Rate</a>" : "") ."
-				<br><img src=images/_.gif width=200 height=1>
+				". (false ? "<br><a href={$GLOBALS['jul_views_path']}/sendprivate.php?uid=1>PM</a> - <a href=rateuser.php?id=1>Rate</a>" : "") ."
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			<td height=1 width=100% style=\"font-size: 12px; color: #ddd; font-family: Verdana, sans-serif; background: #004c5a; border-bottom: 1px solid #000;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -310,7 +310,7 @@
 				$set[userpic]
 				<br>". ($hacks['noposts'] ? "<font color=#bb0000>" : "<br>Post$postss $postnum<font color=#bb0000>$posttotal") ."
 				<br>$lastactivity</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: #000000; font-size: 12px; color: #ff0000; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -346,7 +346,7 @@
 				$set[userpic]
 				<br>". ($hacks['noposts'] ? "<font color=$fcol2>" : "<br>Post$postss $postnum<font color=$fcol2>$posttotal") ."
 				<br>$lastactivity</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -386,7 +386,7 @@
 				$reinf
 				<br><br>$set[userpic]
 				<br><br>Post$postss $postnum$posttotal
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -406,7 +406,7 @@
 				$set[userpic]
 				<br>
 				<br>Post$postss $postnum$posttotal
-		  </center><br><img src=images/_.gif width=190 height=1>
+		  </center><br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=190 height=1>
 		</td>
 		$set[tdbg] height=1 width=100%>
 		  <table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -442,7 +442,7 @@
 				$set[userpic]
 				<br>". ($hacks['noposts'] ? "<font color=$fcol2>" : "<br>Post$postss $postnum<font color=$fcol2>$posttotal") ."
 				<br>$lastactivity</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -490,7 +490,7 @@
 				$set[userpic]
 				<br>". ($hacks['noposts'] ? "<font color=$fcol2>" : "<br>Post$postss $postnum<font color=$fcol2>$posttotal") ."
 				<br>$lastactivity</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -523,7 +523,7 @@
 				<br>
 				<br>$joindate
 				<br>$lastactivity</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -555,7 +555,7 @@
 				<br>
 				<br>$joindate
 				<br>$lastactivity</font>
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -585,7 +585,7 @@
 					<a href=//jul.rustedlogic.net/profile.php?id=387>
 			". (strpos($_SERVER['USER_AGENT'], "MSIE 6.0") ? "<img src=_.png style=filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=http://acmlm.rustedlogic.net/etc/nismilly/stat.php)>" : "<img src=http://acmlm.rustedlogic.net/etc/nismilly/stat.php>") ."
 					</a>
-					<br><img src=images/_.gif width=200 height=1>
+					<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 				</div>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
@@ -606,7 +606,7 @@
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 14px; color: $fcol1; font-family: Verdana, sans-serif; padding-top: .5em;\">
 				$set[userlink]
 				<br><span style=\"letter-spacing: 0px; color: $fcol2; font-size: 10px;\">Collection of nobodies</span>
-				<br><img src=images/_.gif width=200 height=200>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=200>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -624,7 +624,7 @@
 		// darker #d0bca4
 
 		if (!function_exists("basestat")) {
-			 require 'lib/rpg.php';
+			 require_once 'lib/rpg.php';
 		}
 
 		if (!$x_hacks['rpgstats'][$post['uid']]) {
@@ -718,7 +718,7 @@
 					</tr>
 				</table>
 
-				<br><img src=images/_.gif width=200 height=1>
+				<br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 			</td>
 			$set[tdbg] height=1 width=100% style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				<table cellspacing=0 cellpadding=2 width=100% class=fonts>
@@ -770,7 +770,7 @@
 	$set[tdbg] rowspan=2>
 	  $set[userlink]$smallfont<br>
 	  $set[userrank]$reinf<br>
-	  <br><img src=images/_.gif width=200 height=1>
+	  <br><img src={$GLOBALS['jul_base_dir']}/images/_.gif width=200 height=1>
 	</td>
 	$set[tdbg] height=1 width=100%>
 	  <table cellspacing=0 cellpadding=2 width=100% class=fonts>

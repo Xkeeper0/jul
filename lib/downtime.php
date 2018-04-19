@@ -28,7 +28,7 @@
 			scrollbar-darkshadow-color:	312d7d;
 			color: #DDDDDD;
 			font:13px verdana;
-			background: #000F1F url('http://xkeeper.rustedlogic.net/img/starsbg.png');
+			background: #000F1F url('<?= dir_images('starsbg.png'); ?>');
 		}
 		.font 	{font:13px verdana}
 		.fonth	{font:13px verdana;color:FFEEFF}

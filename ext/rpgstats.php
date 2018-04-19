@@ -1,7 +1,7 @@
 <?php
 	chdir("../");
-	require 'lib/function.php';
-	require 'lib/rpg.php';
+	require_once 'lib/function.php';
+	require_once 'lib/rpg.php';
 
 
 	if(!intval($u)) die("Missing ?u=<id> parameter");
@@ -33,7 +33,7 @@
 		if ($_REQUEST['s'] == "json") {
 			header("Content-type: application/json;");
 			print json_encode($st);
-			
+
 		} else {
 			header("Content-type: text/plain;");
 			print serialize($st);
@@ -43,4 +43,4 @@
 		foreach ($st as $k => $v) {
 			print "$k=$v\n";
 		}
-	}	
+	}
