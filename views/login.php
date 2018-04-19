@@ -62,7 +62,7 @@
 			$verifyoptext[$i] = "(".implode('.', $ipaddr).")";
 			$ipaddr[$i-1]       = 'xxx';
 		}
-		$txt .= "<body onload=window.document.REPLIER.username.focus()>
+		$txt .= "<body onload=window.document.replier.username.focus()>
 		<FORM ACTION='{$GLOBALS['jul_views_path']}/login.php' NAME=REPLIER METHOD=POST><tr>
 		$tccellh width=150>&nbsp;</td>$tccellh width=40%>&nbsp</td>$tccellh width=150>&nbsp;</td>$tccellh width=40%>&nbsp;</td></tr><tr>
 		$tccell1><b>User name:</b></td>       $tccell2l>$inpt=username MAXLENGTH=25 style='width:280px;'></td>

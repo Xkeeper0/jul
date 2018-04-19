@@ -145,7 +145,7 @@
 
 				if($isadmin) $ip=$post['ip'];
 				print "
-					<body onload=window.document.REPLIER.message.focus()>
+					<body onload=window.document.replier.message.focus()>
 					$tccellh>Post preview
 					$tblend$tblstart
 					".threadpost($ppost,1)."

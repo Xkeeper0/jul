@@ -46,7 +46,7 @@
 	print "$header$fonttag<a href={$GLOBALS['jul_base_dir']}/index.php>{$GLOBALS['jul_settings']['board_name']}</a> - <a href={$GLOBALS['jul_views_path']}/private.php>Private messages</a>$tblstart";
 
 	if (!$action) {
-		print "<body onload=window.document.REPLIER.message.focus()><FORM ACTION={$GLOBALS['jul_views_path']}/sendprivate.php NAME=REPLIER METHOD=POST>";
+		print "<body onload=window.document.replier.message.focus()><FORM ACTION={$GLOBALS['jul_views_path']}/sendprivate.php NAME=REPLIER METHOD=POST>";
 
 		if ($log && $id) {
 			$user = loaduser($msg['userfrom'],1);
@@ -134,7 +134,7 @@
 				$ppost['text']=$message;
 				if($isadmin) $ip=$userip;
 				print "
-					<body onload=window.document.REPLIER.message.focus()>
+					<body onload=window.document.replier.message.focus()>
 					$tccellh>Message preview
 					$tblend$tblstart
 					$pollpreview

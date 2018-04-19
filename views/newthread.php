@@ -142,7 +142,7 @@
 			}
 
 			print "
-				<body onload=window.document.REPLIER.subject.focus()>
+				<body onload=window.document.replier.subject.focus()>
 				$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
 				$tccell1><b>{$passhint}</td> $tccell2l colspan=2>
 					{$altloginjs}
@@ -309,7 +309,7 @@
 				if($isadmin) $ip=$userip;
 				$threadtype=($poll?'poll':'thread');
 				print "
-					<body onload=window.document.REPLIER.message.focus()>
+					<body onload=window.document.replier.message.focus()>
 					$tccellh>".($poll?'Poll':'Thread')." preview
 					$tblend$tblstart
 					$pollpreview

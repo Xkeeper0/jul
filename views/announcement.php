@@ -115,7 +115,7 @@
 	    $ppost[text]="<center><b>". stripslashes($subject) ."</b></center><hr>". stripslashes($message);
 	    if($isadmin) $ip=$userip;
 	    $annclist="
-		  <body onload=window.document.REPLIER.message.focus()>
+		  <body onload=window.document.replier.message.focus()>
 		  $tccellh>Announcement preview
 		  $tblend$tblstart
 		  ".threadpost($ppost,1)."
@@ -175,7 +175,7 @@
 
 	  if($isadmin) $ip=$annc['ip'];
 	  $annclist="
-		<body onload=window.document.REPLIER.message.focus()>
+		<body onload=window.document.replier.message.focus()>
 		$tccellh>Announcement preview
 		$tblend$tblstart
 		".threadpost($ppost,1)."

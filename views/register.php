@@ -18,7 +18,7 @@
   if (!$_POST[action]){
     $descbr="</b>$smallfont<br></center>&nbsp";
     print "
-	<body onload=window.document.REPLIER.username.focus()>
+	<body onload=window.document.replier.username.focus()>
 	<form ACTION={$GLOBALS['jul_views_path']}/register.php NAME=REPLIER METHOD=POST>
 	<br>$tblstart
 
