@@ -335,7 +335,7 @@
 	";
 
 	if ($log && $id && $forum['id']) {
-		$headlinks	.= " - <a href='.$GLOBALS['jul_base_dir'].'/index.php?action=markforumread&forumid=$forum[id]>Mark forum read</a>";
+		$headlinks	.= " - <a href=".$GLOBALS['jul_base_dir']."/index.php?action=markforumread&forumid=$forum[id]>Mark forum read</a>";
 		$header = makeheader($header1, $headlinks, $header2 . (($fonline) ? "$tblstart$tccell1s>$fonline$tblend" : ""));
 	}
 
