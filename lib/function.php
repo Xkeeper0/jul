@@ -1189,7 +1189,6 @@ function include_js($fn, $as_tag = false) {
 function dofilters($p){
 	global $hacks;
 	$img_base = base_dir().'/';
-	die('a');
 	$temp = $p;
 
 	$p=preg_replace("'position\s*:\s*fixed'si", "display:none", $p);
