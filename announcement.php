@@ -2,6 +2,8 @@
   require 'lib/function.php';
   require 'lib/layout.php';
   if(!$f) $f=0;
+  if ($f && !$sql->resultq("SELECT COUNT(*) FROM forums WHERE id = {$f} AND minpower <= {$loguser['powerlevel']}"))
+	  errorpage("This forum does not exist.", 'the index page', 'index.php');  
   if(@$sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum=$f and user=$loguserid"))) $ismod=1;
   $canpost=($isadmin or ($ismod && $f>0));
   if($_GET[action]=='edit' or $_POST[action]=='editannc'){
