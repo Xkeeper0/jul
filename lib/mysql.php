@@ -131,7 +131,7 @@
 					self::$rowst += $result->rowCount();
 			}
 			catch (PDOException $e){
-				trigger_error("MySQL (execute) error: ".$sql->error(), E_USER_ERROR);
+				trigger_error("MySQL (execute) error: ".$this->error(), E_USER_ERROR);
 			}
 			
 			$t = microtime(true) - $start;
