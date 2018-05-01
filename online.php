@@ -25,8 +25,8 @@
 	$banorama	= ($_SERVER['REMOTE_ADDR'] == $x_hacks['adminip'] || $loguser['id'] == 1 || $loguser['id'] == 5 || $loguser['id'] == 2100);
 
 	if ($banorama && filter_string($_GET['banip']) && filter_string($_GET['valid']) == md5($_GET['banip'] . "aglkdgslhkadgshlkgds")) {
-		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_GET['banip'] ."', `reason`='online.php ban', `date` = '". ctime() ."', `banner` = '$loguserid'") or print mysql_error();
-//		if ($_GET['uid']) mysql_query("UPDATE `users` SET `powerlevel` = -1, `title` = 'Banned; account hijacked. Contact admin via PM to change it.' WHERE `id` = '". $_GET['uid'] ."'") or print mysql_error();
+		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_GET['banip'] ."', `reason`='online.php ban', `date` = '". ctime() ."', `banner` = '$loguserid'") or print $sql->error();
+//		if ($_GET['uid']) $sql->query("UPDATE `users` SET `powerlevel` = -1, `title` = 'Banned; account hijacked. Contact admin via PM to change it.' WHERE `id` = '". $_GET['uid'] ."'") or print $sql->error();
 		xk_ircsend("1|". xk(8) . $loguser['name'] . xk(7) ." added IP ban for ". xk(8) . $_GET['banip'] . xk(7) .".");
 		return header("Location: online.php?m=1");
 	}

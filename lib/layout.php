@@ -291,7 +291,7 @@
 			$namelink = getuserlink($pmsg, array('id'=>'uid'));
 			$lastmsg  = "Last unread message from $namelink on ".date($dateformat,$pmsg['date']+$tzoff);
 
-      $numnew = mysql_num_rows($newmsgquery);
+      $numnew = $sql->num_rows($newmsgquery);
 			if ($numnew > 1) $ssss = "s";
 
 			$privatebox = "<tr><td colspan=3 class='tbl tdbg2 center fonts'>$newpic <a href=private.php>You have $numnew new private message$ssss</a> -- $lastmsg</td></tr>";
@@ -400,7 +400,7 @@
 
 	if($log) {
 		/*
-			$ulastip=mysql_result(mysql_query("SELECT lastip FROM users WHERE id=$loguserid"),0,0);
+			$ulastip=$sql->result($sql->query("SELECT lastip FROM users WHERE id=$loguserid"),0,0);
 			$aol1=(substr($userip,0,7)=='152.163' or substr($userip,0,7)=='205.188' or substr($userip,0,6)=='64.12.' or substr($userip,0,6)=='195.93' or substr($userip,0,6)=='198.81');
 			$aol2=(substr($ulastip,0,7)=='152.163' or substr($ulastip,0,7)=='205.188' or substr($ulastip,0,6)=='64.12.' or substr($ulastip,0,6)=='195.93' or substr($ulastip,0,6)=='198.81');
 			if($userip!=$ulastip && !($aol1 && $aol2)){

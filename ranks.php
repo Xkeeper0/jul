@@ -45,7 +45,7 @@
 	$btime=ctime()-86400*30;
 
 	$ranks = $sql->query("SELECT * FROM ranks WHERE rset=$set ORDER BY num");
-	$totalranks = mysql_num_rows($ranks);
+	$totalranks = $sql->num_rows($ranks);
 
 	if ($totalranks > 0) {
 		$rank  = $sql->fetch($ranks);
@@ -53,7 +53,7 @@
 		// 300 queries [11sec] ---> 20 queries [1sec]
 		$users = $sql->query("SELECT id,name,sex,powerlevel,aka,birthday,posts,lastactivity,lastposttime FROM users WHERE posts >= $rank[num] $useranks ORDER BY posts ASC");
 		$user  = $sql->fetch($users);
-		$total = mysql_num_rows($users);
+		$total = $sql->num_rows($users);
 	}
 	
 	for($i=0; $i<$totalranks; ++$i) {

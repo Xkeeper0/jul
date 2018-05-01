@@ -58,10 +58,10 @@
 		";
 
 	$q	= "SELECT `posts`.`thread`, (COUNT(`posts`.`id`)) AS 'real', ((CAST(COUNT(`posts`.`id`) AS SIGNED) - 1) - CAST(`threads`.`replies` AS SIGNED)) AS 'offset', `threads`.`replies`, `threads`.`title` AS `threadname`  FROM `posts` LEFT JOIN `threads` ON `posts`.`thread` = `threads`.`id` GROUP BY `thread` HAVING `offset` <> 0 OR `offset` IS NULL ORDER BY ISNULL(`threadname`) ASC, `thread` DESC";
-	$sql	= mysql_query($q) or die(mysql_error());
+	$sql	= $sql->query($q) or die($sql->error());
 
 	$count	= "";
-	while ($data = mysql_fetch_array($sql, MYSQL_ASSOC)) {
+	while ($data = $sql->fetch($sql, PDO::FETCH_ASSOC)) {
 
 		$status	= "";
 
@@ -70,7 +70,7 @@
 			if ($data['replies'] === null) {
 				$status			= "<font color=\"#ff8080\">Invalid thread</font>";
 			} else {
-				$status	= mysql_query("UPDATE `threads` SET `replies` = '". ($data['real'] - 1) ."' WHERE `id` = '". $data['thread'] ."'") or "<font color=#ff0000>Error</font>: ". mysql_error();
+				$status	= $sql->query("UPDATE `threads` SET `replies` = '". ($data['real'] - 1) ."' WHERE `id` = '". $data['thread'] ."'") or "<font color=#ff0000>Error</font>: ". $sql->error();
 				if ($status == 1) $status	= "<font color=#80ff80>Updated</font>";
 				$count++;
 			}

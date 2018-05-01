@@ -20,7 +20,7 @@ if ($action) {
 			$removemodforum = $removemod[0];
 
 			$sql->query("DELETE FROM forummods WHERE user='$removemoduser' AND forum='$removemodforum'");
-			if(($err=mysql_error()) != "")
+			if(($err=$sql->error()) != "")
 				print "$tblstart$tccell1> ERROR: $err.";
 			else {
 				$sql->query("INSERT INTO actionlog (atime, adesc, aip) VALUES (".ctime().", \"User ".$loguserid." removed mod $removemoduser from forum $removemodforum\", \"$userip\")");
@@ -29,7 +29,7 @@ if ($action) {
 		break;
 		case "add":
 			$sql->query("INSERT INTO forummods VALUES('$addmodforum', '$addmoduser')");
-			if(($err=mysql_error()) != "")
+			if(($err=$sql->error()) != "")
 				print "$tblstart$tccell1> ERROR: $err.";
 			else {
  				$sql->query("INSERT INTO actionlog (atime, adesc, aip) VALUES (".ctime().", \"User ".$loguserid." added mod $addmoduser to forum $addmodforum\", \"$userip\")");

@@ -37,13 +37,20 @@
 		."FROM posts p "
 		."LEFT JOIN threads t ON (thread=t.id) "
 		."LEFT JOIN forums f ON (t.forum=f.id) "
-		."WHERE p.user={$id}{$forumquery}{$timequery} ORDER BY p.id DESC");
-
-	$posttotal=mysql_num_rows($posts);
+		."WHERE p.user={$id}{$forumquery}{$timequery} "
+		."ORDER BY p.id DESC "
+		."LIMIT {$min},{$ppp}");
+	
+	$posttotal = $sql->resultq("SELECT COUNT(*) "
+		."FROM posts p "
+		."LEFT JOIN threads t ON p.thread = t.id "
+		."LEFT JOIN forums f ON t.forum = f.id "
+		."WHERE p.user = {$_GET['id']}{$forumquery}{$timequery}");
+	//$posttotal=$sql->num_rows($posts);
 
 	// Seek to page
-	if (!@mysql_data_seek($posts, $min)) $page = 0;
-
+	//if (!@mysql_data_seek($posts, $min)) $page = 0;
+	
 	$pagelinks=$smallfont.'Pages:';
 	for($i=0;$i<($posttotal/$ppp);$i++) {
 		if($i==$page) $pagelinks.=' '.($i+1);

@@ -2,10 +2,10 @@
   require 'lib/function.php';
   require 'lib/layout.php';
   if(!$f) $f=0;
-  if(@mysql_num_rows(mysql_query("SELECT user FROM forummods WHERE forum=$f and user=$loguserid"))) $ismod=1;
+  if(@$sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum=$f and user=$loguserid"))) $ismod=1;
   $canpost=($isadmin or ($ismod && $f>0));
   if($_GET[action]=='edit' or $_POST[action]=='editannc'){
-    $annc=mysql_fetch_array(mysql_query("SELECT * FROM announcements WHERE id=$id"));
+    $annc=$sql->fetch($sql->query("SELECT * FROM announcements WHERE id=$id"));
     if($annc[forum]>0 && $ismod) $canpost=true;
   }
   $smilies=readsmilies();
@@ -14,17 +14,17 @@
     $ppp=($log?$loguser[postsperpage]:20);
     $min=$ppp*$page;
 	if ($loguser['id'] && $f == 0) {
-		mysql_query("UPDATE `users` SET `lastannouncement` = (SELECT MAX(`id`) FROM `announcements` WHERE `forum` = 0) WHERE `id` = '". $loguser['id'] ."'");
+		$sql->query("UPDATE `users` SET `lastannouncement` = (SELECT MAX(`id`) FROM `announcements` WHERE `forum` = 0) WHERE `id` = '". $loguser['id'] ."'");
 	}
-	$anncs=mysql_query("SELECT a.*,u.*,a.title atitle,u.id uid FROM announcements a,users u WHERE forum=$f AND a.user=u.id ORDER BY a.id DESC LIMIT $min,$ppp");
-    $annctotal=@mysql_result(mysql_query("SELECT count(*) FROM announcements WHERE forum=$f"),0,0);
+	$anncs=$sql->query("SELECT a.*,u.*,a.title atitle,u.id uid FROM announcements a,users u WHERE forum=$f AND a.user=u.id ORDER BY a.id DESC LIMIT $min,$ppp");
+    $annctotal=@$sql->result($sql->query("SELECT count(*) FROM announcements WHERE forum=$f"),0,0);
     $pagelinks=$smallfont.'Pages:';
     for($i=0;$i<($annctotal/$ppp);$i++){
 	if($i==$page) $pagelinks.=' '.($i+1);
 	else $pagelinks.=" <a href=announcement.php?f=$f&page=$i>".($i+1).'</a>';
     }
     $annclist="$tccellh width=150>User</td>$tccellh colspan=2>Announcement<tr>";
-    while($annc=mysql_fetch_array($anncs)){
+    while($annc=$sql->fetch($anncs)){
 	if($annccount) $annclist.='<tr>';
 	$annccount++;
 	$bg=$bg%2+1;
@@ -43,7 +43,7 @@
   }
   if($canpost){
     if($_GET[action]=='delete'){
-	mysql_query("DELETE FROM announcements WHERE id=$id");
+	$sql->query("DELETE FROM announcements WHERE id=$id");
 	$annclist.="
 	  $tccell1>Announcement deleted.
 	  <br>".redirect("announcement.php?f=$f",'return to the announcements',0);
@@ -61,9 +61,9 @@
     }
     if($_GET[action]=='edit'){
 	if(!$annc[headid]) $head=$annc[headtext];
-	else $head=mysql_result(mysql_query("SELECT text FROM postlayouts WHERE id=$annc[headid]"),0,0);
+	else $head=$sql->result($sql->query("SELECT text FROM postlayouts WHERE id=$annc[headid]"),0,0);
 	if(!$annc[signid]) $sign=$annc[signtext];
-	else $sign=mysql_result(mysql_query("SELECT text FROM postlayouts WHERE id=$annc[signid]"),0,0);
+	else $sign=$sql->result($sql->query("SELECT text FROM postlayouts WHERE id=$annc[signid]"),0,0);
 	sbr(1,$annc[text]);
 	sbr(1,$head);
 	sbr(1,$sign);
@@ -101,7 +101,7 @@
 	    if(!$f) $f=0;
 	    $headid=getpostlayoutid($head);
 	    $signid=getpostlayoutid($sign);
-	    mysql_query("INSERT INTO `announcements` (`user`, `date`, `ip`, `title`, `forum`, `text`, `headid`, `signid`, `tagval`) VALUES ('$userid', '$currenttime', '$userip', '$subject', '$f', '$message', '$headid', '$signid', '$tagval')");
+	    $sql->query("INSERT INTO `announcements` (`user`, `date`, `ip`, `title`, `forum`, `text`, `headid`, `signid`, `tagval`) VALUES ('$userid', '$currenttime', '$userip', '$subject', '$f', '$message', '$headid', '$signid', '$tagval')");
 	    $annclist="
 		$tccell1>Thank you, $user[name], for posting your announcement.<br>
 	     ".redirect("announcement.php?f=$f","the announcements",0)."</table></table>";
@@ -147,18 +147,18 @@
 	$edited ="<a href=profile.php?id=$loguser[id]><font $namecolor>$loguser[name]</font></a>";
 
 	if($submit){
-	  $headid=@mysql_result(mysql_query("SELECT id FROM postlayouts WHERE text='$head' LIMIT 1"),0,'id');
-	  $signid=@mysql_result(mysql_query("SELECT id FROM postlayouts WHERE text='$sign' LIMIT 1"),0,'id');
+	  $headid=@$sql->result($sql->query("SELECT id FROM postlayouts WHERE text='$head' LIMIT 1"),0,'id');
+	  $signid=@$sql->result($sql->query("SELECT id FROM postlayouts WHERE text='$sign' LIMIT 1"),0,'id');
 	  if($headid) $head=''; else $headid=0;
 	  if($signid) $sign=''; else $signid=0;
-	  mysql_query("UPDATE announcements SET title='$subject', text='$message', headtext='$head', signtext='$sign', edited='$edited', editdate='".ctime()."',headid=$headid,signid=$signid WHERE id=$id");
+	  $sql->query("UPDATE announcements SET title='$subject', text='$message', headtext='$head', signtext='$sign', edited='$edited', editdate='".ctime()."',headid=$headid,signid=$signid WHERE id=$id");
 	  $annclist="
 	    $tccell1>Thank you, ".$loguser[name].", for editing the announcement.<br>
 	    ".redirect("announcement.php?f=$f","go to the announcements",0);
 	}else{
 	  loadtlayout();
-	  $annc=mysql_fetch_array(mysql_query("SELECT * FROM announcements WHERE id=$id"));
-	  $ppost=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE id=$annc[user]"));
+	  $annc=$sql->fetch($sql->query("SELECT * FROM announcements WHERE id=$id"));
+	  $ppost=$sql->fetch($sql->query("SELECT * FROM users WHERE id=$annc[user]"));
 	$subject = stripslashes($subject);
 	$message = stripslashes($message);
 	$head = stripslashes($head);

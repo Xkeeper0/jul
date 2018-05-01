@@ -34,7 +34,7 @@
 		$ratetotal+=$users[$rating['userfrom']]['level'];
 	}
 	$ratetotal*=10;
-	$numvotes=mysql_num_rows($ratings);
+	$numvotes=$sql->num_rows($ratings);
 	if($ratetotal) {
 		$ratingstatus=(floor($ratescore*1000/$ratetotal)/100)." ($ratescore/$ratetotal, $numvotes votes)";
 	} else {

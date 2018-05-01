@@ -51,11 +51,11 @@
 
 		if ($_GET['id'] <= -1) {
 			$sql -> query("INSERT INTO `items` SET $q, `user` = '". $loguser['id'] ."'");
-			if (mysql_error()) die(mysql_error());
-			$id	= mysql_insert_id();
+			if ($sql->error()) die($sql->error());
+			$id	= $sql->insert_id();
 		} else {
 			$sql -> query("UPDATE `items` SET $q WHERE `id` = '". $_GET['id'] ."'");
-			if (mysql_error()) die(mysql_error());
+			if ($sql->error()) die($sql->error());
 			$id	= $_GET['id'];
 		}
 

@@ -207,7 +207,7 @@
 			if($custposticon) $posticon = $custposticon;
 
 			if($submit) {
-				mysql_query("UPDATE `users` SET `posts` = $numposts, `lastposttime` = '$currenttime' WHERE `id` = '$userid'");
+				$sql->query("UPDATE `users` SET `posts` = $numposts, `lastposttime` = '$currenttime' WHERE `id` = '$userid'");
 				if (filter_bool($nolayout)) {
 					$headid = 0;
 					$signid = 0;
@@ -216,14 +216,14 @@
 					$signid=getpostlayoutid($sign);
 				}
 
-				mysql_query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
+				$sql->query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
 							"VALUES ('$id', '$userid', '0', '0', '$subject', '$posticon', '0', '$currenttime', '$currenttime', '$userid')");
-				$t = mysql_insert_id();
-				mysql_query("INSERT INTO `posts` (`thread`, `user`, `date`, `ip`, `num`, `headid`, `signid`, `moodid`) VALUES ('$t', '$userid', '$currenttime', '$userip', '$postnum', '$headid', '$signid','". $_POST['moodid'] ."')");
-				$pid=mysql_insert_id();
+				$t = $sql->insert_id();
+				$sql->query("INSERT INTO `posts` (`thread`, `user`, `date`, `ip`, `num`, `headid`, `signid`, `moodid`) VALUES ('$t', '$userid', '$currenttime', '$userip', '$postnum', '$headid', '$signid','". $_POST['moodid'] ."')");
+				$pid=$sql->insert_id();
 				$options = intval($nosmilies) . "|" . intval($nohtml);
-				if($pid) mysql_query("INSERT INTO `posts_text` (`pid`, `text`, `tagval`, `options`) VALUES ('$pid', '$msg', '$tagval', '$options')");
-				mysql_query("UPDATE `forums` SET `numthreads` = `numthreads` + 1, `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` = '$userid', `lastpostid` = '$pid' WHERE id=$id");
+				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`, `text`, `tagval`, `options`) VALUES ('$pid', '$msg', $tagval, '$options')");
+				$sql->query("UPDATE `forums` SET `numthreads` = `numthreads` + 1, `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` = '$userid', `lastpostid` = '$pid' WHERE id=$id");
 
 				if(!$poll) {
 					print "
@@ -239,12 +239,12 @@
 					));
 				}
 				else {
-					mysql_query("INSERT INTO `poll` (`question`, `briefing`, `closed`, `doublevote`) VALUES ('$question', '$briefing', '0', '$mltvote')");
-					$p=mysql_insert_id();
-					mysql_query("UPDATE `threads` SET `poll` = '$p' where `id` = '$t'");
+					$sql->query("INSERT INTO `poll` (`question`, `briefing`, `closed`, `doublevote`) VALUES ('$question', '$briefing', '0', '$mltvote')");
+					$p=$sql->insert_id();
+					$sql->query("UPDATE `threads` SET `poll` = '$p' where `id` = '$t'");
 					$c=1;
 					while($chtext[$c]){
-						mysql_query("INSERT INTO `poll_choices` (`poll`, `choice`, `color`) VALUES ('$p', '$chtext[$c]', '$chcolor[$c]')");
+						$sql->query("INSERT INTO `poll_choices` (`poll`, `choice`, `color`) VALUES ('$p', '$chtext[$c]', '$chcolor[$c]')");
 						$c++;
 					}
 					print "

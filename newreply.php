@@ -36,7 +36,7 @@
 	$fonline=fonlineusers($forumid);
 	$header=makeheader($header1,$headlinks,$header2 ."	$tblstart$tccell1s>$fonline$tblend");
 
-	if(mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'"))) $ismod=1;
+	if($sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'"))) $ismod=1;
 
 	$modoptions	= "";
 
@@ -207,11 +207,11 @@
 				}
 
 				$sql->query("INSERT INTO posts (thread,user,date,ip,num,headid,signid,moodid) VALUES ($id,$userid,$currenttime,'$userip',$numposts,$headid,$signid,'". $_POST['moodid'] ."')");
-				$pid=mysql_insert_id();
+				$pid=$sql->insert_id();
 
 				$options = filter_int($nosmilies) . "|" . filter_int($nohtml);
 
-				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','$message','$tagval', '$options')");
+				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','$message',$tagval, '$options')");
 
 				$sql->query("UPDATE `threads` SET $closeq $stickq `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
 				$sql->query("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` ='$userid', `lastpostid` = '$pid' WHERE `id`='$forumid'");

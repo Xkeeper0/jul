@@ -46,13 +46,13 @@
 		$sort = 'posts';
 
 	$query='SELECT id,posts,regdate,name,minipic,sex,powerlevel,aka,r.* FROM users LEFT JOIN users_rpg r ON id=uid ';
-	if($sort=='name')  $users1=$sql->query("$query$where ORDER BY name", MYSQL_ASSOC);
-	if($sort=='reg')   $users1=$sql->query("$query$where ORDER BY regdate DESC", MYSQL_ASSOC);
-	if($sort=='exp')   $users1=$sql->query("$query$where", MYSQL_ASSOC);
-	if($sort=='age')   $users1=$sql->query("$query$where AND birthday ORDER BY birthday", MYSQL_ASSOC);
-	if($sort=='posts') $users1=$sql->query("$query$where ORDER BY posts DESC", MYSQL_ASSOC);
+	if($sort=='name')  $users1=$sql->query("$query$where ORDER BY name", PDO::FETCH_ASSOC);
+	if($sort=='reg')   $users1=$sql->query("$query$where ORDER BY regdate DESC", PDO::FETCH_ASSOC);
+	if($sort=='exp')   $users1=$sql->query("$query$where", PDO::FETCH_ASSOC);
+	if($sort=='age')   $users1=$sql->query("$query$where AND birthday ORDER BY birthday", PDO::FETCH_ASSOC);
+	if($sort=='posts') $users1=$sql->query("$query$where ORDER BY posts DESC", PDO::FETCH_ASSOC);
 
-	$numusers=mysql_num_rows($users1);
+	$numusers=$sql->num_rows($users1);
 
 	for($i=0;$user = $sql->fetch($users1);$i++){
 		$user['days'] = (ctime()-$user['regdate'])/86400;

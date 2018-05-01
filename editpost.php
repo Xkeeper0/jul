@@ -36,7 +36,7 @@
 	require_once 'lib/layout.php';
 	print $header;
 
-	if (@mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forum[id] and user=$loguserid")))
+	if (@$sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forum[id] and user=$loguserid")))
 		$ismod = 1;
 
 	print "$fonttag<a href=index.php>$boardname</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href=forum.php?id=$forum[id]>".$forum['title']."</a> - <a href='thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
@@ -101,7 +101,7 @@
 					xk_ircsend("1|The jceggbert5 dipshit tried to edit another post: ". $id);
 				}
 				elseif (($message == "COCKS" || $head == "COCKS" || $sign == "COCKS") || ($message == $head && $head == $sign)) {
-					mysql_query("INSERT INTO `ipbans` SET `reason` = 'Idiot hack attempt', `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."'");
+					$sql->query("INSERT INTO `ipbans` SET `reason` = 'Idiot hack attempt', `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."'");
 					die("NO BONUS");
 				}
 				else {
@@ -177,7 +177,7 @@
 	elseif ($action=='noob') {
 		die();
 		/*if ($loguser['powerlevel'] >= 1) {
-			mysql_query("UPDATE `posts` SET `noob` = '1' - `noob` WHERE `id` = '$id'");
+			$sql->query("UPDATE `posts` SET `noob` = '1' - `noob` WHERE `id` = '$id'");
 			print "
 				$tblstart$tccell1>Post n00bed!<br>
 				".redirect("thread.php?pid=$id&r=1#$id",'the post',0).'</table></table>';

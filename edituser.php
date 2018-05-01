@@ -232,7 +232,7 @@
 		`editing_locked` = '$editing_locked',
 		`pronouns` = '$pronouns',
 		`titleoption` = '$titleoption'
-	WHERE `id` = '$userid'") or print mysql_error();
+	WHERE `id` = '$userid'") or print $sql->error();
 
 	print "
 	$tblstart

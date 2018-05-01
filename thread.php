@@ -187,7 +187,7 @@
 	$fonline = "";
 	if ($id && !$thread_error) {
 		$fonline = fonlineusers($forumid);
-		if (mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'")))
+		if ($sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'")))
 			$ismod = true;
 	}
 	$modfeats = '';
@@ -232,7 +232,7 @@
 		$uservote = array();
 		if ($log) {
 			$lsql = $sql->query("SELECT `choice` FROM `pollvotes` WHERE `poll` = '$poll[id]' AND `user` = '$loguserid'");
-			while ($userchoice = $sql->fetch($lsql, MYSQL_ASSOC))
+			while ($userchoice = $sql->fetch($lsql, PDO::FETCH_ASSOC))
 				$uservote[$userchoice['choice']] = true;
 		}
 
@@ -360,13 +360,14 @@
 
 	if ($user) $searchon = "user={$user}";
 	else       $searchon = "thread={$id}";
-
+	
+	$postlayouts = $sql->query("SELECT headid, signid FROM posts WHERE {$searchon} ORDER BY id LIMIT $min,$ppp");
+	preplayouts($postlayouts);
+	
 	$posts = $sql->query(
 		"SELECT p.*,text$sfields,edited,editdate,options,tagval,u.id uid,name,$ufields,regdate ".
 		"FROM posts_text, posts p LEFT JOIN users u ON p.user=u.id ".
 		"WHERE {$searchon} AND p.id=pid ORDER BY p.id LIMIT $min,$ppp");
-
-	preplayouts($posts);
 
 	for ($i = 0; $post = $sql->fetch($posts); $i++) {
 		$postlist	.= '<tr>';
@@ -392,8 +393,8 @@
 		$pthread	= null;
 		if (!$id) {
 			// Enable caching for these
-			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id=$post[thread]", MYSQL_BOTH, true);
-			$pforum  = $sql->fetchq("SELECT minpower FROM forums WHERE id=".intval($pthread[forum]), MYSQL_BOTH, true);
+			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id=$post[thread]", PDO::FETCH_BOTH, true);
+			$pforum  = $sql->fetchq("SELECT minpower FROM forums WHERE id=".intval($pthread[forum]), PDO::FETCH_BOTH, true);
 		}
 
 		$post['act'] = filter_int($act[$post['user']]);

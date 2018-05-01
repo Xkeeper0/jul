@@ -99,9 +99,9 @@
 		}
 	} else {
 		// Ranked yesterday:
-//		$usersy=mysql_query("SELECT users.id,users.name,users.sex,users.powerlevel,COUNT(posts.id) AS cnt FROM users,posts WHERE posts.user=users.id AND posts.date>".($dd-86400)." AND posts.date<$dd GROUP BY users.id ORDER BY cnt DESC");
+//		$usersy=$sql->query("SELECT users.id,users.name,users.sex,users.powerlevel,COUNT(posts.id) AS cnt FROM users,posts WHERE posts.user=users.id AND posts.date>".($dd-86400)." AND posts.date<$dd GROUP BY users.id ORDER BY cnt DESC");
 //		$i=0;
-//		while($user=mysql_fetch_array($usersy) and $r <= $rcount ) {
+//		while($user=$sql->fetch($usersy) and $r <= $rcount ) {
 //			$i++;
 //			if($rp!=$user['cnt']) $r=$i;
 //			$rp=$user['cnt'];
@@ -152,11 +152,11 @@
 
 		// More ranked yesterday stuff
 //		$lose=$user[cnt];
-//		@mysql_data_seek($usersy,0);
+//		$usersy=$sql->query("SELECT users.id,users.name,users.sex,users.powerlevel,COUNT(posts.id) AS cnt FROM users,posts WHERE posts.user=users.id AND posts.date>".($dd-86400)." AND posts.date<$dd GROUP BY users.id ORDER BY cnt DESC");
 //		$i=0;
 //		$rp=0;
 //		$r=0;
-//		while($user=mysql_fetch_array($usersy) and $r<=$rcount){
+//		while($user=$sql->fetch($usersy) and $r<=$rcount){
 //			$i++;
 //			if($rp!=$user[cnt]) $r=$i;
 //			$rp=$user[cnt];

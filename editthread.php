@@ -8,7 +8,7 @@
 	$forumid = $thread['forum'];
 	$posticons = file('posticons.dat');
 
-	if (@mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum={$forumid} and user={$loguserid}")))
+	if (@$sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum={$forumid} and user={$loguserid}")))
 		$ismod = 1;
 
 	if (!$forumid)

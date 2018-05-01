@@ -96,7 +96,7 @@ function getdata($users) {
 	$tmp = array();
 	$y = array();
 
-	while ($r = $sql->fetch($q, MYSQL_ASSOC))
+	while ($r = $sql->fetch($q, PDO::FETCH_ASSOC))
 		$tmp[$r['user']][$r['day']] = $r;
 
 	for($i=0; $i < $days; ++$i) {

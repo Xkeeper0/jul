@@ -26,7 +26,7 @@
 
 
 
-	$sql->connect($sqlhost, $sqluser, $sqlpass) or
+	$sql->connect($sqlhost, $sqluser, $sqlpass, $dbname) or
 		die("<title>Damn</title>
 			<body style=\"background: #000 url('images/bombbg.png'); color: #f00;\">
 				<font style=\"font-family: Verdana, sans-serif;\">
@@ -34,11 +34,11 @@
 				<img src=\"http://xkeeper.shacknet.nu:5/docs/temp/mysqlbucket.png\" title=\"bought the farm, too\">
 				<br><br><font style=\"color: #f88; size: 175%;\"><b>The MySQL server has exploded.</b></font>
 				<br>
-				<br><font style=\"color: #f55;\">Error: ". mysql_error() ."</font>
+				<br><font style=\"color: #f55;\">Error: ". $sql->error() ."</font>
 				<br>
 				<br><small>This is not a hack attempt; it is a server problem.</small>
 			");
-	$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
+	//$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". $sql->error() ."</small>");
 
 
 	if (file_exists("lib/firewall.php") && !filter_bool($disable_firewall)) {
@@ -258,13 +258,13 @@
 
 // Old birthday shit
 /*
-	mysql_query("UPDATE `users` SET `sex` = '2' WHERE `sex` = 255");
-	$busers = @mysql_query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() - (60 * 60 * 3))."' AND birthday") or print mysql_error();
+	$sql->query("UPDATE `users` SET `sex` = '2' WHERE `sex` = 255");
+	$busers = @$sql->query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() - (60 * 60 * 3))."' AND birthday") or print $sql->error();
 	$bquery = "";
-	while($buserid = mysql_fetch_array($busers, MYSQL_ASSOC))
+	while($buserid = $sql->fetch($busers, PDO::FETCH_ASSOC))
 		$bquery .= ($bquery ? " OR " : "") ."`id` = '". $buserid['id'] ."'";
 	if ($bquery)
-		mysql_query("UPDATE `users` SET `sex` = '255' WHERE $bquery");
+		$sql->query("UPDATE `users` SET `sex` = '255' WHERE $bquery");
 */
 
 
@@ -456,7 +456,7 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 	global $tagval, $sql;
 
 	// This should probably go off of user ID but welp
-	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", MYSQL_BOTH, true);
+	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", PDO::FETCH_BOTH, true);
 
 	$userdata		= array(
 		'id'		=> $user['id'],
@@ -575,7 +575,7 @@ function doforumlist($id){
 		$fjump[$cat['id']]	= "<optgroup label=\"". $cat['name'] ."\">";
 	}
 
-	$forum1= $sql->query("SELECT id,title,catid FROM forums WHERE (minpower<=$power OR minpower<=0) AND `hidden` = '0' AND `id` != '0' OR `id` = '$id' ORDER BY forder") or print mysql_error();
+	$forum1= $sql->query("SELECT id,title,catid FROM forums WHERE (minpower<=$power OR minpower<=0) AND `hidden` = '0' AND `id` != '0' OR `id` = '$id' ORDER BY forder") or print $sql->error();
 	while($forum=$sql->fetch($forum1)) {
 		$fjump[$forum['catid']]	.="<option value=forum.php?id=$forum[id]".($forum['id']==$id?' selected':'').">$forum[title]</option>";
 	}
@@ -646,7 +646,7 @@ function getrank($rankset,$title,$posts,$powl){
 function updategb() {
 	global $sql;
 	$hranks = $sql->query("SELECT posts FROM users WHERE posts>=1000 ORDER BY posts DESC");
-	$c      = mysql_num_rows($hranks);
+	$c      = $sql->num_rows($hranks);
 
 	for($i=1;($hrank=$sql->fetch($hranks)) && $i<=$c*0.7;$i++){
 		$n=$hrank[posts];
@@ -955,9 +955,9 @@ function postradar($userid){
 	global $sql, $loguser, $loguserid;
 	if (!$userid) return "";
 
-	//$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users u RIGHT JOIN postradar p ON u.id=p.comp WHERE p.user={$userid} ORDER BY posts DESC", MYSQL_ASSOC);
-	$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users,postradar WHERE postradar.user={$userid} AND users.id=postradar.comp ORDER BY posts DESC", MYSQL_ASSOC);
-	if (@mysql_num_rows($postradar)>0) {
+	//$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users u RIGHT JOIN postradar p ON u.id=p.comp WHERE p.user={$userid} ORDER BY posts DESC", PDO::FETCH_ASSOC);
+	$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users,postradar WHERE postradar.user={$userid} AND users.id=postradar.comp ORDER BY posts DESC", PDO::FETCH_ASSOC);
+	if (@$sql->num_rows($postradar)>0) {
 		$race = 'You are ';
 
 		function cu($a,$b) {
@@ -985,7 +985,7 @@ function postradar($userid){
 
 		for($i=0;$user2=$sql->fetch($postradar);$i++) {
 			if($i) $race.=', ';
-			if($i && $i == mysql_num_rows($postradar)-1) $race.='and ';
+			if($i && $i == $sql->num_rows($postradar)-1) $race.='and ';
 			$race .= cu($myposts, $user2);
 		}
 	}
@@ -1003,7 +1003,7 @@ function getpostlayoutid($text){
 	$id=@$sql->resultq("SELECT id FROM postlayouts WHERE text='".addslashes($text)."' LIMIT 1",0,0);
 	if(!$id){
 		$sql->query("INSERT INTO postlayouts (text) VALUES ('".addslashes($text)."')");
-		$id=mysql_insert_id();
+		$id=$sql->insert_id();
 	}
 	return $id;
 }
@@ -1029,10 +1029,7 @@ function sbr($t, &$src){
 		case 1: $src=str_replace('<br>',$br,$src); break;
 	}
 }
-function mysql_get($query){
-  global $sql;
-  return $sql->fetchq($query);
-}
+
 function sizelimitjs(){
 	// where the fuck is this used?!
 	return "";
@@ -1338,6 +1335,7 @@ function addslashes_array($data) {
 	}
 
 	function xk_ircsend($str) {
+		return true;
 		$str = str_replace(array("%10", "%13"), array("", ""), rawurlencode($str));
 
 		$str = html_entity_decode($str);

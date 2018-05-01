@@ -9,18 +9,18 @@
 	redirect('index.php','return to the main page',0).
 	$tblend;
   }else{
-    $user=mysql_fetch_array(mysql_query("SELECT posts,regdate,users_rpg.* FROM users,users_rpg WHERE id=$loguserid AND uid=id"));
+    $user=$sql->fetch($sql->query("SELECT posts,regdate,users_rpg.* FROM users,users_rpg WHERE id=$loguserid AND uid=id"));
     $p=$user[posts];
     $d=(ctime()-$user[regdate])/86400;
     $st=getstats($user);
     $GP=$st[GP];
     switch($action){
 	case '':
-	  $shops=mysql_query('SELECT * FROM itemcateg ORDER BY corder');
-	  $eq=mysql_fetch_array(mysql_query("SELECT * FROM users_rpg WHERE uid=$loguserid"));
-	  $eqitems=mysql_query("SELECT * FROM items WHERE id=$eq[eq1] OR id=$eq[eq2] OR id=$eq[eq3] OR id=$eq[eq4] OR id=$eq[eq5] OR id=$eq[eq6] OR id=$eq[eq7]");
-	  while($item=mysql_fetch_array($eqitems)) $items[$item[id]]=$item;
-	  while($shop=mysql_fetch_array($shops))
+	  $shops=$sql->query('SELECT * FROM itemcateg ORDER BY corder');
+	  $eq=$sql->fetch($sql->query("SELECT * FROM users_rpg WHERE uid=$loguserid"));
+	  $eqitems=$sql->query("SELECT * FROM items WHERE id=$eq[eq1] OR id=$eq[eq2] OR id=$eq[eq3] OR id=$eq[eq4] OR id=$eq[eq5] OR id=$eq[eq6] OR id=$eq[eq7]");
+	  while($item=$sql->fetch($eqitems)) $items[$item[id]]=$item;
+	  while($shop=$sql->fetch($shops))
 	    $shoplist.="
 		<tr>
 		$tccell1><a href=shoph.php?action=items&cat=$shop[id]#status>$shop[name]</a></td>
@@ -45,8 +45,8 @@
 	  ";
 	break;
 	case 'items':
-	  $eq=mysql_fetch_array(mysql_query("SELECT eq$cat AS e FROM users_rpg WHERE uid=$loguserid"));
-	  $eqitem=mysql_fetch_array(mysql_query("SELECT * FROM items WHERE id=$eq[e]"));
+	  $eq=$sql->fetch($sql->query("SELECT eq$cat AS e FROM users_rpg WHERE uid=$loguserid"));
+	  $eqitem=$sql->fetch($sql->query("SELECT * FROM items WHERE id=$eq[e]"));
         print "
 		<script>
 		  function preview(user,item,cat,name){
@@ -77,7 +77,7 @@
 	  ";
 	  $atrlist='';
 	  for($i=0;$i<9;$i++) $atrlist.="$tccellh width=50>$stat[$i]</td>";
-	  $items=mysql_query("SELECT * FROM items WHERE (cat=$cat OR cat=0) AND `hidden` = 1 ORDER BY type,coins");
+	  $items=$sql->query("SELECT * FROM items WHERE (cat=$cat OR cat=0) AND `hidden` = 1 ORDER BY type,coins");
 	  print "
 		$tblstart
 		$tccellh width=110 colspan=2>Commands</td>$tccellct width=1 rowspan=10000>&nbsp;</td>
@@ -86,7 +86,7 @@
 		$tccellh width=6%><img src=images/coin.gif></td>
 		$tccellh width=5%><img src=images/coin2.gif></td>
 	  ";
-	  while($item=mysql_fetch_array($items)){
+	  while($item=$sql->fetch($items)){
 	    $preview="<a href=#status onclick='preview($loguserid,$item[id],$cat,\"$item[name]\")'>Preview</a>";
 	    if($item[id]==$eq[e] && $item[id]){
 		$comm="width=80 colspan=2><a href=shoph.php?action=sell&cat=$cat>Sell</a>";
@@ -137,11 +137,11 @@
 	  print $tblend;
 	break;
 	case 'buy':
-	  $item=mysql_fetch_array(mysql_query("SELECT * FROM items WHERE id=$id"));
+	  $item=$sql->fetch($sql->query("SELECT * FROM items WHERE id=$id"));
 	  if($item[coins]<=$GP){
-	    $pitem=mysql_fetch_array(mysql_query("SELECT coins FROM items WHERE id=".$user['eq'.$item[cat]]));
+	    $pitem=$sql->fetch($sql->query("SELECT coins FROM items WHERE id=".$user['eq'.$item[cat]]));
 	    $whatever = $pitem[coins]*0.6-$item[coins];
-	    mysql_query("UPDATE users_rpg SET `eq". $item[cat] ."`='". $id ."',`spent`=spent-". $whatever ." WHERE uid=$loguserid") or print mysql_error();
+	    $sql->query("UPDATE users_rpg SET `eq". $item[cat] ."`='". $id ."',`spent`=spent-". $whatever ." WHERE uid=$loguserid") or print $sql->error();
 	    print "
 		$tblstart
 		  $tccell1>The $item[name] has been bought and equipped.<br>
@@ -151,8 +151,8 @@
 	  }
 	break;
 	case 'sell':
-	  $pitem=mysql_fetch_array(mysql_query("SELECT coins FROM items WHERE id=".$user['eq'.$cat]));
-	  mysql_query("UPDATE users_rpg SET eq$cat=0,spent=spent-$pitem[coins]*0.6 WHERE uid=$loguserid") or print mysql_error();
+	  $pitem=$sql->fetch($sql->query("SELECT coins FROM items WHERE id=".$user['eq'.$cat]));
+	  $sql->query("UPDATE users_rpg SET eq$cat=0,spent=spent-$pitem[coins]*0.6 WHERE uid=$loguserid") or print $sql->error();
 	  print "
 	    $tblstart
 		$tccell1>The $item[name] has been unequipped and sold.<br>

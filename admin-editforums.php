@@ -24,12 +24,12 @@ if ($_POST['edit'] || $_POST['edit2']) {
 
 	if ($_GET['id'] <= -1) {
 		$sql->query("INSERT INTO `forums` SET $values, `lastpostid` = '0'");
-		if (mysql_error()) die(mysql_error());
-		$id	= mysql_insert_id();
+		if ($sql->error()) die($sql->error());
+		$id	= $sql->insert_id();
 		trigger_error("Created new forum \"$forumtitle\" with ID $id", E_USER_NOTICE);
 	} else {
 		$sql->query("UPDATE `forums` SET $values WHERE `id` = '". $_GET['id'] ."'");
-		if (mysql_error()) die(mysql_error());
+		if ($sql->error()) die($sql->error());
 		$id	= $_GET['id'];
 		trigger_error("Edited forum ID $id", E_USER_NOTICE);
 	}
@@ -54,10 +54,10 @@ elseif ($_POST['delete']) {
 		die("No forum selected to merge to.");
 
 	$counts = $sql->fetchq("SELECT `numthreads`, `numposts` FROM `forums` WHERE `id`='$id'");
-	$sql->query("UPDATE `threads` SET `forum`='$mergeid' WHERE `forum`='$id'") or die(mysql_error());
-	$sql->query("UPDATE `announcements` SET `forum`='$mergeid' WHERE `forum`='$id'") or die(mysql_error());
-	$sql->query("DELETE FROM `forummods` WHERE `forum`='$id'") or die(mysql_error());
-	$sql->query("DELETE FROM `forums` WHERE `id`='$id'") or die(mysql_error());
+	$sql->query("UPDATE `threads` SET `forum`='$mergeid' WHERE `forum`='$id'") or die($sql->error());
+	$sql->query("UPDATE `announcements` SET `forum`='$mergeid' WHERE `forum`='$id'") or die($sql->error());
+	$sql->query("DELETE FROM `forummods` WHERE `forum`='$id'") or die($sql->error());
+	$sql->query("DELETE FROM `forums` WHERE `id`='$id'") or die($sql->error());
 
 	$lastthread = $sql->fetchq("SELECT * FROM `threads` WHERE `forum`='$mergeid' ORDER BY `lastpostdate` DESC LIMIT 1");
 	$sql->query("UPDATE `forums` SET
@@ -66,7 +66,7 @@ elseif ($_POST['delete']) {
 		`lastpostdate`='{$lastthread['lastpostdate']}',
 		`lastpostuser`='{$lastthread['lastposter']}',
 		`lastpostid`='{$lastthread['id']}'
-	WHERE `id`='$mergeid'") or die(mysql_error());
+	WHERE `id`='$mergeid'") or die($sql->error());
 
 	if (isset($_GET['preview']))
 		$prevtext = "preview=" . $_GET['preview'];
@@ -102,7 +102,7 @@ if (isset($_GET['delete'])) {
 
 	$forums[-1] = "Choose a forum to merge into...";
 	$forumquery = $sql->query("SELECT id,title FROM forums ORDER BY catid,forder");
-	while ($f = $sql->fetch($forumquery, MYSQL_ASSOC))
+	while ($f = $sql->fetch($forumquery, PDO::FETCH_ASSOC))
 		$forums[$f['id']] = $f['title'];
 
 	if (array_key_exists($forum, $forums)) {
@@ -131,7 +131,7 @@ else if (isset($_GET['id'])) {
 	while ($catres = $sql->fetch($catquery))
 		$categories[$catres['id']] = $catres['name'];
 
-	$forum = $sql->fetchq("SELECT * FROM `forums` WHERE `id` = '". $_GET['id'] . "'", MYSQL_ASSOC);
+	$forum = $sql->fetchq("SELECT * FROM `forums` WHERE `id` = '". $_GET['id'] . "'", PDO::FETCH_ASSOC);
 	if (!$forum)
 		$_GET['id'] = -1;
 

@@ -116,7 +116,7 @@
 				$signid = getpostlayoutid($sign);
 
 				$sql->query("INSERT INTO pmsgs (id,userto,userfrom,date,ip,msgread,headid,signid) VALUES (NULL,$userid,$loguserid,$currenttime,'$userip',0,$headid,$signid)");
-				$sql->query("INSERT INTO pmsgs_text (pid,title,text,tagval) VALUES (".mysql_insert_id().",'$subject','$message','$tagval')");
+				$sql->query("INSERT INTO pmsgs_text (pid,title,text,tagval) VALUES (".$sql->insert_id().",'$subject','$message','$tagval')");
 
 				print "$tccell1>Private message to $username sent successfully!
 					<br>".redirect('private.php','your private message box',0).$tblend;
@@ -158,8 +158,8 @@
 		}
   }
 /*if($action=='delete' and $msg[userto]==$loguserid){
-    mysql_query("DELETE FROM pmsgs WHERE id=$id");
-    mysql_query("DELETE FROM pmsgs_text WHERE pid=$id");
+    $sql->query("DELETE FROM pmsgs WHERE id=$id");
+    $sql->query("DELETE FROM pmsgs_text WHERE pid=$id");
     print "
       $tccell1>Thank you, $loguser[name], for deleting the message.
       <br>".redirect('private.php','return to the private message box',0).$tblend;

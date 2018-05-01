@@ -59,10 +59,10 @@
 
 
 	$q	= "SELECT `threads`.`id`, `threads`.`title` , `threads`.`lastpostdate` , `posts`.`date` as realdate FROM `threads` LEFT JOIN (SELECT MAX(`date`) as `date`, `thread` FROM `posts` GROUP BY `thread`) as `posts`  ON `posts`.`thread` = `threads`.`id` ORDER BY `threads`.`id` DESC";
-	$sql	= mysql_query($q) or die(mysql_error());
+	$sql	= $sql->query($q) or die($sql->error());
 
 	$count	= "";
-	while ($data = mysql_fetch_array($sql, MYSQL_ASSOC)) {
+	while ($data = $sql->fetch($sql, PDO::FETCH_ASSOC)) {
 
 		$status	= "";
 
@@ -72,8 +72,8 @@
 				$status	= "<font color=#ff8888>Broken thread</font>";
 			} else {
 
-				$userd	= mysql_fetch_array(mysql_query("SELECT `date`, `user` FROM `posts` WHERE `thread` = '". $data['id'] ."' ORDER BY `date` DESC LIMIT 1"), MYSQL_ASSOC);
-				$status	= mysql_query("UPDATE `threads` SET `lastposter` = '". $userd['user'] ."', `lastpostdate` = '". $userd['date'] ."' WHERE `id` = '". $data['id'] ."'") or "<font color=#ff0000>Error</font>: ". mysql_error();
+				$userd	= $sql->fetch($sql->query("SELECT `date`, `user` FROM `posts` WHERE `thread` = '". $data['id'] ."' ORDER BY `date` DESC LIMIT 1"), PDO::FETCH_ASSOC);
+				$status	= $sql->query("UPDATE `threads` SET `lastposter` = '". $userd['user'] ."', `lastpostdate` = '". $userd['date'] ."' WHERE `id` = '". $data['id'] ."'") or "<font color=#ff0000>Error</font>: ". $sql->error();
 				if ($status == 1) $status	= "<font color=#80ff80>Updated</font>";
 				$count++;
 			}

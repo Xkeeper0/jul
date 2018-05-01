@@ -1,10 +1,5 @@
 <?php
-
-	if (!function_exists("mysql_connect")) {
-		// probably php 7, load shim for it
-		require_once("lib/mysql_compat.php");
-	}
-
+	
 	class mysql {
 		// a 'backport' of my 'static' class in not-as-static form
 		// the statistics remain static so they're global just in case this gets used for >1 connection
@@ -19,16 +14,27 @@
 		static $debug_on   = false;
 		static $debug_list = array();
 
-		var $cache = array();
-		var $connection = NULL;
-		var $id = 0;
-
-		public function connect($host,$user,$pass,$persist=false) {
+		public $cache = array();
+		public $connection = NULL;
+		public $id = 0;
+		
+		public function connect($host,$user,$pass,$dbname,$persist=false) {
 			$start=microtime(true);
-			$this->connection = (($persist) ? mysql_pconnect($host,$user,$pass) : mysql_connect($host,$user,$pass));
+			$dsn = "mysql:dbname=$dbname;host=$host;charset=utf8mb4";
+			$opt = array(
+				PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_BOTH,
+				PDO::ATTR_EMULATE_PREPARES   => false,
+				PDO::ATTR_PERSISTENT         => $persist
+			);
+			try {
+				$this->connection = new PDO($dsn, $user, $pass, $opt);
+			}
+			catch (PDOException $x) {
+				return NULL;
+			}
 			$t = microtime(true)-$start;
 			$this->id = ++self::$connection_count;
-			$this->set_character_encoding("utf8mb4");
 
 			if (self::$debug_on) {
 				$b = self::getbacktrace();
@@ -38,40 +44,37 @@
 			self::$time += $t;
 			return $this->connection;
 		}
-
-		public function selectdb($dbname)	{
-			$start=microtime(true);
-			$r = mysql_select_db($dbname, $this->connection);
-			self::$time += microtime(true)-$start;
-			return $r;
-		}
-
-		public function query($query, $usecache = false) {
-			if ($usecache && array_key_exists($hash = md5($query), $this->cache)) {
+		
+		public function query($query, $hash = false) {
+			if ($hash && isset($this->cache[$hash])) {//array_key_exists($hash = self::get_query_hash($query), $this->cache)) {
 				$start=microtime(true);
 				++self::$cachehits;
-				@mysql_data_seek($this->cache[$hash], 0);
+				// cursors don't work in PDO
+				//@mysql_data_seek($this->cache[$hash], 0);
 				$t = microtime(true)-$start;
 				if (self::$debug_on) {
 					$b = self::getbacktrace();
 					self::$debug_list[] = array($this->id, $b['pfunc'], "$b[file]:$b[line]", "<font color=#00dd00>$query</font>", "<font color=#00dd00>".sprintf("%01.6fs",$t)."</font>");
 				}
-				return $this->cache[$hash];
+				return NULL;
+				//return $this->cache[$hash];
 			}
 
 			$start=microtime(true);
-			if($res = mysql_query($query, $this->connection)) {
+			try {
+				$res = $this->connection->query($query);
 				++self::$queries;
-				if (!is_bool($res))
-					self::$rowst += @mysql_num_rows($res);
-
-				if ($usecache) {
-					$this->cache[md5($query)] = &$res;
-				}
+				
+				if (strtoupper(substr(ltrim($query), 0, 6)) == "SELECT") // if (!is_bool($res))
+					self::$rowst += $res->rowCount();
+	
+				//if ($usecache) {
+				//	$this->cache[md5($query)] = &$res;
+				//}
 			}
-			else {
+			catch (PDOException $e) {
 				// the huge SQL warning text sucks
-				$err = str_replace("You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use", "SQL syntax error", mysql_error());
+				$err = str_replace("You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use", "SQL syntax error", $this->error());
 				trigger_error("MySQL error: $err", E_USER_ERROR);
 			}
 
@@ -87,93 +90,134 @@
 			return $res;
 		}
 
-		public function fetch($result, $flag = MYSQL_BOTH){
+		public function fetch($result, $flag = PDO::FETCH_BOTH, $hash = NULL){
 			$start=microtime(true);
-
-			if($result && $res=mysql_fetch_array($result, $flag))
-					++self::$rowsf;
-
-			self::$time += microtime(true)-$start;
-			return $res;
-		}
-
-		public function result($result,$row=0,$col=0){
-			$start=microtime(true);
-
-			if($result) {
-				if (mysql_num_rows($result) < $row+1)
-					$res = NULL;
-				elseif ($res=@mysql_result($result,$row,$col))
-					++self::$rowsf;
+			
+			if ($hash && isset($this->cache[$hash])) {
+				$res = $this->cache[$hash];
+			} else if ($result != false && $res = $result->fetch($flag)) {
+				++self::$rowsf;
+				if ($hash) $this->cache[$hash] = $res;
 			}
 
 			self::$time += microtime(true)-$start;
 			return $res;
 		}
 
-		public function fetchq($query, $flag = MYSQL_BOTH, $cache = false){
-			$res = $this->query($query, $cache);
-			$res = $this->fetch($res, $flag);
+		public function fetchAll($result, $flag = PDO::FETCH_BOTH, $hash = NULL){
+			$start = microtime(true);
+			$res   = NULL;
+			
+			if ($hash && isset($this->cache[$hash])) {
+				$res = $this->cache[$hash];
+			} else if ($result != false && $res = $result->fetchAll($flag)) {
+				++self::$rowsf;
+				if ($hash) $this->cache[$hash] = $res;
+			}
+			
+			self::$time += microtime(true) - $start;
+			return $res;
+		}
+
+		public function result($result, $row = 0, $col = 0, $hash = NULL){
+			$start=microtime(true);
+			
+			if ($row) {
+				trigger_error("Deprecated: passed \$row > 0", E_USER_NOTICE);
+			}
+			
+			if ($hash && isset($this->cache[$hash])) {
+				$res = $this->cache[$hash];
+			} else if ($result != false && $result->rowCount() > $row) {
+				$res = $result->fetchColumn($col);
+				++self::$rowsf;
+				if ($hash) $this->cache[$hash] = $res;
+			} else {
+				$res = NULL;
+			}
+			
+			self::$time += microtime(true)-$start;
+			return $res;
+		}
+
+		public function fetchq($query, $flag = PDO::FETCH_BOTH, $cache = false){
+			$hash = $cache ? self::get_query_hash($query) : NULL;
+			$res = $this->query($query, $hash);
+			$res = $this->fetch($res, $flag, $hash);
 			return $res;
 		}
 
 		public function resultq($query,$row=0,$col=0, $cache = false){
-			$res = $this->query($query, $cache);
-			$res = $this->result($res,$row,$col);
+			$hash = $cache ? self::get_query_hash($query) : NULL;
+			$res = $this->query($query, $hash);
+			$res = $this->result($res,$row,$col,$hash);
 			return $res;
 		}
-
+		
 		public function getmultiresults($query, $key, $wanted, $cache = false) {
-			$q = $this->query($query, $cache);
+			$hash = $cache ? 'gmr'.self::get_query_hash($query) : NULL;
+			
+			$q = $this->query($query, $hash);
+			if ($hash && isset($this->cache[$hash]))
+				return $this->cache[$hash];
+			
 			$ret = array();
-			$tmp = array();
-
-			while ($res = @$this->fetch($q, MYSQL_ASSOC))
-				$tmp[$res[$key]][] = $res[$wanted];
+			$tmp = $this->fetchAll($q, PDO::FETCH_GROUP | PDO::FETCH_COLUMN);
 			foreach ($tmp as $keys => $values)
 				$ret[$keys] = implode(",", $values);
 			return $ret;
 		}
 
-		public function getresultsbykey($query, $key, $wanted, $cache = false) {
-			$q = $this->query($query, $cache);
-			$ret = array();
-			while ($res = @$this->fetch($q, MYSQL_ASSOC))
-				$ret[$res[$key]] = $res[$wanted];
-			return $ret;
+		public function getresultsbykey($query, $key = '', $wanted = '', $cache = false) {
+			$hash = $cache ? 'grbk'.self::get_query_hash($query) : NULL;
+			$q = $this->query($query, $hash);
+			return $this->fetchAll($q, PDO::FETCH_KEY_PAIR, $hash);
 		}
 
-		public function getresults($query, $wanted, $cache = false) {
-			$q = $this->query($query, $cache);
-			$ret = array();
-			while ($res = @$this->fetch($q, MYSQL_ASSOC))
-				$ret[] = $res[$wanted];
-			return $ret;
+		public function getresults($query, $wanted = '', $cache = false) {
+			$hash = $cache ? 'gr'.self::get_query_hash($query) : NULL;
+			$q = $this->query($query, $hash);
+			return $this->fetchAll($q, PDO::FETCH_COLUMN, $hash);
 		}
 
-		public function getarraybykey($query, $key, $cache = false) {
-			$q = $this->query($query, $cache);
-			$ret = array();
-			while ($res = @$this->fetch($q, MYSQL_ASSOC))
-				$ret[$res[$key]] = $res;
+		public function getarraybykey($query, $key = '', $cache = false) {
+			$hash = $cache ? 'gabk'.self::get_query_hash($query) : NULL;
+			$q = $this->query($query, $hash);
+			$ret = $this->fetchAll($q, PDO::FETCH_UNIQUE, $hash);
+			// hack around this fetch mode not inserting the $key with the array values
+			// (can be removed once the code stops relying on the non-index $key)
+			foreach ($res as $id => $val)
+				$res[$id][$key] = $val[$key];
+			if ($hash) $this->cache[$hash] = $ret;
 			return $ret;
 		}
 
 		public function getarray($query, $cache = false) {
-			$q = $this->query($query, $cache);
-			$ret = array();
-			while ($res = @$this->fetch($q, MYSQL_ASSOC))
-				$ret[] = $res;
-			return $ret;
+			$hash = $cache ? 'ga'.self::get_query_hash($query) : NULL;
+			$q = $this->query($query, $hash);
+			return $this->fetchAll($q, PDO::FETCH_ASSOC, $hash);
 		}
 
 		public function escape($s) {
-			return mysql_real_escape_string($s);
+			return $this->connection->quote($s);
 		}
-
-
-		public function set_character_encoding($s) {
-			return mysql_set_charset($s, $this->connection);
+		
+		public function num_rows($res) {
+			if ($res === NULL || is_bool($res)) return 0;
+			return $res->rowCount();
+		}
+		
+		public function insert_id() {
+			return $this->connection->lastInsertId();
+		}
+		
+		public function error() {
+			$err = $this->connection->errorInfo();
+			return ($err) ? "SQLSTATE[{$err[0]}]: {$err[2]}" : "";
+		}
+		
+		private static function get_query_hash($query) {
+			return md5($query);
 		}
 
 		//private function __construct() {}
@@ -207,16 +251,16 @@
 		}
 
 		private static function getbacktrace() {
-			$backtrace = debug_backtrace();
-			for ($i = 1; isset($backtrace[$i]); ++$i) {
-				if (substr($backtrace[$i]['file'], -9) !== "mysql.php") {
-					if (!($backtrace[$i]['pfunc'] = $backtrace[$i+1]['function']))
-						$backtrace[$i]['pfunc'] = "<i>(main)</i>";
-					$backtrace[$i]['file'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $backtrace[$i]['file']);
-					return $backtrace[$i];
-				}
-			}
-			return $backtrace[$i-1];
+			$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			
+			// Loop until we have found the real location of the query
+			for ($i = 1; strpos($backtrace[$i]['file'], "mysql.php"); ++$i);
+			
+			// Check in what function it comes from
+			$backtrace[$i]['pfunc'] = (isset($backtrace[$i+1]) ? $backtrace[$i+1]['function'] : "<i>(main)</i>");
+			$backtrace[$i]['file']  = str_replace($_SERVER['DOCUMENT_ROOT'], "", $backtrace[$i]['file']);
+			
+			return $backtrace[$i];
 		}
 	}
 ?>

@@ -637,10 +637,10 @@
 				'5' => "<center style=\"text-align: center; color: #b09080;\">(Shoes)</center>",
 				'6' => "<center style=\"text-align: center; color: #b09080;\">(Acc.)</center>",
 			);
-			$user=mysql_fetch_array(mysql_query("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='". $post['uid'] ."' AND uid=id"));
+			$user=$sql->fetch($sql->query("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='". $post['uid'] ."' AND uid=id"));
 			$d=(ctime()-$user[regdate])/86400;
-			$eqitems=mysql_query("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6]") or print mysql_error();
-			while($item=mysql_fetch_array($eqitems)) {
+			$eqitems=$sql->query("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6]") or print $sql->error();
+			while($item=$sql->fetch($eqitems)) {
 				$items[$item[id]]=$item;
 				$eq[$item['cat']] = $item['name'];
 			}

@@ -19,7 +19,7 @@
 		"\nORDER BY `id` DESC ".
 		(($maxposts !== false) ? "LIMIT 0, $maxposts" : '') // posts limit here
 	);
-	$_count = @mysql_num_rows($data);
+	$_count = @$sql->num_rows($data);
 
 	$output	= "";
 	if ($_GET['raw']) {
@@ -38,7 +38,7 @@
 	}
 
 	$_counter = 1;
-	while ($in = $sql->fetch($data, MYSQL_ASSOC)) {
+	while ($in = $sql->fetch($data, PDO::FETCH_ASSOC)) {
 		if (!$_GET['raw']) {
 			if ($log && $in['date'] > max($forumread[$in['fid']], $in['treadtime']))
 				$newpost = $statusicons['new']."&nbsp";

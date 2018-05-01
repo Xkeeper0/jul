@@ -288,7 +288,7 @@
       `signsep` = '$signsep',
       `pagestyle` = '$pagestyle',
       `pollstyle` = '$pollstyle'
-    WHERE `id` = '$loguserid'") OR print mysql_error();
+    WHERE `id` = '$loguserid'") OR print $sql->error();
 
     print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>".redirect("profile.php?id=$loguserid",'view your profile',0).$tblend;
   }

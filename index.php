@@ -69,7 +69,7 @@
 
 		$onlinetime=ctime()-300;
 		$onusers=$sql->query("SELECT id,name,powerlevel,lastactivity,sex,minipic,aka,birthday FROM users WHERE lastactivity>$onlinetime OR lastposttime>$onlinetime ORDER BY name");
-		$numonline=mysql_num_rows($onusers);
+		$numonline=$sql->num_rows($onusers);
 
 		$numguests=$sql->resultq("SELECT count(*) FROM guests WHERE date>$onlinetime",0,0);
 		if ($numguests) $guestcount=" | <nobr>$numguests guest".($numguests>1?"s":"");
@@ -118,10 +118,10 @@
 		if($numonline>$misc['maxusers'])      $sql->query("UPDATE misc SET maxusers=$numonline,maxusersdate=".ctime().",maxuserstext='".addslashes($onlineusers)."'");
 
 		/*// index sparkline
-		$sprkq = mysql_query('SELECT COUNT(id),date FROM posts WHERE date >="'.(time()-3600).'" GROUP BY (date % 60) ORDER BY date');
+		$sprkq = $sql->query('SELECT COUNT(id),date FROM posts WHERE date >="'.(time()-3600).'" GROUP BY (date % 60) ORDER BY date');
 		$sprk = array();
 
-		while ($r = mysql_fetch_row($sprkq)) {
+		while ($r = $sql->fetch($sprkq, PDO::FETCH_NUM)) {
 			array_push($sprk,$r[0]);
 		}
 		// print_r($sprk);

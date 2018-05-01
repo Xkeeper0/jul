@@ -225,12 +225,12 @@
 
 	$sticklast = 0;
 
-	if (mysql_num_rows($threads) <= 0) {
+	if ($sql->num_rows($threads) <= 0) {
 		$threadlist .= "<tr>
 			$tccell1 style='font-style:italic;' colspan=7>There are no threads to display.</td>
 		</td></tr>";
 	}
-	else for($i=1; $thread=@$sql->fetch($threads, MYSQL_ASSOC); ++$i) {
+	else for($i=1; $thread=@$sql->fetch($threads, PDO::FETCH_ASSOC); ++$i) {
 		if($sticklast && !$thread['sticky'])
 			$threadlist .= "<tr>$tccellh colspan=7><img src='images/_.gif' height=6 width=6>";
 		$sticklast = $thread['sticky'];

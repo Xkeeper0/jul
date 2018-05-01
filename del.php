@@ -17,27 +17,27 @@
 		foreach($_POST['deluser'] as $id => $junk) {
 
 			$query = "SELECT id,name,posts,sex,powerlevel FROM users WHERE id=$id";
-			$user2 = mysql_query($query);
+			$user2 = $sql->query($query);
 
-			while ($user=mysql_fetch_array($user2)) {
+			while ($user=$sql->fetch($user2)) {
 			$id	= $user['id'];
 
 				$name=$user[name];
 				$namecolor=getnamecolor($user[sex],$user[powerlevel]);
-				mysql_query("INSERT INTO `delusers` ( SELECT * FROM `users` WHERE `id` = '$id' )");
+				$sql->query("INSERT INTO `delusers` ( SELECT * FROM `users` WHERE `id` = '$id' )");
 				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". addslashes($name) ."</b></font>]<br>";
-				$ups=mysql_query("SELECT id FROM posts WHERE user=$id");
-				while($up=mysql_fetch_array($ups)) mysql_query("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=$up[id]") or print mysql_error();
-				mysql_query("UPDATE threads SET user=89 WHERE user=$id");
-				mysql_query("UPDATE threads SET lastposter=89 WHERE lastposter=$id");
-				mysql_query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$id");
-				mysql_query("UPDATE pmsgs SET userto=89 WHERE userto=$id");
-				mysql_query("UPDATE posts SET user=89,headid=0,signid=0 WHERE user=$id");
-				mysql_query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '89') WHERE `id` = '89'");
-				mysql_query("DELETE FROM userratings WHERE userrated=$id OR userfrom=$id");
-				mysql_query("DELETE FROM pollvotes WHERE user=$id");
-				mysql_query("DELETE FROM users WHERE id=$id");
-				mysql_query("DELETE FROM users_rpg WHERE uid=$id");
+				$ups=$sql->query("SELECT id FROM posts WHERE user=$id");
+				while($up=$sql->fetch($ups)) $sql->query("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=$up[id]") or print $sql->error();
+				$sql->query("UPDATE threads SET user=89 WHERE user=$id");
+				$sql->query("UPDATE threads SET lastposter=89 WHERE lastposter=$id");
+				$sql->query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$id");
+				$sql->query("UPDATE pmsgs SET userto=89 WHERE userto=$id");
+				$sql->query("UPDATE posts SET user=89,headid=0,signid=0 WHERE user=$id");
+				$sql->query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '89') WHERE `id` = '89'");
+				$sql->query("DELETE FROM userratings WHERE userrated=$id OR userfrom=$id");
+				$sql->query("DELETE FROM pollvotes WHERE user=$id");
+				$sql->query("DELETE FROM users WHERE id=$id");
+				$sql->query("DELETE FROM users_rpg WHERE uid=$id");
 
 			$delusertext	.= "\r\n<tr>$tccell1 width=120>$id</td>$tccell2l><font $namecolor><b>$user[name]</b></font></td></tr>";
 			$delusercnt		++;
@@ -157,8 +157,8 @@ $deltext
   if ($ip) $q = "lastip = '$ip'";
 	else $q = "posts=$p";
 */
-	$users		= mysql_query("SELECT * FROM `users` $sqlquery");
-	$usercount	= mysql_num_rows($users);
+	$users		= $sql->query("SELECT * FROM `users` $sqlquery");
+	$usercount	= $sql->num_rows($users);
   print "
 	<form action=del.php method=post>
     $tblstart
@@ -173,7 +173,7 @@ $deltext
 	$tccellh>Last URL</td>
 	$tccellh>IP
   ";
-  while($user=mysql_fetch_array($users)){
+  while($user=$sql->fetch($users)){
     $namecolor=getnamecolor($user[sex],$user[powerlevel]);
     $lastpost='-';
     if($user['lastposttime']) $lastpost		= date($dateshort, $user['lastposttime'] - $tzoff);

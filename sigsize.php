@@ -12,9 +12,9 @@
 	".  ($_GET['bio'] ? "$tccellh>Bio</td>" : "$tccellh>Header</td>
 	$tccellh>Signature</td>
 	$tccellh>Total</td>");
-  $users=mysql_query('SELECT id,name, minipic, powerlevel, sex, '. ($_GET['bio'] ? "LENGTH(bio) AS tsize, bio as postheader" : "LENGTH(postheader) AS hsize,LENGTH(signature) AS ssize,LENGTH(postheader)+LENGTH(signature) AS tsize, postheader") .' FROM users ORDER BY tsize DESC');
+  $users=$sql->query('SELECT id,name, minipic, powerlevel, sex, '. ($_GET['bio'] ? "LENGTH(bio) AS tsize, bio as postheader" : "LENGTH(postheader) AS hsize,LENGTH(signature) AS ssize,LENGTH(postheader)+LENGTH(signature) AS tsize, postheader") .' FROM users ORDER BY tsize DESC');
 
-  for ($i = 1; $u=mysql_fetch_array($users); $i++) {
+  for ($i = 1; $u=$sql->fetch($users); $i++) {
 	if (!$u['tsize']) break;
 	if ($last['tsize'] != $u['tsize']) $r = $i;
 	$last	= $u;

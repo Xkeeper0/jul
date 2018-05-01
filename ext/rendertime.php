@@ -44,7 +44,7 @@
 								"FROM `rendertimes` ".
 								"WHERE `page` = '/index.php' ".
 								"AND `time` > $mintime ".
-								"GROUP BY FLOOR(`time` / 3600)") or die(mysql_error());
+								"GROUP BY FLOOR(`time` / 3600)") or die($sql->error());
 
 	while ($rt = $sql -> fetch($data)) {
 		$y		= ($rt['time'] - $rangemin) * 10;

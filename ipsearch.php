@@ -82,7 +82,7 @@
 
 		print "
 		  $tblend<br>$tblstart
-		  $tccellh colspan=7><b>Users: ".mysql_num_rows($users)."</b><tr>
+		  $tccellh colspan=7><b>Users: ".$sql->num_rows($users)."</b><tr>
 		  $tccellc>id</td>
 		  $tccellc>Name</td>
 		  $tccellc>Registered on</td>
@@ -107,7 +107,7 @@
 
 		print "
 		  $tblend<br>$tblstart
-		  $tccellh colspan=5><b>Posts: ".mysql_num_rows($posts)."</b><tr>
+		  $tccellh colspan=5><b>Posts: ".$sql->num_rows($posts)."</b><tr>
 		  $tccellc>id</td>
 		  $tccellc>Posted by</td>
 		  $tccellc>Thread</td>
@@ -128,7 +128,7 @@
 
 		print "
 		  $tblend<br>$tblstart
-		  $tccellh colspan=6><b>Private messages: ".mysql_num_rows($pmsgs)."</b><tr>
+		  $tccellh colspan=6><b>Private messages: ".$sql->num_rows($pmsgs)."</b><tr>
 		  $tccellc>id</td>
 		  $tccellc>Sent by</td>
 		  $tccellc>Sent to</td>
