@@ -46,9 +46,9 @@
 	if(!$action && $log && ($ismod || ($loguserid==$post['user'] && $loguser['powerlevel'] > -1 && !$thread['closed'])) && (!$forum['minpower'] or $power>=$forum['minpower'])) {
 		$message=$post['text'];
 		if(!$post['headid']) $head=$post['headtext'];
-		else $head=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[headid]",0,0);
+		else $head=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[headid]");
 		if(!$post['signid']) $sign=$post['signtext'];
-		else $sign=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[signid]",0,0);
+		else $sign=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[signid]");
 
 		sbr(1,$message);
 		sbr(1,$head);
@@ -105,8 +105,8 @@
 					die("NO BONUS");
 				}
 				else {
-					$headid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$head' LIMIT 1",0,0);
-					$signid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$sign' LIMIT 1",0,0);
+					$headid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$head' LIMIT 1");
+					$signid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$sign' LIMIT 1");
 					if($headid) $head=''; else $headid=0;
 					if($signid) $sign=''; else $signid=0;
 					$sql->query("UPDATE `posts_text` SET `options` = '$poptions', `headtext` = '$head', `text` = '$message', `signtext` = '$sign', `edited` = '$edited', `editdate` = '".ctime()."' WHERE `pid` = '$id'");

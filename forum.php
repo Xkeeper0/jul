@@ -98,7 +98,7 @@
 	$windowtitle = "$boardname -- $forum[title]";
 	require 'lib/layout.php';
 
-	$hotcount = $sql->resultq('SELECT hotcount FROM misc',0,0);
+	$hotcount = $sql->resultq('SELECT hotcount FROM misc');
 	if ($hotcount <= 0) $hotcount = 0xFFFF;
 
 	$ppp = (($_GET['ppp']) ? intval($_GET['ppp']) : (($log) ? $loguser['postsperpage'] : 20));

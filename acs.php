@@ -35,7 +35,7 @@
 	$ch2[$u]	= 'checked';
 	$ch3[$view]	= 'checked';
 
-	$tposts		= $sql->resultq("SELECT COUNT(*) AS cnt FROM posts WHERE posts.date>$dd AND posts.date<$dd2",0,'cnt');
+	$tposts		= $sql->resultq("SELECT COUNT(*) FROM posts WHERE posts.date>$dd AND posts.date<$dd2");
 	$rcount		= ($tposts >= 400 ? 10 : 5);
 	$spoints	= ($tposts >= 400 ? 11 : 8);
 	$desc="</b><br>$smallfont";

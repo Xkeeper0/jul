@@ -53,7 +53,7 @@
 	while($sch=$sql->fetch($schemes)){
 		$sel='';
 		if($sch['id']==$user['scheme']) $sel=' selected';
-		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE scheme=$sch[id]",0,'cnt');
+		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE scheme=$sch[id]");
 		$schlist.="<option value=$sch[id]$sel>$sch[name] ($used)";
 	}
 	$schlist="<select name=sscheme>$schlist</select>";
@@ -63,7 +63,7 @@
 	while($lay=$sql->fetch($tlayouts)){
 		$sel="";
 		if($lay['id']==$user['layout']) $sel=' selected';
-		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE layout=$lay[id]",0,'cnt');
+		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE layout=$lay[id]");
 		$laylist.="<option value=$lay[id]$sel>$lay[name] ($used)";
 	}
 	$laylist="<select name=tlayout>$laylist</select>";
@@ -71,7 +71,7 @@
 	$rsets=$sql->query('SELECT id,name FROM ranksets ORDER BY id');
 	while($set=$sql->fetch($rsets)) {
 		$sel=($set['id']==$user['useranks']?' selected':'');
-		$used=$sql->resultq("SELECT count(*) FROM users WHERE useranks=$set[id]",0,0);
+		$used=$sql->resultq("SELECT count(*) FROM users WHERE useranks=$set[id]");
 		$rsetlist.="<option value=$set[id]$sel>$set[name] ($used)";
 	}
 	$rsetlist="<select name=useranks>$rsetlist</select>";

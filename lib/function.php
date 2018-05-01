@@ -895,7 +895,7 @@ function fonlineusers($id){
 	else
 		$sql->query("UPDATE guests SET lastforum=$id WHERE ip='$userip'");
 
-	$forumname		=@$sql->resultq("SELECT title FROM forums WHERE id=$id",0,0);
+	$forumname		=@$sql->resultq("SELECT title FROM forums WHERE id=$id");
 	$onlinetime		=ctime()-300;
 	$onusers		=$sql->query("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
 
@@ -917,7 +917,7 @@ function fonlineusers($id){
 	}
 	$p = ($numon ? ':' : '.');
 	$s = ($numon != 1 ? 's' : '');
-	$numguests = $sql->resultq("SELECT count(*) AS n FROM guests WHERE date>$onlinetime AND lastforum=$id",0,0);
+	$numguests = $sql->resultq("SELECT count(*) AS n FROM guests WHERE date>$onlinetime AND lastforum=$id");
 	if($numguests) $guests="| $numguests guest".($numguests>1?'s':'');
 	return "$numon user$s currently in $forumname$p $onlineusers $guests";
 }
@@ -1000,7 +1000,7 @@ function loaduser($id,$type){
 
 function getpostlayoutid($text){
 	global $sql;
-	$id=@$sql->resultq("SELECT id FROM postlayouts WHERE text='".addslashes($text)."' LIMIT 1",0,0);
+	$id=@$sql->resultq("SELECT id FROM postlayouts WHERE text='".addslashes($text)."' LIMIT 1");
 	if(!$id){
 		$sql->query("INSERT INTO postlayouts (text) VALUES ('".addslashes($text)."')");
 		$id=$sql->insert_id();
@@ -1051,7 +1051,7 @@ function sizelimitjs(){
 function loadtlayout(){
 	global $log,$loguser,$tlayout,$sql;
 	$tlayout    = (filter_int($loguser['layout']) ? $loguser['layout'] : 1);
-	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'",0,0);
+	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'");
 	require "tlayouts/$layoutfile.php";
 }
 

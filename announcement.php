@@ -17,7 +17,7 @@
 		$sql->query("UPDATE `users` SET `lastannouncement` = (SELECT MAX(`id`) FROM `announcements` WHERE `forum` = 0) WHERE `id` = '". $loguser['id'] ."'");
 	}
 	$anncs=$sql->query("SELECT a.*,u.*,a.title atitle,u.id uid FROM announcements a,users u WHERE forum=$f AND a.user=u.id ORDER BY a.id DESC LIMIT $min,$ppp");
-    $annctotal=@$sql->result($sql->query("SELECT count(*) FROM announcements WHERE forum=$f"),0,0);
+    $annctotal=@$sql->resultq("SELECT count(*) FROM announcements WHERE forum=$f");
     $pagelinks=$smallfont.'Pages:';
     for($i=0;$i<($annctotal/$ppp);$i++){
 	if($i==$page) $pagelinks.=' '.($i+1);
@@ -61,9 +61,9 @@
     }
     if($_GET[action]=='edit'){
 	if(!$annc[headid]) $head=$annc[headtext];
-	else $head=$sql->result($sql->query("SELECT text FROM postlayouts WHERE id=$annc[headid]"),0,0);
+	else $head=$sql->resultq("SELECT text FROM postlayouts WHERE id=$annc[headid]");
 	if(!$annc[signid]) $sign=$annc[signtext];
-	else $sign=$sql->result($sql->query("SELECT text FROM postlayouts WHERE id=$annc[signid]"),0,0);
+	else $sign=$sql->resultq("SELECT text FROM postlayouts WHERE id=$annc[signid]");
 	sbr(1,$annc[text]);
 	sbr(1,$head);
 	sbr(1,$sign);
@@ -147,8 +147,8 @@
 	$edited ="<a href=profile.php?id=$loguser[id]><font $namecolor>$loguser[name]</font></a>";
 
 	if($submit){
-	  $headid=@$sql->result($sql->query("SELECT id FROM postlayouts WHERE text='$head' LIMIT 1"),0,'id');
-	  $signid=@$sql->result($sql->query("SELECT id FROM postlayouts WHERE text='$sign' LIMIT 1"),0,'id');
+	  $headid=@$sql->resultq("SELECT id FROM postlayouts WHERE text='$head' LIMIT 1");
+	  $signid=@$sql->resultq("SELECT id FROM postlayouts WHERE text='$sign' LIMIT 1");
 	  if($headid) $head=''; else $headid=0;
 	  if($signid) $sign=''; else $signid=0;
 	  $sql->query("UPDATE announcements SET title='$subject', text='$message', headtext='$head', signtext='$sign', edited='$edited', editdate='".ctime()."',headid=$headid,signid=$signid WHERE id=$id");

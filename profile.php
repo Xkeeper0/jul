@@ -45,14 +45,14 @@
 */
 
 	$userrank=getrank($user['useranks'],$user['title'],$user['posts'],$user['powerlevel']);
-	$threadsposted=$sql->resultq("SELECT count(id) AS cnt FROM threads WHERE user=$id",0,"cnt");
+	$threadsposted=$sql->resultq("SELECT count(id) AS cnt FROM threads WHERE user=$id");
 
 	$i=0;
 	$lastpostdate="None";
 	if($user['posts']) {
 		$lastpostdate=date($dateformat,$user['lastposttime']+$tzoff);
 
-		//$postsfound=$sql->resultq("SELECT count(id) AS cnt FROM posts WHERE user=$id",0,"cnt");
+		//$postsfound=$sql->resultq("SELECT count(id) AS cnt FROM posts WHERE user=$id");
 		$post = @$sql->fetchq("SELECT id, thread FROM posts WHERE user=$id AND date=$user[lastposttime]");
 
 		if ($post && $thread = $sql->fetchq("SELECT title,forum FROM threads WHERE id=$post[1]")) {

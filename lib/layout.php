@@ -400,7 +400,7 @@
 
 	if($log) {
 		/*
-			$ulastip=$sql->result($sql->query("SELECT lastip FROM users WHERE id=$loguserid"),0,0);
+			$ulastip=$sql->result($sql->query("SELECT lastip FROM users WHERE id=$loguserid"));
 			$aol1=(substr($userip,0,7)=='152.163' or substr($userip,0,7)=='205.188' or substr($userip,0,6)=='64.12.' or substr($userip,0,6)=='195.93' or substr($userip,0,6)=='198.81');
 			$aol2=(substr($ulastip,0,7)=='152.163' or substr($ulastip,0,7)=='205.188' or substr($ulastip,0,6)=='64.12.' or substr($ulastip,0,6)=='195.93' or substr($ulastip,0,6)=='198.81');
 			if($userip!=$ulastip && !($aol1 && $aol2)){
@@ -489,7 +489,7 @@ piwikTracker.enableLinkTracking();
 		} elseif ($loguser['title']) {
 			$reason	= "Ban reason: ". $loguser['title'] ."<br>If you think have been banned in error, please contact Xkeeper.";
 		} else {
-			$reason	= $sql->resultq("SELECT `reason` FROM ipbans WHERE $checkips",0,0);
+			$reason	= $sql->resultq("SELECT `reason` FROM ipbans WHERE $checkips");
 			$reason	= ($reason ? "Reason: $reason" : "<i>(No reason given)</i>");
 		}
 		die("$header<br>$tblstart$tccell1>

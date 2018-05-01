@@ -71,7 +71,7 @@
 		$onusers=$sql->query("SELECT id,name,powerlevel,lastactivity,sex,minipic,aka,birthday FROM users WHERE lastactivity>$onlinetime OR lastposttime>$onlinetime ORDER BY name");
 		$numonline=$sql->num_rows($onusers);
 
-		$numguests=$sql->resultq("SELECT count(*) FROM guests WHERE date>$onlinetime",0,0);
+		$numguests=$sql->resultq("SELECT count(*) FROM guests WHERE date>$onlinetime");
 		if ($numguests) $guestcount=" | <nobr>$numguests guest".($numguests>1?"s":"");
 		$onlineusersa	= array();
 		for ($numon=0; $onuser = $sql->fetch($onusers);$numon++) {

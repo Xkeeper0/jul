@@ -24,7 +24,7 @@
 		$query	= "SELECT `id`, `forum`, `title` FROM `threads` WHERE `id` IN (". implode(", ", $ta) .")";
 		$sql	= $sql->query($query);
 		while ($thread = $sql->fetch($sql, PDO::FETCH_ASSOC)) {
-			$minpower	= $sql->result($sql->query("SELECT `minpower` FROM `forums` WHERE `id` = '". $thread['forum'] ."'"), 0);
+			$minpower	= $sql->resultq("SELECT `minpower` FROM `forums` WHERE `id` = '". $thread['forum'] ."'");
 			if ($minpower <= 0) {
 
 				$dat	= $sql->query("SELECT `p`.`id`, `p`.`date`, `u`.`name` FROM `posts` `p` LEFT JOIN `users` `u` ON `u`.`id` = `p`.`user` WHERE `p`.`thread` = '". $thread['id'] ."' ORDER BY `p`.`date` DESC LIMIT 5") or print $sql->error();
