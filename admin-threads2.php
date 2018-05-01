@@ -59,10 +59,10 @@
 
 
 	$q	= "SELECT `threads`.`id`, `threads`.`title` , `threads`.`lastpostdate` , `posts`.`date` as realdate FROM `threads` LEFT JOIN (SELECT MAX(`date`) as `date`, `thread` FROM `posts` GROUP BY `thread`) as `posts`  ON `posts`.`thread` = `threads`.`id` ORDER BY `threads`.`id` DESC";
-	$sql	= $sql->query($q) or die($sql->error());
+	$qfix	= $sql->query($q) or die($sql->error());
 
 	$count	= "";
-	while ($data = $sql->fetch($sql, PDO::FETCH_ASSOC)) {
+	while ($data = $sql->fetch($qfix, PDO::FETCH_ASSOC)) {
 
 		$status	= "";
 

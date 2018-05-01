@@ -58,10 +58,10 @@
 		";
 
 	$q	= "SELECT `posts`.`thread`, (COUNT(`posts`.`id`)) AS 'real', ((CAST(COUNT(`posts`.`id`) AS SIGNED) - 1) - CAST(`threads`.`replies` AS SIGNED)) AS 'offset', `threads`.`replies`, `threads`.`title` AS `threadname`  FROM `posts` LEFT JOIN `threads` ON `posts`.`thread` = `threads`.`id` GROUP BY `thread` HAVING `offset` <> 0 OR `offset` IS NULL ORDER BY ISNULL(`threadname`) ASC, `thread` DESC";
-	$sql	= $sql->query($q) or die($sql->error());
+	$qfix	= $sql->query($q) or die($sql->error());
 
 	$count	= "";
-	while ($data = $sql->fetch($sql, PDO::FETCH_ASSOC)) {
+	while ($data = $sql->fetch($qfix, PDO::FETCH_ASSOC)) {
 
 		$status	= "";
 
