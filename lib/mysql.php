@@ -46,18 +46,14 @@
 		}
 		
 		public function query($query, $hash = false) {
-			if ($hash && isset($this->cache[$hash])) {//array_key_exists($hash = self::get_query_hash($query), $this->cache)) {
-				$start=microtime(true);
+			if ($hash && isset($this->cache[$hash])) {
 				++self::$cachehits;
-				// cursors don't work in PDO
-				//@mysql_data_seek($this->cache[$hash], 0);
-				$t = microtime(true)-$start;
+				$t = 0;
 				if (self::$debug_on) {
 					$b = self::getbacktrace();
 					self::$debug_list[] = array($this->id, $b['pfunc'], "$b[file]:$b[line]", "<font color=#00dd00>$query</font>", "<font color=#00dd00>".sprintf("%01.6fs",$t)."</font>");
 				}
 				return NULL;
-				//return $this->cache[$hash];
 			}
 
 			$start=microtime(true);
@@ -65,12 +61,8 @@
 				$res = $this->connection->query($query);
 				++self::$queries;
 				
-				if (strtoupper(substr(ltrim($query), 0, 6)) == "SELECT") // if (!is_bool($res))
+				if (strtoupper(substr(ltrim($query), 0, 6)) == "SELECT")
 					self::$rowst += $res->rowCount();
-	
-				//if ($usecache) {
-				//	$this->cache[md5($query)] = &$res;
-				//}
 			}
 			catch (PDOException $e) {
 				// the huge SQL warning text sucks
@@ -87,6 +79,69 @@
 				self::$debug_list[] = array($this->id, $b['pfunc'], "$b[file]:$b[line]", $tx, sprintf("%01.6fs",$t));
 			}
 
+			return $res;
+		}
+		
+		public function prepare($query, $hash = NULL) {
+			if ($hash && isset($this->cache[$hash])) {
+				++self::$cachehits;
+				$t = 0;
+				if (self::$debug_on) {
+					$b = self::getbacktrace();
+					self::$debug_list[] = array($this->id, $b['pfunc'], "$b[file]:$b[line]", "<font color=#00dd00>[P] $query</font>", "<font color=#00dd00>".sprintf("%01.6fs",$t)."</font>");
+				}
+				return NULL;
+			}
+			
+			$start = microtime(true);
+			$res = NULL;
+			try {
+				$res = $this->connection->prepare($query);
+			}
+			catch (PDOException $e) {
+				// the huge SQL warning text sucks
+				$err = str_replace("You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use", "SQL syntax error", $this->error());
+				trigger_error("MySQL (prepare) error: $err", E_USER_ERROR);
+			}
+			
+			$t = microtime(true) - $start;
+			self::$time += $t;
+			
+			if (self::$debug_on) {
+				$b = self::getbacktrace();
+				$tx = ((!$err) ? $query : "<span style=\"color:#FF0000;border-bottom:1px dotted red;\" title=\"$err\">[P] $query</span>");
+				self::$debug_list[] = array($this->id, $b['pfunc'], "$b[file]:$b[line]", $tx, sprintf("%01.6fs",$t));
+			}
+			return $res;
+		}
+		
+		public function execute($result, $vals = array()){
+			if (!$result) {
+				trigger_error("MySQL (execute) error: Called execute() on null \$result", E_USER_ERROR);
+				return NULL;
+			}
+			$query = $result->queryString;
+			$start = microtime(true);
+			try {
+				$res = $result->execute($vals);
+				if (!is_numeric($result->errorInfo()[0])) // It's possible for this to fail silently (seriously)
+					throw new PDOException($result->errorInfo()[0]); //trigger_error("MySQL (execute) error: ".$sql->error(), E_USER_ERROR);
+				++self::$queries;
+				if (strtoupper(substr(trim($query), 0, 6)) == "SELECT")
+					self::$rowst += $result->rowCount();
+			}
+			catch (PDOException $e){
+				trigger_error("MySQL (execute) error: ".$sql->error(), E_USER_ERROR);
+			}
+			
+			$t = microtime(true) - $start;
+			self::$time += $t;
+			
+			if (self::$debug_on) {
+				$b = self::getbacktrace();
+				$tx = ((!$err) ? $query : "<span style=\"color:#FF0000;border-bottom:1px dotted red;\" title=\"$err\">[P] $query</span>");
+				self::$debug_list[] = array($this->id, $b['pfunc'], "$b[file]:$b[line]", $tx, sprintf("%01.6fs",$t));
+			}
 			return $res;
 		}
 
@@ -118,7 +173,7 @@
 			self::$time += microtime(true) - $start;
 			return $res;
 		}
-
+		
 		public function result($result, $row = 0, $col = 0, $hash = NULL){
 			$start=microtime(true);
 			
@@ -139,6 +194,12 @@
 			self::$time += microtime(true)-$start;
 			return $res;
 		}
+		
+		public function queryp($query, $values = array()) {
+			$q = $this->prepare($query);
+			$result = $this->execute($q, $values);
+			return $q;
+		}
 
 		public function fetchq($query, $flag = PDO::FETCH_BOTH, $cache = false){
 			$hash = $cache ? self::get_query_hash($query) : NULL;
@@ -147,11 +208,27 @@
 			return $res;
 		}
 
+		public function fetchp($query, $values = array(), $flag = PDO::FETCH_BOTH, $cache = false) {
+			$hash = $cache ? self::get_query_hash($query) : NULL;
+			$res = $this->prepare($query, array(), $hash);
+			if ($hash === NULL && !$this->execute($res, $values)) 
+				return false;
+			return $this->fetch($res, $flag, $hash);
+		}
+
 		public function resultq($query,$row=0,$col=0, $cache = false){
 			$hash = $cache ? self::get_query_hash($query) : NULL;
 			$res = $this->query($query, $hash);
 			$res = $this->result($res,$row,$col,$hash);
 			return $res;
+		}
+		
+		public function resultp($query, $values = array(), $row=0, $col=0, $cache = false){
+			$hash = $cache ? self::get_query_hash($query) : NULL;
+			$res = $this->prepare($query, $hash);
+			if ($hash === NULL && !$this->execute($res, $values)) 
+				return false;
+			return $this->result($res, $row, $col, $hash);
 		}
 		
 		public function getmultiresults($query, $key, $wanted, $cache = false) {
@@ -186,8 +263,8 @@
 			$ret = $this->fetchAll($q, PDO::FETCH_UNIQUE, $hash);
 			// hack around this fetch mode not inserting the $key with the array values
 			// (can be removed once the code stops relying on the non-index $key)
-			foreach ($res as $id => $val)
-				$res[$id][$key] = $val[$key];
+			foreach ($ret as $id => $val)
+				$ret[$id][$key] = $val[$key];
 			if ($hash) $this->cache[$hash] = $ret;
 			return $ret;
 		}
@@ -213,9 +290,17 @@
 		
 		public function error() {
 			$err = $this->connection->errorInfo();
-			return ($err) ? "SQLSTATE[{$err[0]}]: {$err[2]}" : "";
+			return ($err && $err[1]) ? "SQLSTATE[{$err[0]}]: {$err[2]}" : "";
 		}
 		
+		public static function phs($arraySet) {
+			$out 	= "";
+			$fields = array_keys($arraySet);
+			$i 		= 0;
+			foreach ($fields as $field)
+				$out .= ($i++ ? "," : "")."`$field`=:".str_replace("`","",$field);
+			return $out;
+		}
 		private static function get_query_hash($query) {
 			return md5($query);
 		}
