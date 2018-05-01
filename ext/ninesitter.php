@@ -22,8 +22,8 @@
 	if ($ta) {
 
 		$query	= "SELECT `id`, `forum`, `title` FROM `threads` WHERE `id` IN (". implode(", ", $ta) .")";
-		$sql	= $sql->query($query);
-		while ($thread = $sql->fetch($sql, PDO::FETCH_ASSOC)) {
+		$q	= $sql->query($query);
+		while ($thread = $sql->fetch($q, PDO::FETCH_ASSOC)) {
 			$minpower	= $sql->resultq("SELECT `minpower` FROM `forums` WHERE `id` = '". $thread['forum'] ."'");
 			if ($minpower <= 0) {
 

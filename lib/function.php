@@ -1335,7 +1335,6 @@ function addslashes_array($data) {
 	}
 
 	function xk_ircsend($str) {
-		return true;
 		$str = str_replace(array("%10", "%13"), array("", ""), rawurlencode($str));
 
 		$str = html_entity_decode($str);
