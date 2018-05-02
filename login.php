@@ -32,7 +32,13 @@
 				@xk_ircsend("1|". xk(7) ."Auto banned tictOrnaria (malicious bot) with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) .".");
 			}
 			else {
-				$sql->query("INSERT INTO `failedlogins` SET `time` = '". ctime() ."', `username` = '". $username ."', `password` = '". $password ."', `ip` = '". $_SERVER['REMOTE_ADDR'] ."'");
+				$values = array(
+					'time'     => ctime(),
+					'username' => stripslashes($username),
+					'password' => stripslashes($password),
+					'ip'       => $_SERVER['REMOTE_ADDR'],
+				);
+				$sql->queryp("INSERT INTO `failedlogins` SET ".mysql::phs($values), $values);
 				$fails = $sql->resultq("SELECT COUNT(`id`) FROM `failedlogins` WHERE `ip` = '". $_SERVER['REMOTE_ADDR'] ."' AND `time` > '". (ctime() - 1800) ."'");
 
 				// Keep in mind, it's now not possible to trigger this if you're IP banned

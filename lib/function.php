@@ -456,7 +456,7 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 	global $tagval, $sql;
 
 	// This should probably go off of user ID but welp
-	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", PDO::FETCH_BOTH, true);
+	$user			= $sql->fetchp("SELECT * FROM `users` WHERE `name` = ?", array($username), PDO::FETCH_ASSOC, true);
 
 	$userdata		= array(
 		'id'		=> $user['id'],
@@ -465,7 +465,7 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 		'days'		=> $days,
 		'useranks'	=> $user['useranks'],
 		'exp'		=> calcexp($posts,$days)
-		);
+	);
 
 	$userdata['level']		= calclvl($userdata['exp']);
 	$userdata['expdone']	= $userdata['exp'] - calclvlexp($userdata['level']);
@@ -664,7 +664,7 @@ function updategb() {
 
 function checkusername($name){
 	global $sql;
-	$u = $sql->resultq("SELECT id FROM users WHERE name='".addslashes($name)."'");
+	$u = $sql->resultp("SELECT id FROM users WHERE name = ?", array($name));
 	if($u<1) $u=-1;
 	return $u;
 }
@@ -672,7 +672,7 @@ function checkusername($name){
 function checkuser($name,$pass){
 	global $hacks, $sql;
 
-	$user = $sql->fetchq("SELECT id,password FROM users WHERE name='$name'");
+	$user = $sql->fetchp("SELECT id,password FROM users WHERE name = ?", array(stripslashes($name)));
 
 	if (!$user) return -1;
 	if ($user['password'] !== getpwhash($pass, $user['id'])) {
@@ -1000,9 +1000,9 @@ function loaduser($id,$type){
 
 function getpostlayoutid($text){
 	global $sql;
-	$id=@$sql->resultq("SELECT id FROM postlayouts WHERE text='".addslashes($text)."' LIMIT 1");
+	$id = $sql->resultp("SELECT id FROM postlayouts WHERE text = ? LIMIT 1", array($text));
 	if(!$id){
-		$sql->query("INSERT INTO postlayouts (text) VALUES ('".addslashes($text)."')");
+		$sql->queryp("INSERT INTO postlayouts (text) VALUES (?)", array($text));
 		$id=$sql->insert_id();
 	}
 	return $id;

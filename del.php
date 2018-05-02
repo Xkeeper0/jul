@@ -18,16 +18,18 @@
 
 			$query = "SELECT id,name,posts,sex,powerlevel FROM users WHERE id=$id";
 			$user2 = $sql->query($query);
-
+			
 			while ($user=$sql->fetch($user2)) {
-			$id	= $user['id'];
+				$id	= $user['id'];
 
 				$name=$user[name];
 				$namecolor=getnamecolor($user[sex],$user[powerlevel]);
 				$sql->query("INSERT INTO `delusers` ( SELECT * FROM `users` WHERE `id` = '$id' )");
-				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". addslashes($name) ."</b></font>]<br>";
+				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". htmlspecialchars(addslashes($name)) ."</b></font>]<br>";
 				$ups=$sql->query("SELECT id FROM posts WHERE user=$id");
-				while($up=$sql->fetch($ups)) $sql->query("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=$up[id]") or print $sql->error();
+				$signupd = $sql->prepare("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=?");
+				while ($up = $sql->fetch($ups))
+					$sql->execute($signupd, array($up['id']));
 				$sql->query("UPDATE threads SET user=89 WHERE user=$id");
 				$sql->query("UPDATE threads SET lastposter=89 WHERE lastposter=$id");
 				$sql->query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$id");
@@ -103,27 +105,32 @@ $deltext
 
 //	print_r($_POST);
 	$sqlquery	= "";
-
-	if ($_POST['maxposts'])
-		$sqlquery	= "`posts` <= '". $_POST['maxposts'] ."'";
-
+    $sqlvals	= array();
+	if ($_POST['maxposts']) {
+		$sqlquery	= "`posts` <= ?";
+		$sqlvals[]  = (int)$_POST['maxposts'];
+	}
 	if ($_POST['searchip']) {
 		if ($sqlquery)	$sqlquery	.= " AND ";
-		$sqlquery	.= "`lastip` LIKE '". $_POST['searchip'] ."%'";
+		$sqlquery	.= "`lastip` LIKE ?";
+		$sqlvals[]   = stripslashes($_POST['searchip']).'%';
 	}
 
 	if ($_POST['searchname']) {
 		if ($sqlquery)	$sqlquery	.= " AND ";
-		$sqlquery	.= "`name` LIKE '%". $_POST['searchname'] ."%'";
+		$sqlquery	.= "`name` LIKE ?";
+		$sqlvals[]   = "%".stripslashes($_POST['searchname'])."%";
 	}
 
 	if ($_POST['sortpowerlevel'] != "aa") {
 		if ($sqlquery)	$sqlquery	.= " AND ";
 
-		if ($_POST['sortpowerlevel'] == "ab") 
+		if ($_POST['sortpowerlevel'] == "ab") {
 			$sqlquery	.= "`powerlevel` < '0'";
-		else
-			$sqlquery	.= "`powerlevel` = '". str_replace("s", "", $_POST['sortpowerlevel']) ."'";
+		} else {
+			$sqlquery	.= "`powerlevel` = ?";
+			$sqlvals[]   = (int)str_replace("s", "", $_POST['sortpowerlevel']);
+		}
 	}
 
 	switch ($_POST['sorttype']) {
@@ -157,7 +164,7 @@ $deltext
   if ($ip) $q = "lastip = '$ip'";
 	else $q = "posts=$p";
 */
-	$users		= $sql->query("SELECT * FROM `users` $sqlquery");
+	$users		= $sql->queryp("SELECT * FROM `users` $sqlquery", $sqlvals);
 	$usercount	= $sql->num_rows($users);
   print "
 	<form action=del.php method=post>
@@ -174,7 +181,7 @@ $deltext
 	$tccellh>IP
   ";
   while($user=$sql->fetch($users)){
-    $namecolor=getnamecolor($user[sex],$user[powerlevel]);
+    $namecolor=getnamecolor($user['sex'],$user['powerlevel']);
     $lastpost='-';
     if($user['lastposttime']) $lastpost		= date($dateshort, $user['lastposttime'] - $tzoff);
 		else $lastpost		= '-';

@@ -230,13 +230,17 @@
 
 	$ipbanned	= $torbanned = 0;
 
-	$checkips = "INSTR('$userip',ip)=1";
-	if ($forwardedip !== "XXXXXXXXXXXXXXXXX")
-		$checkips .= " OR INSTR('$forwardedip',ip)=1";
-	if ($clientip !== "XXXXXXXXXXXXXXXXX")
-		$checkips .= " OR INSTR('$clientip',ip)=1";
-
-	if($sql->resultq("SELECT count(*) FROM ipbans WHERE $checkips")) $ipbanned=1;
+	$checkips = "INSTR(?,ip)=1";
+	$checkval = array($userip);
+	if ($forwardedip !== "XXXXXXXXXXXXXXXXX") {
+		$checkips  .= " OR INSTR(?,ip)=1";
+		$checkval[] = $forwardedip;
+	}
+	if ($clientip !== "XXXXXXXXXXXXXXXXX") {
+		$checkips  .= " OR INSTR(?,ip)=1";
+		$checkval[] = $clientip;
+	}
+	if($sql->resultp("SELECT count(*) FROM ipbans WHERE $checkips", $checkval)) $ipbanned=1;
 	if($sql->resultq("SELECT count(*) FROM `tor` WHERE `ip` = '". $_SERVER['REMOTE_ADDR'] ."' AND `allowed` = '0'")) $torbanned=1;
 
 	if ($ipbanned || $torbanned)
@@ -394,7 +398,7 @@
 
 	if($q) $url.="?$q";
 
-	if($ref && substr($ref,7,7)!="jul.rus") $sql->query("INSERT INTO referer (time,url,ref,ip) VALUES (". ctime() .", '".addslashes($url)."', '".addslashes($ref)."', '". $_SERVER['REMOTE_ADDR'] ."')");
+	if($ref && substr($ref,7,7)!="jul.rus") $sql->queryp("INSERT INTO referer (time,url,ref,ip) VALUES (?,?,?,?)", array(ctime(),$url,$ref,$_SERVER['REMOTE_ADDR']));
 
 	$sql->query("DELETE FROM guests WHERE ip='$userip' OR date<".(ctime()-300));
 
@@ -426,12 +430,11 @@
 
 				xk_ircsend("102|". xk(7) ."User $loguser[name] (id $loguserid) changed from IP ". xk(8) . $loguser['lastip'] . xk(7) ." to ". xk(8) . $_SERVER['REMOTE_ADDR'] .xk(7). " ({$color}{$diff}" .xk(7). ")");
 			}
-
-			$sql->query("UPDATE users SET lastactivity=".ctime().",lastip='$userip',lasturl='".addslashes($url)."',lastforum=0,`influence`='$influencelv' WHERE id=$loguserid");
+			$sql->queryp("UPDATE users SET lastactivity=?,lastip=?,lasturl=?,lastforum=?,`influence`=? WHERE id=$loguserid", array(ctime(),$userip,$url,0,$influencelv));
 		}
 
 	} else {
-		$sql->query("INSERT INTO guests (ip,date,useragent,lasturl) VALUES ('$userip',".ctime().",'".addslashes($_SERVER['HTTP_USER_AGENT']) ."','". addslashes($url) ."')");
+		$sql->queryp("INSERT INTO guests (ip,date,useragent,lasturl) VALUES (?,?,?,?)", array($userip, ctime(), $_SERVER['HTTP_USER_AGENT'], $url));
 	}
 
 

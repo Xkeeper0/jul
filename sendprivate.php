@@ -106,7 +106,9 @@
 				$head="<div style=background:url($user[postbg]);height=100%>$head";
 
 			$numdays=(ctime()-$loguser['regdate'])/86400;
-			$message=doreplace($message,$loguser['posts'],$numdays,$loguser['name']);
+			$tags			= array();
+			$message		= doreplace($message,$loguser['posts'],$numdays,$loguser['name'], $tags);
+			$tagval			= json_encode($tags);
 			$rsign=doreplace($sign,$loguser['posts'],$numdays,$loguser['name']);
 			$rhead=doreplace($head,$loguser['posts'],$numdays,$loguser['name']);
 			$currenttime=ctime();
@@ -114,9 +116,25 @@
 			if($submit) {
 				$headid = getpostlayoutid($head);
 				$signid = getpostlayoutid($sign);
+				
+				$values = array(
+					'userto'   => $userid,
+					'userfrom' => $loguserid,
+					'date'     => $currenttime,
+					'ip'       => $userip,
+					'msgread'  => 0,
+					'headid'   => $headid,
+					'signid'   => $signid,
+				);
+				$sql->queryp("INSERT INTO `pmsgs` SET ".mysql::phs($values), $values);
 
-				$sql->query("INSERT INTO pmsgs (id,userto,userfrom,date,ip,msgread,headid,signid) VALUES (NULL,$userid,$loguserid,$currenttime,'$userip',0,$headid,$signid)");
-				$sql->query("INSERT INTO pmsgs_text (pid,title,text,tagval) VALUES (".$sql->insert_id().",'$subject','$message','$tagval')");
+				$values = array(
+					'pid'     => $sql->insert_id(),
+					'title'   => stripslashes($subject),
+					'text'    => stripslashes($message),
+					'tagval'  => $tagval,
+				);
+				$sql->queryp("INSERT INTO `pmsgs_text` SET ".mysql::phs($values), $values);
 
 				print "$tccell1>Private message to $username sent successfully!
 					<br>".redirect('private.php','your private message box',0).$tblend;

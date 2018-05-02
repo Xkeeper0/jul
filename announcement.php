@@ -3,8 +3,9 @@
   require 'lib/layout.php';
   if(!$f) $f=0;
   if ($f && !$sql->resultq("SELECT COUNT(*) FROM forums WHERE id = {$f} AND minpower <= {$loguser['powerlevel']}"))
-	  errorpage("This forum does not exist.", 'the index page', 'index.php');  
-  if(@$sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum=$f and user=$loguserid"))) $ismod=1;
+	  errorpage("This forum does not exist.", 'the index page', 'index.php'); 
+  if (!$ismod && $loguserid) 
+	  $ismod = (int)$sql->resultq("SELECT COUNT(*) FROM forummods WHERE forum=$f and user=$loguserid");
   $canpost=($isadmin or ($ismod && $f>0));
   if($_GET[action]=='edit' or $_POST[action]=='editannc'){
     $annc=$sql->fetch($sql->query("SELECT * FROM announcements WHERE id=$id"));
@@ -94,7 +95,9 @@
 	  if($user[postbg]) $head="<div style=background:url($user[postbg]);height=100%>$head";
 	  $numposts=$user[posts];
 	  $numdays=(ctime()-$user[regdate])/86400;
-	  $message=doreplace($message,$numposts,$numdays,$user['name']);
+	  $tags			= array();
+	  $message		= doreplace($message,$numposts,$numdays,$user['name'], $tags);
+	  $tagval		= json_encode($tags);
 	  $rsign=doreplace($sign,$numposts,$numdays,$user['name']);
 	  $rhead=doreplace($head,$numposts,$numdays,$user['name']);
 	  squot(0,$subject);
@@ -103,7 +106,18 @@
 	    if(!$f) $f=0;
 	    $headid=getpostlayoutid($head);
 	    $signid=getpostlayoutid($sign);
-	    $sql->query("INSERT INTO `announcements` (`user`, `date`, `ip`, `title`, `forum`, `text`, `headid`, `signid`, `tagval`) VALUES ('$userid', '$currenttime', '$userip', '$subject', '$f', '$message', '$headid', '$signid', '$tagval')");
+		$values = array(
+			'user'   => $userid,
+			'date'   => $currenttime,
+			'ip'     => $userip,
+			'title'  => stripslashes($subject),
+			'forum'  => $f, 
+			'text'   => stripslashes($message), 
+			'headid' => $headid,
+			'signid' => $signid,
+			'tagval' => $tagval
+		);
+		$sql->queryp("INSERT INTO `announcements` SET ".mysql::phs($values), $values);
 	    $annclist="
 		$tccell1>Thank you, $user[name], for posting your announcement.<br>
 	     ".redirect("announcement.php?f=$f","the announcements",0)."</table></table>";
@@ -145,15 +159,30 @@
 	$numdays=(ctime()-$loguser[regdate])/86400;
 	$message=doreplace($message,$numposts,$numdays,$loguser[name]);
 
-	$namecolor = getnamecolor($loguser['sex'], $loguser['powerlevel']);
-	$edited ="<a href=profile.php?id=$loguser[id]><font $namecolor>$loguser[name]</font></a>";
-
+	//$namecolor = getnamecolor($loguser['sex'], $loguser['powerlevel']);
+	//$edited ="<a href=profile.php?id=$loguser[id]><font $namecolor>$loguser[name]</font></a>";
+	$edited = getuserlink($loguser);
+	$subject = stripslashes($subject);
+	$message = stripslashes($message);
+	$head = stripslashes($head);
+	$sign = stripslashes($sign);
 	if($submit){
-	  $headid=@$sql->resultq("SELECT id FROM postlayouts WHERE text='$head' LIMIT 1");
-	  $signid=@$sql->resultq("SELECT id FROM postlayouts WHERE text='$sign' LIMIT 1");
+
+	  $headid=@$sql->resultp("SELECT id FROM postlayouts WHERE text=? LIMIT 1", array($head));
+	  $signid=@$sql->resultp("SELECT id FROM postlayouts WHERE text=? LIMIT 1", array($sign));
 	  if($headid) $head=''; else $headid=0;
 	  if($signid) $sign=''; else $signid=0;
-	  $sql->query("UPDATE announcements SET title='$subject', text='$message', headtext='$head', signtext='$sign', edited='$edited', editdate='".ctime()."',headid=$headid,signid=$signid WHERE id=$id");
+		$values = array(
+			'title'    => $subject,
+			'text'     => $message, 
+			'headid'   => $headid,
+			'signid'   => $signid,
+			'headtext' => $head,
+			'signtext' => $sign,
+			'edited'   => $edited,
+			'editdate' => ctime()
+		);
+	  $sql->queryp("UPDATE announcements SET ".mysql::phs($values)." WHERE id=$id", $values);
 	  $annclist="
 	    $tccell1>Thank you, ".$loguser[name].", for editing the announcement.<br>
 	    ".redirect("announcement.php?f=$f","go to the announcements",0);
@@ -161,10 +190,6 @@
 	  loadtlayout();
 	  $annc=$sql->fetch($sql->query("SELECT * FROM announcements WHERE id=$id"));
 	  $ppost=$sql->fetch($sql->query("SELECT * FROM users WHERE id=$annc[user]"));
-	$subject = stripslashes($subject);
-	$message = stripslashes($message);
-	$head = stripslashes($head);
-	$sign = stripslashes($sign);
 	  $ppost['uid']=$annc[user];
 	  $ppost['date']=$annc[date];
 	  $ppost['tagval']=$annc[tagval];

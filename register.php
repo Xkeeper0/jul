@@ -121,8 +121,19 @@
 		
 		// No longer useful
 		//$ircout['pmatch']	= $sql -> resultq("SELECT COUNT(*) FROM `users` WHERE `password` = '". md5($pass) ."'");
-
-		$sql->query("INSERT INTO `users` SET `name` = '$name', `password` = '". md5($pass) ."', `powerlevel` = '0', `postsperpage` = '20', `threadsperpage` = '50', `lastip` = '$ipaddr', `layout` = '1', `scheme` = '0', `lastactivity` = '$currenttime', `regdate` = '$currenttime'") or print $sql->error();
+		$values = array(
+			'name'           => stripslashes($name),
+			'password'       => md5($pass), // do not use stripslashes() here
+			'powerlevel'     => 0,
+			'postsperpage'   => 20,
+			'threadsperpage' => 50,
+			'lastip'         => $ipaddr,
+			'layout'         => 1,
+			'scheme'         => 0,
+			'lastactivity'   => $currenttime,
+			'regdate'        => $currenttime,
+		);
+		$sql->queryp("INSERT INTO `users` SET ".mysql::phs($values), $values) or print $sql->error();
 		$newuserid			= $sql->insert_id();
 		$sql->query("UPDATE users SET `password` = '".getpwhash($pass, $newuserid)."' WHERE `id` = '$newuserid'");
 

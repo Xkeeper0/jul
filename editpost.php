@@ -36,8 +36,8 @@
 	require_once 'lib/layout.php';
 	print $header;
 
-	if (@$sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forum[id] and user=$loguserid")))
-		$ismod = 1;
+	if (!$ismod && $loguserid)
+		$ismod = (int)$sql->resultq("SELECT COUNT(*) FROM forummods WHERE forum={$forum['id']} and user={$loguserid}");
 
 	print "$fonttag<a href=index.php>$boardname</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href=forum.php?id=$forum[id]>".$forum['title']."</a> - <a href='thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
 		$tblstart
@@ -94,8 +94,11 @@
 			$numdays=(ctime()-$user['regdate'])/86400;
 			$message=doreplace($message,$numposts,$numdays,$loguser['name']);
 
-			$edited = str_replace('\'', '\\\'', getuserlink($loguser));
-
+			//$edited = str_replace('\'', '\\\'', getuserlink($loguser));
+			$edited		= getuserlink($loguser);
+			$head 		= stripslashes($head);
+			$sign 		= stripslashes($sign);
+			$message 	= stripslashes($message);
 			if($submit) {
 				if ($loguserid == 1162) {
 					xk_ircsend("1|The jceggbert5 dipshit tried to edit another post: ". $id);
@@ -105,12 +108,25 @@
 					die("NO BONUS");
 				}
 				else {
-					$headid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$head' LIMIT 1");
-					$signid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$sign' LIMIT 1");
+					$headid=$sql->resultp("SELECT `id` FROM `postlayouts` WHERE `text` = ? LIMIT 1", array($head));
+					$signid=$sql->resultp("SELECT `id` FROM `postlayouts` WHERE `text` = ? LIMIT 1", array($sign));
 					if($headid) $head=''; else $headid=0;
 					if($signid) $sign=''; else $signid=0;
-					$sql->query("UPDATE `posts_text` SET `options` = '$poptions', `headtext` = '$head', `text` = '$message', `signtext` = '$sign', `edited` = '$edited', `editdate` = '".ctime()."' WHERE `pid` = '$id'");
-					$sql->query("UPDATE `posts` SET `headid` = '$headid', `signid` = '$signid', `moodid` = '". $_POST['moodid'] ."' WHERE `id` = '$id'");
+					$textval = array(
+						'options'  => $poptions,
+						'headtext' => $head,
+						'text'     => $message,
+						'signtext' => $sign,
+						'edited'   => $edited,
+						'editdate' => ctime()
+					);
+					$mainval = array(
+						'headid' => $headid, 
+						'signid' => $signid,
+						'moodid' => (int)$_POST['moodid']
+					);
+					$sql->queryp("UPDATE `posts_text` SET ".mysql::phs($textval)." WHERE `pid` = '$id'", $textval);
+					$sql->queryp("UPDATE `posts` SET ".mysql::phs($mainval)." WHERE `id` = '$id'", $mainval);
 				}
 
 				//$ppp=($log?$loguser['postsperpage']:20);
@@ -123,9 +139,6 @@
 			else {
 				loadtlayout();
 				$ppost=$sql->fetchq("SELECT * FROM users WHERE id=$post[user]");
-				$head = stripslashes($head);
-				$sign = stripslashes($sign);
-				$message = stripslashes($message);
 				$ppost['uid']=$post['user'];
 				$ppost['num']=$post['num'];
 				$ppost['date']=$post['date'];

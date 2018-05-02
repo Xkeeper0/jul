@@ -2,6 +2,7 @@
 
 #	die();
 	require 'lib/function.php';
+	$_GET['id'] = filter_int($_GET['id']);
 	$stats		= array(
 		0	=> "sHP", 
 		1	=> "sMP", 
@@ -27,34 +28,39 @@
 
 
 	if ($_POST['edit']) {
-		$q	= 
-			"`name` = '". $_POST['name'] ."', ".
-			"`desc` = '". $_POST['desc'] ."', ".
-			"`cat` = '". $_POST['cat'] ."', ".
-			"`type` = '". $_POST['type'] ."', ".
-			"`effect` = '". $_POST['effect'] ."', ".
-			"`coins` = '". $_POST['coins'] ."', ".
-			($hiddeneditok ? "`hidden` = '". $_POST['hidden'] ."', " : "").
-			"`gcoins` = '". $_POST['gcoins'] ."', ";
+		
+		$values = array(
+			'name'   => stripslashes($_POST['name']),
+			'desc'   => stripslashes($_POST['desc']),
+			'cat'    => (int)$_POST['cat'],
+			'type'   => (int)$_POST['type'],
+			'effect' => (int)$_POST['effect'],
+			'coins'  => (int)$_POST['coins'],
+			'gcoins' => (int)$_POST['gcoins'],
+			'stype'  => "",
+		);
+		
+		if ($hiddeneditok)
+			$values['hidden'] = (int)$_POST['hidden'];
 	
 		foreach($stats as $stat) {
 			if ($_POST['m'. $stat] == "m") $_POST[$stat] *= 100;
-			$q		.= "`$stat` = '". $_POST[$stat] ."', ";
-			$stypes	.= $_POST['m'. $stat];
+			$values[$stat]    = (int)$_POST[$stat];
+			$values['stype'] .= $_POST['m'. $stat];
 		}
-		$q	.= "`stype` = '$stypes'";
 
 		if ($_POST['coins'] < 0 || $_POST['gcoins'] < 0) {
 			// $sql -> query("UPDATE `users` SET `powerlevel` = -1, `title` = 'Next time, read the goddamn warning before doing something stupid'");
 			die("You don't pay warnings much heed, do you?");
 		}
-
+		
+		$q = mysql::phs($values);
 		if ($_GET['id'] <= -1) {
-			$sql -> query("INSERT INTO `items` SET $q, `user` = '". $loguser['id'] ."'");
+			$sql->queryp("INSERT INTO `items` SET $q, `user` = '{$loguser['id']}'", $values);
 			if ($sql->error()) die($sql->error());
 			$id	= $sql->insert_id();
 		} else {
-			$sql -> query("UPDATE `items` SET $q WHERE `id` = '". $_GET['id'] ."'");
+			$sql->queryp("UPDATE `items` SET $q WHERE `id` = '{$_GET['id']}'", $values);
 			if ($sql->error()) die($sql->error());
 			$id	= $_GET['id'];
 		}

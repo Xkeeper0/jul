@@ -6,29 +6,30 @@ if ($_POST['edit'] || $_POST['edit2']) {
 
 	if (isset($_GET['preview']))
 		$prevtext = "&preview=" . $_GET['preview'];
-
-	$hidden = (($_POST['hidden']) ? 1 : 0);
-
-	$values .= "`title`          = '$forumtitle',     ";
-	$values .= "`description`    = '$description',    ";
-	$values .= "`catid`          = '$catid',          ";
-	$values .= "`minpower`       = '$minpower',       ";
-	$values .= "`minpowerthread` = '$minpowerthread', ";
-	$values .= "`minpowerreply`  = '$minpowerreply',  ";
-	$values .= "`numthreads`     = '$numthreads',     ";
-	$values .= "`numposts`       = '$numposts',       ";
-	$values .= "`forder`         = '$forder',         ";
-	$values .= "`specialscheme`  = '$edspecialscheme',";
-	$values .= "`hidden`         = '$hideforum',      ";
-	$values .= "`pollstyle`      = '$pollstyle'       ";
-
+	
+	$data = array(
+		'title'          => stripslashes($_POST['forumtitle']),
+		'description'    => stripslashes($_POST['description']),
+		'catid'          => (int)$_POST['catid'],
+		'minpower'       => (int)$_POST['minpower'],
+		'minpowerthread' => (int)$_POST['minpowerthread'],
+		'minpowerreply'  => (int)$_POST['minpowerreply'],
+		'numthreads'     => (int)$_POST['numthreads'],
+		'numposts'       => (int)$_POST['numposts'],
+		'forder'         => (int)$_POST['forder'],
+		'specialscheme'  => stripslashes($_POST['edspecialscheme']),
+		'hidden'         => (int)$_POST['hidden'],
+		'pollstyle'      => (int)$_POST['pollstyle']
+	);
+	$values = mysql::phs($data);
+	
 	if ($_GET['id'] <= -1) {
-		$sql->query("INSERT INTO `forums` SET $values, `lastpostid` = '0'");
+		$sql->queryp("INSERT INTO `forums` SET $values, `lastpostid` = '0'", $data);
 		if ($sql->error()) die($sql->error());
 		$id	= $sql->insert_id();
-		trigger_error("Created new forum \"$forumtitle\" with ID $id", E_USER_NOTICE);
+		trigger_error("Created new forum \"{$_POST['forumtitle']}\" with ID $id", E_USER_NOTICE);
 	} else {
-		$sql->query("UPDATE `forums` SET $values WHERE `id` = '". $_GET['id'] ."'");
+		$sql->queryp("UPDATE `forums` SET $values WHERE `id` = '{$_GET['id']}'", $data);
 		if ($sql->error()) die($sql->error());
 		$id	= $_GET['id'];
 		trigger_error("Edited forum ID $id", E_USER_NOTICE);

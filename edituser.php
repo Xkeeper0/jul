@@ -181,11 +181,6 @@
 		if(!$bmonth && !$bday && !$byear) $birthday=0;
 
     //$sql->query("INSERT logs SET useraction ='Edit User ".$user[nick]."(".$user[id]."'");
-
-		if ($password) {
-			$passedit="`password` = '".getpwhash($password, $userid)."', ";
-		}
-
 		if ($sex == -378) {
 			$sex = $sexn;
 		}
@@ -193,46 +188,56 @@
 		if ($userid == 1 && $loguserid != 1) {
 			xk_ircsend("1|". xk(7) ."Someone (*cough{$loguserid}cough*) is trying to be funny...");
 		}
+		
+		$values = array(
+			'posts'          => (int) $_POST['numposts'],
+			'regdate'        => (int) $_POST['regtime'],
+			'name'           => stripslashes($_POST['username']),
+			'powerlevel'     => (int) $_POST['powerlevel'],
+			'profile_locked' => (int) $_POST['profile_locked'],
+			'editing_locked' => (int) $_POST['editing_locked'],
+			'titleoption'    => (int) $_POST['titleoption'],
+		
+			'picture'        => stripslashes($_POST['picture']),
+			'minipic'        => stripslashes($minipic),
+			'signature'      => stripslashes($signature),
+			'bio'            => stripslashes($bio),
+			'email'          => stripslashes($_POST['email']),
+			'icq'            => (int) $icq,
+			'title'          => stripslashes($title),
+			'useranks'       => (int) $useranks,
+			'aim'            => stripslashes($_POST['aim']),
+			'sex'            => (int) $sex,
+			'homepageurl'    => stripslashes($_POST['homepage']),
+			'homepagename'   => stripslashes($_POST['pagename']),
+			'timezone'       => (int) $_POST['timezone'],
+			'dateformat'     => $eddateformat,
+			'dateshort'      => $eddateshort,
+			'postsperpage'   => (int) $_POST['postsperpage'],
+			'aka'            => stripslashes($_POST['aka']),
+			'realname'       => stripslashes($_POST['realname']),
+			'location'       => stripslashes($_POST['location']),
+			'postbg'         => stripslashes($_POST['postbg']), // DELETEME
+			'postheader'     => stripslashes($postheader),
+			'birthday'       => $birthday,
+			'scheme'         => (int) $_POST['sscheme'],
+			'threadsperpage' => (int) $_POST['threadsperpage'],
+			'viewsig'        => (int) $_POST['viewsig'],
+			'layout'         => (int) $_POST['tlayout'],
+	//		'posttool'       => (int) $_POST['posttool'],
+			'moodurl'        => stripslashes($_POST['moodurl']),
+			'imood'          => stripslashes($_POST['imood']),
+			'pronouns'       => stripslashes($_POST['pronouns']),
+			'signsep'        => (int) $_POST['signsep'],
+			'pagestyle'      => (int) $_POST['pagestyle'],
+			'pollstyle'      => (int) $_POST['pollstyle']
+		);
+		
+		if ($_POST['password']) {
+			$values['password'] = getpwhash($_POST['password'], $userid);
+		}
 
-	$sql->query("UPDATE `users` SET
-		`posts` = '$numposts',
-		`regdate` = '$regtime',
-		`name` = '$username',
-		$passedit
-		`picture` = '$picture',
-		`signature` = '$signature',
-		`bio` = '$bio',
-		`powerlevel` = '$powerlevel',
-		`title` = '$usertitle',
-		`email` = '$email',
-		`icq` = '$icq',
-		`aim` = '$aim',
-		`aka` = '$aka',
-		`sex` = '$sex',
-		`homepageurl` = '$homepage',
-		`timezone` = '$timezone',
-		`dateformat`		= '$eddateformat',
-		`dateshort`			= '$eddateshort',
-		`postsperpage` = '$postsperpage',
-		`realname` = '$realname',
-		`location` = '$location',
-		`postbg` = '$postbg',
-		`postheader` = '$postheader',
-		`useranks` = '$useranks',
-		`birthday` = '$birthday',
-		`minipic` = '$minipic',
-		`homepagename` = '$pagename',
-		`scheme` = '$sscheme',
-		`threadsperpage` = '$threadsperpage',
-		`viewsig` = '$viewsig',
-		`layout` = '$tlayout',".
-//	`posttool` = '$posttool',
-	 "`moodurl` = '$moodurl',
-		`profile_locked` = '$profile_locked',
-		`editing_locked` = '$editing_locked',
-		`pronouns` = '$pronouns',
-		`titleoption` = '$titleoption'
-	WHERE `id` = '$userid'") or print $sql->error();
+		$sql->queryp("UPDATE `users` SET ".mysql::phs($values)." WHERE `id` = '$userid'", $values) or print $sql->error();
 
 	print "
 	$tblstart

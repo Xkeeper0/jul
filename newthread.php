@@ -198,7 +198,7 @@
 			$msg = doreplace($msg, $numposts, $numdays, $username, $tags);
 			$rsign = doreplace($sign, $numposts, $numdays, $username);
 			$rhead = doreplace($head, $numposts, $numdays, $username);
-			$tagval	= $sql->escape(json_encode($tags));
+			$tagval	= json_encode($tags);
 			$posticons = file('posticons.dat');
 			$posticon = $posticons[$iconid];
 			$currenttime = ctime();
@@ -215,14 +215,45 @@
 					$headid=getpostlayoutid($head);
 					$signid=getpostlayoutid($sign);
 				}
-
-				$sql->query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
-							"VALUES ('$id', '$userid', '0', '0', '$subject', '$posticon', '0', '$currenttime', '$currenttime', '$userid')");
+				
+				// create the thread
+				$values = array(
+					'forum'         => $id,
+					'user'          => $userid,
+					'views'         => 0,
+					'closed'        => 0,
+					'title'         => stripslashes($_POST['subject']),
+					'icon'          => stripslashes($posticon),
+					'replies'       => 0,
+					'firstpostdate' => $currenttime,
+					'lastpostdate'  => $currenttime, 
+					'lastposter'    => $userid,
+				);
+				$sql->queryp("INSERT INTO `threads` SET ".mysql::phs($values), $values);
 				$t = $sql->insert_id();
-				$sql->query("INSERT INTO `posts` (`thread`, `user`, `date`, `ip`, `num`, `headid`, `signid`, `moodid`) VALUES ('$t', '$userid', '$currenttime', '$userip', '$postnum', '$headid', '$signid','". $_POST['moodid'] ."')");
-				$pid=$sql->insert_id();
-				$options = intval($nosmilies) . "|" . intval($nohtml);
-				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`, `text`, `tagval`, `options`) VALUES ('$pid', '$msg', $tagval, '$options')");
+				// create the post
+				$values = array(
+					'thread' => $t,
+					'user'   => $userid,
+					'date'   => $currenttime,
+					'ip'     => $userip,
+					'num'    => $postnum,
+					'headid' => $headid,
+					'signid' => $signid,
+					'moodid' => $_POST['moodid'],
+				);
+				$sql->queryp("INSERT INTO `posts` SET ".mysql::phs($values), $values);
+				$pid = $sql->insert_id();
+				// create the post text
+				if ($pid) {
+					$values = array(
+						'pid'     => $pid,
+						'text'    => stripslashes($msg),
+						'tagval'  => $tagval,
+						'options' => filter_int($_POST['nosmilies']) . "|" . filter_int($_POST['nohtml'])
+					);
+					$sql->queryp("INSERT INTO `posts_text` SET ".mysql::phs($values), $values);
+				}
 				$sql->query("UPDATE `forums` SET `numthreads` = `numthreads` + 1, `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` = '$userid', `lastpostid` = '$pid' WHERE id=$id");
 
 				if(!$poll) {
@@ -239,12 +270,21 @@
 					));
 				}
 				else {
-					$sql->query("INSERT INTO `poll` (`question`, `briefing`, `closed`, `doublevote`) VALUES ('$question', '$briefing', '0', '$mltvote')");
+					// create poll data
+					$values = array(
+						'question'   => stripslashes($_POST['question']),
+						'briefing'   => stripslashes($_POST['briefing']),
+						'closed'     => 0,
+						'doublevote' => (int) $_POST['mltvote']
+					);
+					$sql->queryp("INSERT INTO `poll` SET ".mysql::phs($values), $values);
 					$p=$sql->insert_id();
 					$sql->query("UPDATE `threads` SET `poll` = '$p' where `id` = '$t'");
+					// create poll choices
+					$makechoice = $sql->prepare("INSERT INTO `poll_choices` (`poll`, `choice`, `color`) VALUES (?,?,?)");
 					$c=1;
-					while($chtext[$c]){
-						$sql->query("INSERT INTO `poll_choices` (`poll`, `choice`, `color`) VALUES ('$p', '$chtext[$c]', '$chcolor[$c]')");
+					while ($chtext[$c]) {
+						$sql->execute($makechoice, array($p, stripslashes($chtext[$c]), stripslashes($chcolor[$c])));
 						$c++;
 					}
 					print "

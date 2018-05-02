@@ -36,7 +36,8 @@
 	$fonline=fonlineusers($forumid);
 	$header=makeheader($header1,$headlinks,$header2 ."	$tblstart$tccell1s>$fonline$tblend");
 
-	if($sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'"))) $ismod=1;
+	if (!$ismod)
+		$ismod = (int)$sql->resultq("SELECT COUNT(*) FROM forummods WHERE forum='{$forumid}' and user='{$loguserid}'");
 
 	$modoptions	= "";
 
@@ -180,7 +181,7 @@
 			$numdays		= (ctime()-$user['regdate'])/86400;
 			$tags			= array();
 			$message		= doreplace($message,$numposts,$numdays,$username, $tags);
-			$tagval			= $sql->escape(json_encode($tags));
+			$tagval			= json_encode($tags);
 			$rsign			= doreplace($sign,$numposts,$numdays,$username);
 			$rhead			= doreplace($head,$numposts,$numdays,$username);
 			$currenttime	= ctime();
@@ -205,14 +206,29 @@
 					if (filter_bool($_POST['stick'])) $stickq = "`sticky` = '1',";
 						else $stickq = "`sticky` = '0',";
 				}
-
-				$sql->query("INSERT INTO posts (thread,user,date,ip,num,headid,signid,moodid) VALUES ($id,$userid,$currenttime,'$userip',$numposts,$headid,$signid,'". $_POST['moodid'] ."')");
+				
+				$values = array(
+					'thread' => $id,
+					'user'   => $userid,
+					'date'   => $currenttime,
+					'ip'     => $userip,
+					'num'    => $numposts,
+					'headid' => $headid,
+					'signid' => $signid,
+					'moodid' => (int) $_POST['moodid'],
+				);
+				$sql->queryp("INSERT INTO `posts` SET ".mysql::phs($values), $values);
 				$pid=$sql->insert_id();
 
-				$options = filter_int($nosmilies) . "|" . filter_int($nohtml);
-
-				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','$message',$tagval, '$options')");
-
+				if ($pid) {
+					$values = array(
+						'pid'     => $pid,
+						'text'    => stripslashes($message),
+						'tagval'  => $tagval,
+						'options' => filter_int($_POST['nosmilies']) . "|" . filter_int($_POST['nohtml'])
+					);
+					$sql->queryp("INSERT INTO `posts_text` SET ".mysql::phs($values), $values);
+				}
 				$sql->query("UPDATE `threads` SET $closeq $stickq `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
 				$sql->query("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` ='$userid', `lastpostid` = '$pid' WHERE `id`='$forumid'");
 

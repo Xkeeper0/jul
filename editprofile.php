@@ -240,10 +240,45 @@
     if(!$bmonth && !$bday && !$byear) $birthday=0;
     if(!$icq) $icq=0;
     if(!isset($useranks)) $useranks=$loguser['useranks'];
-
+		
+		$values = array(
+			'picture'        => stripslashes($_POST['picture']),
+			'minipic'        => stripslashes($minipic),
+			'signature'      => stripslashes($signature),
+			'bio'            => stripslashes($bio),
+			'email'          => stripslashes($_POST['email']),
+			'icq'            => (int) $icq,
+			'title'          => stripslashes($title),
+			'useranks'       => (int) $useranks,
+			'aim'            => stripslashes($_POST['aim']),
+			'sex'            => (int) $sex,
+			'homepageurl'    => stripslashes($_POST['homepage']),
+			'homepagename'   => stripslashes($_POST['pagename']),
+			'timezone'       => (int) $_POST['timezone'],
+			'dateformat'     => $eddateformat,
+			'dateshort'      => $eddateshort,
+			'postsperpage'   => (int) $_POST['postsperpage'],
+	//		'aka'            => stripslashes($_POST['aka']),
+			'realname'       => stripslashes($_POST['realname']),
+			'location'       => stripslashes($_POST['location']),
+			'postbg'         => stripslashes($_POST['postbg']), // DELETEME
+			'postheader'     => stripslashes($postheader),
+			'birthday'       => $birthday,
+			'scheme'         => (int) $_POST['sscheme'],
+			'threadsperpage' => (int) $_POST['threadsperpage'],
+			'viewsig'        => (int) $_POST['viewsig'],
+			'layout'         => (int) $_POST['tlayout'],
+	//		'posttool'       => (int) $_POST['posttool'],
+			'moodurl'        => stripslashes($_POST['moodurl']),
+			'imood'          => stripslashes($_POST['imood']),
+			'pronouns'       => stripslashes($_POST['pronouns']),
+			'signsep'        => (int) $_POST['signsep'],
+			'pagestyle'      => (int) $_POST['pagestyle'],
+			'pollstyle'      => (int) $_POST['pollstyle']
+		);
 		if ($_POST['password']) {
 			$hash = getpwhash($_POST['password'], $loguserid);
-			$passwordenc = "`password` = '$hash', ";
+			$values['password'] = $hash;
 
 			if ($loguser['id'] == $loguserid) {
 				$verifyid = intval(substr($_COOKIE['logverify'], 0, 1));
@@ -251,44 +286,8 @@
 				setcookie('logverify',$verify,2147483647, "/", $_SERVER['SERVER_NAME'], false, true);
 			}
 		}
-		else // Sneaky!  But no.
-			$passwordenc = '';
-
-    $sql->query("UPDATE users
-      SET		$passwordenc
-      `picture` = '$picture',
-      `minipic` = '$minipic',
-      `signature` = '$signature',
-      `bio` = '$bio',
-      `email` = '$email',
-      `icq` = '$icq',
-      `title` = '$title',
-      `useranks` = '$useranks',
-      `aim` = '$aim',
-      `sex` = '$sex',
-      `homepageurl` = '$homepage',
-      `homepagename` = '$pagename',
-      `timezone` = '$timezone',
-      `dateformat` = '$eddateformat',
-      `dateshort` = '$eddateshort',
-      `postsperpage` = '$postsperpage',".
-//      `aka` = '$aka',
-     "`realname` = '$realname',
-      `location` = '$location',
-      `postbg` = '$postbg',
-      `postheader` = '$postheader',
-      `birthday` = '$birthday',
-      `scheme` = '$sscheme',
-      `threadsperpage` = '$threadsperpage',
-      `viewsig` = '$viewsig',
-      `layout` = '$tlayout',
-      `moodurl` = '". $_POST['moodurl'] ."',
-      `imood` = '$imood',
-      `pronouns` = '{$_POST['pronouns']}',
-      `signsep` = '$signsep',
-      `pagestyle` = '$pagestyle',
-      `pollstyle` = '$pollstyle'
-    WHERE `id` = '$loguserid'") OR print $sql->error();
+		
+		$sql->queryp("UPDATE users SET ".mysql::phs($values)." WHERE `id` = '$loguserid'", $values) OR print $sql->error();
 
     print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>".redirect("profile.php?id=$loguserid",'view your profile',0).$tblend;
   }
