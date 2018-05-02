@@ -31,7 +31,7 @@
 			<li><a href='activeusers.php'>Recently active posters</a></li>
 			<li><a href='acs.php'>Daily poster rankings</a></li>
 			<li><a href='milestones.php'>Post milestones</a></li>
-			<li><a href='sigsize.php'>Biggest posters</a></li>
+			<li><a href='biggestposters.php'>Biggest posters</a></li>
 			<li><a href='sigsize.php'>Largest post layouts</a></li>
 			<li><a href='sigsize.php?bio=1'>Largest bios</a></li>
 			<li><a href='activity.php?u=". ($loguserid ? $loguserid : 1) ."'>Graph of your posting history</a> (change the ID in the URL to see others)</li>
