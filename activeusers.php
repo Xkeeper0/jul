@@ -3,29 +3,29 @@
 
 	$windowtitle	= "$boardname -- Active users";
 	require 'lib/layout.php';
-
+	
 	if (($type == 'pm' || $type == 'pms') && !$log)
 		unset($type);
-
-	if (!isset($_GET['time']))
-		$time = 86400;
-	else
-		$time = intval($_GET['time']);
-
-	$query='SELECT users.id, regdate, name, minipic, sex, powerlevel, aka, birthday, COUNT(*) AS cnt FROM users';
-	$endp=' GROUP BY users.id ORDER BY cnt DESC';
-
-	$linklist[0] = "<a href=\"?time=$time\">posts made</a>";
-	$linklist[1] = "<a href=\"?type=thread&time=$time\">new threads</a>";
+	
+	$values = array();
+	$_GET['tid']  = filter_int($_GET['tid']);
+	$_GET['time'] = filter_int($_GET['time'], 86400); // 1 day default
+	
+	$linklist[0] = "<a href=\"?time={$_GET['time']}\">posts made</a>";
+	$linklist[1] = "<a href=\"?type=thread&time={$_GET['time']}\">new threads</a>";
 	if ($log) {
-		$linklist[2] = "<a href=\"?type=pms&time=$time\">PMs sent by you</a>";
-		$linklist[3] = "<a href=\"?type=pm&time=$time\">PMs sent to you</a>";
+		$linklist[2] = "<a href=\"?type=pms&time={$_GET['time']}\">PMs sent by you</a>";
+		$linklist[3] = "<a href=\"?type=pm&time={$_GET['time']}\">PMs sent to you</a>";
 	}
 
 	if ($type == 'thread')	{
-		$posters	= $sql-> query("$query, threads WHERE threads.user=users.id"
-			.($time ? " AND threads.firstpostdate> '". (ctime() - $time) ."'" : '')
-			.$endp);
+		$jointbl    = "threads";
+		$where       = "WHERE threads.user = users.id";
+		if ($_GET['time']) {
+			$where .= " AND threads.firstpostdate > :time";
+			$values['time'] = ctime() - $_GET['time'];
+		}
+		
 		$desc		= "Most active thread posters";
 		$column		= "Threads";
 		$column2	= "threads";
@@ -33,9 +33,14 @@
 		$linklist[1] = "new threads";
 
 	} elseif ($type == 'pm') {
-		$posters	= $sql-> query("$query, pmsgs WHERE pmsgs.userto=$loguserid"
-			.($time ? " AND pmsgs.date> '". (ctime() - $time) ."'" : '')
-			." AND pmsgs.userfrom=users.id$endp");
+		$jointbl        = "pmsgs";
+		$where          = "WHERE pmsgs.userto = :user AND pmsgs.userfrom = users.id";
+		$values['user'] = $loguserid;
+		if ($_GET['time']) {
+			$where .= " AND pmsgs.date > :time";		
+			$values['time'] = ctime() - $_GET['time'];
+		}
+		
 		$desc		= "PMs recieved from";
 		$column		= "PMs";
 		$column2	= "PMs";
@@ -43,9 +48,14 @@
 		$linklist[3] = "PMs sent to you";
 
 	} elseif ($type == 'pms') {
-		$posters	= $sql-> query("$query, pmsgs WHERE pmsgs.userfrom=$loguserid"
-			.($time ? " AND pmsgs.date> '". (ctime() - $time) ."'" : '')
-			." AND pmsgs.userto=users.id$endp");
+		$jointbl        = "pmsgs";
+		$where          = "WHERE pmsgs.userfrom = :user AND pmsgs.userto = users.id";
+		$values['user'] = $loguserid;
+		if ($_GET['time']) {
+			$where .= " AND pmsgs.date > :time";		
+			$values['time'] = ctime() - $_GET['time'];
+		}
+		
 		$desc		= "PMs sent to";
 		$column		= "PMs";
 		$column2	= "PMs";
@@ -53,10 +63,17 @@
 		$linklist[2] = "PMs sent by you";
 
 	} else {
-		$posters	= $sql-> query("$query, posts WHERE posts.user=users.id"
-			.($tid ? " AND thread='$tid'" : '')
-			.($time ? " AND posts.date> '". (ctime() - $time) ."'" : '')
-			.$endp);
+		$jointbl        = "posts";
+		$where          = "WHERE posts.user = users.id";
+		if ($_GET['time']) {
+			$where .= " AND posts.date > :time";		
+			$values['time'] = ctime() - $_GET['time'];
+		}
+		if ($tid) {
+			$where .= " AND thread = :tid ";		
+			$values['tid'] = $tid;
+		}
+		
 		$desc		= "Most active posters";
 		$column		= "Posts";
 		$column2	= "posts";
@@ -64,6 +81,14 @@
 		$linklist[0] = "posts made";
 		$type = '';
 	}
+	
+	$posters = $sql->queryp("
+		SELECT users.id, regdate, name, minipic, sex, powerlevel, aka, birthday, COUNT(*) AS cnt
+		FROM users, {$jointbl}
+		{$where}
+		GROUP BY users.id 
+		ORDER BY cnt DESC
+	", $values);
 
 	$link='<a href='.(($type) ? "?type={$type}&" : '?').'time';
 	print "
@@ -78,8 +103,8 @@
 		$tblend
 	"; 
 
-	if ($time)
-		$timespan = " during the last ". timeunits2($time);
+	if ($_GET['time'])
+		$timespan = " during the last ". timeunits2($_GET['time']);
 	else
 		$timespan = "";
 
@@ -118,7 +143,8 @@
 			$tccellh width=130 colspan=2>$column</td>
 	";
 
-	$total = 0;
+	$total  = 0;
+	$oldcnt = NULL;
 	for($i = 1; $user = $sql->fetch($posters); $i++) {
 		if($i == 1) $max = $user['cnt'];
 		if ($user['cnt'] != $oldcnt) $rank = $i;

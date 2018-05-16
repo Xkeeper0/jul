@@ -19,20 +19,20 @@ if ($action) {
 			$removemoduser = $removemod[1];
 			$removemodforum = $removemod[0];
 
-			$sql->query("DELETE FROM forummods WHERE user='$removemoduser' AND forum='$removemodforum'");
+			$sql->queryp("DELETE FROM forummods WHERE user=? AND forum=?", array($removemoduser, $removemodforum));
 			if(($err=$sql->error()) != "")
 				print "$tblstart$tccell1> ERROR: $err.";
 			else {
-				$sql->query("INSERT INTO actionlog (atime, adesc, aip) VALUES (".ctime().", \"User ".$loguserid." removed mod $removemoduser from forum $removemodforum\", \"$userip\")");
+				actionlog("User $loguserid removed mod $removemoduser from forum $removemodforum");
 				print "$tblstart$tccell1> You successfully deleted user $removemoduser from forum $removemodforum.<br>".redirect("admin-editmods.php",'go back to Edit Mods',0);
 			}
 		break;
 		case "add":
-			$sql->query("INSERT INTO forummods VALUES('$addmodforum', '$addmoduser')");
+			$sql->queryp("INSERT INTO forummods VALUES(?,?)", array($addmodforum, $addmoduser));
 			if(($err=$sql->error()) != "")
 				print "$tblstart$tccell1> ERROR: $err.";
 			else {
- 				$sql->query("INSERT INTO actionlog (atime, adesc, aip) VALUES (".ctime().", \"User ".$loguserid." added mod $addmoduser to forum $addmodforum\", \"$userip\")");
+				actionlog("User $loguserid added mod $addmoduser to forum $addmodforum");
 				print "$tblstart$tccell1> You successfully added user $addmoduser to forum $addmodforum.<br>".redirect("admin-editmods.php",'go back to Edit Mods',0);
 			}
 		break;
@@ -53,7 +53,7 @@ if (!$donotprint) {
 		$mods=$sql->query("SELECT user FROM forummods WHERE forum=$forum[id]");
 		if($mods) {
 			while($mod=$sql->fetch($mods)) {
-				$usermod=$sql->fetchq("SELECT aka,sex,powerlevel,name,id from users where id=$mod[user]");
+				$usermod=$sql->fetchq("SELECT aka,sex,powerlevel,name,id,birthday from users where id=$mod[user]");
 				if($m) $modlist.=", ";
 				$modlist .= getuserlink($usermod);
 				$forumselectforrem.="<option value=\"$forum[id]|$usermod[id]\">$forum[title] -- $usermod[name]</option>\r\n";
@@ -130,4 +130,14 @@ $tccell1>            <input type=\"submit\" name=\"action\" value=\"Add Mod\">*/
 print $footer;
 printtimedif($startingtime);
 
-?>
+
+function actionlog($msg) {
+	// return;
+	global $sql;
+	$values = array(
+		'atime' => ctime(),
+		'adesc' => $msg,
+		'aip'   => $_SERVER['REMOTE_ADDR']
+	);
+	$sql->queryp("INSERT INTO actionlog SET ". mysql::phs($values), $values);
+}

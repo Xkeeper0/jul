@@ -8,9 +8,9 @@
 
 	// Skip to last post/end thread
 	if (filter_int($_GET['lpt'])) {
-		$gotopost = $sql->resultq("SELECT MIN(`id`) FROM `posts` WHERE `thread` = '{$id}' AND `date` > '".intval($_GET['lpt'])."'");
+		$gotopost = $sql->resultp("SELECT MIN(`id`) FROM `posts` WHERE `thread` = ? AND `date` > ?", array($_GET['id'], $_GET['lpt']));
 	} elseif (filter_int($_GET['end']) || (filter_int($_GET['lpt']) && !$gotopost)) {
-		$gotopost = $sql->resultq("SELECT MAX(`id`) FROM `posts` WHERE `thread` = '{$id}'");
+		$gotopost = $sql->resultp("SELECT MAX(`id`) FROM `posts` WHERE `thread` = ?", array($_GET['id']));
 	}
 	if ($gotopost) {
 		return header("Location: ?pid={$gotopost}#{$gotopost}");
@@ -21,7 +21,7 @@
 		$option	= (($_GET['addvote']) ? 'addvote' : 'delvote');
 		$choice	= filter_int($_GET[$option]);
 
-		$pollid	= $sql->resultq("SELECT poll FROM threads WHERE id='{$id}'");
+		$pollid	= $sql->resultp("SELECT poll FROM threads WHERE id=?", array($_GET['id']));
 		if (!$pollid)
 			return header("Location: ?id={$id}#{$id}");
 
@@ -29,16 +29,17 @@
 		$confirm = md5($loguser['name'] . "sillysaltstring");
 
 		// no wrong poll bullshit
-		$valid = $sql->resultq("SELECT COUNT(*) FROM `poll_choices` WHERE `poll` = '$pollid' AND `id` = '$choice'");
+		$valid = $sql->resultp("SELECT COUNT(*) FROM `poll_choices` WHERE `poll` = ? AND `id` = ?", array($pollid, $choice));
 
 		if ($log && $poll && !$poll['closed'] && $_GET['dat'] == $confirm && $valid) {
 			if ($option == 'addvote') {
 				if (!$poll['doublevote'])
-					$sql->query("DELETE FROM `pollvotes` WHERE `user` = '$loguserid' AND `poll` = '$pollid'");
-				$sql->query("INSERT INTO pollvotes (poll,choice,user) VALUES ($pollid,$choice,$loguserid)");
+					$sql->queryp("DELETE FROM `pollvotes` WHERE `user` = ? AND `poll` = ?", array($loguserid, $pollid));
+				$sql->queryp("INSERT INTO pollvotes (poll,choice,user) VALUES (?,?,?)", array($pollid, $choice, $loguserid));
 			}
-			else
-				$sql->query("DELETE FROM `pollvotes` WHERE `user` = '$loguserid' AND `poll` = '$pollid' AND `choice` = '$choice'");
+			else {
+				$sql->queryp("DELETE FROM `pollvotes` WHERE `user` = ? AND `poll` = ? AND `choice` = ?", array($loguserid, $pollid, $choice));
+			}
 		}
 		return header("Location: ?id={$id}#{$id}");
 	}
@@ -48,13 +49,13 @@
 
 	if (filter_int($_GET['pid'])) {
 		$pid	= $_GET['pid'];
-		$id		= $sql->resultq("SELECT `thread` FROM `posts` WHERE `id` = '{$pid}'");
+		$id		= $sql->resultp("SELECT `thread` FROM `posts` WHERE `id` = ?", array($pid));
 		if (!$id) {
 			$meta['noindex'] = true; // prevent search engines from indexing
 			require_once 'lib/layout.php';
 			errorpage("Couldn't find a post with ID #".intval($pid).".  Perhaps it's been deleted?",'the index page',"index.php");
 		}
-		$numposts = $sql->resultq("SELECT COUNT(*) FROM `posts` WHERE `thread` = '{$id}' AND `id` < '{$pid}'");
+		$numposts = $sql->resultp("SELECT COUNT(*) FROM `posts` WHERE `thread` = ? AND `id` < ?", array($id, $pid));
 		$page = floor($numposts / $ppp);
 
 		// Canonical page w/o ppp link (for bots)
@@ -69,7 +70,7 @@
 
 	// fuck brace overkill
 	if ($id) do {
-		$thread = $sql->fetchq("SELECT * FROM threads WHERE id=$id");
+		$thread = $sql->fetchp("SELECT * FROM threads WHERE id=?", array($id));
 		$tlinks = '';
 
 		if (!$thread) {
@@ -80,7 +81,7 @@
 				notAuthorizedError();
 			}
 
-			if ($sql->resultq("SELECT COUNT(*) FROM `posts` WHERE `thread` = '{$id}'") <= 0) {
+			if ($sql->resultp("SELECT COUNT(*) FROM `posts` WHERE `thread` = ?", array($id)) <= 0) {
 				require_once 'lib/layout.php';
 				errorpage("Thread ID #{$id} doesn't exist, and no posts are associated with the invalid thread ID.",'the index page',"index.php");
 			}
@@ -91,11 +92,11 @@
 			$thread['title'] = "Bad posts with ID #$id";
 			break;
 		}
-
+		
 		$thread['title'] = str_replace("<", "&lt;", $thread['title']);
 
 		$forumid = intval($thread['forum']);
-		$forum = $sql->fetchq("SELECT * FROM forums WHERE id=$forumid");
+		$forum = $sql->fetchp("SELECT * FROM forums WHERE id = ?", array($forumid));
 
 		if (!$forum) {
 			$meta['noindex'] = true; // prevent search engines from indexing
@@ -120,32 +121,40 @@
 		$specialscheme = $forum['specialscheme'];
 
 		if ($log) {
-			$readdate = $sql->resultq("SELECT `readdate` FROM `forumread` WHERE `user` = '$loguserid' AND `forum` = '$forumid'");
+			$readdate = $sql->resultp("SELECT `readdate` FROM `forumread` WHERE `user` = ? AND `forum` = ?", array($loguserid, $forumid));
 
-			if ($thread['lastpostdate'] > $readdate)
-				$sql->query("REPLACE INTO threadsread SET `uid` = '$loguserid', `tid` = '$thread[id]', `time` = '".ctime()."', `read` = '1'");
-
-			$unreadcount = $sql->resultq(
+			if ($thread['lastpostdate'] > $readdate) {
+				$values = array(
+					'uid'  => $loguserid,
+					'tid'  => $thread['id'],
+					'time' => ctime(),
+					'read' => 1
+				);
+				$sql->queryp("REPLACE INTO threadsread SET ".mysql::phs($values), $values);
+			}
+			
+			$unreadcount = $sql->resultp(
 				"SELECT COUNT(*) FROM `threads` ".
-				"WHERE `id` NOT IN (SELECT `tid` FROM `threadsread` WHERE `uid` = '$loguserid' AND `read` = '1') ".
-				"AND `lastpostdate` > '$readdate' AND `forum` = '$forumid'");
+				"WHERE `id` NOT IN (SELECT `tid` FROM `threadsread` WHERE `uid` = ? AND `read` = ?) ".
+				"AND `lastpostdate` > ? AND `forum` = ?", array($loguserid, 1, $readdate, $forumid));
 			if ($unreadcount == 0)
-				$sql->query("REPLACE INTO forumread VALUES ('$loguserid', '$forumid', '".ctime().'\')');
+				$sql->queryp("REPLACE INTO forumread VALUES (?,?,?)", array($loguserid, $forumid, ctime()));
 		}
 
 		$tlinks = array();
 
 		// Favorites
 		if ($log) {
-			if ($sql->fetchq("SELECT * FROM favorites WHERE user={$loguserid} AND thread={$id}"))
+			if ($sql->fetchp("SELECT * FROM favorites WHERE user=? AND thread=?", array($loguserid, $id)))
 				$tlinks[] = "<a href='forum.php?act=rem&thread={$id}' style='white-space:nowrap;'>Remove from favorites</a>";
 			else
 				$tlinks[] = "<a href='forum.php?act=add&thread={$id}' style='white-space:nowrap;'>Add to favorites</a>";
 		}
 
-		$tnext = $sql->resultq("SELECT id FROM threads WHERE forum=$forumid AND lastpostdate>$thread[lastpostdate] ORDER BY lastpostdate ASC LIMIT 1");
+		$values = array($forumid, $thread['lastpostdate']);
+		$tnext = $sql->resultp("SELECT id FROM threads WHERE forum = ? AND lastpostdate > ? ORDER BY lastpostdate ASC  LIMIT 1", $values);
 		if ($tnext) $tlinks[] = "<a href='?id={$tnext}' style='white-space:nowrap;'>Next newer thread</a>";
-		$tprev = $sql->resultq("SELECT id FROM threads WHERE forum=$forumid AND lastpostdate<$thread[lastpostdate] ORDER BY lastpostdate DESC LIMIT 1");
+		$tprev = $sql->resultp("SELECT id FROM threads WHERE forum = ? AND lastpostdate < ? ORDER BY lastpostdate DESC LIMIT 1", $values);
 		if ($tprev) $tlinks[] = "<a href='?id={$tprev}' style='white-space:nowrap;'>Next older thread</a>";
 
 		$tlinks = implode(' | ', $tlinks);
@@ -157,19 +166,19 @@
 		$text = str_replace("\"", "&quot;", $text);
 		$meta['description'] = $text;
 
-		$sql->query("UPDATE threads SET views=views+1 WHERE id=$id");
+		$sql->queryp("UPDATE threads SET views=views+1 WHERE id=?", array($id));
 
 		$windowtitle = "{$forum['title']}: {$thread['title']}";
 	} while (false);
 	elseif($user) {
-		$uname = $sql->resultq("SELECT name FROM users WHERE id={$user}");
+		$uname = $sql->resultp("SELECT name FROM users WHERE id=?", array($user));
 		if (!$uname) {
 			$meta['noindex'] = true; // prevent search engines from indexing what they can't access
 			require_once 'lib/layout.php';
 			errorpage("User ID #{$user} doesn't exist.",'the index page',"index.php");
 		}
 
-		$thread['replies'] = $sql->resultq("SELECT count(*) FROM posts WHERE user={$user}") - 1;
+		$thread['replies'] = $sql->resultp("SELECT count(*) FROM posts WHERE user=?", array($user)) - 1;
 		$thread['title'] = "Posts by {$uname}";
 		$windowtitle = "Posts by {$uname}";
 		$tlinks = '';
@@ -187,8 +196,8 @@
 	$fonline = "";
 	if ($id && !$thread_error) {
 		$fonline = fonlineusers($forumid);
-		if ($sql->num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'")))
-			$ismod = true;
+		if (!$ismod)
+			$ismod = (int)$sql->resultp("SELECT COUNT(*) FROM forummods WHERE forum=? and user=?", array($forumid, $loguser['id']));
 	}
 	$modfeats = '';
 	if ($id && $ismod) {
@@ -227,11 +236,11 @@
 
 	$polltbl	= "";
 	if ($forum['pollstyle'] != -2 && $thread['poll']) {
-		$poll = $sql->fetchq("SELECT * FROM poll WHERE id='$thread[poll]'");
+		$poll = $sql->fetchp("SELECT * FROM poll WHERE id=?", array($thread['poll']));
 
 		$uservote = array();
 		if ($log) {
-			$lsql = $sql->query("SELECT `choice` FROM `pollvotes` WHERE `poll` = '$poll[id]' AND `user` = '$loguserid'");
+			$lsql = $sql->queryp("SELECT `choice` FROM `pollvotes` WHERE `poll` = ? AND `user` = ?", array($poll['id'], $loguser['id']));
 			while ($userchoice = $sql->fetch($lsql, PDO::FETCH_ASSOC))
 				$uservote[$userchoice['choice']] = true;
 		}
@@ -241,19 +250,20 @@
 		else
 			$pollstyle = $loguser['pollstyle'];
 
-		$tvotes2 = $sql->resultq("SELECT count(*) FROM pollvotes WHERE poll=$poll[id]");
-		$tvotesi = $sql->resultq("SELECT sum(u.`influence`) as influence FROM pollvotes p LEFT JOIN users u ON p.user = u.id WHERE poll=$poll[id]");
+		$pollval = array($poll['id']);
+		$tvotes2 = $sql->resultp("SELECT count(*) FROM pollvotes WHERE poll=?", $pollval);
+		$tvotesi = $sql->resultp("SELECT sum(u.`influence`) as influence FROM pollvotes p LEFT JOIN users u ON p.user = u.id WHERE poll=?", $pollval);
 
-		$pollvotes = $sql->getresultsbykey("SELECT choice, count(*) cnt FROM pollvotes WHERE poll=$poll[id] GROUP BY choice WITH ROLLUP",'choice','cnt');
-		$pollinflu = $sql->getresultsbykey("SELECT choice, sum(u.influence) as inf FROM pollvotes p LEFT JOIN users u ON p.user = u.id WHERE poll=$poll[id] GROUP BY choice WITH ROLLUP",'choice','inf');
+		$pollvotes = $sql->getresultsbykey("SELECT choice, count(*) cnt FROM pollvotes WHERE poll='{$poll['id']}' GROUP BY choice WITH ROLLUP",'choice','cnt');
+		$pollinflu = $sql->getresultsbykey("SELECT choice, sum(u.influence) as inf FROM pollvotes p LEFT JOIN users u ON p.user = u.id WHERE poll='{$poll['id']}' GROUP BY choice WITH ROLLUP",'choice','inf');
 
-		$tvotes_u = $sql->resultq("SELECT count(distinct `user`) FROM pollvotes WHERE poll=$poll[id]");
+		$tvotes_u = $sql->resultp("SELECT count(distinct `user`) FROM pollvotes WHERE poll=?", $pollval);
 		$tvotes_c = $pollvotes[""];
 		$tvotes_i = $pollinflu[""];
 
 		$confirm = md5($loguser['name'] . "sillysaltstring");
 
-		$pollcs = $sql->query("SELECT * FROM poll_choices WHERE poll=$poll[id]");
+		$pollcs = $sql->queryp("SELECT * FROM poll_choices WHERE poll=?", $pollval);
 		while ($pollc = $sql->fetch($pollcs)) {
 			$votes = intval($pollvotes[$pollc['id']]);
 			$influ = intval($pollinflu[$pollc['id']]);
@@ -323,9 +333,10 @@
 	}
 	$ufields = userfields();
 
-	$activity = $sql->query("SELECT user, count(*) num FROM posts WHERE date>".(ctime() - 86400)." GROUP BY user");
-	while ($n = $sql->fetch($activity))
-		$act[$n['user']] = $n['num'];
+	$act = $sql->getresultsbykey("SELECT user, COUNT(*) FROM posts WHERE date>".(ctime() - 86400)." GROUP BY user");
+	//$activity = $sql->query("SELECT user, count(*) num FROM posts WHERE date>".(ctime() - 86400)." GROUP BY user");
+	//while ($n = $sql->fetch($activity))
+	//	$act[$n['user']] = $n['num'];
 
 	$postlist = "
 		$polltbl
@@ -358,16 +369,21 @@
 	$page	= max(0, filter_int($page));
 	$min	= $ppp * $page;
 
-	if ($user) $searchon = "user={$user}";
-	else       $searchon = "thread={$id}";
-	
-	$postlayouts = $sql->query("SELECT headid, signid FROM posts WHERE {$searchon} ORDER BY id LIMIT $min,$ppp");
+	$values = array(0, $min, $ppp);
+	if ($user) {
+		$searchon = "user=?";
+		$values[0] = $user;
+	} else {
+		$searchon = "thread=?";
+		$values[0] = $id;
+	}
+	$postlayouts = $sql->queryp("SELECT headid, signid FROM posts WHERE {$searchon} ORDER BY id LIMIT ?,?", $values);
 	preplayouts($postlayouts);
 	
-	$posts = $sql->query(
+	$posts = $sql->queryp(
 		"SELECT p.*,text$sfields,edited,editdate,options,tagval,u.id uid,name,$ufields,regdate ".
 		"FROM posts_text, posts p LEFT JOIN users u ON p.user=u.id ".
-		"WHERE {$searchon} AND p.id=pid ORDER BY p.id LIMIT $min,$ppp");
+		"WHERE {$searchon} AND p.id=pid ORDER BY p.id LIMIT ?,?", $values);
 
 	for ($i = 0; $post = $sql->fetch($posts); $i++) {
 		$postlist	.= '<tr>';
@@ -393,8 +409,8 @@
 		$pthread	= null;
 		if (!$id) {
 			// Enable caching for these
-			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id=$post[thread]", PDO::FETCH_BOTH, true);
-			$pforum  = $sql->fetchq("SELECT minpower FROM forums WHERE id=".intval($pthread[forum]), PDO::FETCH_BOTH, true);
+			$pthread = $sql->fetchq("SELECT id,title,forum FROM threads WHERE id='{$post['thread']}'", PDO::FETCH_ASSOC, true);
+			$pforum  = $sql->fetchq("SELECT minpower FROM forums WHERE id='".intval($pthread['forum']), PDO::FETCH_ASSOC, true);
 		}
 
 		$post['act'] = filter_int($act[$post['user']]);

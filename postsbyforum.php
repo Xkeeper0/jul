@@ -3,34 +3,36 @@
 	require 'lib/layout.php';
 
 	$qstrings = array();
+	$qvalues  = array();
 
 	if ($id) {
-		$qstrings[] = "posts.user={$id}";
-		$by = 'by '.$sql->resultq("SELECT name FROM users WHERE id={$id}");
+		$qstrings[] = "posts.user=?";
+		$qvalues[]   = $_GET['id'];
+		$by = 'by '.$sql->resultp("SELECT name FROM users WHERE id=?", array($_GET['id']));
 	}
 
-	if (!isset($_GET['posttime'])) $posttime = 86400;
-	else $posttime = intval($_GET['posttime']);
+	$posttime = filter_int($_GET['posttime'], 86400);
 	if (($posttime === 0 || $posttime > 2592000) && !$id)
 		$posttime = 2592000;
 
 	if ($posttime !== 0) {
-		$qstrings[] = "posts.date > ".(ctime()-$posttime);
+		$qstrings[] = "posts.date > ?";
+		$qvalues[]  = ctime()-$posttime;
 		$during = ' during the last '.timeunits2($posttime);
 	}
 
 	if (empty($qstrings)) $qwhere = '1';
 	else $qwhere = implode(' AND ', $qstrings);
 
-	$posters = $sql->query(
+	$posters = $sql->queryp(
 		"SELECT forums.*,COUNT(posts.id) AS cnt ".
 		"FROM forums,threads,posts ".
 		"WHERE posts.thread=threads.id ".
 		"AND threads.forum=forums.id ".
 		"AND {$qwhere} ".
-		"GROUP BY forums.id ORDER BY cnt DESC");
+		"GROUP BY forums.id ORDER BY cnt DESC", $qvalues);
 
-	$userposts = $sql->resultq("SELECT COUNT(*) FROM posts WHERE $qwhere");
+	$userposts = $sql->resultp("SELECT COUNT(*) FROM posts WHERE $qwhere", $qvalues);
 	$lnk="<a href=postsbyforum.php?id=$id&posttime";
 
 	print "$header

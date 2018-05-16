@@ -293,12 +293,14 @@
 			return ($err && $err[1]) ? "SQLSTATE[{$err[0]}]: {$err[2]}" : "";
 		}
 		
-		public static function phs($arraySet) {
+		public static function phs(&$arraySet, $xSet = array()) {
 			$out 	= "";
 			$fields = array_keys($arraySet);
 			$i 		= 0;
 			foreach ($fields as $field)
 				$out .= ($i++ ? "," : "")."`$field`=:".str_replace("`","",$field);
+			if ($xSet)
+				$arraySet = array_merge($arraySet, $xSet);
 			return $out;
 		}
 		private static function get_query_hash($query) {

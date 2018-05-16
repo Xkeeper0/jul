@@ -6,7 +6,7 @@
 	$meta['noindex'] = true;
 
 	$username = $_POST['username'];
-	$password = $_POST['userpass'];
+	$password = escape_password($_POST['userpass']);
 	$verifyid = $_POST['verify'];
 
 	$txt="$header<br>$tblstart";
@@ -34,8 +34,8 @@
 			else {
 				$values = array(
 					'time'     => ctime(),
-					'username' => stripslashes($username),
-					'password' => stripslashes($password),
+					'username' => $username,
+					'password' => $password,
 					'ip'       => $_SERVER['REMOTE_ADDR'],
 				);
 				$sql->queryp("INSERT INTO `failedlogins` SET ".mysql::phs($values), $values);

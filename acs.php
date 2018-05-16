@@ -1,7 +1,7 @@
 <?php
 	require 'lib/function.php';
 	require 'lib/layout.php';
-	$userid = htmlspecialchars(stripslashes($_GET['userid']));
+	$userid = htmlspecialchars($_GET['userid']);
 
 	$vd=date('m-d-y', ctime());
 	if (!$m && !$d && !$y) {

@@ -41,17 +41,26 @@
 		$tccellh colspan=2>Users on that rank
 	";
 
-	$useranks = ($showall?'':"AND useranks={$set}");
+	
 	$btime=ctime()-86400*30;
 
-	$ranks = $sql->query("SELECT * FROM ranks WHERE rset=$set ORDER BY num");
+	$where = array('rset' => $set);
+	$ranks = $sql->queryp("SELECT * FROM ranks WHERE rset=:rset ORDER BY num", $where);
 	$totalranks = $sql->num_rows($ranks);
 
 	if ($totalranks > 0) {
 		$rank  = $sql->fetch($ranks);
-
-		// 300 queries [11sec] ---> 20 queries [1sec]
-		$users = $sql->query("SELECT id,name,sex,powerlevel,aka,birthday,posts,lastactivity,lastposttime FROM users WHERE posts >= $rank[num] $useranks ORDER BY posts ASC");
+		
+		// Rank divider
+		$qwhere = "posts >= ?";
+		$where  = array($rank['num']);
+		// Rank select
+		if (!$showall) {
+			$qwhere .= " AND useranks=?";
+			$where[] = $set;
+		}
+		// 300 queries [11sec] ---> 20 queries [1sec]	
+		$users = $sql->queryp("SELECT id,name,sex,powerlevel,aka,birthday,posts,lastactivity,lastposttime FROM users WHERE {$qwhere} ORDER BY posts ASC", $where);
 		$user  = $sql->fetch($users);
 		$total = $sql->num_rows($users);
 	}

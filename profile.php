@@ -1,6 +1,6 @@
 <?php
 	require 'lib/function.php';
-	$user=@$sql->fetchq("SELECT * FROM users WHERE id=$id");
+	$user=@$sql->fetchp("SELECT * FROM users WHERE id=?", array($_GET['id']));
 	$windowtitle="$boardname -- Profile for $user[name]";
 	require 'lib/layout.php';
 
@@ -48,21 +48,28 @@
 	$threadsposted=$sql->resultq("SELECT count(id) AS cnt FROM threads WHERE user=$id");
 
 	$i=0;
-	$lastpostdate="None";
-	if($user['posts']) {
+	// Last post
+	if ($user['posts']) {
 		$lastpostdate=date($dateformat,$user['lastposttime']+$tzoff);
-
-		//$postsfound=$sql->resultq("SELECT count(id) AS cnt FROM posts WHERE user=$id");
-		$post = @$sql->fetchq("SELECT id, thread FROM posts WHERE user=$id AND date=$user[lastposttime]");
-
-		if ($post && $thread = $sql->fetchq("SELECT title,forum FROM threads WHERE id=$post[1]")) {
-			$forum = $sql->fetchq("SELECT id,title,minpower FROM forums WHERE id=$thread[forum]");
-			$thread[0]=str_replace("<","&lt",$thread[0]);
-			if ($forum['minpower']>$loguser['powerlevel'] and $forum['minpower'])
-				$lastpostlink=", in a restricted forum";
-			else
-				$lastpostlink=", in <a href=thread.php?pid=$post[0]#$post[0]>$thread[0]</a> (<a href=forum.php?id=$forum[id]>$forum[title]</a>)";
+		//$postsfound = $sql->resultp("SELECT COUNT(*) FROM posts WHERE user = ?", array($_GET['id']));
+		$post = $sql->fetchp("
+			SELECT p.id, t.title ttitle, f.id fid, f.title ftitle, f.minpower
+			FROM posts p
+			INNER JOIN threads t ON p.thread = t.id
+			INNER JOIN forums  f ON t.forum  = f.id
+			WHERE p.user = :user AND p.date = :date
+		", array('user' => $_GET['id'], 'date' => $user['lastposttime']));
+		if (!$post || ($post['minpower'] && $post['minpower'] > $loguser['powerlevel'])) {
+			$lastpostlink = ", in a restricted forum";
+		} else {
+			$threadtitle  = htmlspecialchars($post['ttitle']);
+			$forumtitle   = htmlspecialchars($post['ftitle']);
+			$lastpostlink = ", in <a href='thread.php?pid={$post['id']}#{$post['id']}'>{$threadtitle}</a> (<a href='forum.php?id={$post['fid']}'>{$forumtitle}</a>)";
 		}
+	} else {
+		$lastpostdate = "None";
+		$lastpostlink = "";
+		//$postsfound   = 0;
 	}
 
 	if($log) {
@@ -148,7 +155,7 @@
 
 	// shop/rpg such
 	$shops=$sql->query('SELECT * FROM itemcateg ORDER BY corder');
-	$eq=$sql->fetchq("SELECT * FROM users_rpg WHERE uid=$id");
+	$eq=$sql->fetchp("SELECT * FROM users_rpg WHERE uid=?", array($id));
 	$itemids=array_unique(array($eq['eq1'], $eq['eq2'], $eq['eq3'], $eq['eq4'], $eq['eq5'], $eq['eq6'], $eq['eq7']));
 	$itemids=implode(',', $itemids);
 	$eqitems=$sql->query("SELECT * FROM items WHERE id IN ({$itemids})");

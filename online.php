@@ -25,7 +25,13 @@
 	$banorama	= ($_SERVER['REMOTE_ADDR'] == $x_hacks['adminip'] || $loguser['id'] == 1 || $loguser['id'] == 5 || $loguser['id'] == 2100);
 
 	if ($banorama && filter_string($_GET['banip']) && filter_string($_GET['valid']) == md5($_GET['banip'] . "aglkdgslhkadgshlkgds")) {
-		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_GET['banip'] ."', `reason`='online.php ban', `date` = '". ctime() ."', `banner` = '$loguserid'") or print $sql->error();
+		$sban = array(
+			'ip'     => $_GET['banip'],
+			'reason' => "online.php ban",
+			'date'   => ctime(),
+			'banner' => $loguserid,
+		);
+		$sql->queryp("INSERT INTO `ipbans` SET ".mysql::phs($sban), $sban) or print $sql->error();
 //		if ($_GET['uid']) $sql->query("UPDATE `users` SET `powerlevel` = -1, `title` = 'Banned; account hijacked. Contact admin via PM to change it.' WHERE `id` = '". $_GET['uid'] ."'") or print $sql->error();
 		xk_ircsend("1|". xk(8) . $loguser['name'] . xk(7) ." added IP ban for ". xk(8) . $_GET['banip'] . xk(7) .".");
 		return header("Location: online.php?m=1");
@@ -47,7 +53,12 @@
 		print '<br>Admin cruft: <a href=online.php'. ($sort ? '?sort=1&' : '?') ."time=$time>Sort by ".($sort == 'IP' ? 'date' : 'IP') ."</a>";
 
 	// Logged in users
-	$posters = $sql->query("SELECT id,posts,name,sex,powerlevel,aka,lastactivity,lastip,lastposttime,lasturl,birthday FROM users WHERE lastactivity>".(ctime()-$time).' ORDER BY '.($sort=='IP'&&$isadmin?'lastip':'lastactivity DESC'));
+	$posters = $sql->queryp("".
+		"SELECT id,posts,name,sex,powerlevel,aka,lastactivity,lastip,lastposttime,lasturl,birthday ".
+		"FROM users ".
+		"WHERE lastactivity > :time ".
+		"ORDER BY ".($sort=='IP'&&$isadmin?'lastip':'lastactivity DESC'),
+	array('time' => ctime() - $time));
 
 
 	print "<br>
@@ -70,7 +81,7 @@
 		$user['lasturl']=str_replace('<','&lt;',$user['lasturl']);
 		$user['lasturl']=str_replace('>','&gt;',$user['lasturl']);
 		$user['lasturl']=str_replace('%20',' ',$user['lasturl']);
-		$user['lasturl']=str_replace('shoph','shop',$user['lasturl']);
+		$user['lasturl']=preg_replace('/shop.php\?h&?/i','shop.php?',$user['lasturl']);
 		$user['lasturl']=preg_replace('/[\?\&]debugsql(|=[0-9]+)/i','',$user['lasturl']); // let's not give idiots any ideas
 		$lasturltd	= "$tccell2l><a rel=\"nofollow\" href=\"". urlformat($user['lasturl']) ."\">$user[lasturl]";
 
@@ -114,7 +125,7 @@
 	for($i=1;$guest=$sql->fetch($guests);$i++){
 		$guest['lasturl']=str_replace('<','&lt;',$guest['lasturl']);
 		$guest['lasturl']=str_replace('>','&gt;',$guest['lasturl']);
-		$guest['lasturl']=str_replace('shoph','shop',$guest['lasturl']);
+		$guest['lasturl']=preg_replace('/shop.php\?h&?/i','shop.php?',$guest['lasturl']);
 		$guest['lasturl']=preg_replace('/[\?\&]debugsql=[0-9]+/i','',$guest['lasturl']); // let's not give idiots any ideas
 
 /*		if ($guest['useragent'] == "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; rv:1.9.0.19) Gecko/2010031218 Firefox/3.0.19" && $banorama) {

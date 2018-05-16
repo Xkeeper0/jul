@@ -123,7 +123,7 @@
 		";
 	}
 
-	$numcols=(filter_int($numcols) ? $numcols : 60);
+	$numcols= filter_int($numcols, 60);
 
 	if($formcss){
 		$numcols=80;

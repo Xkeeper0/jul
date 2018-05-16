@@ -4,7 +4,18 @@
   $maxposts = (($_GET['p']) ? max(min($_GET['p'], 100),   1)  : false);
   if ($maxtime === false && $maxposts === false) $maxposts = 50; // Default
 
-	$data	= $sql->query(
+	// sadjfoklgglhj
+	$values = array(
+		'minpower' => $loguser['powerlevel'],
+		'maxtime'  => ($maxtime !== false) ? (ctime()-$maxtime) : (ctime()-86400*7),
+	);
+	if ($loguser['id'])      $values['user']   = $loguser['id'];
+	if ($_GET['lastid'])     $values['lastid'] = $_GET['lastid'];
+	if ($maxposts !== false) $values['limit']  = $maxposts;
+
+
+
+	$data = $sql->queryp(
 		"SELECT p.id, p.user, p.date as date, f.title as ftitle, t.forum as fid, t.title as title, ".
 		"u.name as uname, u.sex as usex, u.powerlevel as upowerlevel ".
 		(($log) ? ", r.read AS tread, r.time as treadtime " : "").
@@ -12,13 +23,15 @@
 		"LEFT JOIN `threads` t ON p.thread = t.id ".
 		"LEFT JOIN `forums` f ON t.forum = f.id ".
 		"LEFT JOIN `users` u ON p.user = u.id ".
-		(($log) ? "LEFT JOIN threadsread r ON (t.id=r.tid AND r.uid=$loguser[id]) " : "").
-		"\n WHERE f.minpower <= '". $loguser['powerlevel'] ."' ".
-		"AND p.date >= ".(($maxtime !== false)  ? (ctime()-$maxtime) : (ctime()-86400*7))." ". // time limit here
-    (($_GET['lastid'])     ? "AND p.id > $_GET[lastid] ":"").
+		(($log) ? "LEFT JOIN threadsread r ON (t.id=r.tid AND r.uid=:user) " : "").
+		"\n WHERE f.minpower <= :minpower ".
+		"AND p.date >= :maxtime ". // time limit here
+		(($_GET['lastid']) ? "AND p.id > :lastid " : "").
 		"\nORDER BY `id` DESC ".
-		(($maxposts !== false) ? "LIMIT 0, $maxposts" : '') // posts limit here
-	);
+		(($maxposts !== false) ? "LIMIT 0, :limit" : '') // posts limit here
+	, $values);
+	
+	
 	$_count = @$sql->num_rows($data);
 
 	$output	= "";

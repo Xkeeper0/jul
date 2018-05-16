@@ -5,7 +5,7 @@
 	$windowtitle = "$boardname -- Private Messages";
 	$meta['noindex'] = true;
 
-	$msg = $sql->fetchq("SELECT * FROM pmsgs,pmsgs_text WHERE id=$id AND id=pid");
+	$msg = $sql->fetchp("SELECT * FROM pmsgs,pmsgs_text WHERE id=? AND id=pid", array($id));
 
 	if (!$log) {
 		require_once 'lib/layout.php';
@@ -26,7 +26,7 @@
 
 	$top = "<table width=100%><td align=left>$fonttag<a href=index.php>$boardname</a> - <a href=private.php>$pmlinktext</a> - $msg[title]</table>";
 	if ($msg['userto'] == $loguserid)
-		$sql->query("UPDATE pmsgs SET msgread=1 WHERE id=$id");
+		$sql->queryp("UPDATE pmsgs SET msgread=1 WHERE id=?", array($id));
 
 	loadtlayout();
 	$post = $user;

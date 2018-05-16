@@ -48,11 +48,14 @@
 
 		// Bad Design Decisions 2001.
 		// :(
+		
+		// One out, one to go
+		/*
 		if (!get_magic_quotes_gpc()) {
 			$_GET = addslashes_array($_GET);
 			$_POST = addslashes_array($_POST);
 			$_COOKIE = addslashes_array($_COOKIE);
-		}
+		}*/
 		if(!ini_get('register_globals')){
 			$supers=array('_ENV', '_SERVER', '_GET', '_POST', '_COOKIE',);
 			foreach($supers as $__s) if (is_array($$__s)) extract($$__s, EXTR_SKIP);
@@ -268,18 +271,18 @@
 */
 
 
-function filter_int(&$v) {
+function filter_int(&$v, $default = null) {
 	if (!isset($v)) {
-		return null;
+		return $default;
 	} else {
 		$v	= intval($v);
 		return $v;
 	}
 }
 
-function filter_bool(&$v) {
+function filter_bool(&$v, $default = null) {
 	if (!isset($v)) {
-		return null;
+		return $default;
 	} else {
 		$v	= (bool)$v;
 		return $v;
@@ -287,9 +290,9 @@ function filter_bool(&$v) {
 }
 
 
-function filter_string(&$v) {
+function filter_string(&$v, $default = null) {
 	if (!isset($v)) {
-		return null;
+		return $default;
 	} else {
 		$v	= (string)$v;
 		return $v;
@@ -319,7 +322,7 @@ function numsmilies(){
 function readpostread($userid){
 	global $sql;
 	if (!$userid) return array();
-	return $sql->getresultsbykey("SELECT forum,readdate FROM forumread WHERE user=$userid", 'forum', 'readdate');
+	return $sql->fetchp("SELECT forum,readdate FROM forumread WHERE user=?", array($userid), PDO::FETCH_KEY_PAIR);
 }
 
 function timeunits($sec){
@@ -575,7 +578,12 @@ function doforumlist($id){
 		$fjump[$cat['id']]	= "<optgroup label=\"". $cat['name'] ."\">";
 	}
 
-	$forum1= $sql->query("SELECT id,title,catid FROM forums WHERE (minpower<=$power OR minpower<=0) AND `hidden` = '0' AND `id` != '0' OR `id` = '$id' ORDER BY forder") or print $sql->error();
+	$where = array(
+		'minpower' => $power,
+		'hidden'   => 0,
+		'id'       => $id
+	);
+	$forum1 = $sql->queryp("SELECT id,title,catid FROM forums WHERE (minpower<=:minpower OR minpower<=0) AND `hidden` = :hidden AND `id` != '0' OR `id` = :id ORDER BY forder", $where) or print $sql->error();
 	while($forum=$sql->fetch($forum1)) {
 		$fjump[$forum['catid']]	.="<option value=forum.php?id=$forum[id]".($forum['id']==$id?' selected':'').">$forum[title]</option>";
 	}
@@ -672,7 +680,7 @@ function checkusername($name){
 function checkuser($name,$pass){
 	global $hacks, $sql;
 
-	$user = $sql->fetchp("SELECT id,password FROM users WHERE name = ?", array(stripslashes($name)));
+	$user = $sql->fetchp("SELECT id,password FROM users WHERE name = ?", array($name));
 
 	if (!$user) return -1;
 	if ($user['password'] !== getpwhash($pass, $user['id'])) {
@@ -702,6 +710,14 @@ function create_verification_hash($n,$pw) {
 
 	// don't base64 encode like I do on my fork, waste of time (honestly)
 	return $n . sha1($pw . $vstring, false);
+}
+
+// passwords were never stripslashed() before being hashed when magic_quotes was in effect
+// which means doing this is necessary for compatibility. fun
+// (as its own function so it can be easily disabled)
+function escape_password($pw) {
+	// return $pw;
+	return addslashes($pw);
 }
 
 function shenc($str){
@@ -891,13 +907,13 @@ function fonlineusers($id){
 	global $userip,$loguserid,$sql;
 
 	if($loguserid)
-		$sql->query("UPDATE users SET lastforum=$id WHERE id=$loguserid");
+		$sql->queryp("UPDATE users  SET lastforum=? WHERE id=?", array($id, $loguserid));
 	else
-		$sql->query("UPDATE guests SET lastforum=$id WHERE ip='$userip'");
+		$sql->queryp("UPDATE guests SET lastforum=? WHERE ip=?", array($id, $userip));
 
-	$forumname		=@$sql->resultq("SELECT title FROM forums WHERE id=$id");
+	$forumname		=@$sql->resultp("SELECT title FROM forums WHERE id=?", array($id));
 	$onlinetime		=ctime()-300;
-	$onusers		=$sql->query("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
+	$onusers		=$sql->queryp("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>? AND lastforum=? ORDER BY name", array($onlinetime, $id));
 
 	$onlineusers	= "";
 
@@ -956,7 +972,7 @@ function postradar($userid){
 	if (!$userid) return "";
 
 	//$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users u RIGHT JOIN postradar p ON u.id=p.comp WHERE p.user={$userid} ORDER BY posts DESC", PDO::FETCH_ASSOC);
-	$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users,postradar WHERE postradar.user={$userid} AND users.id=postradar.comp ORDER BY posts DESC", PDO::FETCH_ASSOC);
+	$postradar = $sql->queryp("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users,postradar WHERE postradar.user=? AND users.id=postradar.comp ORDER BY posts DESC", array($userid), PDO::FETCH_ASSOC);
 	if (@$sql->num_rows($postradar)>0) {
 		$race = 'You are ';
 
@@ -981,7 +997,7 @@ function postradar($userid){
 		if ($userid == $loguserid)
 			$myposts = $loguser['posts'];
 		else
-			$myposts = $sql->resultq("SELECT posts FROM users WHERE id=$userid");
+			$myposts = $sql->resultp("SELECT posts FROM users WHERE id=?", array($userid));
 
 		for($i=0;$user2=$sql->fetch($postradar);$i++) {
 			if($i) $race.=', ';
@@ -995,11 +1011,12 @@ function postradar($userid){
 function loaduser($id,$type){
   global $sql;
 	if ($type==1) {$fields='id,name,sex,powerlevel,posts';}
-	return @$sql->fetchq("SELECT $fields FROM users WHERE id=$id");
+	return @$sql->fetchp("SELECT $fields FROM users WHERE id=?", array($id));
 }
 
 function getpostlayoutid($text){
 	global $sql;
+	$text = (string) $text;
 	$id = $sql->resultp("SELECT id FROM postlayouts WHERE text = ? LIMIT 1", array($text));
 	if(!$id){
 		$sql->queryp("INSERT INTO postlayouts (text) VALUES (?)", array($text));
@@ -1545,8 +1562,13 @@ function printtimedif($timestart){
 		);
 		$url = $_SERVER['REQUEST_URI'];
 		if (in_array(substr($url, 0, 14), $pages)) {
-			$sql->query("INSERT INTO `rendertimes` SET `page` = '". addslashes($url) ."', `time` = '". ctime() ."', `rendertime`  = '". $exectime ."'");
-			$sql->query("DELETE FROM `rendertimes` WHERE `time` < '". (ctime() - 86400 * 14) ."'");
+			$values = array(
+				'page'       => $url,
+				'time'       => ctime(),
+				'rendertime' => $exectime
+			);
+			$sql->queryp("INSERT INTO `rendertimes` SET ".mysql::phs($values), $values);
+			$sql->queryp("DELETE FROM `rendertimes` WHERE `time` < ?", array(ctime() - 86400 * 14));
 		}
 	}
 }

@@ -4,16 +4,16 @@
 
 	$trashid = 27;
 
-	$thread  = $sql->fetchq("SELECT forum,closed,title,icon,replies,lastpostdate,lastposter,sticky FROM threads WHERE id=$id");
+	$thread  = $sql->fetchp("SELECT forum,closed,title,icon,replies,lastpostdate,lastposter,sticky FROM threads WHERE id=?", array($id));
 	$forumid = $thread['forum'];
 	$posticons = file('posticons.dat');
 
 	if (!$ismod && $loguserid)
-		$ismod = (int)$sql->resultq("SELECT COUNT(*) FROM forummods WHERE forum={$forumid} and user={$loguserid}");
+		$ismod = (int)$sql->resultp("SELECT COUNT(*) FROM forummods WHERE forum=? and user=?", array($forumid, $loguser['id']));
 
 	if (!$forumid)
 		$ismod = 0;
-	elseif ($sql->resultq("SELECT minpower FROM forums WHERE id={$forumid}") > $loguser['powerlevel'])
+	elseif ($sql->resultp("SELECT minpower FROM forums WHERE id=?", array($forumid)) > $loguser['powerlevel'])
 		$ismod = 0;
 
 	if (!$ismod)
@@ -22,23 +22,24 @@
 	// Quickmod
 	if (substr($_GET['action'], 0, 1) == 'q') {
 		switch ($_GET['action']) {
-			case 'qstick':   $update = 'sticky=1'; break;
-			case 'qunstick': $update = 'sticky=0'; break;
-			case 'qclose':   $update = 'closed=1'; break;
-			case 'qunclose': $update = 'closed=0'; break;
-			default: return header("Location: thread.php?id={$id}");
+			case 'qstick':   $values['sticky'] = 1; break;
+			case 'qunstick': $values['sticky'] = 0; break;
+			case 'qclose':   $values['closed'] = 1; break;
+			case 'qunclose': $values['closed'] = 0; break;
+			default: return header("Location: thread.php?id={$_GET['id']}");
 		}
-
-		$sql->query("UPDATE threads SET {$update} WHERE id={$id}");
-		return header("Location: thread.php?id={$id}");
+		$update = mysql::phs($values); // Generate placeholders
+		$values['id'] = $_GET['id'];   // Add the id AFTER they have been generated
+		$sql->queryp("UPDATE threads SET {$update} WHERE id = :id", $values);
+		return header("Location: thread.php?id={$_GET['id']}");
 	}
 	elseif ($_POST['action'] == "trashthread") {
 		$sql->query("UPDATE threads SET sticky=0, closed=1, forum=$trashid WHERE id='$id'");
 		$numposts = $thread['replies'] + 1;
-		$t1 = $sql->fetchq("SELECT lastpostdate,lastposter FROM threads WHERE forum=$forumid ORDER BY lastpostdate DESC LIMIT 1");
-		$t2 = $sql->fetchq("SELECT lastpostdate,lastposter FROM threads WHERE forum=$trashid ORDER BY lastpostdate DESC LIMIT 1");
-		$sql->query("UPDATE forums SET numposts=numposts-$numposts,numthreads=numthreads-1,lastpostdate='$t1[lastpostdate]',lastpostuser='$t1[lastposter]' WHERE id=$forumid");
-		$sql->query("UPDATE forums SET numposts=numposts+$numposts,numthreads=numthreads+1,lastpostdate='$t2[lastpostdate]',lastpostuser='$t2[lastposter]' WHERE id=$trashid");
+		$t1 = $sql->fetchp("SELECT lastpostdate,lastposter FROM threads WHERE forum=? ORDER BY lastpostdate DESC LIMIT 1", array($forumid));
+		$t2 = $sql->fetchp("SELECT lastpostdate,lastposter FROM threads WHERE forum=? ORDER BY lastpostdate DESC LIMIT 1", array($trashid));
+		$sql->queryp("UPDATE forums SET numposts=numposts-?,numthreads=numthreads-1,lastpostdate=?,lastpostuser=? WHERE id=?", array($numposts, $t1['lastpostdate'], $t1['lastposter'], $forumid));
+		$sql->queryp("UPDATE forums SET numposts=numposts+?,numthreads=numthreads+1,lastpostdate=?,lastpostuser=? WHERE id=?", array($numposts, $t2['lastpostdate'], $t2['lastposter'], $trashid));
 
 		// Yeah whatever
 		errorpage("Thread successfully trashed.",'return to the thread',"thread.php?id=$id");
@@ -47,22 +48,22 @@
 		$posticons[$iconid]=str_replace("\n",'',$posticons[$iconid]);
 
 		$icon=$posticons[$iconid];
-		if($_POST['custposticon']) $icon=stripslashes($_POST['custposticon']);
+		if($_POST['custposticon']) $icon=$_POST['custposticon'];
 		$forummove = (int) $_POST['forummove'];
 		$values = array(
 			'forum'  => $forummove,
 			'closed' => (int) $_POST['closed'],
-			'title'  => stripslashes($_POST['subject']),
+			'title'  => $_POST['subject'],
 			'icon'   => $icon,
 			'sticky' => (int) $_POST['sticky']
 		);
 		$sql->queryp("UPDATE `threads` SET ".mysql::phs($values)." WHERE `id` = '$id'", $values);
 		if($forummove!=$forumid) {
 			$numposts=$thread['replies']+1;
-			$t1 = $sql->fetchq("SELECT lastpostdate,lastposter FROM threads WHERE forum=$forumid ORDER BY lastpostdate DESC LIMIT 1");
-			$t2 = $sql->fetchq("SELECT lastpostdate,lastposter FROM threads WHERE forum=$forummove ORDER BY lastpostdate DESC LIMIT 1");
-			$sql->query("UPDATE forums SET numposts=numposts-$numposts,numthreads=numthreads-1,lastpostdate='$t1[lastpostdate]',lastpostuser='$t1[lastposter]' WHERE id=$forumid");
-			$sql->query("UPDATE forums SET numposts=numposts+$numposts,numthreads=numthreads+1,lastpostdate='$t2[lastpostdate]',lastpostuser='$t2[lastposter]' WHERE id=$forummove");
+			$t1 = $sql->fetchp("SELECT lastpostdate,lastposter FROM threads WHERE forum=? ORDER BY lastpostdate DESC LIMIT 1", array($forumid));
+			$t2 = $sql->fetchp("SELECT lastpostdate,lastposter FROM threads WHERE forum=? ORDER BY lastpostdate DESC LIMIT 1", array($forummove));
+			$sql->queryp("UPDATE forums SET numposts=numposts-?,numthreads=numthreads-1,lastpostdate=?,lastpostuser=? WHERE id=?", array($numposts, $t1['lastpostdate'], $t1['lastposter'], $forumid));
+			$sql->queryp("UPDATE forums SET numposts=numposts+?,numthreads=numthreads+1,lastpostdate=?,lastpostuser=? WHERE id=?", array($numposts, $t2['lastpostdate'], $t2['lastposter'], $forummove));
 		}
 		errorpage("Thank you, $loguser[name], for editing the thread.",'return to the thread',"thread.php?id=$id");
 	}

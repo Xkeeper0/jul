@@ -29,7 +29,7 @@
 	}
 	
 	if($id) {
-		$msg = $sql->fetchq("SELECT * FROM pmsgs,pmsgs_text WHERE id=$id AND id=pid");
+		$msg = $sql->fetchp("SELECT * FROM pmsgs,pmsgs_text WHERE id=? AND id=pid", array($id));
 
 		if ($loguserid != $msg['userto']) {
 			print "
@@ -88,7 +88,7 @@
 		";
 	}
 	if($action=='sendmsg') {
-		$username	= stripslashes($_POST['username']);
+		$username	= $_POST['username'];
 		$userid=checkusername($username);
 
 		if ($userid == -1)
@@ -98,13 +98,15 @@
 			print "$tccell1>Couldn't send the message. You didn't enter a subject.
 				<br>".redirect('private.php','your private message box',2);
 		else {
-			$subject=str_replace('<','&lt;',$subject);
+			$subject=htmlspecialchars($subject);
 
 			$sign=$loguser['signature'];
 			$head=$loguser['postheader'];
+			//--
 			if($user['postbg'])
 				$head="<div style=background:url($user[postbg]);height=100%>$head";
-
+			//--
+			
 			$numdays=(ctime()-$loguser['regdate'])/86400;
 			$tags			= array();
 			$message		= doreplace($message,$loguser['posts'],$numdays,$loguser['name'], $tags);
@@ -130,8 +132,8 @@
 
 				$values = array(
 					'pid'     => $sql->insert_id(),
-					'title'   => stripslashes($subject),
-					'text'    => stripslashes($message),
+					'title'   => $subject,
+					'text'    => $message,
 					'tagval'  => $tagval,
 				);
 				$sql->queryp("INSERT INTO `pmsgs_text` SET ".mysql::phs($values), $values);
@@ -142,9 +144,6 @@
 			else {
 				loadtlayout();
 				$ppost=$loguser;
-				$message = stripslashes($message);
-				$username = stripslashes($username);
-				$subject = stripslashes($subject);
 				$ppost['uid']=$loguserid;
 				$ppost['date']=$currenttime;
 				$ppost['headtext']=$rhead;
@@ -156,7 +155,7 @@
 					$tccellh>Message preview
 					$tblend$tblstart
 					$pollpreview
-					$tccell2l><b>". stripslashes($subject) ."</b>
+					$tccell2l><b>". $subject ."</b>
 					$tblend$tblstart
 					".threadpost($ppost,1)."
 					$tblend<br>$tblstart
@@ -164,7 +163,7 @@
 					$tccellh width=150>&nbsp</td>$tccellh>&nbsp<tr>
 					$tccell1><b>Subject:</td>	 $tccell2l>$inpt=subject value=\"$subject\" size=60 maxlength=100><tr>
 					$tccell1><b>Message:</td>
-					$tccell2l>$txta=message ROWS=10 COLS=$numcols>$message</TEXTAREA><tr>
+					$tccell2l>$txta=message ROWS=10 COLS=$numcols>".htmlspecialchars($message)."</TEXTAREA><tr>
 					$tccell1>&nbsp</td>$tccell2l>
 					$inph=username VALUE=\"".htmlspecialchars($username)."\">
 					$inph=action VALUE=sendmsg>
@@ -176,8 +175,8 @@
 		}
   }
 /*if($action=='delete' and $msg[userto]==$loguserid){
-    $sql->query("DELETE FROM pmsgs WHERE id=$id");
-    $sql->query("DELETE FROM pmsgs_text WHERE pid=$id");
+    $sql->queryp("DELETE FROM pmsgs WHERE id=?", array($id));
+    $sql->queryp("DELETE FROM pmsgs_text WHERE pid=?", array($id));
     print "
       $tccell1>Thank you, $loguser[name], for deleting the message.
       <br>".redirect('private.php','return to the private message box',0).$tblend;

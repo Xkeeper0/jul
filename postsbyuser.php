@@ -7,45 +7,53 @@
 
 	if (!$id)
 		errorpage('No user specified.', 'return to the board', 'index.php');
-
+	
+	$qstrings = array('p.user = ?');
+	$qvalues  = array($_GET['id']);
+	
 	if ($_GET['forum']) {
-		$fid = intval($_GET['forum']);
-		$forum = $sql->fetchq("SELECT title, minpower FROM forums WHERE id={$fid}");
+		$forum = $sql->fetchp("SELECT title, minpower FROM forums WHERE id=?", array($_GET['forum']));
 		if ($forum['minpower'] > 0 && $power < $forum['minpower'])
 			errorpage('You don\'t have access to view posts in this forum.', 'return to the board', 'index.php');
 		$where = "in $forum[title]";
-		$forumquery = " AND t.forum = {$fid}";
+		
+		$qstrings[] = "t.forum = ?";
+		$qvalues[]  = $_GET['forum'];
 	}
-	else {
-		$forumquery = '';
-		$where = "on the board";
-	}
-
+	else $where = "on the board";
+	
 	if ($_GET['time']) {
 		$time = intval($_GET['time']);
-		$when = " over the past ".timeunits2($time);
-		$timequery = ' AND p.date > ' . (ctime()-$time);
+		$when = " over the past ".timeunits2($_GET['time']);
+		$qstrings[] = "p.date > ?";
+		$qvalues[]  = ctime()-$_GET['time'];
 	}
-	else
-		$timequery = $when = '';
+	else $when = '';
+	
+	
+	$qwhere = implode(' AND ', $qstrings);
+	$posttotal = $sql->resultp("SELECT COUNT(*) "
+		."FROM posts p "
+		."LEFT JOIN threads t ON p.thread = t.id "
+		."LEFT JOIN forums f ON t.forum = f.id "
+		."WHERE {$qwhere}", $qvalues);
+		
 
 	if (!$page) $page=0;
  	if (!$ppp) $ppp=50;
 	$min = $ppp*$page;
-
-	$posts=$sql->query("SELECT p.id,thread,ip,date,num,t.title,minpower "
+	$qvalues[] = $min;
+	$qvalues[] = $ppp;
+	
+	$posts=$sql->queryp("SELECT p.id,thread,ip,date,num,t.title,minpower "
 		."FROM posts p "
 		."LEFT JOIN threads t ON (thread=t.id) "
 		."LEFT JOIN forums f ON (t.forum=f.id) "
-		."WHERE p.user={$id}{$forumquery}{$timequery} "
+		."WHERE {$qwhere} "
 		."ORDER BY p.id DESC "
-		."LIMIT {$min},{$ppp}");
+		."LIMIT ?,?", $qvalues);
 	
-	$posttotal = $sql->resultq("SELECT COUNT(*) "
-		."FROM posts p "
-		."LEFT JOIN threads t ON p.thread = t.id "
-		."LEFT JOIN forums f ON t.forum = f.id "
-		."WHERE p.user = {$_GET['id']}{$forumquery}{$timequery}");
+
 	//$posttotal=$sql->num_rows($posts);
 
 	// Seek to page

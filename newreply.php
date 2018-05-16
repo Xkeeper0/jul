@@ -1,7 +1,7 @@
 <?php
 	// die("Disabled.");
 	require 'lib/function.php';
-	$thread=$sql->fetchq("SELECT forum, closed, sticky,title,lastposter FROM threads WHERE id=$id");
+	$thread=$sql->fetchp("SELECT forum, closed, sticky,title,lastposter FROM threads WHERE id=?", array($id));
 
 	// Stop this insanity.  Never index newreply.
 	$meta['noindex'] = true;
@@ -18,7 +18,7 @@
 	}
 
 	$forumid=intval($thread['forum']);
-	$forum=$sql->fetchq("SELECT title,minpower,minpowerreply,id,specialscheme FROM forums WHERE id=$forumid");
+	$forum=$sql->fetchp("SELECT title,minpower,minpowerreply,id,specialscheme FROM forums WHERE id=?", array($forumid));
 	if ($forum['minpower'] && $power < $forum['minpower']) {
 		$forum['title'] = '';
 		$thread['title'] = '(restricted thread)';
@@ -37,7 +37,7 @@
 	$header=makeheader($header1,$headlinks,$header2 ."	$tblstart$tccell1s>$fonline$tblend");
 
 	if (!$ismod)
-		$ismod = (int)$sql->resultq("SELECT COUNT(*) FROM forummods WHERE forum='{$forumid}' and user='{$loguserid}'");
+		$ismod = (int)$sql->resultp("SELECT COUNT(*) FROM forummods WHERE forum=? and user=?", array($forumid, $loguser['id']));
 
 	$modoptions	= "";
 
@@ -58,7 +58,7 @@
 	if (($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
 		$postlist="<tr>$tccellh colspan=2 style=\"font-weight:bold;\">Thread history</tr><tr>$tccellh width=150>User</td>$tccellh width=*>Post</tr>";
 		$qppp = $ppp + 1;
-		$posts=$sql->query("SELECT name,posts,sex,powerlevel,user,text,options,num FROM users u,posts p,posts_text WHERE thread=$id AND p.id=pid AND user=u.id ORDER BY p.id DESC LIMIT $qppp");
+		$posts=$sql->queryp("SELECT name,posts,sex,powerlevel,user,text,options,num FROM users u,posts p,posts_text WHERE thread=? AND p.id=pid AND user=u.id ORDER BY p.id DESC LIMIT $qppp", array($id));
 		$i = 0;
 
 		while($post=$sql->fetch($posts)){
@@ -99,7 +99,7 @@
 
 		$quotemsg	= "";
 		if(filter_int($postid)){
-			$post=$sql->fetchq("SELECT user,text,thread FROM posts,posts_text WHERE id=$postid AND id=pid");
+			$post=$sql->fetchp("SELECT user,text,thread FROM posts,posts_text WHERE id=? AND id=pid", array($postid));
 			$post['text']=str_replace('<br>',$br,$post['text']);
 			$u=$post['user'];
 			$users[$u]=loaduser($u,1);
@@ -152,7 +152,7 @@
 		if ($log && !$password)
 			$userid = $loguserid;
 		else
-			$userid = checkuser($username,$password);
+			$userid = checkuser($username,escape_password($password));
 
 
 		$error='';
@@ -160,7 +160,7 @@
 		if ($userid == -1) {
 			$error	= "Either you didn't enter an existing username, or you haven't entered the right password for the username.";
 		} else {
-			$user	= @$sql->fetchq("SELECT * FROM users WHERE id='$userid'");
+			$user	= $sql->fetchq("SELECT * FROM users WHERE id='$userid'");
 			if ($thread['closed'])
 				$error	= 'The thread is closed and no more replies can be posted.';
 			if ($user['powerlevel']<$forum['minpowerreply'])
@@ -186,8 +186,13 @@
 			$rhead			= doreplace($head,$numposts,$numdays,$username);
 			$currenttime	= ctime();
 			if (filter_string($_POST['submit'])) {
-
-				$sql->query("UPDATE `users` SET `posts` = $numposts, `lastposttime` = '$currenttime' WHERE `id` = '$userid'");
+				$values = array(
+					'posts'         => $numposts,
+					'lastposttime'  => $currenttime,
+				);
+				$where = array('id' => $id);
+				$qstr  = mysql::phs($values, $where);
+				$sql->queryp("UPDATE `users` SET {$qstr} WHERE `id` = :id", $values);
 
 				if (filter_bool($nolayout)) {
 					$headid = 0;
@@ -195,16 +200,6 @@
 				} else {
 					$headid=getpostlayoutid($head);
 					$signid=getpostlayoutid($sign);
-				}
-
-
-				$closeq	= "";
-				$stickq	= "";
-				if ($ismod) {
-					if (filter_bool($_POST['close'])) $closeq = "`closed` = '1',";
-						else $closeq = "`closed` = '0',";
-					if (filter_bool($_POST['stick'])) $stickq = "`sticky` = '1',";
-						else $stickq = "`sticky` = '0',";
 				}
 				
 				$values = array(
@@ -219,21 +214,33 @@
 				);
 				$sql->queryp("INSERT INTO `posts` SET ".mysql::phs($values), $values);
 				$pid=$sql->insert_id();
-
+				
 				if ($pid) {
 					$values = array(
 						'pid'     => $pid,
-						'text'    => stripslashes($message),
+						'text'    => $message,
 						'tagval'  => $tagval,
 						'options' => filter_int($_POST['nosmilies']) . "|" . filter_int($_POST['nohtml'])
 					);
 					$sql->queryp("INSERT INTO `posts_text` SET ".mysql::phs($values), $values);
 				}
-				$sql->query("UPDATE `threads` SET $closeq $stickq `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
-				$sql->query("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` ='$userid', `lastpostid` = '$pid' WHERE `id`='$forumid'");
+				
+				
+				$values = array(
+					'lastpostdate' => $currenttime,
+					'lastposter'   => $userid,
+				);
+				if ($ismod) {
+					$values['closed'] = filter_int($_POST['close'], 0);
+					$values['sticky'] = filter_int($_POST['stick'], 0);
+				}
+				$where = array('id' => $id);
+				$qstr = mysql::phs($values, $where);
+				$sql->queryp("UPDATE `threads` SET {$qstr}, `replies` = `replies` + 1 WHERE `id` = :id", $values);
+				$sql->queryp("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = ?, `lastpostuser` = ?, `lastpostid` = ? WHERE `id` = ?", array($currenttime, $userid, $pid, $forumid));
 
-				$sql->query("UPDATE `threadsread` SET `read` = '0' WHERE `tid` = '$id'");
-				$sql->query("REPLACE INTO threadsread SET `uid` = '$userid', `tid` = '$id', `time` = ". ctime() .", `read` = '1'");
+				$sql->queryp("UPDATE `threadsread` SET `read` = '0' WHERE `tid` = ?", array($id));
+				$sql->queryp("REPLACE INTO threadsread SET `uid` = ?, `tid` = ?, `time` = ?, `read` = ?", array($userid, $id, ctime(), 1));
 
 
 				xk_ircout("reply", $user['name'], array(
@@ -251,7 +258,7 @@
 			} else {
 
 				loadtlayout();
-				$message				= stripslashes($message);
+				$message				= $message;
 				$ppost					= $user;
 				$ppost['posts']++;
 				$ppost['uid']			= $userid;

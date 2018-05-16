@@ -2,16 +2,18 @@
 	require 'lib/function.php';
 	$windowtitle = "Posts by time of day";
 	require 'lib/layout.php';
+	
+	$qstrings = array();
+	$qvalues  = array();
 
-	if (!isset($_GET['posttime'])) $posttime = 86400;
-	else $posttime = intval($_GET['posttime']);
-
-	if($id) {
-		$qstrings[] = "user={$id}";
-		$from = " from ".$sql->resultq("SELECT name FROM users WHERE id=$id");
+	if ($id) {
+		$qstrings[] = "user=?";
+		$qvalues[]   = $_GET['id'];
+		$from = 'by '.$sql->resultp("SELECT name FROM users WHERE id=?", array($_GET['id']));
 	}
 	else $from = ' on the board';
-
+	
+	$posttime = filter_int($_GET['posttime'], 86400);
 	if ($posttime !== 0) {
 		$qstrings[] = "date > ".(ctime()-$posttime);
 		$during = ' during the last '.timeunits2($posttime);
@@ -20,7 +22,7 @@
 	if (empty($qstrings)) $qwhere = '1';
 	else $qwhere = implode(' AND ', $qstrings);
 
-	$posts = $sql->query("SELECT count(*) AS cnt, FROM_UNIXTIME(date,'%k') AS hour FROM posts WHERE {$qwhere} GROUP BY hour");
+	$posts = $sql->queryp("SELECT count(*) AS cnt, FROM_UNIXTIME(date,'%k') AS hour FROM posts WHERE {$qwhere} GROUP BY hour", $qvalues);
 	$link = "<a href=postsbytime.php?" . (($id) ? "id=$id&" : "") . "posttime";
 	print "$header$smallfont
 		Timeframe:

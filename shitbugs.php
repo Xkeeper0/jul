@@ -26,7 +26,13 @@ if (!in_array($loguser['id'], array(175, 1)) && $loguser['powerlevel'] < 1) {
 	$expower = in_array($loguserid, array(175, 1, 2100));
 
 	if ($expower && $_GET['banip'] && $_GET['valid'] == md5($_GET['banip'] . "aglkdgslhkadgshlkgds")) {
-		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_GET['banip'] ."', `reason`='Abusive/unwelcome activity', `date` = '". ctime() ."', `banner` = '$loguserid'") or print $sql->error();
+		$sban = array(
+			'ip'     => $_GET['banip'],
+			'reason' => "Abusive/unwelcome activity",
+			'date'   => ctime(),
+			'banner' => $loguserid,
+		);
+		$sql->queryp("INSERT INTO `ipbans` SET ".mysql::phs($sban), $sban) or print $sql->error();
 		xk_ircsend("1|". xk(8) . $loguser['name'] . xk(7) ." added IP ban for ". xk(8) . $_GET['banip'] . xk(7) .".");
 		return header("Location: ?");
 	}
@@ -36,7 +42,7 @@ if (!in_array($loguser['id'], array(175, 1)) && $loguser['powerlevel'] < 1) {
 	$clearbutton = '&nbsp;';
 	if ($expower) {
 		if ($_POST['clear'])
-			$query	= $sql -> query("TRUNCATE `minilog`");
+			$query	= $sql->query("TRUNCATE `minilog`");
 		$clearbutton = "<br><form style='margin: 0px; padding: 0px;' action='?' method='post'>$inps='clear' value='Clear log'></form><br>";
 	}
 

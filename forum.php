@@ -19,13 +19,14 @@
 			errorpage("You need to be logged in to edit your favorites!",'return to the forum',"forum.php?id=$t[forum]");
 		}
 
-		$sql->query("DELETE FROM favorites WHERE user=$loguserid AND thread=$thread");
+		$values = array($loguserid, $thread);
+		$sql->queryp("DELETE FROM favorites WHERE user=? AND thread=?", $values);
 		if ($act == 'add') {
 			$tx = "\"$t[title]\" has been added to your favorites.";
 
-			$minpower = $sql->resultq("SELECT minpower FROM forums WHERE id=$t[forum]");
+			$minpower = $sql->resultq("SELECT minpower FROM forums WHERE id='{$t['forum']}'");
 			if($minpower < 1 || $minpower <= $power)
-				$sql->query("INSERT INTO favorites (user,thread) VALUES ($loguserid,$thread)");
+				$sql->queryp("INSERT INTO favorites (user,thread) VALUES (?,?)", $values);
 			else
 				$tx = "You can't favorite a thread you don't have access to!";
 		}
@@ -46,14 +47,14 @@
 
 		$forum['title'] = 'Favorites';
 		if ($user && $user != $loguserid && $isadmin)
-			$forum['title'] .= ' of '.$sql->resultq("SELECT name FROM users WHERE id={$user}");
+			$forum['title'] .= ' of '.$sql->resultp("SELECT name FROM users WHERE id=?", array($user));
 		else
 			$user = $loguserid;
 
-		$threadcount = $sql->resultq("SELECT COUNT(*) FROM favorites where user={$user}");
+		$threadcount = $sql->resultp("SELECT COUNT(*) FROM favorites where user=?", array($user));
 	}
 	elseif ($user) {
-		$user1=$sql->fetchq("SELECT name,sex,powerlevel,aka,birthday FROM users WHERE id={$user}");
+		$user1=$sql->fetchp("SELECT name,sex,powerlevel,aka,birthday FROM users WHERE id=?", array($user));
 		if (!$user1) {
 			$meta['noindex'] = true; // prevent search engines from indexing what they can't access
 			require_once 'lib/layout.php';
@@ -61,11 +62,11 @@
 		}
 
 		$forum['title']="Threads by $user1[name]";
-		$threadcount = $sql->resultq("SELECT COUNT(*) FROM threads where user=$user");
+		$threadcount = $sql->resultp("SELECT COUNT(*) FROM threads where user=?", array($user));
 	}
 	elseif ($id) { # Default case, show forum with id
 		$id	= intval($id);
-		$forum = $sql->fetchq("SELECT title,minpower,numthreads,specialscheme,pollstyle FROM forums WHERE id=$id");
+		$forum = $sql->fetchp("SELECT title,minpower,numthreads,specialscheme,pollstyle FROM forums WHERE id=?", array($id));
 
 		if (!$forum) {
 			trigger_error("Attempted to access invalid forum $id", E_USER_NOTICE);
@@ -171,8 +172,11 @@
 		$forumnames = $sql->getresultsbykey("SELECT id,title FROM forums WHERE minpower <= ".intval($loguser['powerlevel']), 'id', 'title');
 
 	// Get threads
-	if($fav)
-		$threads = $sql->query("SELECT t.*, minpower,f.id as forumid, "
+	if ($fav) {
+		$values = array(
+			'user' => $user,
+		);
+		$threads = $sql->queryp("SELECT t.*, minpower,f.id as forumid, "
 			."u1.name AS name1, u1.sex AS sex1, u1.powerlevel AS pwr1, u1.aka as aka1, u1.birthday as bd1,"
 			."u2.name AS name2, u2.sex AS sex2, u2.powerlevel AS pwr2, u2.aka as aka2, u2.birthday as bd2 "
 			.($log ? ", r.read AS tread, r.time as treadtime " : " ")
@@ -182,37 +186,45 @@
 			."WHERE u1.id=t.user "
 			."AND u2.id=t.lastposter "
 			."AND fav.thread=t.id "
-			."AND fav.user={$user} "
+			."AND fav.user=:user "
 			."AND f.id=t.forum "
 			."ORDER BY sticky DESC,lastpostdate DESC "
-			."LIMIT $min,$tpp");
-	elseif($user)
-		$threads = $sql->query("SELECT t.*, minpower, f.id as forumid, "
-			."'".addslashes($user1['name'])."' AS name1, {$user1['sex']} AS sex1, {$user1['powerlevel']} AS pwr1, '"
-			.addslashes($user1['aka'])."' as aka1, {$user1['birthday']} as bd1, "
+			."LIMIT $min,$tpp", $values);
+	}
+	else if ($user) {
+		// dumb trick
+		$user1['user'] = $user;
+		
+		$threads = $sql->queryp("SELECT t.*, minpower, f.id as forumid, "
+			.":name AS name1, :sex AS sex1, :powerlevel AS pwr1, :aka as aka1, :birthday as bd1, "
 			."name AS name2, sex AS sex2, powerlevel AS pwr2, aka as aka2, birthday as bd2"
 			.($log ? ", r.read AS tread, r.time as treadtime " : " ")
 			."FROM threads t "
 			.($log ? "LEFT JOIN threadsread r ON (t.id=r.tid AND r.uid=$loguserid) " : "")
 			.",users u,forums f "
-			."WHERE t.user=$user "
+			."WHERE t.user=:user "
 			."AND u.id=t.lastposter "
 			."AND f.id=t.forum "
 			."ORDER BY sticky DESC,lastpostdate DESC "
-			."LIMIT $min,$tpp");
-	else
-		$threads = $sql->query("SELECT t.*,"
+			."LIMIT $min,$tpp", $user1);
+	}
+	else {
+		$values = array(
+			'id' => $id,
+		);
+		$threads = $sql->queryp("SELECT t.*,"
 			."u1.name AS name1, u1.sex AS sex1, u1.powerlevel AS pwr1, u1.aka as aka1, u1.birthday as bd1,"
 			."u2.name AS name2, u2.sex AS sex2, u2.powerlevel AS pwr2, u2.aka as aka2, u2.birthday as bd2 "
 			.($log ? ", r.read AS tread, r.time as treadtime " : " ")
 			."FROM threads t "
 			.($log ? "LEFT JOIN threadsread r ON (t.id=r.tid AND r.uid=$loguserid) " : "")
 			.",users u1,users u2 "
-			."WHERE forum=$id "
+			."WHERE forum=:id "
 			."AND u1.id=t.user "
 			."AND u2.id=t.lastposter "
 			."ORDER BY sticky DESC,lastpostdate DESC "
-			."LIMIT $min,$tpp");
+			."LIMIT $min,$tpp", $values);
+	}
 
     $threadlist .= "<tr>
 		$tccellh width=30></td>
@@ -231,6 +243,7 @@
 		</td></tr>";
 	}
 	else for($i=1; $thread=@$sql->fetch($threads, PDO::FETCH_ASSOC); ++$i) {
+		// Sticky threads separator
 		if($sticklast && !$thread['sticky'])
 			$threadlist .= "<tr>$tccellh colspan=7><img src='images/_.gif' height=6 width=6>";
 		$sticklast = $thread['sticky'];

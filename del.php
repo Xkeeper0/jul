@@ -10,32 +10,32 @@
 	
 	if (!in_array($_SERVER['REMOTE_ADDR'], $allowedusers)) die("Nein.");
   
-
+  $deluserid = 89;
+  
   require 'lib/layout.php';
   if($_POST['deluser'] and $isadmin) { //($loguserid==1 or $loguserid==2)){
  
 		foreach($_POST['deluser'] as $id => $junk) {
-
-			$query = "SELECT id,name,posts,sex,powerlevel FROM users WHERE id=$id";
-			$user2 = $sql->query($query);
+			
+			$user2 = $sql->queryp("SELECT id,name,posts,sex,powerlevel FROM users WHERE id=?", array($id));
 			
 			while ($user=$sql->fetch($user2)) {
 				$id	= $user['id'];
 
-				$name=$user[name];
-				$namecolor=getnamecolor($user[sex],$user[powerlevel]);
+				$name=$user['name'];
+				$namecolor=getnamecolor($user['sex'],$user['powerlevel']);
 				$sql->query("INSERT INTO `delusers` ( SELECT * FROM `users` WHERE `id` = '$id' )");
-				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". htmlspecialchars(addslashes($name)) ."</b></font>]<br>";
+				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". htmlspecialchars($name) ."</b></font>]<br>";
 				$ups=$sql->query("SELECT id FROM posts WHERE user=$id");
-				$signupd = $sql->prepare("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=?");
+				$signupd = $sql->prepare("UPDATE posts_text SET signtext=CONCAT_WS('',?,signtext) WHERE pid=?");
 				while ($up = $sql->fetch($ups))
-					$sql->execute($signupd, array($up['id']));
-				$sql->query("UPDATE threads SET user=89 WHERE user=$id");
-				$sql->query("UPDATE threads SET lastposter=89 WHERE lastposter=$id");
-				$sql->query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$id");
-				$sql->query("UPDATE pmsgs SET userto=89 WHERE userto=$id");
-				$sql->query("UPDATE posts SET user=89,headid=0,signid=0 WHERE user=$id");
-				$sql->query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '89') WHERE `id` = '89'");
+					$sql->execute($signupd, array($line, $up['id']));
+				$sql->query("UPDATE threads SET user=$deluserid WHERE user=$id");
+				$sql->query("UPDATE threads SET lastposter=$deluserid WHERE lastposter=$id");
+				$sql->query("UPDATE pmsgs SET userfrom=$deluserid WHERE userfrom=$id");
+				$sql->query("UPDATE pmsgs SET userto=$deluserid WHERE userto=$id");
+				$sql->query("UPDATE posts SET user=$deluserid,headid=0,signid=0 WHERE user=$id");
+				$sql->query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '$deluserid') WHERE `id` = '$deluserid'");
 				$sql->query("DELETE FROM userratings WHERE userrated=$id OR userfrom=$id");
 				$sql->query("DELETE FROM pollvotes WHERE user=$id");
 				$sql->query("DELETE FROM users WHERE id=$id");
@@ -69,11 +69,11 @@ $deltext
 	$tblstart
 		<tr>$tccellh colspan=2>Sort Options</td></tr>
 		<tr>$tccell1 width=300><b>User Search:</b></td>
-			$tccell2l>$inpt=searchname size=30 maxlength=15 value='". $_POST['searchname'] ."'></td></tr>
+			$tccell2l>$inpt=searchname size=30 maxlength=15 value='". htmlspecialchars($_POST['searchname']) ."'></td></tr>
 		<tr>$tccell1 width=300><b>IP Search:</b></td>
-			$tccell2l>$inpt=searchip size=30 maxlength=15 value='". $_POST['searchip'] ."'></td></tr>
+			$tccell2l>$inpt=searchip size=30 maxlength=15 value='". htmlspecialchars($_POST['searchip']) ."'></td></tr>
 		<tr>$tccell1 width=300><b>Show users with less than:</b></td>
-			$tccell2l>$inpt=maxposts size=15 maxlength=9 value='". $_POST['maxposts'] ."'> posts</td></tr>
+			$tccell2l>$inpt=maxposts size=15 maxlength=9 value='". htmlspecialchars($_POST['maxposts']) ."'> posts</td></tr>
 		<tr>$tccell1><b>Powerlevel:</b></td>
 			$tccell2l><select name='sortpowerlevel'>
 				<option value='aa' ". $powerselect['aa'] .">* Any powerlevel</option>
@@ -113,13 +113,13 @@ $deltext
 	if ($_POST['searchip']) {
 		if ($sqlquery)	$sqlquery	.= " AND ";
 		$sqlquery	.= "`lastip` LIKE ?";
-		$sqlvals[]   = stripslashes($_POST['searchip']).'%';
+		$sqlvals[]   = $_POST['searchip'].'%';
 	}
 
 	if ($_POST['searchname']) {
 		if ($sqlquery)	$sqlquery	.= " AND ";
 		$sqlquery	.= "`name` LIKE ?";
-		$sqlvals[]   = "%".stripslashes($_POST['searchname'])."%";
+		$sqlvals[]   = "%".$_POST['searchname']."%";
 	}
 
 	if ($_POST['sortpowerlevel'] != "aa") {

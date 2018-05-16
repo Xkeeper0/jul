@@ -167,6 +167,8 @@
 	}
 
 	if($_POST['action']=='saveprofile') {
+		$userid = (int) $_POST['userid'];
+		
 		if ($eddateformat == $defaultdateformat) $eddateformat = '';
 		if ($eddateshort  == $defaultdateshort)  $eddateshort  = '';
 
@@ -175,7 +177,8 @@
 		sbr(0,$postheader);
 
 		$minipic = htmlspecialchars($minipic);
-		$avatar = htmlspecialchars($avatar);
+		$picture = htmlspecialchars($picture);
+		
 
 		$birthday=@mktime(0,0,0,$bmonth,$bday,$byear);
 		if(!$bmonth && !$bday && !$byear) $birthday=0;
@@ -192,52 +195,54 @@
 		$values = array(
 			'posts'          => (int) $_POST['numposts'],
 			'regdate'        => (int) $_POST['regtime'],
-			'name'           => stripslashes($_POST['username']),
+			'name'           => $_POST['username'],
 			'powerlevel'     => (int) $_POST['powerlevel'],
 			'profile_locked' => (int) $_POST['profile_locked'],
 			'editing_locked' => (int) $_POST['editing_locked'],
 			'titleoption'    => (int) $_POST['titleoption'],
 		
-			'picture'        => stripslashes($_POST['picture']),
-			'minipic'        => stripslashes($minipic),
-			'signature'      => stripslashes($signature),
-			'bio'            => stripslashes($bio),
-			'email'          => stripslashes($_POST['email']),
+			'picture'        => $_POST['picture'],
+			'minipic'        => $minipic,
+			'signature'      => $signature,
+			'bio'            => $bio,
+			'email'          => $_POST['email'],
 			'icq'            => (int) $icq,
-			'title'          => stripslashes($title),
+			'title'          => $usertitle,
 			'useranks'       => (int) $useranks,
-			'aim'            => stripslashes($_POST['aim']),
+			'aim'            => $_POST['aim'],
 			'sex'            => (int) $sex,
-			'homepageurl'    => stripslashes($_POST['homepage']),
-			'homepagename'   => stripslashes($_POST['pagename']),
+			'homepageurl'    => $_POST['homepage'],
+			'homepagename'   => $_POST['pagename'],
 			'timezone'       => (int) $_POST['timezone'],
 			'dateformat'     => $eddateformat,
 			'dateshort'      => $eddateshort,
 			'postsperpage'   => (int) $_POST['postsperpage'],
-			'aka'            => stripslashes($_POST['aka']),
-			'realname'       => stripslashes($_POST['realname']),
-			'location'       => stripslashes($_POST['location']),
-			'postbg'         => stripslashes($_POST['postbg']), // DELETEME
-			'postheader'     => stripslashes($postheader),
+			'aka'            => $_POST['aka'],
+			'realname'       => $_POST['realname'],
+			'location'       => $_POST['location'],
+			'postbg'         => $_POST['postbg'], // DELETEME
+			'postheader'     => $postheader,
 			'birthday'       => $birthday,
 			'scheme'         => (int) $_POST['sscheme'],
 			'threadsperpage' => (int) $_POST['threadsperpage'],
 			'viewsig'        => (int) $_POST['viewsig'],
 			'layout'         => (int) $_POST['tlayout'],
 	//		'posttool'       => (int) $_POST['posttool'],
-			'moodurl'        => stripslashes($_POST['moodurl']),
-			'imood'          => stripslashes($_POST['imood']),
-			'pronouns'       => stripslashes($_POST['pronouns']),
-			'signsep'        => (int) $_POST['signsep'],
-			'pagestyle'      => (int) $_POST['pagestyle'],
-			'pollstyle'      => (int) $_POST['pollstyle']
+			'moodurl'        => $_POST['moodurl'],
+			//'imood'          => $_POST['imood'],
+			'pronouns'       => $_POST['pronouns'],
+			//'signsep'        => (int) $_POST['signsep'],
+			//'pagestyle'      => (int) $_POST['pagestyle'],
+			//'pollstyle'      => (int) $_POST['pollstyle']
 		);
 		
 		if ($_POST['password']) {
-			$values['password'] = getpwhash($_POST['password'], $userid);
+			$values['password'] = getpwhash(escape_password($_POST['password']), $userid);
 		}
+		$where = array('id' => $userid);
+		$qstr  = mysql::phs($values, $where);
 
-		$sql->queryp("UPDATE `users` SET ".mysql::phs($values)." WHERE `id` = '$userid'", $values) or print $sql->error();
+		$sql->queryp("UPDATE `users` SET $qstr WHERE `id` = :id", $values) or print $sql->error();
 
 	print "
 	$tblstart
