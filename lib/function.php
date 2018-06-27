@@ -1263,7 +1263,7 @@ function xss_clean($data) {
 	#$data = preg_replace('#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $data);
 	do {
 		$old_data	= $data;
-		$data		= preg_replace('#(<[^>]+?[\x00-\x20"\'])(on|xmlns)([^>]*+)>#iu', '$1DISABLED_$2$3>', $data);
+		$data		= preg_replace('#(<[^>\s]+?[\x00-\x20"\'])(on|xmlns)([^>]*+)>#iu', '$1DISABLED_$2$3>', $data);
 	} while ($old_data !== $data);
 
 	// Remove javascript: and vbscript: protocols
