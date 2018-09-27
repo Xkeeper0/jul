@@ -26,7 +26,7 @@
 
 
 
-	$sql->connect($sqlhost, $sqluser, $sqlpass) or
+	$sql->connect($sqlhost, $sqluser, $sqlpass, $dbname) or
 		die("<title>Damn</title>
 			<body style=\"background: #000 url('images/bombbg.png'); color: #f00;\">
 				<font style=\"font-family: Verdana, sans-serif;\">
@@ -34,11 +34,11 @@
 				<img src=\"http://xkeeper.shacknet.nu:5/docs/temp/mysqlbucket.png\" title=\"bought the farm, too\">
 				<br><br><font style=\"color: #f88; size: 175%;\"><b>The MySQL server has exploded.</b></font>
 				<br>
-				<br><font style=\"color: #f55;\">Error: ". mysql_error() ."</font>
+				<br><font style=\"color: #f55;\">Error: ". $sql->error() ."</font>
 				<br>
 				<br><small>This is not a hack attempt; it is a server problem.</small>
 			");
-	$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". mysql_error() ."</small>");
+	//$sql->selectdb($dbname) or die("Another stupid MySQL error happened, panic<br><small>". $sql->error() ."</small>");
 
 
 	if (file_exists("lib/firewall.php") && !filter_bool($disable_firewall)) {
@@ -48,11 +48,14 @@
 
 		// Bad Design Decisions 2001.
 		// :(
+		
+		// One out, one to go
+		/*
 		if (!get_magic_quotes_gpc()) {
 			$_GET = addslashes_array($_GET);
 			$_POST = addslashes_array($_POST);
 			$_COOKIE = addslashes_array($_COOKIE);
-		}
+		}*/
 		if(!ini_get('register_globals')){
 			$supers=array('_ENV', '_SERVER', '_GET', '_POST', '_COOKIE',);
 			foreach($supers as $__s) if (is_array($$__s)) extract($$__s, EXTR_SKIP);
@@ -258,28 +261,28 @@
 
 // Old birthday shit
 /*
-	mysql_query("UPDATE `users` SET `sex` = '2' WHERE `sex` = 255");
-	$busers = @mysql_query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() - (60 * 60 * 3))."' AND birthday") or print mysql_error();
+	$sql->query("UPDATE `users` SET `sex` = '2' WHERE `sex` = 255");
+	$busers = @$sql->query("SELECT id, name FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() - (60 * 60 * 3))."' AND birthday") or print $sql->error();
 	$bquery = "";
-	while($buserid = mysql_fetch_array($busers, MYSQL_ASSOC))
+	while($buserid = $sql->fetch($busers, PDO::FETCH_ASSOC))
 		$bquery .= ($bquery ? " OR " : "") ."`id` = '". $buserid['id'] ."'";
 	if ($bquery)
-		mysql_query("UPDATE `users` SET `sex` = '255' WHERE $bquery");
+		$sql->query("UPDATE `users` SET `sex` = '255' WHERE $bquery");
 */
 
 
-function filter_int(&$v) {
+function filter_int(&$v, $default = null) {
 	if (!isset($v)) {
-		return null;
+		return $default;
 	} else {
 		$v	= intval($v);
 		return $v;
 	}
 }
 
-function filter_bool(&$v) {
+function filter_bool(&$v, $default = null) {
 	if (!isset($v)) {
-		return null;
+		return $default;
 	} else {
 		$v	= (bool)$v;
 		return $v;
@@ -287,9 +290,9 @@ function filter_bool(&$v) {
 }
 
 
-function filter_string(&$v) {
+function filter_string(&$v, $default = null) {
 	if (!isset($v)) {
-		return null;
+		return $default;
 	} else {
 		$v	= (string)$v;
 		return $v;
@@ -319,7 +322,7 @@ function numsmilies(){
 function readpostread($userid){
 	global $sql;
 	if (!$userid) return array();
-	return $sql->getresultsbykey("SELECT forum,readdate FROM forumread WHERE user=$userid", 'forum', 'readdate');
+	return $sql->fetchp("SELECT forum,readdate FROM forumread WHERE user=?", array($userid), PDO::FETCH_KEY_PAIR);
 }
 
 function timeunits($sec){
@@ -456,7 +459,7 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 	global $tagval, $sql;
 
 	// This should probably go off of user ID but welp
-	$user			= $sql->fetchq("SELECT * FROM `users` WHERE `name` = '".addslashes($username)."'", MYSQL_BOTH, true);
+	$user			= $sql->fetchp("SELECT * FROM `users` WHERE `name` = ?", array($username), PDO::FETCH_ASSOC, true);
 
 	$userdata		= array(
 		'id'		=> $user['id'],
@@ -465,7 +468,7 @@ function doreplace($msg, $posts, $days, $username, &$tags = null) {
 		'days'		=> $days,
 		'useranks'	=> $user['useranks'],
 		'exp'		=> calcexp($posts,$days)
-		);
+	);
 
 	$userdata['level']		= calclvl($userdata['exp']);
 	$userdata['expdone']	= $userdata['exp'] - calclvlexp($userdata['level']);
@@ -575,7 +578,12 @@ function doforumlist($id){
 		$fjump[$cat['id']]	= "<optgroup label=\"". $cat['name'] ."\">";
 	}
 
-	$forum1= $sql->query("SELECT id,title,catid FROM forums WHERE (minpower<=$power OR minpower<=0) AND `hidden` = '0' AND `id` != '0' OR `id` = '$id' ORDER BY forder") or print mysql_error();
+	$where = array(
+		'minpower' => $power,
+		'hidden'   => 0,
+		'id'       => $id
+	);
+	$forum1 = $sql->queryp("SELECT id,title,catid FROM forums WHERE (minpower<=:minpower OR minpower<=0) AND `hidden` = :hidden AND `id` != '0' OR `id` = :id ORDER BY forder", $where) or print $sql->error();
 	while($forum=$sql->fetch($forum1)) {
 		$fjump[$forum['catid']]	.="<option value=forum.php?id=$forum[id]".($forum['id']==$id?' selected':'').">$forum[title]</option>";
 	}
@@ -646,7 +654,7 @@ function getrank($rankset,$title,$posts,$powl){
 function updategb() {
 	global $sql;
 	$hranks = $sql->query("SELECT posts FROM users WHERE posts>=1000 ORDER BY posts DESC");
-	$c      = mysql_num_rows($hranks);
+	$c      = $sql->num_rows($hranks);
 
 	for($i=1;($hrank=$sql->fetch($hranks)) && $i<=$c*0.7;$i++){
 		$n=$hrank[posts];
@@ -664,7 +672,7 @@ function updategb() {
 
 function checkusername($name){
 	global $sql;
-	$u = $sql->resultq("SELECT id FROM users WHERE name='".addslashes($name)."'");
+	$u = $sql->resultp("SELECT id FROM users WHERE name = ?", array($name));
 	if($u<1) $u=-1;
 	return $u;
 }
@@ -672,7 +680,7 @@ function checkusername($name){
 function checkuser($name,$pass){
 	global $hacks, $sql;
 
-	$user = $sql->fetchq("SELECT id,password FROM users WHERE name='$name'");
+	$user = $sql->fetchp("SELECT id,password FROM users WHERE name = ?", array($name));
 
 	if (!$user) return -1;
 	if ($user['password'] !== getpwhash($pass, $user['id'])) {
@@ -702,6 +710,14 @@ function create_verification_hash($n,$pw) {
 
 	// don't base64 encode like I do on my fork, waste of time (honestly)
 	return $n . sha1($pw . $vstring, false);
+}
+
+// passwords were never stripslashed() before being hashed when magic_quotes was in effect
+// which means doing this is necessary for compatibility. fun
+// (as its own function so it can be easily disabled)
+function escape_password($pw) {
+	// return $pw;
+	return addslashes($pw);
 }
 
 function shenc($str){
@@ -891,13 +907,13 @@ function fonlineusers($id){
 	global $userip,$loguserid,$sql;
 
 	if($loguserid)
-		$sql->query("UPDATE users SET lastforum=$id WHERE id=$loguserid");
+		$sql->queryp("UPDATE users  SET lastforum=? WHERE id=?", array($id, $loguserid));
 	else
-		$sql->query("UPDATE guests SET lastforum=$id WHERE ip='$userip'");
+		$sql->queryp("UPDATE guests SET lastforum=? WHERE ip=?", array($id, $userip));
 
-	$forumname		=@$sql->resultq("SELECT title FROM forums WHERE id=$id",0,0);
+	$forumname		=@$sql->resultp("SELECT title FROM forums WHERE id=?", array($id));
 	$onlinetime		=ctime()-300;
-	$onusers		=$sql->query("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>$onlinetime AND lastforum=$id ORDER BY name");
+	$onusers		=$sql->queryp("SELECT id,name,lastactivity,minipic,lasturl,aka,sex,powerlevel,birthday FROM users WHERE lastactivity>? AND lastforum=? ORDER BY name", array($onlinetime, $id));
 
 	$onlineusers	= "";
 
@@ -917,7 +933,7 @@ function fonlineusers($id){
 	}
 	$p = ($numon ? ':' : '.');
 	$s = ($numon != 1 ? 's' : '');
-	$numguests = $sql->resultq("SELECT count(*) AS n FROM guests WHERE date>$onlinetime AND lastforum=$id",0,0);
+	$numguests = $sql->resultq("SELECT count(*) AS n FROM guests WHERE date>$onlinetime AND lastforum=$id");
 	if($numguests) $guests="| $numguests guest".($numguests>1?'s':'');
 	return "$numon user$s currently in $forumname$p $onlineusers $guests";
 }
@@ -955,9 +971,9 @@ function postradar($userid){
 	global $sql, $loguser, $loguserid;
 	if (!$userid) return "";
 
-	//$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users u RIGHT JOIN postradar p ON u.id=p.comp WHERE p.user={$userid} ORDER BY posts DESC", MYSQL_ASSOC);
-	$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users,postradar WHERE postradar.user={$userid} AND users.id=postradar.comp ORDER BY posts DESC", MYSQL_ASSOC);
-	if (@mysql_num_rows($postradar)>0) {
+	//$postradar = $sql->query("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users u RIGHT JOIN postradar p ON u.id=p.comp WHERE p.user={$userid} ORDER BY posts DESC", PDO::FETCH_ASSOC);
+	$postradar = $sql->queryp("SELECT posts,id,name,aka,sex,powerlevel,birthday FROM users,postradar WHERE postradar.user=? AND users.id=postradar.comp ORDER BY posts DESC", array($userid), PDO::FETCH_ASSOC);
+	if (@$sql->num_rows($postradar)>0) {
 		$race = 'You are ';
 
 		function cu($a,$b) {
@@ -981,11 +997,11 @@ function postradar($userid){
 		if ($userid == $loguserid)
 			$myposts = $loguser['posts'];
 		else
-			$myposts = $sql->resultq("SELECT posts FROM users WHERE id=$userid");
+			$myposts = $sql->resultp("SELECT posts FROM users WHERE id=?", array($userid));
 
 		for($i=0;$user2=$sql->fetch($postradar);$i++) {
 			if($i) $race.=', ';
-			if($i && $i == mysql_num_rows($postradar)-1) $race.='and ';
+			if($i && $i == $sql->num_rows($postradar)-1) $race.='and ';
 			$race .= cu($myposts, $user2);
 		}
 	}
@@ -995,15 +1011,16 @@ function postradar($userid){
 function loaduser($id,$type){
   global $sql;
 	if ($type==1) {$fields='id,name,sex,powerlevel,posts';}
-	return @$sql->fetchq("SELECT $fields FROM users WHERE id=$id");
+	return @$sql->fetchp("SELECT $fields FROM users WHERE id=?", array($id));
 }
 
 function getpostlayoutid($text){
 	global $sql;
-	$id=@$sql->resultq("SELECT id FROM postlayouts WHERE text='".addslashes($text)."' LIMIT 1",0,0);
+	$text = (string) $text;
+	$id = $sql->resultp("SELECT id FROM postlayouts WHERE text = ? LIMIT 1", array($text));
 	if(!$id){
-		$sql->query("INSERT INTO postlayouts (text) VALUES ('".addslashes($text)."')");
-		$id=mysql_insert_id();
+		$sql->queryp("INSERT INTO postlayouts (text) VALUES (?)", array($text));
+		$id=$sql->insert_id();
 	}
 	return $id;
 }
@@ -1029,10 +1046,7 @@ function sbr($t, &$src){
 		case 1: $src=str_replace('<br>',$br,$src); break;
 	}
 }
-function mysql_get($query){
-  global $sql;
-  return $sql->fetchq($query);
-}
+
 function sizelimitjs(){
 	// where the fuck is this used?!
 	return "";
@@ -1054,7 +1068,7 @@ function sizelimitjs(){
 function loadtlayout(){
 	global $log,$loguser,$tlayout,$sql;
 	$tlayout    = (filter_int($loguser['layout']) ? $loguser['layout'] : 1);
-	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'",0,0);
+	$layoutfile = $sql->resultq("SELECT file FROM tlayouts WHERE id='$tlayout'");
 	require "tlayouts/$layoutfile.php";
 }
 
@@ -1548,8 +1562,13 @@ function printtimedif($timestart){
 		);
 		$url = $_SERVER['REQUEST_URI'];
 		if (in_array(substr($url, 0, 14), $pages)) {
-			$sql->query("INSERT INTO `rendertimes` SET `page` = '". addslashes($url) ."', `time` = '". ctime() ."', `rendertime`  = '". $exectime ."'");
-			$sql->query("DELETE FROM `rendertimes` WHERE `time` < '". (ctime() - 86400 * 14) ."'");
+			$values = array(
+				'page'       => $url,
+				'time'       => ctime(),
+				'rendertime' => $exectime
+			);
+			$sql->queryp("INSERT INTO `rendertimes` SET ".mysql::phs($values), $values);
+			$sql->queryp("DELETE FROM `rendertimes` WHERE `time` < ?", array(ctime() - 86400 * 14));
 		}
 	}
 }

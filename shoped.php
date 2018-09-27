@@ -2,6 +2,7 @@
 
 #	die();
 	require 'lib/function.php';
+	$_GET['id'] = filter_int($_GET['id']);
 	$stats		= array(
 		0	=> "sHP", 
 		1	=> "sMP", 
@@ -22,40 +23,52 @@
 			$tccell1>No.</td><table>". $footer;
 		die();
 	}
-
-	$hiddeneditok	= in_array($loguser['id'], array(1, 18));
+	
+	// flood gates opened, everybody can edit hidden items now
+	$hiddeneditok	= true; // in_array($loguser['id'], array(1, 18));
 
 
 	if ($_POST['edit']) {
-		$q	= 
-			"`name` = '". $_POST['name'] ."', ".
-			"`desc` = '". $_POST['desc'] ."', ".
-			"`cat` = '". $_POST['cat'] ."', ".
-			"`type` = '". $_POST['type'] ."', ".
-			"`effect` = '". $_POST['effect'] ."', ".
-			"`coins` = '". $_POST['coins'] ."', ".
-			($hiddeneditok ? "`hidden` = '". $_POST['hidden'] ."', " : "").
-			"`gcoins` = '". $_POST['gcoins'] ."', ";
+		
+		$values = array(
+			'name'   => $_POST['name'],
+			'desc'   => $_POST['desc'],
+			'cat'    => (int)$_POST['cat'],
+			'type'   => (int)$_POST['type'],
+			'effect' => (int)$_POST['effect'],
+			'coins'  => (int)$_POST['coins'],
+			'gcoins' => (int)$_POST['gcoins'],
+			'stype'  => "",
+		);
+		$where = array();
+		
+		if ($_GET['id'] <= -1)
+			$values['user']   = $loguser['id'];
+		else
+			$where = array('id' => $_GET['id']);
+		
+		if ($hiddeneditok)
+			$values['hidden'] = (int)$_POST['hidden'];
 	
 		foreach($stats as $stat) {
 			if ($_POST['m'. $stat] == "m") $_POST[$stat] *= 100;
-			$q		.= "`$stat` = '". $_POST[$stat] ."', ";
-			$stypes	.= $_POST['m'. $stat];
+			$values[$stat]    = (int)$_POST[$stat];
+			$values['stype'] .= $_POST['m'. $stat];
 		}
-		$q	.= "`stype` = '$stypes'";
 
 		if ($_POST['coins'] < 0 || $_POST['gcoins'] < 0) {
 			// $sql -> query("UPDATE `users` SET `powerlevel` = -1, `title` = 'Next time, read the goddamn warning before doing something stupid'");
 			die("You don't pay warnings much heed, do you?");
 		}
-
+		
+		$q = mysql::phs($values, $where);
 		if ($_GET['id'] <= -1) {
-			$sql -> query("INSERT INTO `items` SET $q, `user` = '". $loguser['id'] ."'");
-			if (mysql_error()) die(mysql_error());
-			$id	= mysql_insert_id();
+			$sql->queryp("INSERT INTO `items` SET $q", $values);
+			if ($sql->error()) die($sql->error());
+			$id	= $sql->insert_id();
 		} else {
-			$sql -> query("UPDATE `items` SET $q WHERE `id` = '". $_GET['id'] ."'");
-			if (mysql_error()) die(mysql_error());
+			$sql->queryp("UPDATE `items` SET $q WHERE `id` = :id", $values);
+			if ($sql->error()) die($sql->error());
 			$id	= $_GET['id'];
 		}
 
@@ -96,11 +109,16 @@
 	
 		$typesq	= $sql -> query("SELECT `id`, `name` FROM `itemtypes` ORDER BY `ord` ASC");
 		$alltypes[255]	= "Unknown";
-		while($typex = $sql -> fetch($typesq)) {
+		while($typex = $sql->fetch($typesq)) {
 			$alltypes[$typex['id']]	= $typex['name'];
 		}
-
-		$item	= $sql -> fetchq("SELECT * FROM `items` WHERE `id` = '". $_GET['id'] ."'" . ($hiddeneditok ? "" : " AND `hidden` = '0'"));
+		
+		$where = array('id' => $_GET['id']);
+		if (!$hiddeneditok) {
+			$where['hidden'] = 0;
+		}
+		$item	= $sql->fetchp("SELECT * FROM `items` WHERE ".str_replace(",", " AND ", mysql::phs($where)), $where);
+		
 		if (!$item) {
 			$item['cat']	= $cat;
 			$_GET['id']		= -1;
@@ -127,7 +145,7 @@
 			</tr>
 			<tr>
 				$tccellh>Name</td>
-				$tccell1l colspan=3><input type=\"text\" name=\"name\" value=\"". $item['name'] ."\"  style=\"width: 100%;\" maxlength=\"255\">
+				$tccell1l colspan=3><input type=\"text\" name=\"name\" value=\"". htmlspecialchars($item['name']) ."\"  style=\"width: 100%;\" maxlength=\"255\">
 					". ($hiddeneditok ? "<br><input type=\"checkbox\" id=\"hiddenitem\" name=\"hidden\" value=\"1\"". ($item['hidden'] ? " checked" : "") ."> <label for=\"hiddenitem\">Hidden item</label>" : "") ."
 					</td>
 				$tccellh>Category</td>
@@ -135,7 +153,7 @@
 			</tr>
 			<tr>
 				$tccellh>Desc</td>
-				$tccell1l colspan=3><input type=\"text\" name=\"desc\" value=\"". $item['desc'] ."\" style=\"width: 100%;\"></td>
+				$tccell1l colspan=3><input type=\"text\" name=\"desc\" value=\"". htmlspecialchars($item['desc']) ."\" style=\"width: 100%;\"></td>
 				$tccellh>Effect <small>(wip)</small></td>
 				$tccell1l>". linkbar($effects, $item['effect'], 1, "effect") ."</td>
 			</tr>
@@ -157,8 +175,24 @@
 		</table></form><br>";
 	}
 
-
-	$items	= $sql -> query("SELECT `items`.*, `users`.`id` as uid, `users`.`sex` as usex, `users`.`powerlevel` as upow, `users`.`name` as uname FROM `items` LEFT JOIN `users` ON `users`.`id` = `items`.`user` WHERE `cat` = '$cat'". ($_GET['type'] ? " AND `type` = '". $_GET['type'] ."' " : "") . ($hiddeneditok ? "" : " AND `hidden` = '0'") ." ORDER BY `type` ASC, `coins` ASC, `gcoins` ASC");
+	$qwhere = "cat = ?";
+	$where = array($cat);
+	if ($_GET['type']) {
+		$qwhere .= " AND type = ?";
+		$where[] = $_GET['type'];
+	}
+	if (!$hiddeneditok)	{
+		$qwhere .= " AND hidden = ?";
+		$where[] = 0;
+	}
+	
+	$items	= $sql->queryp("".
+		"SELECT i.*, u.id uid, u.sex usex, u.powerlevel upow, u.name uname ".
+		"FROM items i ".
+		"LEFT JOIN users u ON u.id = i.user ".
+		"WHERE $qwhere ".
+		"ORDER BY `type` ASC, `coins` ASC, `gcoins` ASC", $where);
+	
 	echo "
 		$tblstart
 			<tr>$tccellc colspan=\"16\">&lt; <a href=\"?cat=$cat&id=-1\">New Item</a> &gt;</td></tr>

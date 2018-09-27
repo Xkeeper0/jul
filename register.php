@@ -15,7 +15,7 @@
 		die("$tblstart<br>$tccell2>Registration is disabled. Please contact an admin if you have any questions.$tblend$footer");
   
 
-  if (!$_POST[action]){
+  if (!$_POST['action']){
     $descbr="</b>$smallfont<br></center>&nbsp";
     print "
 	<body onload=window.document.REPLIER.username.focus()>
@@ -93,50 +93,59 @@
 	$username2 = str_replace(' ','',$username2);
 	$username2 = preg_replace("'&nbsp;'si",'&nbsp',$username2);
 	$username2 = preg_replace("'&nbsp'si",'',$username2);
-	$username2 = stripslashes($username2);
     print $tblstart;
     $userid=-1;
     while ($user=$sql->fetch($users)) {
-		$user[name]=str_replace(' ','',$user['name']);
-		$user[name]=str_replace(' ','',$user['name']);
-		if (strcasecmp($user[name],$username2)==0) $userid=$u;
+		$user['name']=str_replace(' ','',$user['name']);
+		$user['name']=str_replace(' ','',$user['name']);
+		if (strcasecmp($user['name'],$username2)==0) $userid=$u;
 	  }
-	$nomultis = $sql->fetchq("SELECT * FROM `users` WHERE `lastip` = '$REMOTE_ADDR'");
+	$nomultis = $sql->fetchq("SELECT * FROM `users` WHERE `lastip` = '{$_SERVER['REMOTE_ADDR']}'");
 //	$nomultis	= false;
 
 	if ($userid==-1 and $pass and $pass != "123" and $name && ( !$nomultis || $isadmin )) {
-	if(!mysql_num_rows($users)) $userlevel=3;
+	if(!$sql->num_rows($users)) $userlevel=3;
 	$currenttime=ctime();
-	$ipaddr=getenv("REMOTE_ADDR");
 	if (!$x_hacks['host'] && false) {
-		$sql->query("INSERT INTO `pendingusers` SET `username` = '$name', `password` = '". $pass ."', `ip` = '$ipaddr', `time` = '$currenttime'") or print mysql_error();
+		$sql->query("INSERT INTO `pendingusers` SET `username` = '$name', `password` = '". $pass ."', `ip` = '{$_SERVER['REMOTE_ADDR']}', `time` = '$currenttime'") or print $sql->error();
 
-//		$sql->query("INSERT INTO `ipbans` SET `ip` = '$ipaddr', `reason` = 'Automagic ban', `banner` = 'Acmlmboard'");
+//		$sql->query("INSERT INTO `ipbans` SET `ip` = '{$_SERVER['REMOTE_ADDR']}', `reason` = 'Automagic ban', `banner` = 'Acmlmboard'");
 
 		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect('index.php','the board',0);
 	} else {
 
-		$ircout['name']		= stripslashes($name);
-		$ircout['ip']		= $ipaddr;
+		$ircout['name']		= $name;
+		$ircout['ip']		= $_SERVER['REMOTE_ADDR'];
 		
 		// No longer useful
 		//$ircout['pmatch']	= $sql -> resultq("SELECT COUNT(*) FROM `users` WHERE `password` = '". md5($pass) ."'");
-
-		$sql->query("INSERT INTO `users` SET `name` = '$name', `password` = '". md5($pass) ."', `powerlevel` = '0', `postsperpage` = '20', `threadsperpage` = '50', `lastip` = '$ipaddr', `layout` = '1', `scheme` = '0', `lastactivity` = '$currenttime', `regdate` = '$currenttime'") or print mysql_error();
-		$newuserid			= mysql_insert_id();
-		$sql->query("UPDATE users SET `password` = '".getpwhash($pass, $newuserid)."' WHERE `id` = '$newuserid'");
+		$values = array(
+			'name'           => $name,
+			'password'       => '-', //md5($pass),
+			'powerlevel'     => 0,
+			'postsperpage'   => 20,
+			'threadsperpage' => 50,
+			'lastip'         => $_SERVER['REMOTE_ADDR'],
+			'layout'         => 1,
+			'scheme'         => 0,
+			'lastactivity'   => $currenttime,
+			'regdate'        => $currenttime,
+		);
+		$sql->queryp("INSERT INTO `users` SET ".mysql::phs($values), $values) or print $sql->error();
+		$newuserid			= $sql->insert_id();
+		$sql->query("UPDATE users SET `password` = '".getpwhash(escape_password($pass), $newuserid)."' WHERE `id` = '$newuserid'");
 
 		$ircout['id']		= $newuserid;
 		xk_ircout("user", $ircout['name'], $ircout);
 
-		$sql->query("INSERT INTO `users_rpg` (`uid`) VALUES ('". $newuserid ."')") or print mysql_error();
+		$sql->query("INSERT INTO `users_rpg` (`uid`) VALUES ('". $newuserid ."')") or print $sql->error();
 		print "$tccell1>Thank you, $username, for registering your account.<br>".redirect('index.php','the board',0);
 	}
     }else{
 	
 /*	if ($password == "123") {
 		echo	"$tccell1>Thank you, $username, for registering your account.<img src=cookieban.php width=1 height=1><br>".redirect('index.php','the board',0);
-		mysql_query("INSERT INTO `ipbans` (`ip`, `reason`, `date`) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', 'blocked password of 123', '". ctime() ."')");
+		$sql->query("INSERT INTO `ipbans` (`ip`, `reason`, `date`) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', 'blocked password of 123', '". ctime() ."')");
 		die();
 	}
 */

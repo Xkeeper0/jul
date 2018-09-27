@@ -17,9 +17,9 @@
   // Login confirmed from here on out
 	// Changes above form to save a redirect
 	if ($_POST['action'] == 'dochanges') {
-		$user = $sql->resultq("SELECT name FROM users WHERE id=$loguserid");
-		if ($rem) $sql->query("DELETE FROM postradar WHERE user=$loguserid and comp=". intval($rem) ."");
-		if ($add) $sql->query("INSERT INTO postradar (user,comp) VALUES ($loguserid,". intval($add) .")");
+		$user = $sql->resultp("SELECT name FROM users WHERE id=?", array($loguserid));
+		if ($rem) $sql->queryp("DELETE FROM postradar WHERE user=? and comp=?", array($loguserid, $rem));
+		if ($add) $sql->queryp("INSERT INTO postradar (user,comp) VALUES (?,?)", array($loguserid, $add));
 		if ($submit2) {
 			require 'lib/layout.php';
 

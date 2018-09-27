@@ -52,17 +52,13 @@
 
 		$ids = array();
 
-		// PHP pre-buffers all queries' results by default
-		// Just fetch everything now, seek back to beginning for the original function,
-		// and fire off one query to get all post layout data in one query
-		// instead of hitting the DB for each new header/signature encountered
 		while ($ps = $sql->fetch($posts)) {
 			if ($ps['headid']) $ids[] = $ps['headid'];
 			if ($ps['signid']) $ids[] = $ps['signid'];
 		}
-		@mysql_data_seek($posts, 0);
+		//@mysql_data_seek($posts, 0);
 
-    if (!count($ids)) return;
+		if (!count($ids)) return;
 		$postl = $sql->getresultsbykey("SELECT id, text FROM postlayouts WHERE id IN (".implode(",", array_unique($ids, SORT_NUMERIC)).")", 'id', 'text');
 	}
 

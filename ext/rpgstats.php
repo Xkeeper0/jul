@@ -5,13 +5,13 @@
 
 
 	if(!intval($u)) die("Missing ?u=<id> parameter");
-	$user=mysql_fetch_array(mysql_query("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='$u' AND uid=id")) or die("User doesn't exist");
+	$user=$sql->fetch($sql->query("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='$u' AND uid=id")) or die("User doesn't exist");
 	$p=$user[posts];
 	$d=(ctime()-$user[regdate])/86400;
 	if(!$it) $it=0;
 	if(!$ne) {
-		$eqitems=mysql_query("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6] OR id=$it") or print mysql_error();
-		while($item=mysql_fetch_array($eqitems)) $items[$item[id]]=$item;
+		$eqitems=$sql->query("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6] OR id=$it") or print $sql->error();
+		while($item=$sql->fetch($eqitems)) $items[$item[id]]=$item;
 	}
 	if($ct){
 		 $GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];

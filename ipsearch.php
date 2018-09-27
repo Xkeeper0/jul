@@ -76,13 +76,14 @@
 		  $pgroup='GROUP BY p.ip,u.id';
 		  $mgroup='GROUP BY p.ip,u1.id';
 		}
-		$users=$sql->query("SELECT * FROM users WHERE lastip LIKE '$ip' $usort");
-		$posts=$sql->query("SELECT p.*,u.name,u.sex,u.powerlevel,t.title FROM posts p,users u,threads t WHERE ip LIKE '$ip' AND p.user=u.id AND p.thread=t.id $pgroup $psort");
-		$pmsgs=$sql->query("SELECT p.*,t.title,u1.name AS name1,u2.name AS name2,u1.sex AS sex1,u2.sex AS sex2,u1.powerlevel pow1,u2.powerlevel pow2 FROM pmsgs p,pmsgs_text t,users u1,users u2 WHERE ip LIKE '$ip' AND p.userfrom=u1.id AND p.userto=u2.id AND p.id=pid $mgroup $msort");
+		$values=array($ip);
+		$users=$sql->queryp("SELECT * FROM users WHERE lastip LIKE ? $usort", $values);
+		$posts=$sql->queryp("SELECT p.*,u.name,u.sex,u.powerlevel,t.title FROM posts p,users u,threads t WHERE ip LIKE ? AND p.user=u.id AND p.thread=t.id $pgroup $psort", $values);
+		$pmsgs=$sql->queryp("SELECT p.*,t.title,u1.name AS name1,u2.name AS name2,u1.sex AS sex1,u2.sex AS sex2,u1.powerlevel pow1,u2.powerlevel pow2 FROM pmsgs p,pmsgs_text t,users u1,users u2 WHERE ip LIKE ? AND p.userfrom=u1.id AND p.userto=u2.id AND p.id=pid $mgroup $msort", $values);
 
 		print "
 		  $tblend<br>$tblstart
-		  $tccellh colspan=7><b>Users: ".mysql_num_rows($users)."</b><tr>
+		  $tccellh colspan=7><b>Users: ".$sql->num_rows($users)."</b><tr>
 		  $tccellc>id</td>
 		  $tccellc>Name</td>
 		  $tccellc>Registered on</td>
@@ -107,7 +108,7 @@
 
 		print "
 		  $tblend<br>$tblstart
-		  $tccellh colspan=5><b>Posts: ".mysql_num_rows($posts)."</b><tr>
+		  $tccellh colspan=5><b>Posts: ".$sql->num_rows($posts)."</b><tr>
 		  $tccellc>id</td>
 		  $tccellc>Posted by</td>
 		  $tccellc>Thread</td>
@@ -128,7 +129,7 @@
 
 		print "
 		  $tblend<br>$tblstart
-		  $tccellh colspan=6><b>Private messages: ".mysql_num_rows($pmsgs)."</b><tr>
+		  $tccellh colspan=6><b>Private messages: ".$sql->num_rows($pmsgs)."</b><tr>
 		  $tccellc>id</td>
 		  $tccellc>Sent by</td>
 		  $tccellc>Sent to</td>

@@ -6,7 +6,7 @@
 	$meta['noindex'] = true;
 
 	$username = $_POST['username'];
-	$password = $_POST['userpass'];
+	$password = escape_password($_POST['userpass']);
 	$verifyid = $_POST['verify'];
 
 	$txt="$header<br>$tblstart";
@@ -32,7 +32,13 @@
 				@xk_ircsend("1|". xk(7) ."Auto banned tictOrnaria (malicious bot) with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) .".");
 			}
 			else {
-				$sql->query("INSERT INTO `failedlogins` SET `time` = '". ctime() ."', `username` = '". $username ."', `password` = '". $password ."', `ip` = '". $_SERVER['REMOTE_ADDR'] ."'");
+				$values = array(
+					'time'     => ctime(),
+					'username' => $username,
+					'password' => $password,
+					'ip'       => $_SERVER['REMOTE_ADDR'],
+				);
+				$sql->queryp("INSERT INTO `failedlogins` SET ".mysql::phs($values), $values);
 				$fails = $sql->resultq("SELECT COUNT(`id`) FROM `failedlogins` WHERE `ip` = '". $_SERVER['REMOTE_ADDR'] ."' AND `time` > '". (ctime() - 1800) ."'");
 
 				// Keep in mind, it's now not possible to trigger this if you're IP banned
@@ -88,7 +94,7 @@
 	}
 	else { // Just what do you think you're doing
 		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Generic internet exploit searcher'");
-		if (!mysql_error())
+		if (!$sql->error())
 			xk_ircsend("1|". xk(7) ."Auto-banned asshole trying to be clever with the login form (action: ".xk(8).$_POST['action'].xk(7).") with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) .".");
 	}	
 

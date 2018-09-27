@@ -230,20 +230,58 @@
 		$title=preg_replace("'(face|style|class|size|id)=\'([^ ].*?)\''si", '', $title);
 		$title=preg_replace("'(face|style|class|size|id)=([^ ].*?)'si", '', $title);
 	}
+	// duplicate unnecessary XSS protection code
+	/*
 	$bio=preg_replace("'<iframe'si", '&lt;iframe', $bio);
     $bio=preg_replace("'<script'si", '&lt;script', $bio);
     $bio=preg_replace("'onload'si", 'o<z>nload', $bio);
     $bio=preg_replace("'onfail'si", 'o<z>nfail', $bio);
     $bio=preg_replace("'onhover'si", 'o<z>nhover', $bio);
     $bio=preg_replace("'javascript'si", 'java<z>script', $bio);
+	*/
     $birthday=@mktime(12,0,0,$bmonth,$bday,$byear);
     if(!$bmonth && !$bday && !$byear) $birthday=0;
     if(!$icq) $icq=0;
     if(!isset($useranks)) $useranks=$loguser['useranks'];
-
+		
+		$values = array(
+			'picture'        => $_POST['picture'],
+			'minipic'        => $minipic,
+			'signature'      => $signature,
+			'bio'            => $bio,
+			'email'          => $_POST['email'],
+			'icq'            => (int) $icq,
+			'title'          => $title,
+			'useranks'       => (int) $useranks,
+			'aim'            => $_POST['aim'],
+			'sex'            => (int) $sex,
+			'homepageurl'    => $_POST['homepage'],
+			'homepagename'   => $_POST['pagename'],
+			'timezone'       => (int) $_POST['timezone'],
+			'dateformat'     => $eddateformat,
+			'dateshort'      => $eddateshort,
+			'postsperpage'   => (int) $_POST['postsperpage'],
+	//		'aka'            => $_POST['aka'],
+			'realname'       => $_POST['realname'],
+			'location'       => $_POST['location'],
+			'postbg'         => $_POST['postbg'], // DELETEME
+			'postheader'     => $postheader,
+			'birthday'       => $birthday,
+			'scheme'         => (int) $_POST['sscheme'],
+			'threadsperpage' => (int) $_POST['threadsperpage'],
+			'viewsig'        => (int) $_POST['viewsig'],
+			'layout'         => (int) $_POST['tlayout'],
+	//		'posttool'       => (int) $_POST['posttool'],
+			'moodurl'        => $_POST['moodurl'],
+			'imood'          => $_POST['imood'],
+			'pronouns'       => $_POST['pronouns'],
+			'signsep'        => (int) $_POST['signsep'],
+			'pagestyle'      => (int) $_POST['pagestyle'],
+			'pollstyle'      => (int) $_POST['pollstyle']
+		);
 		if ($_POST['password']) {
-			$hash = getpwhash($_POST['password'], $loguserid);
-			$passwordenc = "`password` = '$hash', ";
+			$hash = getpwhash(escape_password($_POST['password']), $loguserid);
+			$values['password'] = $hash;
 
 			if ($loguser['id'] == $loguserid) {
 				$verifyid = intval(substr($_COOKIE['logverify'], 0, 1));
@@ -251,44 +289,10 @@
 				setcookie('logverify',$verify,2147483647, "/", $_SERVER['SERVER_NAME'], false, true);
 			}
 		}
-		else // Sneaky!  But no.
-			$passwordenc = '';
-
-    $sql->query("UPDATE users
-      SET		$passwordenc
-      `picture` = '$picture',
-      `minipic` = '$minipic',
-      `signature` = '$signature',
-      `bio` = '$bio',
-      `email` = '$email',
-      `icq` = '$icq',
-      `title` = '$title',
-      `useranks` = '$useranks',
-      `aim` = '$aim',
-      `sex` = '$sex',
-      `homepageurl` = '$homepage',
-      `homepagename` = '$pagename',
-      `timezone` = '$timezone',
-      `dateformat` = '$eddateformat',
-      `dateshort` = '$eddateshort',
-      `postsperpage` = '$postsperpage',".
-//      `aka` = '$aka',
-     "`realname` = '$realname',
-      `location` = '$location',
-      `postbg` = '$postbg',
-      `postheader` = '$postheader',
-      `birthday` = '$birthday',
-      `scheme` = '$sscheme',
-      `threadsperpage` = '$threadsperpage',
-      `viewsig` = '$viewsig',
-      `layout` = '$tlayout',
-      `moodurl` = '". $_POST['moodurl'] ."',
-      `imood` = '$imood',
-      `pronouns` = '{$_POST['pronouns']}',
-      `signsep` = '$signsep',
-      `pagestyle` = '$pagestyle',
-      `pollstyle` = '$pollstyle'
-    WHERE `id` = '$loguserid'") OR print mysql_error();
+		$where = array('id' => $loguserid);
+		$qstr  = mysql::phs($values, $where);
+		
+		$sql->queryp("UPDATE users SET $qstr WHERE `id` = :id", $values) OR print $sql->error();
 
     print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>".redirect("profile.php?id=$loguserid",'view your profile',0).$tblend;
   }

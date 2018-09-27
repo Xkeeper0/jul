@@ -1,26 +1,40 @@
 <?php
+	// error_reporting(0);
 	require 'lib/function.php';
 	require 'lib/rpg.php';
+	
+	$u  = filter_int($_GET['u']);	// User ID
+	$it = filter_int($_GET['it']);	// Extra item (for item previews)
+	$ne = filter_int($_GET['ne']);	// No item display
+	$nc = filter_int($_GET['nc']);	// No RPG class display
+	$ct = filter_int($_GET['ct']);	// No coins display
+	
+	if (!$u) die;
 
-	if(!intval($u)) die();
-
-	$user = $sql->fetchq("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='$u' AND uid=id");
+	$user = $sql->fetchp(""
+		."SELECT u.name,u.posts,u.regdate,r.* "
+		."FROM users u "
+		."INNER JOIN users_rpg r ON u.id = r.uid "
+		."WHERE id = ?", array($u));
+		
 	$p = $user['posts'];
 	$d = (ctime()-$user['regdate'])/86400;
 
 	if(!$it)
 		$it=0;
-	if(!$ne)
-		$items = $sql->getarraybykey("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6] OR id=$it", 'id');
+	if(!$ne) {
+		$itemlist = array($user['eq1'], $user['eq2'], $user['eq3'], $user['eq4'], $user['eq5'], $user['eq6'], $it);
+		$items  = $sql->getarraybykey("SELECT * FROM items WHERE id IN (".implode(',', $itemlist).")", 'id');
+	}
 	if(!$nc)
-		$class = $sql->fetchq("SELECT * FROM `rpg_classes` WHERE `id` = '". $user['class'] ."'");
+		$class = $sql->fetchq("SELECT * FROM `rpg_classes` WHERE `id` = '{$user['class']}'");
 
 	if($ct) {
-		$GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
-		$user['eq'.$ct]=$it;
+		$GPdif = floor($items[$user['eq'.$ct]]['coins']*0.6)-$items[$it]['coins'];
+		$user['eq'.$ct] = $it;
 	}
 
-	$st = getstats($user,$items,$class);
+	$st = getstats($user, $items, $class);
 	$st['GP']+=$GPdif;
 	if($st['lvl'] > 0) $pct = 1 - calcexpleft($st['exp'])/totallvlexp($st['lvl']);
 
@@ -189,7 +203,7 @@ function bars(){
 		ImageFilledRectangle($img,137,41+24,136+$st['HP']/$sc[$s],47+24,$c['bxb0']);
 		ImageFilledRectangle($img,136,40+24,135+$st['HP']/$sc[$s],46+24,$c['bar1'][$s]);
 		if ($user['damage'] > 0) {
-			$dmg	= max($st[HP] - $user['damage'], 0) / $sc[$s];
+			$dmg	= max($st['HP'] - $user['damage'], 0) / $sc[$s];
 			$ctemp	= imagecolorsforindex($img, $c['bar1'][$s]);
 			$df		= 0.6;
 			ImageFilledRectangle($img,135 + $st['HP']/$sc[$s],40+24,135+$dmg,46+24,imagecolorallocate($img, $ctemp['red'] * $df, $ctemp['green'] * $df, $ctemp['blue'] * $df));

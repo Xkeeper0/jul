@@ -1,6 +1,6 @@
 <?php
 	require 'lib/function.php';
-	$forum = $sql->fetchq("SELECT * FROM forums WHERE id=$id");
+	$forum = $sql->fetchp("SELECT * FROM forums WHERE id=?", array($id));
 	$windowtitle = "$boardname -- $forum[title] -- New Thread";
 	$specialscheme	= $forum['specialscheme'];
 
@@ -48,11 +48,11 @@
 		while($chtext[$c+$d] || $c < $_POST['count']) {
 			if($remove[$c+$d]) $d++;
 			else {
-				$choices.="Choice $c: $inpt=chtext[$c] SIZE=30 MAXLENGTH=255 VALUE=\"".stripslashes(htmlspecialchars($chtext[$c+$d]))."\"> &nbsp Color: $inpt=chcolor[$c] SIZE=7 MAXLENGTH=25 VALUE=\"".stripslashes(htmlspecialchars($chcolor[$c+$d]))."\"> &nbsp <INPUT type=checkbox class=radio name=remove[$c] value=1> Remove<br>";
+				$choices.="Choice $c: $inpt=chtext[$c] SIZE=30 MAXLENGTH=255 VALUE=\"".htmlspecialchars($chtext[$c+$d])."\"> &nbsp Color: $inpt=chcolor[$c] SIZE=7 MAXLENGTH=25 VALUE=\"".htmlspecialchars($chcolor[$c+$d])."\"> &nbsp <INPUT type=checkbox class=radio name=remove[$c] value=1> Remove<br>";
 				$c++;
 			}
 		}
-		$choices.="Choice $c: $inpt=chtext[$c] SIZE=30 MAXLENGTH=255> &nbsp Color: $inpt=chcolor[$c] SIZE=7 MAXLENGTH=25><br>$inps=paction VALUE=\"Submit changes\"> and show $inpt=count size=4 maxlength=2 VALUE=\"".stripslashes(htmlspecialchars(($_POST['count']) ? $_POST['count'] : $c))."\"> options";
+		$choices.="Choice $c: $inpt=chtext[$c] SIZE=30 MAXLENGTH=255> &nbsp Color: $inpt=chcolor[$c] SIZE=7 MAXLENGTH=25><br>$inps=paction VALUE=\"Submit changes\"> and show $inpt=count size=4 maxlength=2 VALUE=\"".htmlspecialchars(($_POST['count']) ? $_POST['count'] : $c)."\"> options";
 		if($mltvote) $checked1='checked';
 		else $checked0='checked';
 	}
@@ -66,7 +66,7 @@
 	if(!$iconid or $iconid==-1) $checked='checked';
 	$posticonlist.="
 		<br>$radio=iconid value=-1 $checked>&nbsp;None&nbsp; &nbsp; &nbsp;
-		Custom: $inpt=custposticon SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($custposticon) ."\">
+		Custom: $inpt=custposticon SIZE=40 MAXLENGTH=100 VALUE=\"". htmlspecialchars($custposticon) ."\">
 	";
 	$subject=htmlspecialchars($subject);
 	$question=htmlspecialchars($question);
@@ -77,9 +77,9 @@
 
 	$form=(!$poll?"
 		<tr>$tccell1><b>Thread icon:</td>	$tccell2l colspan=2>$posticonlist</td></tr>
-		<tr>$tccell1><b>Thread title:</td>$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($subject) ."\"></td></tr>
+		<tr>$tccell1><b>Thread title:</td>$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". $subject ."\"></td></tr>
 		<tr>$tccell1><b>Post:</td>$tccell2l width=800px valign=top>".replytoolbar(2)."
-		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". stripslashes(htmlspecialchars($message)) ."</TEXTAREA></td>
+		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". $message ."</TEXTAREA></td>
 		$tccell2l width=*>".moodlist($moodid)."</td></tr>
 		<tr>$tccell1>&nbsp</td>$tccell2l colspan=2>
 		$inph=action VALUE=postthread>
@@ -94,13 +94,13 @@
 		<!-- </FORM> -->
 	":"
 		<tr>$tccell1><b>Poll icon:</td>	$tccell2l colspan=2>$posticonlist</td></tr>
-		<tr>$tccell1><b>Poll title:</td>	$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($subject) ."\"></td></tr>
-		<tr>$tccell1><b>Question:</td>	$tccell2l colspan=2>$inpt=question SIZE=60 MAXLENGTH=255 VALUE=\"". stripslashes($question) ."\"></td></tr>
-		<tr>$tccell1><b>Briefing:</td>	$tccell2l colspan=2>$txta=briefing ROWS=2 COLS=$numcols style=\"resize:vertical;\">". stripslashes($briefing) ."</TEXTAREA></td></tr>
+		<tr>$tccell1><b>Poll title:</td>	$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". $subject ."\"></td></tr>
+		<tr>$tccell1><b>Question:</td>	$tccell2l colspan=2>$inpt=question SIZE=60 MAXLENGTH=255 VALUE=\"". $question ."\"></td></tr>
+		<tr>$tccell1><b>Briefing:</td>	$tccell2l colspan=2>$txta=briefing ROWS=2 COLS=$numcols style=\"resize:vertical;\">". htmlspecialchars($briefing) ."</TEXTAREA></td></tr>
 		<tr>$tccell1><b>Multi-voting:</td>$tccell2l colspan=2>$radio=mltvote value=0 $checked0> Disabled &nbsp $radio=mltvote value=1 $checked1> Enabled</td></tr>
 		<tr>$tccell1><b>Choices:</td>	$tccell2l colspan=2>$choices</td></tr>
 		<tr>$tccell1><b>Post:</td>$tccell2l width=800px valign=top>".replytoolbar(2)."
-		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". stripslashes(htmlspecialchars($message)) ."</TEXTAREA></td>
+		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($message) ."</TEXTAREA></td>
 		$tccell2l width=*>".moodlist($moodid)."</td></tr>
 
 		<tr>
@@ -168,7 +168,7 @@
 		if ($log && !$password)
 			$userid = $loguserid;
 		else
-			$userid = checkuser($username,$password);
+			$userid = checkuser($username,escape_password($password));
 
 		$user=$sql->fetchq("SELECT * FROM users WHERE id=$userid");
 		if($user['powerlevel']<0) $userid=-1;
@@ -198,7 +198,7 @@
 			$msg = doreplace($msg, $numposts, $numdays, $username, $tags);
 			$rsign = doreplace($sign, $numposts, $numdays, $username);
 			$rhead = doreplace($head, $numposts, $numdays, $username);
-			$tagval	= $sql->escape(json_encode($tags));
+			$tagval	= json_encode($tags);
 			$posticons = file('posticons.dat');
 			$posticon = $posticons[$iconid];
 			$currenttime = ctime();
@@ -207,7 +207,14 @@
 			if($custposticon) $posticon = $custposticon;
 
 			if($submit) {
-				mysql_query("UPDATE `users` SET `posts` = $numposts, `lastposttime` = '$currenttime' WHERE `id` = '$userid'");
+				$values = array(
+					'posts'         => $numposts,
+					'lastposttime'  => $currenttime,
+				);
+				$where = array('id' => $id);
+				$qstr  = mysql::phs($values, $where);
+				$sql->queryp("UPDATE `users` SET {$qstr} WHERE `id` = :id", $values);
+				
 				if (filter_bool($nolayout)) {
 					$headid = 0;
 					$signid = 0;
@@ -215,20 +222,59 @@
 					$headid=getpostlayoutid($head);
 					$signid=getpostlayoutid($sign);
 				}
-
-				mysql_query("INSERT INTO `threads` (`forum`, `user`, `views`, `closed`, `title`, `icon`, `replies`, `firstpostdate`, `lastpostdate`, `lastposter`) ".
-							"VALUES ('$id', '$userid', '0', '0', '$subject', '$posticon', '0', '$currenttime', '$currenttime', '$userid')");
-				$t = mysql_insert_id();
-				mysql_query("INSERT INTO `posts` (`thread`, `user`, `date`, `ip`, `num`, `headid`, `signid`, `moodid`) VALUES ('$t', '$userid', '$currenttime', '$userip', '$postnum', '$headid', '$signid','". $_POST['moodid'] ."')");
-				$pid=mysql_insert_id();
-				$options = intval($nosmilies) . "|" . intval($nohtml);
-				if($pid) mysql_query("INSERT INTO `posts_text` (`pid`, `text`, `tagval`, `options`) VALUES ('$pid', '$msg', '$tagval', '$options')");
-				mysql_query("UPDATE `forums` SET `numthreads` = `numthreads` + 1, `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` = '$userid', `lastpostid` = '$pid' WHERE id=$id");
+				
+				// create the thread
+				$values = array(
+					'forum'         => $id,
+					'user'          => $userid,
+					'views'         => 0,
+					'closed'        => 0,
+					'title'         => $subject,
+					'icon'          => $posticon,
+					'replies'       => 0,
+					'firstpostdate' => $currenttime,
+					'lastpostdate'  => $currenttime, 
+					'lastposter'    => $userid,
+				);
+				$sql->queryp("INSERT INTO `threads` SET ".mysql::phs($values), $values);
+				$t = $sql->insert_id();
+				// create the post
+				$values = array(
+					'thread' => $t,
+					'user'   => $userid,
+					'date'   => $currenttime,
+					'ip'     => $userip,
+					'num'    => $postnum,
+					'headid' => $headid,
+					'signid' => $signid,
+					'moodid' => $_POST['moodid'],
+				);
+				$sql->queryp("INSERT INTO `posts` SET ".mysql::phs($values), $values);
+				$pid = $sql->insert_id();
+				// create the post text
+				if ($pid) {
+					$values = array(
+						'pid'     => $pid,
+						'text'    => $msg,
+						'tagval'  => $tagval,
+						'options' => filter_int($_POST['nosmilies']) . "|" . filter_int($_POST['nohtml'])
+					);
+					$sql->queryp("INSERT INTO `posts_text` SET ".mysql::phs($values), $values);
+				}
+				
+				$values = array(
+					'lastpostdate' => $currenttime, 
+					'lastpostuser' => $userid,
+					'lastpostid'   => $pid,
+				);
+				$where = array('id' => $id);
+				$qstr = mysql::phs($values, $where);
+				$sql->queryp("UPDATE `forums` SET {$qstr}, `numthreads` = `numthreads` + 1, `numposts` = `numposts` + 1 WHERE id = :id", $values);
 
 				if(!$poll) {
 					print "
 						$tccell1>Thread posted successfully!
-						<br>".redirect("thread.php?id=$t", stripslashes($subject), 0).$tblend;
+						<br>".redirect("thread.php?id=$t", $subject, 0).$tblend;
 
 					xk_ircout("thread", $user['name'], array(
 						'forum'		=> $forum['title'],
@@ -239,17 +285,26 @@
 					));
 				}
 				else {
-					mysql_query("INSERT INTO `poll` (`question`, `briefing`, `closed`, `doublevote`) VALUES ('$question', '$briefing', '0', '$mltvote')");
-					$p=mysql_insert_id();
-					mysql_query("UPDATE `threads` SET `poll` = '$p' where `id` = '$t'");
+					// create poll data
+					$values = array(
+						'question'   => $_POST['question'],
+						'briefing'   => $_POST['briefing'],
+						'closed'     => 0,
+						'doublevote' => (int) $_POST['mltvote']
+					);
+					$sql->queryp("INSERT INTO `poll` SET ".mysql::phs($values), $values);
+					$p=$sql->insert_id();
+					$sql->query("UPDATE `threads` SET `poll` = '$p' where `id` = '$t'");
+					// create poll choices
+					$makechoice = $sql->prepare("INSERT INTO `poll_choices` (`poll`, `choice`, `color`) VALUES (?,?,?)");
 					$c=1;
-					while($chtext[$c]){
-						mysql_query("INSERT INTO `poll_choices` (`poll`, `choice`, `color`) VALUES ('$p', '$chtext[$c]', '$chcolor[$c]')");
+					while ($chtext[$c]) {
+						$sql->execute($makechoice, array($p, $chtext[$c], $chcolor[$c]));
 						$c++;
 					}
 					print "
 						$tccell1>Poll created successfully!
-						<br>".redirect("thread.php?id=$t", stripslashes($subject), 0).$tblend;
+						<br>".redirect("thread.php?id=$t", $subject, 0).$tblend;
 
 					xk_ircout("poll", $user['name'], array(
 						'forum'		=> $forum['title'],
@@ -261,12 +316,10 @@
 				}
 			}
 			else {
-				if($posticon) $posticon1="<img src='". stripslashes($posticon) ."' height=15 align=absmiddle>";
+				if($posticon) $posticon1="<img src=\"". htmlspecialchars($posticon) ."\" height=15 align=absmiddle>";
 
 				if($poll) {
 					for($c=1;$chtext[$c];$c++) {
-						$chtext[$c]=stripslashes($chtext[$c]);
-						$chcolor[$c]=stripslashes($chcolor[$c]);
 						$hchoices.="$inph=chtext[$c] VALUE=\"".htmlspecialchars($chtext[$c])."\">$inph=chcolor[$c] VALUE=\"".htmlspecialchars($chcolor[$c]).'">';
 						$pchoices.="
 							$tccell1l width=20%>$chtext[$c]</td>
@@ -282,9 +335,9 @@
 						$tccell2ls colspan=3>Multi-voting is $mlt.
 						$tblend<br>$tblstart
 					";
-					$subject = htmlspecialchars(stripslashes($subject));
-					$question = htmlspecialchars(stripslashes($question));
-					$briefing = htmlspecialchars(stripslashes($briefing));
+					$subject = htmlspecialchars($subject);
+					$question = htmlspecialchars($question);
+					$briefing = htmlspecialchars($briefing);
 				}
 				loadtlayout();
 				$ppost=$user;
@@ -304,7 +357,7 @@
 					$ppost['signtext']=$rsign;
 				}
 				$ppost['moodid']=$_POST['moodid'];
-				$ppost['text']=stripslashes($message);
+				$ppost['text']=$message;
 				$ppost['options'] = $_POST['nosmilies'] . "|" . $_POST['nohtml'];
 				if($isadmin) $ip=$userip;
 				$threadtype=($poll?'poll':'thread');
@@ -313,7 +366,7 @@
 					$tccellh>".($poll?'Poll':'Thread')." preview
 					$tblend$tblstart
 					$pollpreview
-					$tccell2l>$posticon1 <b>". stripslashes($subject) ."</b>
+					$tccell2l>$posticon1 <b>". $subject ."</b>
 					$tblend$tblstart
 					".threadpost($ppost,1)."
 					$tblend<br>$tblstart

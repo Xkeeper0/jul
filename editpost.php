@@ -14,14 +14,14 @@
 		errorpage("You are not allowed to edit your posts.",'return to the board','index.php');
 	}
 
-	$post     = $sql->fetchq("SELECT * FROM posts,posts_text WHERE id='$id 'AND id=pid");
+	$post     = $sql->fetchp("SELECT * FROM posts,posts_text WHERE id=? AND id=pid", array($id));
 	if (!$post) {
 		require_once 'lib/layout.php';
 		errorpage("Post ID #{$id} doesn't exist.",'return to the board','index.php');
 	}
 
 	$threadid = $post['thread'];
-	$thread   = $sql->fetchq("SELECT forum,closed,title FROM threads WHERE id=$threadid");
+	$thread   = $sql->fetchp("SELECT forum,closed,title,replies FROM threads WHERE id=?", array($threadid));
 	$options  = explode("|", $post['options']);
 
 	$thread['title'] = str_replace('<','&lt;',$thread['title']);
@@ -35,20 +35,20 @@
 
 	require_once 'lib/layout.php';
 	print $header;
-
-	if (@mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum=$forum[id] and user=$loguserid")))
-		$ismod = 1;
+	
+	if (!$ismod && $loguser['id'])
+		$ismod = (int)$sql->resultp("SELECT COUNT(*) FROM forummods WHERE forum=? and user=?", array($forum['id'], $loguser['id']));
 
 	print "$fonttag<a href=index.php>$boardname</a> - ". ($forum['minpower'] <= $loguser['powerlevel'] ? "<a href=forum.php?id=$forum[id]>".$forum['title']."</a> - <a href='thread.php?pid=$id#$id'>$thread[title]</a> - Edit post" : "Restricted thread") ."
 		$tblstart
 		<FORM ACTION=editpost.php NAME=REPLIER METHOD=POST>";
 
-	if(!$action && $log && ($ismod || ($loguserid==$post['user'] && $loguser['powerlevel'] > -1 && !$thread['closed'])) && (!$forum['minpower'] or $power>=$forum['minpower'])) {
+	if(!$action && $log && ($ismod || ($loguserid==$post['user'] && $loguser['powerlevel'] > -1 && !$thread['closed'])) && (!$forum['minpower'] || $power>=$forum['minpower'])) {
 		$message=$post['text'];
 		if(!$post['headid']) $head=$post['headtext'];
-		else $head=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[headid]",0,0);
+		else $head=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[headid]");
 		if(!$post['signid']) $sign=$post['signtext'];
-		else $sign=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[signid]",0,0);
+		else $sign=$sql->resultq("SELECT text FROM postlayouts WHERE id=$post[signid]");
 
 		sbr(1,$message);
 		sbr(1,$head);
@@ -93,24 +93,36 @@
 			$numposts=$user['posts'];
 			$numdays=(ctime()-$user['regdate'])/86400;
 			$message=doreplace($message,$numposts,$numdays,$loguser['name']);
-
-			$edited = str_replace('\'', '\\\'', getuserlink($loguser));
-
+			
+			$edited		= getuserlink($loguser);
 			if($submit) {
 				if ($loguserid == 1162) {
 					xk_ircsend("1|The jceggbert5 dipshit tried to edit another post: ". $id);
 				}
 				elseif (($message == "COCKS" || $head == "COCKS" || $sign == "COCKS") || ($message == $head && $head == $sign)) {
-					mysql_query("INSERT INTO `ipbans` SET `reason` = 'Idiot hack attempt', `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."'");
+					$sql->query("INSERT INTO `ipbans` SET `reason` = 'Idiot hack attempt', `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."'");
 					die("NO BONUS");
 				}
 				else {
-					$headid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$head' LIMIT 1",0,0);
-					$signid=@$sql->resultq("SELECT `id` FROM `postlayouts` WHERE `text` = '$sign' LIMIT 1",0,0);
+					$headid=$sql->resultp("SELECT `id` FROM `postlayouts` WHERE `text` = ? LIMIT 1", array($head));
+					$signid=$sql->resultp("SELECT `id` FROM `postlayouts` WHERE `text` = ? LIMIT 1", array($sign));
 					if($headid) $head=''; else $headid=0;
 					if($signid) $sign=''; else $signid=0;
-					$sql->query("UPDATE `posts_text` SET `options` = '$poptions', `headtext` = '$head', `text` = '$message', `signtext` = '$sign', `edited` = '$edited', `editdate` = '".ctime()."' WHERE `pid` = '$id'");
-					$sql->query("UPDATE `posts` SET `headid` = '$headid', `signid` = '$signid', `moodid` = '". $_POST['moodid'] ."' WHERE `id` = '$id'");
+					$textval = array(
+						'options'  => $poptions,
+						'headtext' => $head,
+						'text'     => $message,
+						'signtext' => $sign,
+						'edited'   => $edited,
+						'editdate' => ctime()
+					);
+					$mainval = array(
+						'headid' => $headid, 
+						'signid' => $signid,
+						'moodid' => (int)$_POST['moodid']
+					);
+					$sql->queryp("UPDATE `posts_text` SET ".mysql::phs($textval)." WHERE `pid` = '$id'", $textval);
+					$sql->queryp("UPDATE `posts` SET ".mysql::phs($mainval)." WHERE `id` = '$id'", $mainval);
 				}
 
 				//$ppp=($log?$loguser['postsperpage']:20);
@@ -123,9 +135,6 @@
 			else {
 				loadtlayout();
 				$ppost=$sql->fetchq("SELECT * FROM users WHERE id=$post[user]");
-				$head = stripslashes($head);
-				$sign = stripslashes($sign);
-				$message = stripslashes($message);
 				$ppost['uid']=$post['user'];
 				$ppost['num']=$post['num'];
 				$ppost['date']=$post['date'];
@@ -164,7 +173,7 @@
 					$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
 					$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[1]><label for=\"nohtml\">Disable HTML</label></td></tr>
 					</FORM>
-					$tblend$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forum[id]>".$forum[title]."</a> - $thread[title]
+					$tblend$fonttag<a href=index.php>$boardname</a> - <a href='forum.php?id={$forum['id']}'>{$forum['title']}</a> - {$thread['title']}
 				";
 			}
 		}
@@ -177,7 +186,7 @@
 	elseif ($action=='noob') {
 		die();
 		/*if ($loguser['powerlevel'] >= 1) {
-			mysql_query("UPDATE `posts` SET `noob` = '1' - `noob` WHERE `id` = '$id'");
+			$sql->query("UPDATE `posts` SET `noob` = '1' - `noob` WHERE `id` = '$id'");
 			print "
 				$tblstart$tccell1>Post n00bed!<br>
 				".redirect("thread.php?pid=$id&r=1#$id",'the post',0).'</table></table>';
@@ -193,11 +202,12 @@
 				$txt="Thank you, $loguser[name], for deleting the post.<br>".redirect("thread.php?id=$threadid","the thread",0);
 			}
 			elseif ($ismod || ($loguserid == $post['user'] && $loguser['powerlevel'] >= 0)) {
-				$sql->query("DELETE FROM posts WHERE id='$id'");
-				$sql->query("DELETE FROM posts_text WHERE pid='$id'");
-				$p = $sql->fetchq("SELECT id,user,date FROM posts WHERE thread=$threadid ORDER BY date DESC");
-				$sql->query("UPDATE threads SET replies=replies-1, lastposter=$p[user], lastpostdate=$p[date] WHERE id=$threadid");
-				$sql->query("UPDATE forums SET numposts=numposts-1 WHERE id=$forum[id]");
+				$sql->queryp("DELETE FROM posts WHERE id=?", array($id));
+				$sql->queryp("DELETE FROM posts_text WHERE pid=?", array($id));
+				$p = $sql->fetchp("SELECT id,user,date FROM posts WHERE thread=? ORDER BY date DESC", array($threadid));
+				if ($thread['replies'])
+					$sql->queryp("UPDATE threads SET replies=replies-1, lastposter=?, lastpostdate=? WHERE id=?", array((int) $p['user'], (int) $p['date'], $threadid));
+				$sql->queryp("UPDATE forums SET numposts=numposts-1 WHERE id=?", array($forum['id']));
 				$txt="Thank you, $loguser[name], for deleting the post.<br>".redirect("thread.php?id=$threadid","return to the thread",0);
 			}
 			else

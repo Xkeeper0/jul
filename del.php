@@ -10,34 +10,36 @@
 	
 	if (!in_array($_SERVER['REMOTE_ADDR'], $allowedusers)) die("Nein.");
   
-
+  $deluserid = 89;
+  
   require 'lib/layout.php';
   if($_POST['deluser'] and $isadmin) { //($loguserid==1 or $loguserid==2)){
  
 		foreach($_POST['deluser'] as $id => $junk) {
+			
+			$user2 = $sql->queryp("SELECT id,name,posts,sex,powerlevel FROM users WHERE id=?", array($id));
+			
+			while ($user=$sql->fetch($user2)) {
+				$id	= $user['id'];
 
-			$query = "SELECT id,name,posts,sex,powerlevel FROM users WHERE id=$id";
-			$user2 = mysql_query($query);
-
-			while ($user=mysql_fetch_array($user2)) {
-			$id	= $user['id'];
-
-				$name=$user[name];
-				$namecolor=getnamecolor($user[sex],$user[powerlevel]);
-				mysql_query("INSERT INTO `delusers` ( SELECT * FROM `users` WHERE `id` = '$id' )");
-				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". addslashes($name) ."</b></font>]<br>";
-				$ups=mysql_query("SELECT id FROM posts WHERE user=$id");
-				while($up=mysql_fetch_array($ups)) mysql_query("UPDATE posts_text SET signtext=CONCAT_WS('','$line',signtext) WHERE pid=$up[id]") or print mysql_error();
-				mysql_query("UPDATE threads SET user=89 WHERE user=$id");
-				mysql_query("UPDATE threads SET lastposter=89 WHERE lastposter=$id");
-				mysql_query("UPDATE pmsgs SET userfrom=89 WHERE userfrom=$id");
-				mysql_query("UPDATE pmsgs SET userto=89 WHERE userto=$id");
-				mysql_query("UPDATE posts SET user=89,headid=0,signid=0 WHERE user=$id");
-				mysql_query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '89') WHERE `id` = '89'");
-				mysql_query("DELETE FROM userratings WHERE userrated=$id OR userfrom=$id");
-				mysql_query("DELETE FROM pollvotes WHERE user=$id");
-				mysql_query("DELETE FROM users WHERE id=$id");
-				mysql_query("DELETE FROM users_rpg WHERE uid=$id");
+				$name=$user['name'];
+				$namecolor=getnamecolor($user['sex'],$user['powerlevel']);
+				$sql->query("INSERT INTO `delusers` ( SELECT * FROM `users` WHERE `id` = '$id' )");
+				$line="<br><br>===================<br>[Posted by <font $namecolor><b>". htmlspecialchars($name) ."</b></font>]<br>";
+				$ups=$sql->query("SELECT id FROM posts WHERE user=$id");
+				$signupd = $sql->prepare("UPDATE posts_text SET signtext=CONCAT_WS('',?,signtext) WHERE pid=?");
+				while ($up = $sql->fetch($ups))
+					$sql->execute($signupd, array($line, $up['id']));
+				$sql->query("UPDATE threads SET user=$deluserid WHERE user=$id");
+				$sql->query("UPDATE threads SET lastposter=$deluserid WHERE lastposter=$id");
+				$sql->query("UPDATE pmsgs SET userfrom=$deluserid WHERE userfrom=$id");
+				$sql->query("UPDATE pmsgs SET userto=$deluserid WHERE userto=$id");
+				$sql->query("UPDATE posts SET user=$deluserid,headid=0,signid=0 WHERE user=$id");
+				$sql->query("UPDATE `users` SET `posts` = -1 * (SELECT COUNT(*) FROM `posts` WHERE `user` = '$deluserid') WHERE `id` = '$deluserid'");
+				$sql->query("DELETE FROM userratings WHERE userrated=$id OR userfrom=$id");
+				$sql->query("DELETE FROM pollvotes WHERE user=$id");
+				$sql->query("DELETE FROM users WHERE id=$id");
+				$sql->query("DELETE FROM users_rpg WHERE uid=$id");
 
 			$delusertext	.= "\r\n<tr>$tccell1 width=120>$id</td>$tccell2l><font $namecolor><b>$user[name]</b></font></td></tr>";
 			$delusercnt		++;
@@ -67,11 +69,11 @@ $deltext
 	$tblstart
 		<tr>$tccellh colspan=2>Sort Options</td></tr>
 		<tr>$tccell1 width=300><b>User Search:</b></td>
-			$tccell2l>$inpt=searchname size=30 maxlength=15 value='". $_POST['searchname'] ."'></td></tr>
+			$tccell2l>$inpt=searchname size=30 maxlength=15 value='". htmlspecialchars($_POST['searchname']) ."'></td></tr>
 		<tr>$tccell1 width=300><b>IP Search:</b></td>
-			$tccell2l>$inpt=searchip size=30 maxlength=15 value='". $_POST['searchip'] ."'></td></tr>
+			$tccell2l>$inpt=searchip size=30 maxlength=15 value='". htmlspecialchars($_POST['searchip']) ."'></td></tr>
 		<tr>$tccell1 width=300><b>Show users with less than:</b></td>
-			$tccell2l>$inpt=maxposts size=15 maxlength=9 value='". $_POST['maxposts'] ."'> posts</td></tr>
+			$tccell2l>$inpt=maxposts size=15 maxlength=9 value='". htmlspecialchars($_POST['maxposts']) ."'> posts</td></tr>
 		<tr>$tccell1><b>Powerlevel:</b></td>
 			$tccell2l><select name='sortpowerlevel'>
 				<option value='aa' ". $powerselect['aa'] .">* Any powerlevel</option>
@@ -103,27 +105,32 @@ $deltext
 
 //	print_r($_POST);
 	$sqlquery	= "";
-
-	if ($_POST['maxposts'])
-		$sqlquery	= "`posts` <= '". $_POST['maxposts'] ."'";
-
+    $sqlvals	= array();
+	if ($_POST['maxposts']) {
+		$sqlquery	= "`posts` <= ?";
+		$sqlvals[]  = (int)$_POST['maxposts'];
+	}
 	if ($_POST['searchip']) {
 		if ($sqlquery)	$sqlquery	.= " AND ";
-		$sqlquery	.= "`lastip` LIKE '". $_POST['searchip'] ."%'";
+		$sqlquery	.= "`lastip` LIKE ?";
+		$sqlvals[]   = $_POST['searchip'].'%';
 	}
 
 	if ($_POST['searchname']) {
 		if ($sqlquery)	$sqlquery	.= " AND ";
-		$sqlquery	.= "`name` LIKE '%". $_POST['searchname'] ."%'";
+		$sqlquery	.= "`name` LIKE ?";
+		$sqlvals[]   = "%".$_POST['searchname']."%";
 	}
 
 	if ($_POST['sortpowerlevel'] != "aa") {
 		if ($sqlquery)	$sqlquery	.= " AND ";
 
-		if ($_POST['sortpowerlevel'] == "ab") 
+		if ($_POST['sortpowerlevel'] == "ab") {
 			$sqlquery	.= "`powerlevel` < '0'";
-		else
-			$sqlquery	.= "`powerlevel` = '". str_replace("s", "", $_POST['sortpowerlevel']) ."'";
+		} else {
+			$sqlquery	.= "`powerlevel` = ?";
+			$sqlvals[]   = (int)str_replace("s", "", $_POST['sortpowerlevel']);
+		}
 	}
 
 	switch ($_POST['sorttype']) {
@@ -157,8 +164,8 @@ $deltext
   if ($ip) $q = "lastip = '$ip'";
 	else $q = "posts=$p";
 */
-	$users		= mysql_query("SELECT * FROM `users` $sqlquery");
-	$usercount	= mysql_num_rows($users);
+	$users		= $sql->queryp("SELECT * FROM `users` $sqlquery", $sqlvals);
+	$usercount	= $sql->num_rows($users);
   print "
 	<form action=del.php method=post>
     $tblstart
@@ -173,8 +180,8 @@ $deltext
 	$tccellh>Last URL</td>
 	$tccellh>IP
   ";
-  while($user=mysql_fetch_array($users)){
-    $namecolor=getnamecolor($user[sex],$user[powerlevel]);
+  while($user=$sql->fetch($users)){
+    $namecolor=getnamecolor($user['sex'],$user['powerlevel']);
     $lastpost='-';
     if($user['lastposttime']) $lastpost		= date($dateshort, $user['lastposttime'] - $tzoff);
 		else $lastpost		= '-';

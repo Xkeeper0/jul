@@ -41,16 +41,18 @@
 		require 'mobile/index.php'; // alternate markup for mobile clients.
 	} else {
 		if (filter_string($_GET['action']) == 'markforumread' and $log) {
-			$sql->query("DELETE FROM forumread WHERE user=$loguserid AND forum='$forumid'");
-			$sql->query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid' AND `tid` IN (SELECT `id` FROM `threads` WHERE `forum` = '$forumid')");
-			$sql->query("INSERT INTO forumread (user,forum,readdate) VALUES ($loguserid,$forumid,".ctime().')');
+			$values = array('user' => $loguserid, 'forum' => $forumid);
+			$sql->queryp("DELETE FROM forumread WHERE user=:user AND forum=:forum", $values);
+			$sql->queryp("DELETE FROM `threadsread` WHERE `uid` = :user AND `tid` IN (SELECT `id` FROM `threads` WHERE `forum` = :forum')", $values);
+			$sql->queryp("INSERT INTO forumread (user,forum,readdate) VALUES (:user,:forum,".ctime().')', $values);
 			return header("Location: index.php");
 		}
 
 		if (filter_string($_GET['action']) == 'markallforumsread' and $log) {
-			$sql->query("DELETE FROM forumread WHERE user=$loguserid");
-			$sql->query("DELETE FROM `threadsread` WHERE `uid` = '$loguserid'");
-			$sql->query("INSERT INTO forumread (user,forum,readdate) SELECT $loguserid,id,".ctime().' FROM forums');
+			$values = array('user' => $loguserid);
+			$sql->queryp("DELETE FROM forumread WHERE user=:user", $values);
+			$sql->queryp("DELETE FROM `threadsread` WHERE `uid` = :user", $values);
+			$sql->queryp("INSERT INTO forumread (user,forum,readdate) SELECT :user,id,".ctime()." FROM forums", $values);
 			return header("Location: index.php");
 		}
 
@@ -69,9 +71,9 @@
 
 		$onlinetime=ctime()-300;
 		$onusers=$sql->query("SELECT id,name,powerlevel,lastactivity,sex,minipic,aka,birthday FROM users WHERE lastactivity>$onlinetime OR lastposttime>$onlinetime ORDER BY name");
-		$numonline=mysql_num_rows($onusers);
+		$numonline=$sql->num_rows($onusers);
 
-		$numguests=$sql->resultq("SELECT count(*) FROM guests WHERE date>$onlinetime",0,0);
+		$numguests=$sql->resultq("SELECT count(*) FROM guests WHERE date>$onlinetime");
 		if ($numguests) $guestcount=" | <nobr>$numguests guest".($numguests>1?"s":"");
 		$onlineusersa	= array();
 		for ($numon=0; $onuser = $sql->fetch($onusers);$numon++) {
@@ -106,7 +108,7 @@
 		}
 
 		$lastuser = $sql->fetchq('SELECT id,name,sex,powerlevel,aka,birthday FROM users ORDER BY id DESC LIMIT 1');
-    $lastuserurl = getuserlink($lastuser);
+		$lastuserurl = getuserlink($lastuser);
 
 		$posts = $sql->fetchq('SELECT (SELECT COUNT( * ) FROM posts WHERE date>'.(ctime()-3600).') AS h, (SELECT COUNT( * ) FROM posts WHERE date>'.(ctime()-86400).') AS d');
 		$count = $sql->fetchq('SELECT (SELECT COUNT( * ) FROM users) AS u, (SELECT COUNT(*) FROM threads) as t, (SELECT COUNT(*) FROM posts) as p');
@@ -115,13 +117,13 @@
 
 		if($posts['d']>$misc['maxpostsday'])  $sql->query("UPDATE misc SET maxpostsday=$posts[d],maxpostsdaydate=".ctime());
 		if($posts['h']>$misc['maxpostshour']) $sql->query("UPDATE misc SET maxpostshour=$posts[h],maxpostshourdate=".ctime());
-		if($numonline>$misc['maxusers'])      $sql->query("UPDATE misc SET maxusers=$numonline,maxusersdate=".ctime().",maxuserstext='".addslashes($onlineusers)."'");
+		if($numonline>$misc['maxusers'])      $sql->queryp("UPDATE misc SET maxusers=?,maxusersdate=?,maxuserstext=?", array($numonline, ctime(), $onlineusers));
 
 		/*// index sparkline
-		$sprkq = mysql_query('SELECT COUNT(id),date FROM posts WHERE date >="'.(time()-3600).'" GROUP BY (date % 60) ORDER BY date');
+		$sprkq = $sql->query('SELECT COUNT(id),date FROM posts WHERE date >="'.(time()-3600).'" GROUP BY (date % 60) ORDER BY date');
 		$sprk = array();
 
-		while ($r = mysql_fetch_row($sprkq)) {
+		while ($r = $sql->fetch($sprkq, PDO::FETCH_NUM)) {
 			array_push($sprk,$r[0]);
 		}
 		// print_r($sprk);

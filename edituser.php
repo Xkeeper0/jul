@@ -53,7 +53,7 @@
 	while($sch=$sql->fetch($schemes)){
 		$sel='';
 		if($sch['id']==$user['scheme']) $sel=' selected';
-		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE scheme=$sch[id]",0,'cnt');
+		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE scheme=$sch[id]");
 		$schlist.="<option value=$sch[id]$sel>$sch[name] ($used)";
 	}
 	$schlist="<select name=sscheme>$schlist</select>";
@@ -63,7 +63,7 @@
 	while($lay=$sql->fetch($tlayouts)){
 		$sel="";
 		if($lay['id']==$user['layout']) $sel=' selected';
-		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE layout=$lay[id]",0,'cnt');
+		$used=$sql->resultq("SELECT count(id) as cnt FROM users WHERE layout=$lay[id]");
 		$laylist.="<option value=$lay[id]$sel>$lay[name] ($used)";
 	}
 	$laylist="<select name=tlayout>$laylist</select>";
@@ -71,7 +71,7 @@
 	$rsets=$sql->query('SELECT id,name FROM ranksets ORDER BY id');
 	while($set=$sql->fetch($rsets)) {
 		$sel=($set['id']==$user['useranks']?' selected':'');
-		$used=$sql->resultq("SELECT count(*) FROM users WHERE useranks=$set[id]",0,0);
+		$used=$sql->resultq("SELECT count(*) FROM users WHERE useranks=$set[id]");
 		$rsetlist.="<option value=$set[id]$sel>$set[name] ($used)";
 	}
 	$rsetlist="<select name=useranks>$rsetlist</select>";
@@ -167,6 +167,8 @@
 	}
 
 	if($_POST['action']=='saveprofile') {
+		$userid = (int) $_POST['userid'];
+		
 		if ($eddateformat == $defaultdateformat) $eddateformat = '';
 		if ($eddateshort  == $defaultdateshort)  $eddateshort  = '';
 
@@ -175,17 +177,13 @@
 		sbr(0,$postheader);
 
 		$minipic = htmlspecialchars($minipic);
-		$avatar = htmlspecialchars($avatar);
+		$picture = htmlspecialchars($picture);
+		
 
 		$birthday=@mktime(0,0,0,$bmonth,$bday,$byear);
 		if(!$bmonth && !$bday && !$byear) $birthday=0;
 
     //$sql->query("INSERT logs SET useraction ='Edit User ".$user[nick]."(".$user[id]."'");
-
-		if ($password) {
-			$passedit="`password` = '".getpwhash($password, $userid)."', ";
-		}
-
 		if ($sex == -378) {
 			$sex = $sexn;
 		}
@@ -193,46 +191,58 @@
 		if ($userid == 1 && $loguserid != 1) {
 			xk_ircsend("1|". xk(7) ."Someone (*cough{$loguserid}cough*) is trying to be funny...");
 		}
+		
+		$values = array(
+			'posts'          => (int) $_POST['numposts'],
+			'regdate'        => (int) $_POST['regtime'],
+			'name'           => $_POST['username'],
+			'powerlevel'     => (int) $_POST['powerlevel'],
+			'profile_locked' => (int) $_POST['profile_locked'],
+			'editing_locked' => (int) $_POST['editing_locked'],
+			'titleoption'    => (int) $_POST['titleoption'],
+		
+			'picture'        => $_POST['picture'],
+			'minipic'        => $minipic,
+			'signature'      => $signature,
+			'bio'            => $bio,
+			'email'          => $_POST['email'],
+			'icq'            => (int) $icq,
+			'title'          => $usertitle,
+			'useranks'       => (int) $useranks,
+			'aim'            => $_POST['aim'],
+			'sex'            => (int) $sex,
+			'homepageurl'    => $_POST['homepage'],
+			'homepagename'   => $_POST['pagename'],
+			'timezone'       => (int) $_POST['timezone'],
+			'dateformat'     => $eddateformat,
+			'dateshort'      => $eddateshort,
+			'postsperpage'   => (int) $_POST['postsperpage'],
+			'aka'            => $_POST['aka'],
+			'realname'       => $_POST['realname'],
+			'location'       => $_POST['location'],
+			'postbg'         => $_POST['postbg'], // DELETEME
+			'postheader'     => $postheader,
+			'birthday'       => $birthday,
+			'scheme'         => (int) $_POST['sscheme'],
+			'threadsperpage' => (int) $_POST['threadsperpage'],
+			'viewsig'        => (int) $_POST['viewsig'],
+			'layout'         => (int) $_POST['tlayout'],
+	//		'posttool'       => (int) $_POST['posttool'],
+			'moodurl'        => $_POST['moodurl'],
+			//'imood'          => $_POST['imood'],
+			'pronouns'       => $_POST['pronouns'],
+			//'signsep'        => (int) $_POST['signsep'],
+			//'pagestyle'      => (int) $_POST['pagestyle'],
+			//'pollstyle'      => (int) $_POST['pollstyle']
+		);
+		
+		if ($_POST['password']) {
+			$values['password'] = getpwhash(escape_password($_POST['password']), $userid);
+		}
+		$where = array('id' => $userid);
+		$qstr  = mysql::phs($values, $where);
 
-	$sql->query("UPDATE `users` SET
-		`posts` = '$numposts',
-		`regdate` = '$regtime',
-		`name` = '$username',
-		$passedit
-		`picture` = '$picture',
-		`signature` = '$signature',
-		`bio` = '$bio',
-		`powerlevel` = '$powerlevel',
-		`title` = '$usertitle',
-		`email` = '$email',
-		`icq` = '$icq',
-		`aim` = '$aim',
-		`aka` = '$aka',
-		`sex` = '$sex',
-		`homepageurl` = '$homepage',
-		`timezone` = '$timezone',
-		`dateformat`		= '$eddateformat',
-		`dateshort`			= '$eddateshort',
-		`postsperpage` = '$postsperpage',
-		`realname` = '$realname',
-		`location` = '$location',
-		`postbg` = '$postbg',
-		`postheader` = '$postheader',
-		`useranks` = '$useranks',
-		`birthday` = '$birthday',
-		`minipic` = '$minipic',
-		`homepagename` = '$pagename',
-		`scheme` = '$sscheme',
-		`threadsperpage` = '$threadsperpage',
-		`viewsig` = '$viewsig',
-		`layout` = '$tlayout',".
-//	`posttool` = '$posttool',
-	 "`moodurl` = '$moodurl',
-		`profile_locked` = '$profile_locked',
-		`editing_locked` = '$editing_locked',
-		`pronouns` = '$pronouns',
-		`titleoption` = '$titleoption'
-	WHERE `id` = '$userid'") or print mysql_error();
+		$sql->queryp("UPDATE `users` SET $qstr WHERE `id` = :id", $values) or print $sql->error();
 
 	print "
 	$tblstart

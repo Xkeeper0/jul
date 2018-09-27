@@ -17,7 +17,7 @@
 
 	$eventdata = null;
 	if ($event)
-		$eventdata = $sql->fetchq("SELECT id,d,m,y,user,title,text FROM events WHERE id=$event");
+		$eventdata = $sql->fetchp("SELECT id,d,m,y,user,title,text FROM events WHERE id=?", array($event));
 
 	if ($eventdata) {
 		$month = $eventdata['m'];
@@ -33,6 +33,9 @@
 
 	$date = getdate(mktime(0,0,0,$month+1,0,$year));
 	$max  = $date['mday'];
+	
+	for ($j = 1; $j <= $max; ++$j)
+		$bdaytext[$j] = $eventtext[$j] = "";
 
 	$users = $sql->query('SELECT id,name,birthday,sex,powerlevel,aka FROM users WHERE birthday ORDER BY birthday ASC, name ASC');
 	while ($user = $sql->fetch($users)) {
@@ -44,7 +47,7 @@
 		$bdaytext[$date['mday']].="<br>- {$userlink} turns {$age}";
 	}
 
-	$events = $sql->query("SELECT id,d,title FROM events WHERE m=$month AND y=$year ORDER BY id");
+	$events = $sql->queryp("SELECT id,d,title FROM events WHERE m=? AND y=? ORDER BY id", array($month, $year));
 	while($event1 = $sql->fetch($events))
 		$eventtext[$event1['d']] .= "<br>- <a href='calendar.php?event=$event1[id]'>$event1[title]</a>";
 
@@ -90,6 +93,7 @@
     print "</tr>\r\n";
   }
 
+  $monthlinks = $yearlinks = "";
   for($i=1;$i<=12;$i++){
     if($i==$month) $monthlinks.=" $i";
     else $monthlinks.=" <a href='calendar.php?y=$year&m=$i'>$i</a>";

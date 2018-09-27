@@ -6,30 +6,31 @@ if ($_POST['edit'] || $_POST['edit2']) {
 
 	if (isset($_GET['preview']))
 		$prevtext = "&preview=" . $_GET['preview'];
-
-	$hidden = (($_POST['hidden']) ? 1 : 0);
-
-	$values .= "`title`          = '$forumtitle',     ";
-	$values .= "`description`    = '$description',    ";
-	$values .= "`catid`          = '$catid',          ";
-	$values .= "`minpower`       = '$minpower',       ";
-	$values .= "`minpowerthread` = '$minpowerthread', ";
-	$values .= "`minpowerreply`  = '$minpowerreply',  ";
-	$values .= "`numthreads`     = '$numthreads',     ";
-	$values .= "`numposts`       = '$numposts',       ";
-	$values .= "`forder`         = '$forder',         ";
-	$values .= "`specialscheme`  = '$edspecialscheme',";
-	$values .= "`hidden`         = '$hideforum',      ";
-	$values .= "`pollstyle`      = '$pollstyle'       ";
-
+	
+	$data = array(
+		'title'          => $_POST['forumtitle'],
+		'description'    => $_POST['description'],
+		'catid'          => (int)$_POST['catid'],
+		'minpower'       => (int)$_POST['minpower'],
+		'minpowerthread' => (int)$_POST['minpowerthread'],
+		'minpowerreply'  => (int)$_POST['minpowerreply'],
+		'numthreads'     => (int)$_POST['numthreads'],
+		'numposts'       => (int)$_POST['numposts'],
+		'forder'         => (int)$_POST['forder'],
+		'specialscheme'  => $_POST['edspecialscheme'],
+		'hidden'         => (int)$_POST['hidden'],
+		'pollstyle'      => (int)$_POST['pollstyle']
+	);
+	$values = mysql::phs($data);
+	
 	if ($_GET['id'] <= -1) {
-		$sql->query("INSERT INTO `forums` SET $values, `lastpostid` = '0'");
-		if (mysql_error()) die(mysql_error());
-		$id	= mysql_insert_id();
-		trigger_error("Created new forum \"$forumtitle\" with ID $id", E_USER_NOTICE);
+		$sql->queryp("INSERT INTO `forums` SET $values, `lastpostid` = '0'", $data);
+		if ($sql->error()) die($sql->error());
+		$id	= $sql->insert_id();
+		trigger_error("Created new forum \"{$_POST['forumtitle']}\" with ID $id", E_USER_NOTICE);
 	} else {
-		$sql->query("UPDATE `forums` SET $values WHERE `id` = '". $_GET['id'] ."'");
-		if (mysql_error()) die(mysql_error());
+		$sql->queryp("UPDATE `forums` SET $values WHERE `id` = '{$_GET['id']}'", $data);
+		if ($sql->error()) die($sql->error());
 		$id	= $_GET['id'];
 		trigger_error("Edited forum ID $id", E_USER_NOTICE);
 	}
@@ -50,23 +51,35 @@ elseif ($_POST['delete']) {
 
 	if (!isset($_GET['delete']) || $id < 0)
 		die("No forum selected to delete.");
-	if (!isset($_POST['mergeid']) || $mergeid < 0)
+	if (!isset($_POST['mergeid']) || $mergeid < 0 || ($mergeid == $id))
 		die("No forum selected to merge to.");
+	
+	$dual   = array($mergeid, $id);
+	$single = array($id);
 
-	$counts = $sql->fetchq("SELECT `numthreads`, `numposts` FROM `forums` WHERE `id`='$id'");
-	$sql->query("UPDATE `threads` SET `forum`='$mergeid' WHERE `forum`='$id'") or die(mysql_error());
-	$sql->query("UPDATE `announcements` SET `forum`='$mergeid' WHERE `forum`='$id'") or die(mysql_error());
-	$sql->query("DELETE FROM `forummods` WHERE `forum`='$id'") or die(mysql_error());
-	$sql->query("DELETE FROM `forums` WHERE `id`='$id'") or die(mysql_error());
+	$counts = $sql->fetchp("SELECT `numthreads`, `numposts` FROM `forums` WHERE `id`=?", $single);
+	$sql->queryp("UPDATE `threads` SET `forum`=? WHERE `forum`=?", $dual) or die($sql->error());
+	$sql->queryp("UPDATE `announcements` SET `forum`=? WHERE `forum`=?", $dual) or die($sql->error());
+	$sql->queryp("DELETE FROM `forummods` WHERE `forum`=?", $single) or die($sql->error());
+	$sql->queryp("DELETE FROM `forums` WHERE `id`=?", $single) or die($sql->error());
 
-	$lastthread = $sql->fetchq("SELECT * FROM `threads` WHERE `forum`='$mergeid' ORDER BY `lastpostdate` DESC LIMIT 1");
-	$sql->query("UPDATE `forums` SET
-		`numthreads`=`numthreads`+'{$counts['numthreads']}',
-		`numposts`=`numposts`+'{$counts['numposts']}',
-		`lastpostdate`='{$lastthread['lastpostdate']}',
-		`lastpostuser`='{$lastthread['lastposter']}',
-		`lastpostid`='{$lastthread['id']}'
-	WHERE `id`='$mergeid'") or die(mysql_error());
+	$lastthread = $sql->fetchp("SELECT * FROM `threads` WHERE `forum`=? ORDER BY `lastpostdate` DESC LIMIT 1", array($mergeid));
+	
+	$updval = array(
+		'toffset'      => $counts['numthreads'],
+		'poffset'      => $counts['numposts'],
+		'lastpostdate' => $lastthread['lastpostdate'],
+		'lastpostuser' => $lastthread['lastposter'],
+		'lastpostid'   => $lastthread['id'],
+		'id'           => $mergeid
+	);
+	$sql->queryp("UPDATE `forums` SET
+		`numthreads`   = `numthreads` + :toffset,
+		`numposts`     = `numposts`   + :poffset,
+		`lastpostdate` = :lastpostdate,
+		`lastpostuser` = :lastpostuser,
+		`lastpostid`   = :lastpostid
+	WHERE `id` = :id", $updval) or die($sql->error());
 
 	if (isset($_GET['preview']))
 		$prevtext = "preview=" . $_GET['preview'];
@@ -102,7 +115,7 @@ if (isset($_GET['delete'])) {
 
 	$forums[-1] = "Choose a forum to merge into...";
 	$forumquery = $sql->query("SELECT id,title FROM forums ORDER BY catid,forder");
-	while ($f = $sql->fetch($forumquery, MYSQL_ASSOC))
+	while ($f = $sql->fetch($forumquery, PDO::FETCH_ASSOC))
 		$forums[$f['id']] = $f['title'];
 
 	if (array_key_exists($forum, $forums)) {
@@ -131,7 +144,7 @@ else if (isset($_GET['id'])) {
 	while ($catres = $sql->fetch($catquery))
 		$categories[$catres['id']] = $catres['name'];
 
-	$forum = $sql->fetchq("SELECT * FROM `forums` WHERE `id` = '". $_GET['id'] . "'", MYSQL_ASSOC);
+	$forum = $sql->fetchp("SELECT * FROM `forums` WHERE `id` = ?", array($_GET['id']), PDO::FETCH_ASSOC);
 	if (!$forum)
 		$_GET['id'] = -1;
 
