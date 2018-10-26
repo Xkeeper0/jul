@@ -70,6 +70,7 @@
 	";
 	$subject=htmlspecialchars($subject);
 	$question=htmlspecialchars($question);
+	$briefing=htmlspecialchars($briefing);
 
 	if ($nosmilies)	$nosmilieschk	= " checked";
 	if ($nohtml)	$nohtmlchk	= " checked";
@@ -282,9 +283,9 @@
 						$tccell2ls colspan=3>Multi-voting is $mlt.
 						$tblend<br>$tblstart
 					";
-					$subject = htmlspecialchars(stripslashes($subject));
-					$question = htmlspecialchars(stripslashes($question));
-					$briefing = htmlspecialchars(stripslashes($briefing));
+					$subject = stripslashes(htmlspecialchars($subject));
+					$question = stripslashes(htmlspecialchars($question));
+					$briefing = stripslashes(htmlspecialchars($briefing));
 				}
 				loadtlayout();
 				$ppost=$user;
