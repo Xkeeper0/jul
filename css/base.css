@@ -62,7 +62,7 @@ input[type=radio] { color: black; background: white; }
   background: unset;
 }
 
-.spoiler-b > .spoiler-label:after { width: 100%; display: block; margin: 0; vertical-align: unset; padding: 1em; box-sizing: border-box; content: 'Spoiler content - click to show/hide'; }
+.spoiler-b > .spoiler-label:after { width: 100%; display: block; margin: 0; vertical-align: unset; padding: 0.25em 1em; box-sizing: border-box; content: 'Spoiler content - click to show/hide'; }
 
 .spoiler-label:hover:after { background: #444; }
 .spoiler-label:hover + input[type="checkbox"]:checked ~ .hidden { background: rgba(128, 128, 128, .5); }
