@@ -340,7 +340,7 @@
 
 	$metatag = '';
 
-	if (filter_bool($meta['noindex']))
+	if (true || filter_bool($meta['noindex']))
 		$metatag .= "<meta name=\"robots\" content=\"noindex,follow\" />";
 
 	if (isset($meta['description']))
