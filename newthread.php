@@ -68,11 +68,6 @@
 		<br>$radio=iconid value=-1 $checked>&nbsp;None&nbsp; &nbsp; &nbsp;
 		Custom: $inpt=custposticon SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($custposticon) ."\">
 	";
-<<<<<<< Updated upstream
-	$subject=htmlspecialchars($subject);
-	$question=htmlspecialchars($question);
-=======
->>>>>>> Stashed changes
 
 	if ($nosmilies)	$nosmilieschk	= " checked";
 	if ($nohtml)	$nohtmlchk	= " checked";
@@ -289,12 +284,6 @@
 						$tccell2ls colspan=3>Multi-voting is $mlt.
 						$tblend<br>$tblstart
 					";
-<<<<<<< Updated upstream
-					$subject = htmlspecialchars(stripslashes($subject));
-					$question = htmlspecialchars(stripslashes($question));
-					$briefing = htmlspecialchars(stripslashes($briefing));
-=======
->>>>>>> Stashed changes
 				}
 				loadtlayout();
 				$ppost=$user;
