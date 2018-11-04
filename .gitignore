@@ -6,3 +6,7 @@ xkeeper/
 version.txt
 lib/config.php
 lib/firewall.php
+.htaccess
+favicon.gif
+robots.txt
+google*.html
