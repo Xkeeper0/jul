@@ -54,3 +54,22 @@ input[type=radio] { color: black; background: white; }
 	max-height:	100%;
 	max-width:	100%;
 }
+
+.spoiler-label:after { content: 'Spoiler'; color: white; background: black; font-style: italic; font-weight: bold; margin: 0 .2em; padding: 0.1em 0.4em; font-size: 80%; vertical-align: 10%; }
+.spoiler > input[type="checkbox"] { display: none; }
+.spoiler > .hidden { background: rgba(128, 128, 128, .5); }
+.spoiler > input[type="checkbox"]:checked + .hidden {
+  background: unset;
+}
+
+.spoiler-b > .spoiler-label:after { width: 100%; display: block; margin: 0; vertical-align: unset; padding: 1em; box-sizing: border-box; content: 'Spoiler content - click to show/hide'; }
+
+.spoiler-label:hover:after { background: #444; }
+.spoiler-label:hover + input[type="checkbox"]:checked ~ .hidden { background: rgba(128, 128, 128, .5); }
+
+.spoiler > .hidden > * {
+  visibility: hidden;
+}
+.spoiler > input[type="checkbox"]:checked + .hidden > * {
+  visibility: visible;
+}
