@@ -68,8 +68,11 @@
 		<br>$radio=iconid value=-1 $checked>&nbsp;None&nbsp; &nbsp; &nbsp;
 		Custom: $inpt=custposticon SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($custposticon) ."\">
 	";
+<<<<<<< Updated upstream
 	$subject=htmlspecialchars($subject);
 	$question=htmlspecialchars($question);
+=======
+>>>>>>> Stashed changes
 
 	if ($nosmilies)	$nosmilieschk	= " checked";
 	if ($nohtml)	$nohtmlchk	= " checked";
@@ -94,13 +97,13 @@
 		<!-- </FORM> -->
 	":"
 		<tr>$tccell1><b>Poll icon:</td>	$tccell2l colspan=2>$posticonlist</td></tr>
-		<tr>$tccell1><b>Poll title:</td>	$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". stripslashes($subject) ."\"></td></tr>
-		<tr>$tccell1><b>Question:</td>	$tccell2l colspan=2>$inpt=question SIZE=60 MAXLENGTH=255 VALUE=\"". stripslashes($question) ."\"></td></tr>
-		<tr>$tccell1><b>Briefing:</td>	$tccell2l colspan=2>$txta=briefing ROWS=2 COLS=$numcols style=\"resize:vertical;\">". stripslashes($briefing) ."</TEXTAREA></td></tr>
+		<tr>$tccell1><b>Poll title:</td>	$tccell2l colspan=2>$inpt=subject SIZE=40 MAXLENGTH=100 VALUE=\"". htmlspecialchars(stripslashes($subject)) ."\"></td></tr>
+		<tr>$tccell1><b>Question:</td>	$tccell2l colspan=2>$inpt=question SIZE=60 MAXLENGTH=255 VALUE=\"". htmlspecialchars(stripslashes($question)) ."\"></td></tr>
+		<tr>$tccell1><b>Briefing:</td>	$tccell2l colspan=2>$txta=briefing ROWS=2 COLS=$numcols style=\"resize:vertical;\">". htmlspecialchars(stripslashes($briefing)) ."</TEXTAREA></td></tr>
 		<tr>$tccell1><b>Multi-voting:</td>$tccell2l colspan=2>$radio=mltvote value=0 $checked0> Disabled &nbsp $radio=mltvote value=1 $checked1> Enabled</td></tr>
 		<tr>$tccell1><b>Choices:</td>	$tccell2l colspan=2>$choices</td></tr>
 		<tr>$tccell1><b>Post:</td>$tccell2l width=800px valign=top>".replytoolbar(2)."
-		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". stripslashes(htmlspecialchars($message)) ."</TEXTAREA></td>
+		$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars(stripslashes($message)) ."</TEXTAREA></td>
 		$tccell2l width=*>".moodlist($moodid)."</td></tr>
 
 		<tr>
@@ -275,16 +278,23 @@
 						";
 					}
 					$mlt=($mltvote?'enabled':'disabled');
+					$subject = htmlspecialchars(stripslashes($subject));
+					$question = htmlspecialchars(stripslashes($question));
+					$briefing = htmlspecialchars(stripslashes($briefing));
+
 					$pollpreview="
-						<td colspan=3 class='tbl tdbgc center font'><b>$question<tr>
-						$tccell2ls colspan=3>$briefing<tr>
+						<td colspan=3 class='tbl tdbgc center font'><b>". $question ."<tr>
+						$tccell2ls colspan=3>". $briefing ."<tr>
 						$pchoices
 						$tccell2ls colspan=3>Multi-voting is $mlt.
 						$tblend<br>$tblstart
 					";
+<<<<<<< Updated upstream
 					$subject = htmlspecialchars(stripslashes($subject));
 					$question = htmlspecialchars(stripslashes($question));
 					$briefing = htmlspecialchars(stripslashes($briefing));
+=======
+>>>>>>> Stashed changes
 				}
 				loadtlayout();
 				$ppost=$user;
