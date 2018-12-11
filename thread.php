@@ -369,7 +369,6 @@
 	preplayouts($posts);
 
 	for ($i = 0; $post = $sql->fetch($posts); $i++) {
-		$postlist	.= '<tr>';
 
 		$bg = $i % 2 + 1;
 
