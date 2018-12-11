@@ -17,26 +17,20 @@
 
 	} else {
 
-	$faq	.= faqformat("darules", "The Rules", "
-		Our rules are really <i>really simple</i>, if you take the time to learn them. And you <i>should!</i>
-		<ol>
-			<li><b>Don't be an asshole.</b> If you don't have something constructive to say, <i>don't say it!</i> This is the big one.
-			<li><b>This forum's official language is English</b>. Don't use chat-speak or other unfunny gimmicks.
-			<li><b>Double-posting / bumping old threads.</b> Replying within minutes asking if anybody has read your post is a terrible idea. Double posting after a day or two <i>with something new or updated</i> is fine, though. If you want to bump an old thread, contribute something new to it.
-			<li><b>Don't get in fights.</b> If you're having trouble with another user, contact an administrator.
-			<li><b>Nothing illegal.</b> No warez, illegal crap, etc. There are exceptions for ROMs in certain cases.
-			<li><b>The staff has the final say in everything.</b> We can ban you for any reason or no reason at all. Posting here is NOT a right.
-		</ol>
-		<br>Punishments are given on a case-by-case basis, from 'warning' to 'permanent ban'.
+
+	$faq	.= faqformat("aboot", "About Jul, the community", "
+		Jul itself is a community made up of people who predominantly like to just hang around friendlies and talk about whatever, though we also like games and occasionally anime/other things.
 		<br>
-		<br>We are a relaxed community, but constantly breaking the rules will get you banned fast.
+		<br>It is a community that has gone on for over 10 years, founded early July 2007. It is based off of another (defunct) community that started in early 2001.
 		<br>
-		<br>If you have any questions, feel free to ask <a href='memberlist.php?pow=3'>one of the admins</a> for help.
+		<br>While we're an old group, we always welcome new folks. Feel free to drop in and say hello.
 	");
 
-
-	$faq	.= faqformat("aboot", "About Jul", "
-		Jul itself is a community made up of people who predominantly like to just hang around friendlies and talk about whatever, though we also like games and occasionally anime/other things.
+	$faq	.= faqformat("aboot", "About the forum", "
+		This forum is based off of 2001-era custom software, and is pretty different from most other forums on the internet. <strong>There are no push notifications, no e-mail reminders, no 'we miss you' nags, no popups, no ads, no apps, and no tracking.</strong> What you see is exactly what you get.
+		<br>
+		<br>That being said, here is a quote from a <a href='https://www.doomworld.com/cacowards/2018'>different site</a> that explains us well:
+		<blockquote>I think it is important in this moment to restate that [this site] is an independently owned and operated website; it is intended as a long term, not-for-profit informational and historical resource; we are dedicated to treating all people with respect; it will never be sunsetted or deprecated or paywalled; and we do not vacuum up your personal information, much less profit from it. If you despair for the future of the Internet, consider that [this site], and thousands of small websites just like it, continue to exist and thrive in the spirit of discovery and camaraderie in which the Internet was first conceived.</blockquote>
 	");
 
 	$faq	.= faqformat("newbies", "I'm new here. Where should I start?", "
@@ -45,14 +39,31 @@
 		<br>Once you've done that, <a href='register.php'>sign up for an account</a> (or <a href='login.php'>log in</a> if you've already made one). It's simple and very easy to do. After you're registered, you're more than welcome to just <a href='forum.php?id=1'>jump in and say hi</a> by posting in the Introductions thread, or even making your own. We're friendly people and won't bite (usually). Let us know about yourself, how you found us, or whatever's on your mind &mdash; or just jump in and start contributing to discussions.
 	");
 
+	$faq	.= faqformat("darules", "The Rules", "
+		Our rules are really <em>really simple</em>:
+		<ol>
+			<li><strong>Don't be a jerk.</strong> If you don't have something constructive to say, <em>don't say it!</em>
+			<li><strong>No slurs, hate speech, or homo-/trans-phobia.</strong> If you can't respect your fellow posters, you aren't welcome here.
+			<li><strong>Post legibly</strong>. Keep it readable &mdash; you don't have to be perfect, but be understandable and don't post like this is an AOL chatroom.
+			<li><strong>Don't spam.</strong> If you have something new 
+			<li><strong>Don't get in fights.</strong> If you're having trouble with another user, contact an administrator.
+			<li><strong>No illegal content.</strong> Don't post stuff that would get you (or us) in legal trouble.
+		</ol>
+		However, <strong>the admins have the final say in everything!</strong> We can ban you for any reason, or no reason at all.
+		<br>
+		<br>Breaking the rules will resort in whatever punishment we feel is worthy, from giving you a warning to banning you forever. Posting here is NOT a right.
+		<br>
+		<br>If you have any questions, feel free to ask <a href='memberlist.php?pow=3'>one of the admins</a> for help.
+	");
+
 	$faq	.= faqformat("layoutlowdown", "What are post layouts?", "
 	Post layouts are like signatures on other forums, but on steroids. Rather than just some text, an image, and maybe a link, post layouts allow you to style your <em>entire post</em>! You too can turn your wonderful contributions into a GeoCities&trade;-esque abomination.
 	<br>
-	<br>You can enable or disable the showing of post layouts by choosing the relevant option in your <a href='editprofile.php'>profile settings</a>.
-	<br>
-	<br>(Particularly egregious/unreadable layouts will be removed by admins. Abuse of this feature will lead to you no longer being able to use one.)
-	<br>
 	<br>You can customize your layout with fun facts about your statistics by using &amp;tags&amp;, outlined below.
+	<br>
+	<br>You can enable or disable others' post layouts in your <a href='editprofile.php'>profile settings</a>.
+	<br>
+	<br>If you make a post layout that interferes with the board's interface, is particularly annoying, is hard-to-read, or is just awful, it will be removed. If you continue to do this, your ability to use them will be revoked. Malfunctioning layouts (due to broken images or CSS) may also be removed.
 	");
 
 	$faq	.= faqformat("tags", "What are &amp;tags&amp;?", "
@@ -61,24 +72,24 @@
 		<br>
 		<table class='table font' cellspacing='0' style='width: auto; margin: 0 auto;'>
 		  <tr>
-		    <td class='tbl tdbgh center'>Tags</td>
+		    <td class='tbl tdbgh center'>Tag</td>
 		    <td class='tbl tdbgh center'>Description</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>/me</td>
-		    <td class='tbl tdbg1'>Your username (must have a space after it)</td>
+		    <td class='tbl tdbg1'>Your username (must have a space after it), like IRC.</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;date&amp;</td>
-		    <td class='tbl tdbg1'>Current date</td>
+		    <td class='tbl tdbg1'>The current date</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;numdays&amp;</td>
-		    <td class='tbl tdbg1'>Number of days since registration</td>
+		    <td class='tbl tdbg1'>Number of days since you registered</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;numposts&amp;</td>
-		    <td class='tbl tdbg1'>Current post count</td>
+		    <td class='tbl tdbg1'>How many posts you've made</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;rank&amp;</td>
@@ -86,81 +97,85 @@
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;postrank&amp;</td>
-		    <td class='tbl tdbg1'>Post ranking</td>
+		    <td class='tbl tdbg1'>Your 'ranking', by post count, among all members</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;5000&amp;</td>
-		    <td class='tbl tdbg1'>Posts left until you have 5000</td>
+		    <td class='tbl tdbg1'>Posts left until you have 5,000</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;10000&amp;</td>
-		    <td class='tbl tdbg1'>Posts left until you have 10000</td>
+		    <td class='tbl tdbg1'>Posts left until you have 10,000</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;20000&amp;</td>
-		    <td class='tbl tdbg1'>Posts left until you have 20000</td>
+		    <td class='tbl tdbg1'>Posts left until you have 20,000</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;30000&amp;</td>
-		    <td class='tbl tdbg1'>Posts left until you have 30000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;exp&amp;</td>
-		    <td class='tbl tdbg1'>EXP</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expgain&amp;</td>
-		    <td class='tbl tdbg1'>EXP gain per post</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expgaintime&amp;</td>
-		    <td class='tbl tdbg1'>Seconds for 1 EXP when idle</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expdone&amp;</td>
-		    <td class='tbl tdbg1'>EXP done in the current level</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expdone1k&amp;</td>
-		    <td class='tbl tdbg1'>EXP done / 1000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expdone10k&amp;</td>
-		    <td class='tbl tdbg1'>EXP done / 10000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expnext&amp;</td>
-		    <td class='tbl tdbg1'>Amount of EXP left for next level</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expnext1k&amp;</td>
-		    <td class='tbl tdbg1'>EXP needed / 1000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;expnext10k&amp;</td>
-		    <td class='tbl tdbg1'>EXP needed / 10000</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;exppct&amp;</td>
-		    <td class='tbl tdbg1'>Percentage of EXP done in the level</td>
-		  </tr>
-		  <tr>
-		    <td class='tbl tdbg2'>&amp;exppct2&amp;</td>
-		    <td class='tbl tdbg1'>Percentage of EXP left in the level</td>
+		    <td class='tbl tdbg1'>Posts left until you have 30,000</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;level&amp;</td>
-		    <td class='tbl tdbg1'>Level</td>
+		    <td class='tbl tdbg1'>Your current level.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;exp&amp;</td>
+		    <td class='tbl tdbg1'>Your current EXP.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expgain&amp;</td>
+		    <td class='tbl tdbg1'>How much EXP you gain per post.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expgaintime&amp;</td>
+		    <td class='tbl tdbg1'>How many seconds it takes to get 1 EXP naturally.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expdone&amp;</td>
+		    <td class='tbl tdbg1'>How much EXP you've done in your current level.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expdone1k&amp;</td>
+		    <td class='tbl tdbg1'>The above, divided by 1,000.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expdone10k&amp;</td>
+		    <td class='tbl tdbg1'>The above, divided by 10,000.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expnext&amp;</td>
+		    <td class='tbl tdbg1'>How much EXP you have left until the next level.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expnext1k&amp;</td>
+		    <td class='tbl tdbg1'>The above, divided by 1,000.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;expnext10k&amp;</td>
+		    <td class='tbl tdbg1'>The above, divided by 10,000.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;exppct&amp;</td>
+		    <td class='tbl tdbg1'>How much EXP you've done in your current level, in percent.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;exppct2&amp;</td>
+		    <td class='tbl tdbg1'>How much EXP you have left in your current level, in percent.</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;lvlexp&amp;</td>
-		    <td class='tbl tdbg1'>Total EXP amount needed for next level</td>
+		    <td class='tbl tdbg1'>Cumulative EXP for your next level.</td>
 		  </tr>
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;lvllen&amp;</td>
-		    <td class='tbl tdbg1'>EXP needed to go through the current level</td>
+		    <td class='tbl tdbg1'>EXP needed to go through your current level.</td>
 		  </tr>
 		</table>
+		For an explanation of how the Level and EXP tags work, hover over the highlighted parts below. (The percentages are useful when creating 'EXP bars', as you can use them as a width value.)
+		<br>
+		<br>Level <abbr title='&amp;level&amp;'>10</abbr> &mdash; <abbr title='&amp;exp&amp;'>1040</abbr> EXP (<abbr title='&amp;expgain&amp;'>20</abbr> per post, 1 EXP per <abbr title='&amp;expgaintime&amp;'>300</abbr> sec.)
+		<br>(Next level at <abbr title='&amp;lvlexp&amp;'>1200</abbr> in <abbr title='&amp;expnext&amp;'>160</abbr> EXP. (<abbr title='&amp;expdone&amp;'>40</abbr>/<abbr title='&amp;lvllen&amp;'>200</abbr> EXP) &mdash; <abbr title='&amp;exppct&amp;'>20</abbr>% done, <abbr title='&amp;exppct2&amp;'>80</abbr>% left
 	");
 
 	$faq	.= faqformat("bbcode", "What is BBcode?", doreplace2("
@@ -173,87 +188,91 @@
 		    <td class='tbl tdbgh center' style='width: 50%;'>Result</th>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[b<!-- -->]Bolded text.[/b<!-- -->]</td>
+		    <td class='tbl tdbg2'>[b&#93;Bolded text.[/b&#93;</td>
 		    <td class='tbl tdbg1'>[b]Bolded text.[/b]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[i<!-- -->]Italicized text.[/i<!-- -->]</td>
+		    <td class='tbl tdbg2'>[i&#93;Italicized text.[/i&#93;</td>
 		    <td class='tbl tdbg1'>[i]Italicized text.[/i]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[u<!-- -->]Underlined text.[/u<!-- -->]</td>
+		    <td class='tbl tdbg2'>[u&#93;Underlined text.[/u&#93;</td>
 		    <td class='tbl tdbg1'>[u]Underlined text.[/u]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[s<!-- -->]Strikethrough text.[/s<!-- -->]</td>
+		    <td class='tbl tdbg2'>[s&#93;Strikethrough text.[/s&#93;</td>
 		    <td class='tbl tdbg1'>[s]Strikethrough text.[/s]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[abbr<!-- -->=Basic Input/Output System]BIOS[/abbr<!-- -->]</td>
+		    <td class='tbl tdbg2'>[abbr<!-- -->=Basic Input/Output System]BIOS[/abbr&#93;</td>
 		    <td class='tbl tdbg1'>[abbr=Basic Input/Output System]BIOS[/abbr]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[sp<!-- -->=terrible]Great[/sp<!-- -->] software.</td>
+		    <td class='tbl tdbg2'>[sp<!-- -->=terrible]Great[/sp&#93; software.</td>
 		    <td class='tbl tdbg1'>[sp=terrible]Great[/sp] software.</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[url<!-- -->]http://example.com/[/url<!-- -->]</td>
+		    <td class='tbl tdbg2'>[url&#93;http://example.com/[/url&#93;</td>
 		    <td class='tbl tdbg1'>[url]http://example.com/[/url]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[url<!-- -->=http://example.com/]Link text here.[/url<!-- -->]</td>
+		    <td class='tbl tdbg2'>[url<!-- -->=http://example.com/]Link text here.[/url&#93;</td>
 		    <td class='tbl tdbg1'>[url=http://example.com/]Link text here.[/url]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[img<!-- -->]https://tcrf.net/images/c/c4/SMB2-smiley.png[/img<!-- -->]</td>
-		    <td class='tbl tdbg1'>[img]https://tcrf.net/images/c/c4/SMB2-smiley.png[/img]</td>
+		    <td class='tbl tdbg2'>[img&#93;https://jul.rustedlogic.net/images/smilies/toot.png[/img&#93;</td>
+		    <td class='tbl tdbg1'>[img]https://jul.rustedlogic.net/images/smilies/toot.png[/img]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[red<!-- -->]Red color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[red&#93;Red color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[red]Red color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[green<!-- -->]Green color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[green&#93;Green color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[green]Green color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[blue<!-- -->]Blue color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[blue&#93;Blue color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[blue]Blue color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[orange<!-- -->]Orange color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[orange&#93;Orange color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[orange]Orange color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[yellow<!-- -->]Yellow color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[yellow&#93;Yellow color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[yellow]Yellow color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[pink<!-- -->]Pink color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[pink&#93;Pink color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[pink]Pink color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[white<!-- -->]White color.[/color<!-- -->]</td>
+		    <td class='tbl tdbg2'>[white&#93;White color.[/color&#93;</td>
 		    <td class='tbl tdbg1'>[white]White color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[black<!-- -->]Black color.[/color<!-- -->] (bad idea)</td>
+		    <td class='tbl tdbg2'>[black&#93;Black color.[/color&#93; (bad idea)</td>
 		    <td class='tbl tdbg1'>[black]Black color.[/color]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[quote<!-- -->=user]Quoted text.[/quote<!-- -->]</td>
+		    <td class='tbl tdbg2'>[quote<!-- -->=user]Quoted text.[/quote&#93;</td>
 		    <td class='tbl tdbg1'>[quote=user]Quoted text.[/quote]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[code<!-- -->]Sample &lt;b&gt;code&lt;/b&gt;.[/code<!-- -->]</td>
+		    <td class='tbl tdbg2'>[code&#93;Sample &lt;b&gt;code&lt;/b&gt;.[/code&#93;</td>
 		    <td class='tbl tdbg1'>[code]Sample <b>code</b>.[/code]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[spoiler<!-- -->]Spoiler text.[/spoiler<!-- -->]</td>
+		    <td class='tbl tdbg2'>[spoiler&#93;Spoiler text.[/spoiler&#93;</td>
 		    <td class='tbl tdbg1'>[spoiler]Spoiler text.[/spoiler]</td>
 		  </tr>
 		  <tr>
-		    <td class='tbl tdbg2'>[youtube<!-- -->]BrQn-O_zFRc[/youtube<!-- -->] (video ID)</td>
+		    <td class='tbl tdbg2'>[spoileri&#93;Spoiler text.[/spoileri&#93;</td>
+		    <td class='tbl tdbg1'>[spoileri]Spoiler text.[/spoileri]</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>[youtube&#93;BrQn-O_zFRc[/youtube&#93; (video ID)</td>
 		    <td class='tbl tdbg1'>A YouTube embed.</td>
 		  </tr>
 		</table>
@@ -269,30 +288,17 @@
 		<br>On the other hand, if it's permanent, you can always try to show us you've changed and request a <i>second chance</i>... but any further antics after that will usually get your account <b>deleted</b>.
 	");
 
-	$faq	.= faqformat("cantpass", "I've lost/forgotten my password. Now what?", "
-		The best thing you can do is to <a href='profile.php?id=1'>contact Xkeeper directly</a>. He can help you get it fixed.
+	$faq	.= faqformat("cantpass", "I've lost/forgotten my password.", "
+		The best thing you can do is to <a href='profile.php?id=1'>contact Xkeeper directly</a>. They can help you get it reset. You'll need whatever information you have about your account, including your current IP address, the e-mail you added to your profile (if any), and any other information that can help confirm your identity.
 	");
 
 
-	$faq	.= faqformat("frosteddonut", "I want to throw money at you guys. How do I do that?", "
-			Really? How generous.
+	$faq	.= faqformat("leganese", "Legal Crap / Privacy Policy / et cetera", "
+		The site does not own, and cannot be held responsible for, statements made by members on the forum. This site is offered as-is to the user. Any statements made on the board may be altered or removed at the discretion of the staff.
 		<br>
-		<br>Donations with this button go straight to the hosting bill, and we can't withdraw them, so you don't have to worry about us secretly buying drugs or other fancy stuff with your money.
+		<br>We do not automatically collect or store personal information, with the exception of IP addresses used when registering, logging in, and posting. Unlike pretty much every other site on the internet, we do not use cookies with the sole exception of authenticating a user should they wish to sign in. That means we don't have to show you a cookie popup. Nice, huh? Pretty rare these days.
 		<br>
-		<br>However, there is a slight fee involved, so suffice it to say it's often better to donate $20 at once intead of ten $2 donations.
-		<br>
-		<br><a href=\"http://www.dreamhost.com/donate.cgi?id=11617\"><img border=\"0\" alt=\"Donate towards Jul's web hosting!\" title='Click this and give us your money.' src=\"https://secure.newdream.net/donate1.gif\" /></a>
-		<br>
-		<br>Thanks in advance.
-		<br>
-		<br>At some point we plan on getting a 'donor star' for those who paid our bills... other than that, there isn't really any other benefit than a warm, fuzzy feeling.
-	");
-
-
-	$faq	.= faqformat("leganese", "Legal Crap", "
-		The site does not own and cannot be held responsible for statements made by members on the forum. This site is offered as-is to the user. Any statements made on the board may be altered or removed at the discretion of the staff.
-		<br>
-		<br>We do not sell member information like e-mail addresses or passwords to any third party. Data entered into user profiles is completely optional and may be left out at the user's discretion; however, doing so may complicate matters such as account recovery.
+		<br>All information on this site, excepting username, password, and IP address, is optional, and is provided by the user. If you do not want your information on this site, <em>don't submit it</em>.
 	");
 
 
