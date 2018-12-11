@@ -367,7 +367,7 @@
 		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>Views: $dispviews<br><img src=images/_.gif width=120 height=1></td>
 		  <td width='100%' class='tbl tdbg2 center fonts'>$headlinks2</td>
 		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>".  date($dateformat,ctime()+$tzoff) ."<br><img src=images/_.gif width=120 height=1><tr>"
-		: "<br>$dispviews views, ". date($dateformat,ctime()+$tzoff) ."
+		: "<br>$dispviews views, ". date($dateformat,ctime()+$tzoff) ."<br>(mobile view enabled)
 		  </td><tr>
 			<td width=100% class='tbl tdbg2 center fonts' colspan=3>$headlinks2</td><tr>") ."
 	  <td colspan=3 class='tbl tdbg1 center fonts'>$race

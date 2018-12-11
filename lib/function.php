@@ -198,7 +198,7 @@
 	if($banned) $power=0;
 
 	$specialscheme = "";
-	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE");
+	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE", "iPhone", "Mobile");
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || filter_int($_GET['mobile']) == 1) {
 		$loguser['layout']		= 2;
 		$loguser['viewsig']		= 0;
