@@ -486,7 +486,8 @@ function escape_codeblock($text) {
 	$list2 = array("", "", "&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
 
 	// @TODO why not just use htmlspecialchars() or htmlentities()
-	return "[quote]<code>". str_replace($list, $list2, $text[0]) ."</code>[/quote]";
+	//return "<blockquote class='code'><hr><pre><code>". str_replace($list, $list2, $text[0]) ."</code></pre><hr></blockquote>";
+	return "<blockquote class='code'><hr><pre><code>". str_replace($list, $list2, $text[0]) ."</code></pre><hr></blockquote>";
 }
 
 function doreplace2($msg, $options='0|0'){
@@ -535,7 +536,7 @@ function doreplace2($msg, $options='0|0'){
 	$msg=str_replace('[/spoileri]','</span></span></label>',$msg);
 	$msg=preg_replace("'\[(b|i|u|s)\]'si",'<\\1>',$msg);
 	$msg=preg_replace("'\[/(b|i|u|s)\]'si",'</\\1>',$msg);
-	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img src=\\1>', $msg);
+	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img class="imgtag" src=\\1>', $msg);
 	$msg=preg_replace("'\[url\](.*?)\[/url\]'si", '<a href=\\1>\\1</a>', $msg);
 	$msg=preg_replace("'\[url=(.*?)\](.*?)\[/url\]'si", '<a href=\\1>\\2</a>', $msg);
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);

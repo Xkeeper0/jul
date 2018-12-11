@@ -18,16 +18,17 @@ img { border:none; }
 .center	{text-align:center}
 .right	{text-align:right}
 
-/* Make code blocks scroll instead of stretching the page */
-code {
-	overflow:		auto;
-	width:			100%;
-	white-space:	pre;
-	display:		block;
+/* Make code blocks slightly less likely to go haywire, since apparently
+   "don't stretch the entire gat dang page" is not possible in HTML, lol */
+.code pre {
+	max-width: 100%;
+	width: 100%;
+	overflow-x: auto;
+	white-space: pre-wrap;
 }
 
-/* "Fix" for auto-generated <br> tags in <code> and <pre> blocks */
-code br, pre br { display: none; }
+/* "Fix" for auto-generated <br> tags in <pre> blocks */
+pre br { display: none; }
 
 /* Make radio buttons look not terrible */
 input[type=radio] { color: black; background: white; }
@@ -73,3 +74,5 @@ input[type=radio] { color: black; background: white; }
 .spoiler > input[type="checkbox"]:checked + .hidden > * {
   visibility: visible;
 }
+
+.imgtag { max-width: 100%; }
