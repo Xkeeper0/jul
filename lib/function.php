@@ -329,7 +329,7 @@ function timeunits($sec){
 	if($sec<86400)		return floor($sec/3600).' hours';
 	if($sec<172800)		return '1 day';
 	if($sec<31556926)	return floor($sec/86400).' days';
-	return sprintf("%.1f years", floor($sec/31556926));
+	return sprintf("%.1f years", $sec/31556926);
 }
 
 function timeunits2($sec){
