@@ -50,6 +50,6 @@
 	if ($isadmin)
 		$ip = (($quote) ? ' | ' : '') . "IP: <a href=ipsearch.php?ip=$msg[ip]>$msg[ip]</a>";
 
-	print $header.$top.$tblstart.threadpost($post,1).$tblend.$top.$footer;
+	print $header.$top.threadpost($post,1).$top.$footer;
 	printtimedif($startingtime);
 ?>

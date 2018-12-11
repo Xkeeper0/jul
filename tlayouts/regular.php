@@ -93,7 +93,7 @@
 		}
 		$numdir		= $numdir_;
 
-	return "
+	return "<div class='post'>
 	$tblstart
 	$set[tdbg] rowspan=2 style='padding: 5px 1px 5px 1px;'>
 	  <center>$set[userlink]$smallfont<br>
@@ -110,7 +110,8 @@
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
 	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
-	$tblend";
+	$tblend
+	</div>";
 	}
 
 	// Inu's sidebar
@@ -208,7 +209,8 @@
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
 		$set[tdbg]{$dstyle} height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
-		$tblend";
+		$tblend
+		</div>";
 	}
 	// End Inu's sidebar
 
@@ -231,13 +233,14 @@
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
 	$set[tdbg] style='background: #000;' height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
-	$tblend";
+	$tblend
+	</div>";
 	}
 
   // Default layout
 	if (!(in_array($post['uid'], $sidebars) && !$x_hacks['host']) || $loguser['viewsig'] == 0) {
 	return "
-	<div style='position:relative'>
+	<div class='post'>
 	$tblstart
 	$set[tdbg] rowspan=2>
 	  $set[userlink]$smallfont<br>
@@ -275,7 +278,7 @@
 		}
 
 		//". str_replace('valign=top', 'valign=top', $set[tdbg]) ."
-		return "<table width=100% cellpadding=0 cellspacing=0 style=\"background: #004c5a; background-position: top right; background-repeat: repeat-x; border: 1px solid #000;\">
+		return "<div class='post'><table width=100% cellpadding=0 cellspacing=0 style=\"background: #004c5a; background-position: top right; background-repeat: repeat-x; border: 1px solid #000;\">
 			<tr>
 			<td rowspan=2 valign=top align=center style=\"font-size: 12px; color: #fff; font-family: Verdana, sans-serif; border-right: 3px double #000; background: #004c5a;\">
 				&mdash; $set[userlink] &mdash;
@@ -292,7 +295,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			<td valign='top' id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			<td valign='top' id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 	} elseif ($post['uid'] == "3" && !$x_hacks['host']) {
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) .'<font color=#bb0000> ago';
@@ -302,7 +305,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: #000; font-size: 12px; color: #f00; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
@@ -317,7 +320,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 // ************************************************************
@@ -337,7 +340,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
@@ -353,7 +356,7 @@
 				<td style='color: $fcol1;'>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 
@@ -378,7 +381,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3". ($post['posts'] >= 20000 ? " url('http://www.ffalexandria.com/orlandu/anya/side_bg.jpg'); background-position:bottom left" : "") ."; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				<br>$smallfont
@@ -393,7 +396,7 @@
 				<td style='color: $fcol1;'>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 		return "
@@ -414,7 +417,8 @@
 			<td width=255><nobr>$quote$edit$ip
 		  </table><tr>
 		$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
-		$tblend";
+		$tblend
+		</div>";
 
 // ************************************************************
 // SAKURA HIRYUU
@@ -433,7 +437,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
@@ -449,7 +453,7 @@
 				<td style=\"color: $fcol1;\">Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 
@@ -481,7 +485,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
@@ -497,7 +501,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 	} elseif ($post['uid'] == "19" && !$x_hacks['host']) {
@@ -512,7 +516,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
@@ -530,7 +534,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 	} elseif ($post['uid'] == "4" && !$x_hacks['host']) {
@@ -545,7 +549,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
@@ -562,7 +566,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 	} elseif ($post['uid'] == "387" && !$x_hacks['host']) {
@@ -576,7 +580,7 @@
 			$postnum	= '';
 			$postss		= "s:";
 		}
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('\' valign=top', ' a1\' valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				$css
 				<div class=a2>
@@ -593,7 +597,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 
@@ -602,7 +606,7 @@
 		$fcol2			= "#555555";
 		$fcol3			= "#181818";
 
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 14px; color: $fcol1; font-family: Verdana, sans-serif; padding-top: .5em;\">
 				$set[userlink]
 				<br><span style=\"letter-spacing: 0px; color: $fcol2; font-size: 10px;\">Collection of nobodies</span>
@@ -613,7 +617,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"background: $fcol3; padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"background: $fcol3; padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
 
@@ -675,7 +679,7 @@
 		}
 
 
-		return "$tblstart
+		return "<div class='post'>$tblstart
 			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 width=200>
 				 <table style=\"font-family: Tahoma; font-size: 12px; color: #000; background: #e1cfb6;\" width=100% cellspacing=0>
 					<tr>
@@ -725,7 +729,7 @@
 				<td>Posted on $postdate$threadlink$post[edited]</td>
 				<td width=255><nobr>$quote$edit$ip
 			</table><tr>
-			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend
+			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 /*
 <!--
@@ -740,8 +744,15 @@
 	elseif ($post['uid'] == 1090 && !$x_hacks['host']) {
 		$brltype = "catgirlredux2011";
 
-		$brsidebar = "
-			<link rel=\"stylesheet\" type=\"text/css\" href=\"http://lain.rustedlogic.net/layouts/css/_br_sidebar.css\" />
+		static $brembedcss = false;
+		$brsidebar	= "";
+		if (!$brembedcss) {
+			$brsidebar	.= "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://lain.rustedlogic.net/layouts/css/_br_sidebar.css\" />";
+			$brembedcss	= true;
+		}
+
+		$brsidebar .= "
+			<div class='post'>
 			$tblstart
 			$set[tdbg] rowspan=2>
 				<div class=\"brsidebar lain-sidebar-$brltype\">
@@ -757,7 +768,7 @@
 			<td width=255><nobr>$quote$edit$ip
 			</table><tr>
 			$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
-			$tblend";
+			$tblend</div>";
 
 		return $brsidebar;
 	}
@@ -766,6 +777,7 @@
   // (Adelheid uses this)
 	else {
 	return "
+	<div class='post'>
 	$tblstart
 	$set[tdbg] rowspan=2>
 	  $set[userlink]$smallfont<br>
@@ -778,7 +790,7 @@
 	    <td width=255><nobr>$quote$edit$ip
 	  </table><tr>
 	$set[tdbg] height=220 id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>
-	$tblend";
+	$tblend</div>";
 	}
 
   }

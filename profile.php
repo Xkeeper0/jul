@@ -218,8 +218,8 @@ $tblend
 $tblend
 <br>$tblstart
 	$tccellh colspan=2><center>Sample post<tr>
-	". threadpost($user, 1) ."
 $tblend
+	". threadpost($user, 1) ."
 <br>$tblstart
 	$tccellhs colspan=2><center>Options<tr>
 	$tccell2s colspan=2>

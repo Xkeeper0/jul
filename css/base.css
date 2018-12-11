@@ -76,3 +76,5 @@ input[type=radio] { color: black; background: white; }
 }
 
 .imgtag { max-width: 100%; }
+
+.post { position: relative; }
