@@ -28,7 +28,7 @@
 
 	if($pow!='') {
 		$pow = intval($pow);
-		if (($pow == 1 || $pow == 0) && $loguser['powerlevel'] < 3)
+		if (($pow == 1 || $pow == 0) && $loguser['powerlevel'] <= 0)
 			$pow = "IN (0, 1)";
 		elseif ($pow == 3 || $pow == 4) // merge admin + sysadmin (they appear the same)
 			$pow = "IN (3, 4)";
