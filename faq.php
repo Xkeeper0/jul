@@ -45,7 +45,7 @@
 			<li><strong>Don't be a jerk.</strong> If you don't have something constructive to say, <em>don't say it!</em>
 			<li><strong>No slurs, hate speech, or homo-/trans-phobia.</strong> If you can't respect your fellow posters, you aren't welcome here.
 			<li><strong>Post legibly</strong>. Keep it readable &mdash; you don't have to be perfect, but be understandable and don't post like this is an AOL chatroom.
-			<li><strong>Don't spam.</strong> If you have something new 
+			<li><strong>Don't spam.</strong> Posting over and over without adding to a conversation is annoying. 
 			<li><strong>Don't get in fights.</strong> If you're having trouble with another user, contact an administrator.
 			<li><strong>No illegal content.</strong> Don't post stuff that would get you (or us) in legal trouble.
 		</ol>
