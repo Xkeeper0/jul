@@ -28,7 +28,7 @@
 
 	if($pow!='') {
 		$pow = intval($pow);
-		if (($pow == 1 || $pow == 0) && $loguser['powerlevel'] < 3)
+		if (($pow == 1 || $pow == 0) && $loguser['powerlevel'] <= 0)
 			$pow = "IN (0, 1)";
 		elseif ($pow == 3 || $pow == 4) // merge admin + sysadmin (they appear the same)
 			$pow = "IN (3, 4)";
@@ -42,12 +42,13 @@
 
 	$where = 'WHERE '.((empty($qwhere)) ? '1' : implode(' AND ', $qwhere));
 	
-	if (!in_array($sort, array('name','reg','exp','age','posts')))
+	if (!in_array($sort, array('name','reg','exp','age','posts', 'act')))
 		$sort = 'posts';
 
-	$query='SELECT id,posts,regdate,name,minipic,sex,powerlevel,aka,r.* FROM users LEFT JOIN users_rpg r ON id=uid ';
+	$query='SELECT id,posts,regdate,lastactivity,name,minipic,sex,powerlevel,aka,r.* FROM users LEFT JOIN users_rpg r ON id=uid ';
 	if($sort=='name')  $users1=$sql->query("$query$where ORDER BY name", MYSQL_ASSOC);
 	if($sort=='reg')   $users1=$sql->query("$query$where ORDER BY regdate DESC", MYSQL_ASSOC);
+	if($sort=='act')   $users1=$sql->query("$query$where ORDER BY lastactivity DESC", MYSQL_ASSOC);
 	if($sort=='exp')   $users1=$sql->query("$query$where", MYSQL_ASSOC);
 	if($sort=='age')   $users1=$sql->query("$query$where AND birthday ORDER BY birthday", MYSQL_ASSOC);
 	if($sort=='posts') $users1=$sql->query("$query$where ORDER BY posts DESC", MYSQL_ASSOC);
@@ -80,6 +81,7 @@
 			$lnk=exp$q$qpow$qsex>EXP</a> |
 			$lnk=name$q$qpow$qsex>User name</a> |
 			$lnk=reg$q$qpow$qsex>Registration date</a> |
+			$lnk=act$q$qpow$qsex>Last activity</a> |
 			$lnk=age$q$qpow$qsex>Age</a>
 		</tr><tr>
 		$tccell1s>	Sex:
@@ -93,7 +95,7 @@
 		$tccell2s>
 			$lnk=$sort$q$qsex&pow=-1>Banned</a> |
 			$lnk=$sort$q$qsex&pow=0>Normal</a> |
-			". ($loguser['powerlevel'] >= 3 ? "$lnk=$sort$q$qsex&pow=1>Normal +</a> | " : "") ."
+			". ($loguser['powerlevel'] >= 1 ? "$lnk=$sort$q$qsex&pow=1>Normal +</a> | " : "") ."
 			$lnk=$sort$q$qsex&pow=2>Moderator</a> |
 			$lnk=$sort$q$qsex&pow=3>Administrator</a> |
 			$lnk=$sort$q$qsex>All</a>
@@ -107,6 +109,7 @@
 	if(!$rpg) {
 		print "
 			$tccellh width=200>Registered on</td>
+			$tccellh width=200>Last active</td>
 			$tccellh width=60>Posts</td>
 			$tccellh width=35>Level</td>
 			$tccellh width=100>EXP</td></tr>
@@ -137,17 +140,18 @@
 
 		$userlink = getuserlink($user);
 		$ulist.="
-			$tccell2>".($i+1).".</td>
+			$tccell2>".($i+1)."</td>
 			$tccell1l>{$userpicture}</td>
 			$tccell2l>{$userlink}</td>
 		";
 
 		if(!$rpg){
 			$ulist.="
-				$tccell2>".date($dateformat,$user['regdate']+$tzoff)."</td>
-				$tccell1>{$user['posts']}</td>
-				$tccell1>{$user['lvl']}</td>
-				$tccell1>{$user['exp']}</td>
+				$tccell2><span title='". timeunits2(ctime() - $user['regdate']) ." ago'>".date($dateformat,$user['regdate']+$tzoff)."</span></td>
+				$tccell2><span title='". timeunits2(ctime() - $user['lastactivity']) ." ago'>".date($dateformat,$user['lastactivity']+$tzoff)."</span></td>
+				$tccell1r>{$user['posts']}</td>
+				$tccell1r>{$user['lvl']}</td>
+				$tccell1r>{$user['exp']}</td>
 			";
 		}
 		else {

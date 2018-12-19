@@ -22,7 +22,7 @@
 	$time = filter_int($_GET['time']) ? $_GET['time'] : 300;
 
 	// FOR THE LOVE OF GOD XKEEPER JUST GIVE ME ~NUKE ACCESS
-	$banorama	= ($_SERVER['REMOTE_ADDR'] == $x_hacks['adminip'] || $loguser['id'] == 1 || $loguser['id'] == 5 || $loguser['id'] == 2100);
+	$banorama	= ($loguser['id'] == 1 || $loguser['id'] == 2100);
 
 	if ($banorama && filter_string($_GET['banip']) && filter_string($_GET['valid']) == md5($_GET['banip'] . "aglkdgslhkadgshlkgds")) {
 		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_GET['banip'] ."', `reason`='online.php ban', `date` = '". ctime() ."', `banner` = '$loguserid'") or print mysql_error();

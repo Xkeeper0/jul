@@ -4,7 +4,7 @@
   $numdir='num2/';
   $numfil='numkafuka';
   $boardtitle='<img src=images/kafuka/kafuka.jpg>';
-  $font='arial';
+  $font='Arial, sans-serif';
   $bgimage='images/firebg4.jpg';
   $bgcolor='220000';
   $newthreadpic='<img src=images/kafuka/newthreadkaf.png border=0>';

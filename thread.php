@@ -292,7 +292,7 @@
 				$link = "<a href='?id={$id}&dat={$confirm}&{$linkact}vote=$pollc[id]'>";
 
 			$choices	.= "<tr>
-				$tccell1l width=20%>$dot$link".($pollc['choice'])."</a></td>
+				$tccell1l width=20%>$dot$link".htmlspecialchars($pollc['choice'])."</a></td>
 				$tccell2l width=60%>$barpart</td>
 				$tccell1 width=20%>".($poll['doublevote'] ? "$pct% of users, $votes ($pct2%)" : "$pct%, $votes")."</td>
 				</tr>";
@@ -308,7 +308,7 @@
 
 		$polltbl = "$tblstart
 			<tr>$tccellc colspan=3><b>".htmlspecialchars($poll['question'])."</td></tr>
-			<tr>$tccell2ls colspan=3>".nl2br(dofilters($poll['briefing']))."</td></tr>
+			<tr>$tccell2ls colspan=3>".nl2br(htmlspecialchars(dofilters($poll['briefing'])))."</td></tr>
 			$choices
 			<tr>$tccell2l colspan=3>$smallfont $polltext $tvotes_u user$s_have voted. $polledit</td></tr>
 			$tblend<br>
@@ -369,7 +369,6 @@
 	preplayouts($posts);
 
 	for ($i = 0; $post = $sql->fetch($posts); $i++) {
-		$postlist	.= '<tr>';
 
 		$bg = $i % 2 + 1;
 

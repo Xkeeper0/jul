@@ -198,7 +198,7 @@
 	if($banned) $power=0;
 
 	$specialscheme = "";
-	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE");
+	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE", "iPhone", "Mobile");
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || filter_int($_GET['mobile']) == 1) {
 		$loguser['layout']		= 2;
 		$loguser['viewsig']		= 0;
@@ -329,7 +329,7 @@ function timeunits($sec){
 	if($sec<86400)		return floor($sec/3600).' hours';
 	if($sec<172800)		return '1 day';
 	if($sec<31556926)	return floor($sec/86400).' days';
-	return sprintf("%.1f years", floor($sec/31556926));
+	return sprintf("%.1f years", $sec/31556926);
 }
 
 function timeunits2($sec){
@@ -486,7 +486,8 @@ function escape_codeblock($text) {
 	$list2 = array("", "", "&lt;", "\"", "\\", "\'", "&#91;", "&#58;", "&#41;", "&#95;");
 
 	// @TODO why not just use htmlspecialchars() or htmlentities()
-	return "[quote]<code>". str_replace($list, $list2, $text[0]) ."</code>[/quote]";
+	//return "<blockquote class='code'><hr><pre><code>". str_replace($list, $list2, $text[0]) ."</code></pre><hr></blockquote>";
+	return "<blockquote class='code'><hr><pre><code>". str_replace($list, $list2, $text[0]) ."</code></pre><hr></blockquote>";
 }
 
 function doreplace2($msg, $options='0|0'){
@@ -529,11 +530,13 @@ function doreplace2($msg, $options='0|0'){
 	$msg=str_replace('[/quote]','<hr></blockquote>',$msg);
 	$msg=preg_replace("'\[sp=(.*?)\](.*?)\[/sp\]'si", '<span style="border-bottom: 1px dotted #f00;" title="did you mean: \\1">\\2</span>', $msg);
 	$msg=preg_replace("'\[abbr=(.*?)\](.*?)\[/abbr\]'si", '<span style="border-bottom: 1px dotted;" title="\\1">\\2</span>', $msg);
-	$msg=str_replace('[spoiler]','<div class="fonts pstspl2"><b>Spoiler:</b><div class="pstspl1">',$msg);
-	$msg=str_replace('[/spoiler]','</div></div>',$msg);
+	$msg=str_replace('[spoiler]','<label class="spoiler spoiler-b"><div class="spoiler-label"></div><input type="checkbox"><div class="hidden"><div>',$msg);
+	$msg=str_replace('[/spoiler]','</div></div></label>',$msg);
+	$msg=str_replace('[spoileri]','<label class="spoiler"><span class="spoiler-label"></span><input type="checkbox"><span class="hidden"><span>',$msg);
+	$msg=str_replace('[/spoileri]','</span></span></label>',$msg);
 	$msg=preg_replace("'\[(b|i|u|s)\]'si",'<\\1>',$msg);
 	$msg=preg_replace("'\[/(b|i|u|s)\]'si",'</\\1>',$msg);
-	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img src=\\1>', $msg);
+	$msg=preg_replace("'\[img\](.*?)\[/img\]'si", '<img class="imgtag" src=\\1>', $msg);
 	$msg=preg_replace("'\[url\](.*?)\[/url\]'si", '<a href=\\1>\\1</a>', $msg);
 	$msg=preg_replace("'\[url=(.*?)\](.*?)\[/url\]'si", '<a href=\\1>\\2</a>', $msg);
 	$msg=str_replace('http://nightkev.110mb.com/justus_layout.css','about:blank',$msg);
@@ -1263,7 +1266,7 @@ function xss_clean($data) {
 	#$data = preg_replace('#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $data);
 	do {
 		$old_data	= $data;
-		$data		= preg_replace('#(<[^>]+?[\x00-\x20"\'])(on|xmlns)([^>]*+)>#iu', '$1DISABLED_$2$3>', $data);
+		$data		= preg_replace('#(<[A-Za-z][^>]*?[\x00-\x20"\'])(on|xmlns)([^>]*+)>#iu', '$1DISABLED_$2$3>', $data);
 	} while ($old_data !== $data);
 
 	// Remove javascript: and vbscript: protocols

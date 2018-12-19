@@ -57,7 +57,7 @@
 			$postlist="
 				$tccellh width=150>User</td>
 				$tccellh>Message<tr>
-				$tcellbg><a href=profile.php?id=$user[id]>$user[name]</a>$smallfont<br>
+				$tcellbg><a href=profile.php?id=$user[id] style='color: ". getnamecolor($user['sex'],$user['powerlevel'], false) .";'>$user[name]</a>$smallfont<br>
 				Posts: $postnum$user[posts]</td>
 				$tcellbg>".doreplace2($msg[text])."<tr>
 			";

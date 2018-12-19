@@ -18,16 +18,17 @@ img { border:none; }
 .center	{text-align:center}
 .right	{text-align:right}
 
-/* Make code blocks scroll instead of stretching the page */
-code {
-	overflow:		auto;
-	width:			100%;
-	white-space:	pre;
-	display:		block;
+/* Make code blocks slightly less likely to go haywire, since apparently
+   "don't stretch the entire gat dang page" is not possible in HTML, lol */
+.code pre {
+	max-width: 100%;
+	width: 100%;
+	overflow-x: auto;
+	white-space: pre-wrap;
 }
 
-/* "Fix" for auto-generated <br> tags in <code> and <pre> blocks */
-code br, pre br { display: none; }
+/* "Fix" for auto-generated <br> tags in <pre> blocks */
+pre br { display: none; }
 
 /* Make radio buttons look not terrible */
 input[type=radio] { color: black; background: white; }
@@ -54,3 +55,26 @@ input[type=radio] { color: black; background: white; }
 	max-height:	100%;
 	max-width:	100%;
 }
+
+.spoiler-label:after { content: 'Spoiler'; color: white; background: black; font-style: italic; font-weight: bold; margin: 0 .2em; padding: 0.1em 0.4em; font-size: 80%; vertical-align: 10%; }
+.spoiler > input[type="checkbox"] { display: none; }
+.spoiler > .hidden { background: rgba(128, 128, 128, .5); }
+.spoiler > input[type="checkbox"]:checked + .hidden {
+  background: unset;
+}
+
+.spoiler-b > .spoiler-label:after { width: 100%; display: block; margin: 0; vertical-align: unset; padding: 0.25em 1em; box-sizing: border-box; content: 'Spoiler content - click to show/hide'; }
+
+.spoiler-label:hover:after { background: #444; }
+.spoiler-label:hover + input[type="checkbox"]:checked ~ .hidden { background: rgba(128, 128, 128, .5); }
+
+.spoiler > .hidden > * {
+  visibility: hidden;
+}
+.spoiler > input[type="checkbox"]:checked + .hidden > * {
+  visibility: visible;
+}
+
+.imgtag { max-width: 100%; }
+
+.post { position: relative; }

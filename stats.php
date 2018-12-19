@@ -31,7 +31,7 @@
 			<li><a href='activeusers.php'>Recently active posters</a></li>
 			<li><a href='acs.php'>Daily poster rankings</a></li>
 			<li><a href='milestones.php'>Post milestones</a></li>
-			<li><a href='sigsize.php'>Biggest posters</a></li>
+			<li><a href='biggestposters.php'>Biggest posters</a></li>
 			<li><a href='sigsize.php'>Largest post layouts</a></li>
 			<li><a href='sigsize.php?bio=1'>Largest bios</a></li>
 			<li><a href='activity.php?u=". ($loguserid ? $loguserid : 1) ."'>Graph of your posting history</a> (change the ID in the URL to see others)</li>
@@ -39,6 +39,7 @@
 			<li><a href='activity3.php'>Graph of total post count and posts per day</a></li>
 			<li><a href='activity3u.php'>Graph of active users per day</a></li>
 			<li><a href='avatar.php'>Mood avatars</a></li>
+			<li><a href='stats-daily.php'>Daily board-wide statistics</a></li>
 		</ul>
 	</td>
 	</tr>
@@ -82,42 +83,9 @@
 	.tblinfo('dailystats')
 	.tblinfo('rendertimes')
 	."$tblend
-  <br>
-  $tblstart<tr>
-	$tccellhs colspan=9>Daily stats<tr>
-	$tccellcs>Date</td>
-	$tccellcs>Total users</td>
-	$tccellcs>Total posts</td>
-	$tccellcs>Total threads</td>
-	$tccellcs>Total views</td>
-	$tccellcs>New users</td>
-	$tccellcs>New posts</td>
-	$tccellcs>New threads</td>
-	$tccellcs>New views</td></tr>
-  ";
-	$users=0;
-	$posts=0;
-	$threads=0;
-	$views=0;
-	$stats=$sql->query("SELECT * FROM dailystats");
-	while($day=$sql->fetch($stats)){
-		print "<tr>
-		$tccell1s>$day[date]</td>
-		$tccell2s>$day[users]</td>
-		$tccell2s>$day[posts]</td>
-		$tccell2s>$day[threads]</td>
-		$tccell2s>$day[views]</td>
-		$tccell2s>".($day['users']-$users)."</td>
-		$tccell2s>".($day['posts']-$posts)."</td>
-		$tccell2s>".($day['threads']-$threads)."</td>
-		$tccell2s>".($day['views']-$views)."</td></tr>
-		";
-		$users=$day['users'];
-		$posts=$day['posts'];
-		$threads=$day['threads'];
-		$views=$day['views'];
-	}
-	print $tblend.$footer;
+";
+
+	print $footer;
 	printtimedif($startingtime);
 
 
@@ -147,5 +115,3 @@
 		$tccell2l>".sp($t['Data_free'])."</td>
 		$tccell2l>".sp($t['Data_length']+$t['Index_length'])."</td></tr>";
 	}
-
-?>

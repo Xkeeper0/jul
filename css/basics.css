@@ -25,9 +25,21 @@ div.lastpost { font-size: 90%; text-align: right !important; }
 .center, center { text-align: center; }
 .right { text-align: right; }
 
-code { overflow: auto; width: 100%; white-space: pre; display: block; }
-code br { display: none; }
+/* Make code blocks slightly less likely to go haywire, since apparently
+   "don't stretch the entire gat dang page" is not possible in HTML, lol */
+.code pre {
+	max-width: 100%;
+	width: 100%;
+	overflow-x: auto;
+	white-space: pre-wrap;
+}
+
+/* "Fix" for auto-generated <br> tags in <pre> blocks */
+pre br { display: none; }
 
 .pstspl1 {opacity:0;}
 .pstspl1:hover {opacity:1;}
 .pstspl2 {background:#000;color:#FFF;display:block;}
+
+.imgtag { max-width: 100%; }
+.post { position: relative; }

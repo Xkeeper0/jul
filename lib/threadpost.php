@@ -15,7 +15,8 @@
 		$set['userlink'] = "<a name={$p}></a>{$userlink}";
 		$set['date']  = date($dateformat,$post['date']+$tzoff);
 
-		if($post['location']) { $set['location']="<br>From: {$post['location']}"; }
+		if($post['location']) { $set['location']="From: ". htmlspecialchars($post['location']); }
+		if($post['pronouns']) { $set['pronouns']="Pronouns: ". htmlspecialchars($post['pronouns']); }
 
 		if($post['picture'] || ($post['moodid'] && $post['moodurl'])){
 			$post['picture']  = str_replace('>','%3E',$post['picture']);

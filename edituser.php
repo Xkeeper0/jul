@@ -76,7 +76,7 @@
 	}
 	$rsetlist="<select name=useranks>$rsetlist</select>";
 
-	if(!$_POST[action] and $log){
+	if(!$_POST['action'] and $log){
    $lft="<tr>$tccell1><b>";
    $rgt=":</td>$tccell2l>";
    $hlft="<tr>$tccellh>";
@@ -107,7 +107,7 @@
 				$lft User name		$rgt$inpt=username VALUE=\"$user[name]\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
 				$lft Also known as		$rgt$inpt=aka VALUE=\"$user[aka]\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
 
-				<!-- Hack around autocomplete, fake inputs (don't use these in the file) 
+				<!-- Hack around autocomplete, fake inputs (don't use these in the file)
 				Web browsers think they're smarter than the web designer, so they ignore demands to not use autocomplete.
 				This is STUPID AS FUCK when you're working on another user, and not YOURSELF. -->
 				<input style=\"display:none;\" type=\"text\"     name=\"__f__usernm__\">
@@ -130,15 +130,16 @@
 				$lft User picture		$rgt$inpt=picture VALUE=\"$user[picture]\" SIZE=60 MAXLENGTH=100>
 				$lft Mood avatar		$rgt$inpt=moodurl VALUE=\"$user[moodurl]\" SIZE=60 MAXLENGTH=100>
 				$lft Post background	$rgt$inpt=postbg VALUE=\"$user[postbg]\" SIZE=60 MAXLENGTH=100>
-				$lft Post header		$rgt$txta=postheader ROWS=5 COLS=60>". htmlspecialchars($user[postheader]) ."</TEXTAREA>
-				$lft Signature		$rgt$txta=signature ROWS=5 COLS=60>". htmlspecialchars($user[signature]) ."</TEXTAREA>
+				$lft Post header		$rgt$txta=postheader ROWS=5 COLS=60>". htmlspecialchars($user['postheader']) ."</TEXTAREA>
+				$lft Signature		$rgt$txta=signature ROWS=5 COLS=60>". htmlspecialchars($user['signature']) ."</TEXTAREA>
 
 				$hlft Personal information $hrgt
 				$lft Sex			$rgt$sexlist
+				$lft Pronouns		$rgt$inpt=pronouns VALUE=\"$user[pronouns]\" SIZE=40 MAXLENGTH=50>
 				$lft Real name		$rgt$inpt=realname VALUE=\"$user[realname]\" SIZE=40 MAXLENGTH=60>
 				$lft Location		$rgt$inpt=location VALUE=\"$user[location]\" SIZE=40 MAXLENGTH=60>
 				$lft Birthday		$rgt Month: $inpt=bmonth SIZE=2 MAXLENGTH=2 VALUE=$month> Day: $inpt=bday SIZE=2 MAXLENGTH=2 VALUE=$day> Year: $inpt=byear SIZE=4 MAXLENGTH=4 VALUE=$year>
-				$lft Bio			$rgt$txta=bio ROWS=5 COLS=60>". htmlspecialchars($user[bio]) ."</TEXTAREA>
+				$lft Bio			$rgt$txta=bio ROWS=5 COLS=60>". htmlspecialchars($user['bio']) ."</TEXTAREA>
 
 				$hlft Online services	$hrgt
 				$lft Email address    $rgt $inpt=email VALUE=\"$user[email]\" SIZE=60 MAXLENGTH=60>
@@ -184,7 +185,7 @@
 		if ($password) {
 			$passedit="`password` = '".getpwhash($password, $userid)."', ";
 		}
-		
+
 		if ($sex == -378) {
 			$sex = $sexn;
 		}
@@ -229,6 +230,7 @@
 	 "`moodurl` = '$moodurl',
 		`profile_locked` = '$profile_locked',
 		`editing_locked` = '$editing_locked',
+		`pronouns` = '$pronouns',
 		`titleoption` = '$titleoption'
 	WHERE `id` = '$userid'") or print mysql_error();
 
@@ -236,7 +238,7 @@
 	$tblstart
 	 $tccell1>Thank you, $loguser[name], for editing this user.<br>
 	 ".redirect("profile.php?id=$userid","view $username's profile",0)."
-	$tblend"; 
+	$tblend";
   }
   print $footer;
   printtimedif($startingtime);
