@@ -1225,7 +1225,7 @@ function dofilters($p){
 		$p=str_replace("-->", '--&gt;</font>', $p);
 	}
 
-	$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
+	//$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
 	$p=preg_replace("'http://.{0,3}\.?tinypic\.com'si",'tinyshit',$p);
 	$p=str_replace('<link href="http://pieguy1372.freeweb7.com/misc/piehills.css" rel="stylesheet">',"",$p);
 	$p=str_replace("tabindex=\"0\" ","title=\"the owner of this button is a fucking dumbass\" ",$p);
