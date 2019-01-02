@@ -45,6 +45,7 @@
 
 	$ppp	= filter_int($_GET['ppp']) ? $_GET['ppp'] : ($log ? $loguser['postsperpage'] : 20);
 	$ppp	= max(min($ppp, 500), 1);
+	$pid	= null;
 
 	if (filter_int($_GET['pid'])) {
 		$pid	= $_GET['pid'];
@@ -151,7 +152,12 @@
 		$tlinks = implode(' | ', $tlinks);
 
 		// Description for bots
-		$text = $sql->resultq("SELECT text FROM posts_text pt LEFT JOIN posts p ON (pt.pid = p.id) WHERE p.thread=$id ORDER BY pt.pid ASC LIMIT 1");
+		if ($pid !== null) {
+			// $pid is explicitly null or filter_int'd
+			$text = $sql->resultq("SELECT text FROM posts_text pt LEFT JOIN posts p ON (pt.pid = p.id) WHERE p.thread=$id AND p.id = '$pid' ORDER BY pt.pid ASC LIMIT 1");
+		} else {
+			$text = $sql->resultq("SELECT text FROM posts_text pt LEFT JOIN posts p ON (pt.pid = p.id) WHERE p.thread=$id ORDER BY pt.pid ASC LIMIT 1");
+		}
 		$text = strip_tags(str_replace(array("[", "]", "\r\n"), array("<", ">", " "), $text));
 		$text = ((strlen($text) > 160) ? substr($text, 0, 157) . "..." : $text);
 		$text = str_replace("\"", "&quot;", $text);
