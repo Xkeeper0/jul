@@ -333,6 +333,7 @@ function timeunits($sec){
 }
 
 function timeunits2($sec){
+	if (floor($sec) === 0) { return "0 sec."; }
 	$d = floor($sec/86400);
 	$h = floor($sec/3600)%24;
 	$m = floor($sec/60)%60;
