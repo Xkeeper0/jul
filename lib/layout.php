@@ -57,6 +57,7 @@
 	$radio='<input type=radio class=radio name';
 	$txta='<textarea wrap=virtual name';
 	$tblstart='<table class="table" cellspacing=0>';
+	$tblstartf='<table class="table table-fixed" cellspacing=0>';
 	$tblend='</table>';
 	$sepn=array('Dashes','Line','Full horizontal line','None');
 	$sep=array('<br><br>--------------------<br>',
@@ -442,9 +443,6 @@
 	function makeheader($header1,$headlinks,$header2) {
 		global $loguser, $PHP_SELF;
 		$header	= $header1.$headlinks.$header2;
-		if (!$loguser['id'] && strpos($PHP_SELF, "index.php") === false) {
-			$header .= adbox() ."<br>";
-		}
 		return $header;
 	}
 
@@ -502,7 +500,7 @@
 	$header=makeheader($header1,$headlinks,$header2);
 
 	$footer="	</textarea></form></embed></noembed></noscript></noembed></embed></table></table>
-<br>". 	($loguser['id'] && strpos($PHP_SELF, "index.php") === false ? adbox() ."<br>" : "") ."
+<br>
 <center>
 
 <!--

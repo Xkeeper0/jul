@@ -279,10 +279,7 @@
 	}
 
 		print "$tblend<br>$privatebox
-
-		". adbox() ."<br>
-
 		$tblstart$forumlist$tblend$footer";
 		printtimedif($startingtime);
 	}
-?>
+	
