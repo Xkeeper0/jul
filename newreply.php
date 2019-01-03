@@ -1,189 +1,115 @@
 <?php
-	// die("Disabled.");
+
 	require 'lib/function.php';
 	$thread=$sql->fetchq("SELECT forum, closed, sticky,title,lastposter FROM threads WHERE id=$id");
 
 	// Stop this insanity.  Never index newreply.
 	$meta['noindex'] = true;
 
+	// Give failed replies a last-chance to copy and save their work,
+	// as way too often you'll miss and then it's just gone forever
+	$lastchance		= null;
+	$redirectTime	= 3;
+	if (v($_POST['message']) !== null) {
+		$lastchance		= "<br><br>You can copy and save what you were <em>going</em> to post, if you want:
+		<br><textarea class='newposttextbox' style='margin: 1em auto;'>". htmlspecialchars(stripslashes($_POST['message']), ENT_QUOTES) ."</textarea>";
+		$redirectTime	= -1;
+	}
+
 	if (!$thread) {
 		require_once 'lib/layout.php';
-		print "
-			$header<br>$tblstart
-			$tccell1>Nice try. Next time, wait until someone makes the thread <i>before</i> trying to reply to it.<br>".redirect("index.php", 'return to the index page', 0)."
-			$tblend$footer
-		";
-		printtimedif($startingtime);
-		die();
+		boardmessage("You can't reply to threads that don't exist!<br>". redirect("index.php", "the forum index", $redirectTime) . $lastchance, "Error");
 	}
 
-	$forumid=intval($thread['forum']);
-	$forum=$sql->fetchq("SELECT title,minpower,minpowerreply,id,specialscheme FROM forums WHERE id=$forumid");
+	$forumid			=intval($thread['forum']);
+	$forum				=$sql->fetchq("SELECT title,minpower,minpowerreply,id,specialscheme FROM forums WHERE id=$forumid");
+
 	if ($forum['minpower'] && $power < $forum['minpower']) {
-		$forum['title'] = '';
-		$thread['title'] = '(restricted thread)';
+		require_once 'lib/layout.php';
+		boardmessage("You aren't allowed to view this thread.<br>". redirect("index.php", "the forum index", $redirectTime) . $lastchance, "Error");
 	}
-	$specialscheme = $forum['specialscheme'];
-	$windowtitle="$boardname -- $forum[title]: $thread[title] -- New Reply";
 
-	$thread['title']=str_replace('<','&lt;',$thread['title']);
+	$specialscheme		= $forum['specialscheme'];
+	$windowtitle		= "$boardname -- $forum[title]: $thread[title] -- New reply";
+
+	$thread['title']	= str_replace('<','&lt;',$thread['title']);
 
 	require_once 'lib/layout.php';
 
 
-	$smilies=readsmilies();
-	if(!filter_int($ppp)) $ppp=(!$log?20:$loguser['postsperpage']);
-	$fonline=fonlineusers($forumid);
-	$header=makeheader($header1,$headlinks,$header2 ."	$tblstart$tccell1s>$fonline$tblend");
+	// Do access checks. Can't post while banned...
+	if ($power < $forum['minpowerreply'] || $banned) {
+		boardmessage("You aren't allowed to reply to this thread.<br>". redirect("thread.php?id=$id", "the thread", $redirectTime) . $lastchance, "Error");
+	}
 
-	if(mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'"))) $ismod=1;
+	// ...or in a closed thread
+	if ($thread['closed']) {
+		boardmessage("You can't reply to this thread because it is closed.<br>". redirect("thread.php?id=$id", "the thread", $redirectTime) . $lastchance, "Error");
+	}
 
+
+	// Check if we are a global moderator, or a local mod of this forum
 	$modoptions	= "";
+	if ($ismod || mysql_num_rows($sql->query("SELECT user FROM forummods WHERE forum='$forumid' and user='$loguserid'"))) {
+		$ismod	= 1;
 
-	if ($ismod) {
-		if ($thread['sticky'] == 1) $sticky = "checked";
-		$modoptions = "	<tr>$tccell1><b>Moderator Options:</b></td>$tccell2l colspan=2>
-		$inpc=\"close\" id=\"close\" value=\"1\"><label for=\"close\">Close</label> -
-		$inpc=\"stick\" id=\"stick\" value=\"1\" $sticky><label for=\"stick\">Sticky</label>";
-	}
-
-	if ($forum['minpowerreply'] > $power && $forum['minpowerreply'] > 0)
-		$restricted		= true;
-
-	$header	= "$header
-		$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]<form action=newreply.php name=replier method=post autocomplete=\"off\"> $tblstart";
-
-	// Post preview
-	if (($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
-		$postlist="<tr>$tccellh colspan=2 style=\"font-weight:bold;\">Thread history</tr><tr>$tccellh width=150>User</td>$tccellh width=*>Post</tr>";
-		$qppp = $ppp + 1;
-		$posts=$sql->query("SELECT name,posts,sex,powerlevel,user,text,options,num FROM users u,posts p,posts_text WHERE thread=$id AND p.id=pid AND user=u.id ORDER BY p.id DESC LIMIT $qppp");
-		$i = 0;
-
-		while($post=$sql->fetch($posts)){
-			$bg = ((($i++) & 1) ? 'tdbg2' : 'tdbg1');
-			if ($ppp-- > 0){
-				$postnum=($post['num']?"$post[num]/":'');
-				$tcellbg="<td class='tbl $bg font' valign=top>";
-				$namecolor=getnamecolor($post['sex'],$post['powerlevel']);
-				$postlist.="<tr>
-					$tcellbg<a href=profile.php?id=$post[user]><font $namecolor>$post[name]</font></a>$smallfont<br>
-					Posts: $postnum$post[posts]</td>
-					$tcellbg".doreplace2(dofilters($post['text']), $post['options'])."</tr>
-				";
-			}
-			else{
-				$tcellbg="<td bgcolor=$tablebg1 valign=top colspan=2";
-				$postlist.="<tr>$tccellh colspan=2>This is a long thread. Click <a href=thread.php?id=$id>here</a> to view it.</td></tr>";
-			}
-		}
-	}
-
-	if(!filter_string($_POST['action']) && !$thread['closed'] && !($banned && $log)
-		&& ($power>=$forum['minpowerreply'] || $forum['minpowerreply']<1) && $id>0) {
-		print $header;
-		print "";
-
-		if ($log) {
-			$username=$loguser['name'];
-			$passhint = 'Alternate Login:';
-			$altloginjs = "<a href=\"#\" onclick=\"document.getElementById('altlogin').style.cssText=''; this.style.cssText='display:none'\">Use an alternate login</a>
-				<span id=\"altlogin\" style=\"display:none\">";
-		}
-		else {
-			$username = '';
-			$passhint = 'Login Info:';
-			$altloginjs = "<span>";
-		}
-
-		$quotemsg	= "";
-		if(filter_int($postid)){
-			$post=$sql->fetchq("SELECT user,text,thread FROM posts,posts_text WHERE id=$postid AND id=pid");
-			$post['text']=str_replace('<br>',$br,$post['text']);
-			$u=$post['user'];
-			$users[$u]=loaduser($u,1);
-			if($post['thread']==$id) $quotemsg="[quote={$users[$u]['name']}]{$post['text']}[/quote]\r\n";
-		}
-
-		print "
-			<body>
-			$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
-			$tccell1><b>{$passhint}</td> $tccell2l colspan=2>
-			{$altloginjs}
-			<b>Username:</b> $inpt=username VALUE=\"".htmlspecialchars($username)."\" SIZE=25 MAXLENGTH=25 autocomplete=\"off\">
-
-			<!-- Hack around autocomplete, fake inputs (don't use these in the file) -->
-			<input style=\"display:none;\" type=\"text\"     name=\"__f__usernm__\">
-			<input style=\"display:none;\" type=\"password\" name=\"__f__passwd__\">
-
-			<b>Password:</b> $inpp=password SIZE=13 MAXLENGTH=64 autocomplete=\"off\">
-			</span><tr>
-			$tccell1><b>Reply:</td>
-			$tccell2l width=800px valign=top>
-			$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($quotemsg, ENT_QUOTES) ."</TEXTAREA></td>
-		$tccell2l width=*>".moodlist(filter_int($moodid))."</td><tr>
-		<tr>
-			$tccell1>&nbsp</td>$tccell2l colspan=2>
-			$inph=action VALUE=postreply>
-			$inph=id VALUE=$id>
-			$inph=valid value=\"". md5($_SERVER['REMOTE_ADDR'] . $id ."sillysaltstring") ."\">
-			$inps=submit VALUE=\"Submit reply\">
-			$inps=preview VALUE=\"Preview reply\"></td>
-		<tr>$tccell1><b>Options:</b></td>$tccell2l colspan=2>
-			$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\"><label for=\"nosmilies\">Disable Smilies</label> -
-			$inpc=\"nolayout\" id=\"nolayout\" value=\"1\"><label for=\"nolayout\">Disable Layout</label> -
-			$inpc=\"nohtml\" id=\"nohtml\" value=\"1\"><label for=\"nohtml\">Disable HTML</label></td></tr>
-			$modoptions
-			$tblend
-			<br>
-			$tblstart$postlist$tblend
-		</table>
-			</form>
-		$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - $thread[title]";
-	} elseif(!$_POST['action']) {
-		print $header;
-		print "$tccell1>You are not allowed to post in this thread.
-		<br>".redirect("index.php", 'return to the index page', 0)."</table>";
+		$modoptions = "
+			<tr>
+				$tccell1><strong>Moderator Options:</strong></td>
+				$tccell2l>
+					$inpc='close' id='close' value='1'><label for='close'>Close</label> -
+					$inpc='stick' id='stick' value='1'". ($thread['sticky'] ? "checked" : "") ."><label for='stick'>Sticky</label>
+				</td>
+			</tr>";
 	}
 
 
-	if ($_POST['action'] == 'postreply' && !($banned && $log) && $id > 0) {
-		if ($log && !$password)
+	if(!filter_int($ppp)) $ppp=(!$log?20:$loguser['postsperpage']);
+	$smilies	= readsmilies();
+	$fonline	= fonlineusers($forumid);
+	$header		= makeheader($header1,$headlinks,$header2 ."\t$tblstart$tccell1s>$fonline$tblend");
+	$breadcrumb	= "<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>$forum[title]</a> - <a href='thread.php?id=$id'>$thread[title]</a> - New Reply";
+
+	$header		.= "$fonttag$breadcrumb";
+
+
+	// Show the new reply form?
+	$showform	= true;
+	$usererror	= "";
+	$preview	= "";
+
+	if (v($_POST['action']) == 'postreply') {
+
+		if ($log)
 			$userid = $loguserid;
 		else
-			$userid = checkuser($username,$password);
+			$userid = checkuser($_POST['username'], $_POST['password']);
 
-
-		$error='';
-
-		if ($userid == -1) {
-			$error	= "Either you didn't enter an existing username, or you haven't entered the right password for the username.";
+		if ($userid == -1 || $userid == 0) {
+			$usererror	= " <strong style='color: red;'>* Invalid username or password.</strong>";
 		} else {
 			$user	= @$sql->fetchq("SELECT * FROM users WHERE id='$userid'");
-			if ($thread['closed'])
-				$error	= 'The thread is closed and no more replies can be posted.';
-			if ($user['powerlevel']<$forum['minpowerreply'])
-				$error	= 'Replying in this forum is restricted, and you are not allowed to post in this forum.';
-			if (!$message)
-				$error	= "You didn't enter anything in the post.";
+			if (!$user) {
+				boardmessage("Something went really weird? Contact an admin: Userid $userid but no user??", "This shouldn't happen");
+			}
 		}
 
-		if (!$error) {
+		if ($user) {
 
-			$sign	= $user['signature'];
-			$head	= $user['postheader'];
-			// @TODO: Remove this code
-			if($user['postbg']) $head="<div style=background:url($user[postbg]);height=100%>$head";
+			$sign			= $user['signature'];
+			$head			= $user['postheader'];
 
-			$numposts		= $user['posts']+ 1;
+			$numposts		= $user['posts'] + 1;
 
-			$numdays		= (ctime()-$user['regdate'])/86400;
+			$numdays		= (ctime() - $user['regdate']) / 86400;
 			$tags			= array();
-			$message		= doreplace($message,$numposts,$numdays,$username, $tags);
+			$message		= doreplace($message, $numposts, $numdays, $username, $tags);
 			$tagval			= $sql->escape(json_encode($tags));
-			$rsign			= doreplace($sign,$numposts,$numdays,$username);
-			$rhead			= doreplace($head,$numposts,$numdays,$username);
+			$rsign			= doreplace($sign, $numposts, $numdays, $username);
+			$rhead			= doreplace($head, $numposts, $numdays, $username);
 			$currenttime	= ctime();
+
+			// Submitting a post
 			if (filter_string($_POST['submit'])) {
 
 				$sql->query("UPDATE `users` SET `posts` = $numposts, `lastposttime` = '$currenttime' WHERE `id` = '$userid'");
@@ -231,7 +157,7 @@
 				return header("Location: thread.php?pid=$pid#$pid");
 
 
-
+			// Previewing a post
 			} else {
 
 				loadtlayout();
@@ -255,57 +181,125 @@
 				$ppost['text']		= $message;
 				$ppost['options']	= filter_int($nosmilies) . "|" . filter_int($nohtml);
 
-				if($isadmin) $ip=$userip;
+				$ip					= "";
 
-				$chks = array("", "", "");
-				if ($nosmilies) $chks[0] = "checked";
-				if ($nolayout)  $chks[1] = "checked";
-				if ($nohtml)    $chks[2] = "checked";
-
-				print "$header
-				<body onload=window.document.REPLIER.message.focus()>
-				$tccellh>Post preview
-				$tblend$tblstart
-				".threadpost($ppost,1)."
-				$tblend<br>$tblstart
-				<FORM ACTION=newreply.php NAME=REPLIER METHOD=POST>
-				$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
-				$tccell1><b>Reply:</td>
-				$tccell2l width=800px valign=top>$txta=message ROWS=21 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($message, ENT_QUOTES) ."</TEXTAREA></td>
-				$tccell2l width=*>".moodlist($moodid)."</td><tr>
-				$tccell1>&nbsp</td>$tccell2l colspan=2>
-				$inps=submit VALUE=\"Submit reply\">
-				$inps=preview VALUE=\"Preview reply\"></td>
-				$inph=username VALUE=\"".htmlspecialchars($username)."\">
-				$inph=password VALUE=\"".htmlspecialchars($password)."\">
-				$inph=valid value=\"". md5($_SERVER['REMOTE_ADDR'] . $id ."sillysaltstring") ."\">
-				$inph=action VALUE=postreply>
-				$inph=id VALUE=$id>
-				<tr>$tccell1><b>Options:</b></td>$tccell2l colspan=2>
-				$inpc=\"nosmilies\" id=\"nosmilies\" value=\"1\" $chks[0]><label for=\"nosmilies\">Disable Smilies</label> -
-				$inpc=\"nolayout\" id=\"nolayout\" value=\"1\" $chks[1]><label for=\"nolayout\">Disable Layout</label> -
-				$inpc=\"nohtml\" id=\"nohtml\" value=\"1\" $chks[2]><label for=\"nohtml\">Disable HTML</label></td></tr>
-				$modoptions
+				$preview			= "
+				$tblstart
+				<tr>$tccellh><strong>Post preview</strong></td></tr>
 				$tblend
-				</FORM>
-				$tblstart$postlist$tblend
-				</td></FORM>
-				";
+				".threadpost($ppost,1)."
+				<br>";
 			}
-		} else {
-			print "$header$tccell1>Couldn't enter the post. $error<br>".redirect("thread.php?id=$id", $thread['title'], 0);
 		}
+
 	}
 
-	if ($thread['closed']) {
+
+	// Totally new reply, with optional quote
+	if ($showform) {
+
+		$userlogin		= "";
+		if (!$log) {
+			$userlogin	= "
+			<tr>
+				$tccell1><strong>Username:</strong></td>
+				$tccell2l>$inpt='username' size='25' maxlength='25' value='". htmlspecialchars(v($_POST['username']), ENT_QUOTES) ."'> $usererror
+			</tr>
+			<tr>$tccell1><strong>Password:</strong></td>
+				$tccell2l>$inpp='password' size='25' maxlength='64' value='". htmlspecialchars(v($_POST['password']), ENT_QUOTES) ."'>
+			</tr>
+			";
+		}
+
+		$quotemsg	= "";
+		if (filter_int($postid)) {
+			$post			= $sql->fetchq("SELECT user,text,thread FROM posts,posts_text WHERE id=$postid AND id=pid");
+			$post['text']	= str_replace('<br>', $br, $post['text']);
+			$u				= $post['user'];
+			$users[$u]		= loaduser($u, 1);
+			if ($post['thread'] == $id) $quotemsg = "[quote={$users[$u]['name']}]{$post['text']}[/quote]\r\n";
+		}
+
+		$message	= $quotemsg . stripslashes(v($_POST['message']));
+
+		print "$header
+		$preview
+		<form action=newreply.php name=replier method=post>
+			$tblstartf
+				<colgroup>
+					<col style='width: 150px;'>
+					<col>
+				</colgroup>
+				<tr>
+					$tccellh colspan=2><strong>New reply</strong>
+				</tr>
+				$userlogin
+				<tr>
+					$tccell1 style='width: 150px; max-width: 150px;'><strong>Reply:</strong></td>
+					$tccell2l>$txta=message class='newposttextbox'>". htmlspecialchars($message, ENT_QUOTES) ."</TEXTAREA></td>
+				<tr>
+					$tccell1>&nbsp;</td>$tccell2l>
+					$inph=action VALUE=postreply>
+					$inph=id VALUE=$id>
+					$inph=valid value='". md5($_SERVER['REMOTE_ADDR'] . $id ."sillysaltstring") ."'>
+					$inps=submit VALUE='Submit reply'>
+					$inps=preview VALUE='Preview reply'></td>
+				</tr>
+				<tr>
+					$tccell1><strong>Mood avatar:</strong></td>
+					$tccell2l>". moodlist(filter_int($moodid)) ."</td>
+				</tr>
+				<tr>
+					$tccell1><strong>Options:</strong></td>
+					$tccell2l>
+						$inpc='nosmilies' id='nosmilies' value='1'". (v($_POST['nosmilies']) ? " checked" : "") ."><label for='nosmilies'>Disable Smilies</label> -
+						$inpc='nolayout' id='nolayout' value='1'". (v($_POST['nolayout']) ? " checked" : "") ."><label for='nolayout'>Disable Layout</label> -
+						$inpc='nohtml' id='nohtml' value='1'". (v($_POST['nohtml']) ? " checked" : "") ."><label for='nohtml'>Disable HTML</label>
+					</td>
+				</tr>
+				$modoptions
+			$tblend
+			</form>
+			";
+
+
+
+		// Thread history view (under the form)
+		// (originally had a check for power, but that's accounted for above)
+		if (true) {
+			$postlist="<tr>$tccellh colspan=2 style=\"font-weight:bold;\">Thread history</tr><tr>$tccellh width=150>User</td>$tccellh width=*>Post</tr>";
+			$qppp = $ppp + 1;
+			$posts=$sql->query("SELECT name,posts,sex,powerlevel,user,text,options,num FROM users u,posts p,posts_text WHERE thread=$id AND p.id=pid AND user=u.id ORDER BY p.id DESC LIMIT $qppp");
+			$i = 0;
+
+			while($post=$sql->fetch($posts)){
+				$bg = ((($i++) & 1) ? 'tdbg2' : 'tdbg1');
+				if ($ppp-- > 0){
+					$postnum=($post['num']?"$post[num]/":'');
+					$tcellbg="<td class='tbl $bg font' valign=top>";
+					$namecolor=getnamecolor($post['sex'],$post['powerlevel']);
+					$postlist.="<tr>
+						$tcellbg<a href=profile.php?id=$post[user]><font $namecolor>$post[name]</font></a>$smallfont<br>
+						Posts: $postnum$post[posts]</td>
+						$tcellbg".doreplace2(dofilters($post['text']), $post['options'])."</tr>
+					";
+				}
+				else{
+					$tcellbg="<td bgcolor=$tablebg1 valign=top colspan=2";
+					$postlist.="<tr>$tccellh colspan=2>This is a long thread. Click <a href=thread.php?id=$id>here</a> to view it.</td></tr>";
+				}
+			}
+		}
+
 		print "
-		$tccell1>Sorry, but this thread is closed, and no more replies can be posted in it.
-		<br>".redirect("thread.php?id=$id",$thread['title'],0);
-	} elseif($banned and $log) {
-		print "
-		$tccell1>Sorry, but you are banned from the board, and can not post.
-		<br>".redirect("thread.php?id=$id",$thread['title'],0);
+			$tblstart
+				$postlist
+			$tblend
+		$fonttag
+		$breadcrumb";
 	}
+
+
   print $footer;
   printtimedif($startingtime);
 

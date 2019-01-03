@@ -500,15 +500,7 @@
 	$header=makeheader($header1,$headlinks,$header2);
 
 	$footer="	</textarea></form></embed></noembed></noscript></noembed></embed></table></table>
-<br>
 <center>
-
-<!--
-<img src='adnonsense.php?m=d' title='generous donations to the first national bank of bad jokes and other dumb crap people post' style='margin-left: 44px;'><br>
-<img src='adnonsense.php' title='hotpod fund' style='margin: 0 22px;'><br>
-<img src='adnonsense.php?m=v' title='VPS slushie fund' style='margin-right: 44px;'>
--->
-<br>
 	$smallfont
 	<br><br><a href=$siteurl>$sitename</a>
 	<br>". filter_string($affiliatelinks) ."

@@ -268,6 +268,11 @@
 */
 
 
+function v(&$v, $d = null) {
+	$v	= isset($v) ? $v : $d;
+	return $v;
+}
+
 function filter_int(&$v) {
 	if (!isset($v)) {
 		return null;
@@ -950,9 +955,13 @@ function jspageexpand($start, $end) {
 }
 */
 
-function redirect($url,$msg,$delay){
-	if($delay<1) $delay=1;
-	return "You will now be redirected to <a href=$url>$msg</a>...<META HTTP-EQUIV=REFRESH CONTENT=$delay;URL=$url>";
+function redirect($url,$msg,$delay = 1){
+	if ($delay >= 0) {
+		return "You will now be redirected to <a href=$url>$msg</a>...<META HTTP-EQUIV=REFRESH CONTENT=". max(1, $delay) .";URL=$url>";
+	} else {
+		return "Go back to <a href=$url>$msg</a>.";
+
+	}
 }
 
 function postradar($userid){
@@ -1076,49 +1085,62 @@ function errorpage($text, $redir = '', $redirurl = '') {
 	die();
 }
 
+
+function boardmessage($text, $title = "Message") {
+	global $header,$tblstart,$tccellh,$tccell1,$tblend,$footer,$startingtime;
+
+	print "
+		$header
+		<br>
+		$tblstart
+			<tr>
+				$tccellh><strong>$title</strong></td>
+			</tr>
+			<tr>
+				$tccell1 style='padding: 1em 0;'>$text</td>
+			</tr>
+		$tblend
+		$footer
+	";
+
+	printtimedif($startingtime);
+	die();
+}
+
+
 function moodlist($sel = 0, $return = false) {
 	global $loguserid, $log, $loguser;
-	$sel		= floor($sel);
+	//$sel		= $sel;
 
-	$a	= array("None", "neutral", "angry", "tired/upset", "playful", "doom", "delight", "guru", "hope", "puzzled", "whatever", "hyperactive", "sadness", "bleh", "embarrassed", "amused", "afraid");
-	//if ($loguserid == 1) $a[99] = "special";
-	if ($return) return $a;
+	$moodlist	= array(
+			"(default)",
+			"neutral",
+			"angry",
+			"tired/upset",
+			"playful",
+			"doom",
+			"delight",
+			"guru",
+			"hope",
+			"puzzled",
+			"whatever",
+			"hyperactive",
+			"sadness",
+			"bleh",
+			"embarrassed",
+			"amused",
+			"afraid"
+		);
 
-	$c[$sel]	= " checked";
-	$ret		= "";
+	if ($return) return $moodlist;
 
-	if ($log && $loguser['moodurl'])
-		$ret = '
-			<script type="text/javascript">
-				function avatarpreview(uid,pic)
-				{
-					if (pic > 0)
-					{
-						var moodav="'.htmlspecialchars($loguser['moodurl']).'";
-						document.getElementById(\'prev\').src=moodav.replace("$", pic);
-					}
-					else
-					{
-						document.getElementById(\'prev\').src="images/_.gif";
-					}
-				}
-			</script>
-		';
+	$ret 		= "<select name='moodid'>\n";
 
-	$ret .= "<b>Mood avatar list:</b><br><table cellpadding=0 border=0 cellspacing=0><tr><td width=150px style='white-space:nowrap;'>";
-
-	foreach($a as $num => $name) {
-		$jsclick = (($log && $loguser['moodurl']) ? "onclick='avatarpreview($loguserid,$num)'" : "");
-		$ret .= "<input type='radio' name='moodid' value='$num'". filter_string($c[$num]) ." id='mood$num' tabindex='". (9000 + $num) ."' style=\"height: 12px;\" $jsclick>
-             <label for='mood$num' ". filter_string($c[$sel]) ." style=\"font-size: 12px;\">&nbsp;$num:&nbsp;$name</label><br>\r\n";
+	foreach($moodlist as $num => $name) {
+		$ret .= "\t<option value='$num'". ($sel === $num ? " selected" : "") .">$name</option>\n";
 	}
 
-	if (!$sel || !$log || !$loguser['moodurl'])
-		$startimg = 'images/_.gif';
-	else
-		$startimg = htmlspecialchars(str_replace('$', $sel, $loguser['moodurl']));
-
-	$ret .= "</td><td><img src=\"$startimg\" id=prev></td></table>";
+	$ret .= "</select>\n";
 	return $ret;
 }
 
@@ -1429,72 +1451,6 @@ function addslashes_array($data) {
 
 	}
 
-
-function adbox() {
-
-	// no longer needed. RIP
-	return "";
-
-	global $loguser, $bgcolor, $linkcolor;
-
-/*
-	$tagline	= array();
-	$tagline[]	= "Viewing this ad requires<br>ZSNES 1.42 or older!";
-	$tagline[]	= "Celebrating 5 years of<br>ripping off SMAS!";
-	$tagline[]	= "Now with 100% more<br>buggy custom sprites!";
-	$tagline[]	= "Try using AddMusic to give your hack<br>that 1999 homepage feel!";
-	$tagline[]	= "Pipe cutoff? In my SMW hack?<br>It's more likely than you think!";
-	$tagline[]	= "Just keep giving us your money!";
-	$tagline[]	= "Now with 97% more floating munchers!";
-	$tagline[]	= "Tip: If you can beat your level without<br>savestates, it's too easy!";
-	$tagline[]	= "Tip: Leave exits to level 0 for<br>easy access to that fun bonus game!";
-	$tagline[]	= "Now with 100% more Touhou fads!<br>It's like Jul, but three years behind!";
-	$tagline[]	= "Isn't as cool as this<br>witty subtitle!";
-	$tagline[]	= "Finally beta!";
-	$tagline[]	= "If this is blocking other text<br>try disabling AdBlock next time!";
-	$tagline[]	= "bsnes sucks!";
-	$tagline[]	= "Now in raspberry, papaya,<br>and roast beef flavors!";
-	$tagline[]	= "We &lt;3 terrible Japanese hacks!";
-	$tagline[]	= "573 crappy joke hacks and counting!";
-	$tagline[]	= "Don't forget your RATS tag!";
-	$tagline[]	= "Now with exclusive support for<br>127&frac12;Mbit SuperUltraFastHiDereROM!";
-	$tagline[]	= "More SMW sequels than you can<br>shake a dead horse at!";
-	$tagline[]	= "xkas v0.06 or bust!";
-	$tagline[]	= "SMWC is calling for your blood!";
-	$tagline[]	= "You can run,<br>but you can't hide!";
-	$tagline[]	= "Now with 157% more CSS3!";
-	$tagline[]	= "Stickers and cake don't mix!";
-	$tagline[]	= "Better than a 4-star crap cake<br>with garlic topping!";
-	$tagline[]	= "We need some IRC COPS!";
-
-	if (isset($_GET['lolol'])) {
-		$taglinec	= $_GET['lolol'] % count($tagline);
-		$taglinec	= $tagline[$taglinec];
-	}
-	else
-		$taglinec	= pick_any($tagline);
-*/
-
-	return "
-<center>
-<!-- Beginning of Project Wonderful ad code: -->
-<!-- Ad box ID: 48901 -->
-<script type=\"text/javascript\">
-<!--
-var pw_d=document;
-pw_d.projectwonderful_adbox_id = \"48901\";
-pw_d.projectwonderful_adbox_type = \"5\";
-pw_d.projectwonderful_foreground_color = \"#$linkcolor\";
-pw_d.projectwonderful_background_color = \"#$bgcolor\";
-//-->
-</script>
-<script type=\"text/javascript\" src=\"http://www.projectwonderful.com/ad_display.js\"></script>
-<noscript><map name=\"admap48901\" id=\"admap48901\"><area href=\"http://www.projectwonderful.com/out_nojs.php?r=0&amp;c=0&amp;id=48901&amp;type=5\" shape=\"rect\" coords=\"0,0,728,90\" title=\"\" alt=\"\" target=\"_blank\" /></map>
-<table cellpadding=\"0\" border=\"0\" cellspacing=\"0\" width=\"728\" bgcolor=\"#$bgcolor\"><tr><td><img src=\"http://www.projectwonderful.com/nojs.php?id=48901&amp;type=5\" width=\"728\" height=\"90\" usemap=\"#admap48901\" border=\"0\" alt=\"\" /></td></tr><tr><td bgcolor=\"\" colspan=\"1\"><center><a style=\"font-size:10px;color:#$linkcolor;text-decoration:none;line-height:1.2;font-weight:bold;font-family:Tahoma, verdana,arial,helvetica,sans-serif;text-transform: none;letter-spacing:normal;text-shadow:none;white-space:normal;word-spacing:normal;\" href=\"http://www.projectwonderful.com/advertisehere.php?id=48901&amp;type=5\" target=\"_blank\">Ads by Project Wonderful! Your ad could be right here, right now.</a></center></td></tr></table>
-</noscript>
-<!-- End of Project Wonderful ad code. -->
-</center>";
-}
 
 // for you-know-who's bullshit
 function gethttpheaders() {

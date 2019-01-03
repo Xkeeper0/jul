@@ -78,3 +78,18 @@ input[type=radio] { color: black; background: white; }
 .imgtag { max-width: 100%; }
 
 .post { position: relative; }
+
+textarea.newposttextbox {
+	 max-width: 100%;
+	 width: 800px;
+	 height: 20em;
+	 resize: both;
+}
+
+table.table-fixed {
+	table-layout: fixed;
+}
+
+input, select { vertical-align: middle; }
+
+img[src^="images/smilies/"] { vertical-align: middle; }
