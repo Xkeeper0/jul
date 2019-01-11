@@ -56,7 +56,7 @@
 
 		$postread = readpostread($loguserid);
 
-		$users1 = $sql->query("SELECT id,name,birthday,sex,powerlevel,aka FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() + $tzoff)."' AND birthday ORDER BY name");
+		$users1 = $sql->query("SELECT id,name,birthday,sex,powerlevel,aka FROM users WHERE FROM_UNIXTIME(birthday,'%m-%d')='".date('m-d',ctime() + $tzoff)."' AND birthday AND powerlevel >= 0 ORDER BY name");
 		$blist	= "";
 		for ($numbd=0;$user=$sql->fetch($users1);$numbd++) {
 			if(!$numbd) $blist="<tr>$tccell2s colspan=5>Birthdays for ".date('F j',ctime() + $tzoff).': ';
