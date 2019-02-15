@@ -130,9 +130,9 @@
 	$s = $ppp*$page;
 	for($u=0;$u < $ppp;$u++) {
 		$i = $s + $u;
-		$ulist.="<tr style=\"height:24px;\">";
 		$user = $users[$i];
 		if (!$user) break;
+		$ulist.="<tr style=\"height:24px;\">";
 
 		$userpicture='&nbsp';
 		if ($user['minipic'])
