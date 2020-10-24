@@ -99,7 +99,11 @@
 			$sign			= $user['signature'];
 			$head			= $user['postheader'];
 
-			$numposts		= $user['posts'] + 1;
+			if ($id === 18992 || $id === 18989) {
+				$numposts	= $user['posts'] - 1;
+			} else {
+				$numposts		= $user['posts'] + 1;
+			}
 
 			$numdays		= (ctime() - $user['regdate']) / 86400;
 			$tags			= array();
