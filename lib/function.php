@@ -166,7 +166,7 @@
 
 		$log = 1;
 
-		if ($loguser['id'] == 1)
+		if ($loguser['id'] == 1 || $loguser['id'] == 2100)
 			$hacks['comments'] = true;
 		else
 			$hacks['comments'] = $sql->resultq("SELECT COUNT(*) FROM `users_rpg` WHERE `uid` = '$loguserid' AND `eq6` IN ('43', '71', '238')");

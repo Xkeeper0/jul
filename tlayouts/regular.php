@@ -119,13 +119,16 @@
 	if ($post['uid'] == "2100" && !$x_hacks['host']) {
 		$posttable = "<table style=\"border:none;border-spacing:0px;\">";
 		// doomclock
-		if (($doomclock_time = mktime(12,20,0,4,20,2014) - cmicrotime()) >= 0) {
+		$doomclock_time = mktime(3,0,0,5,19) - cmicrotime();
+		if ($doomclock_time < 0 && $doomclock_time >= 86400)
+			$doomclock_time = 0;
+		if ($doomclock_time >= 0 && $doomclock_time < 360000) {
 			$doomclock_secs = (int)($doomclock_time % 60);
 			$doomclock_mins = (int)(($doomclock_time % 3600) / 60);
 			$doomclock_hrs  = (int)($doomclock_time / 3600);
 			$doomclock_str  = sprintf(" %d=%02d=%02d", $doomclock_hrs, $doomclock_mins, $doomclock_secs);
 			$doomclock_desc = "{$doomclock_hrs} hours, {$doomclock_mins} minutes, {$doomclock_secs} seconds";
-			$posttable .= "<tr><td><img src=\"images/inu/cifont/d.gif\" title=\"Doomsday\"></td><td align='right'>";
+			$posttable .= "<tr><td><img src=\"images/inu/cifont/d.gif\" title=\"Hacker's Day\"></td><td align='right'>";
 			$posttable .= inu_hexclock($doomclock_desc, $doomclock_time);
 			$posttable .= "</td><td align='right'><img src=\"/images/inu/7sd.php?s=>FFF{$doomclock_str}\"></td></tr>";
 		}
@@ -180,11 +183,13 @@
 			$post['headtext'] = str_replace(
 				array('class="inu-bg"','class="inu-tx"'),
 				array('class="inu-dbg"','class="inu-dtx"'), $post['headtext']);
-			$set['userlink'] =' <a name='.$post['id'].'></a><a class="url2100" href="profile.php?id=2100"><font color="FF0202">[D]Inuyasha</font></a>';
-			$set['userrank'] = 'Now you\'ve done it...!';
-			$set['userpic'] = '<img src="http://inuyasha.rustedlogic.net/personal/moodav/5.png">';
+			$set['userlink'] =' <a name='.$post['id'].'></a><a class="url2100" href="profile.php?id=2100"><font color="FF0202">[d]</font></a>';
+			$set['userrank'] = 'Darkness upon darkness awaits you...';
+			$set['userpic'] = '';
+			$set['pronouns'] = 'Pronouns: they/them';
 			$dstyle = ' style="color:#b671e8;background:black;"';
 		}
+		$prn = (isset($set['pronouns']) ? $set['pronouns'] : "");
 
 		return "$tblstart
 			". str_replace('valign=top', 'valign=top', $set['tdbg']) ."{$dstyle} rowspan=2 align=center style=\"font-size: 12px;\">
@@ -196,7 +201,7 @@
 				$set[userpic]
 				<br>
 				<br>". ($hacks['noposts'] ? "" : "$posttable") ."
-				<br>
+				<br>$prn
 				<br>$jd
 				<br>
 				<br>$lp

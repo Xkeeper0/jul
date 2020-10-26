@@ -89,9 +89,16 @@
 	twrite($fontB, 1, 8,0,'HP       /');
 	twrite($fontR, 3, 8,7,nlimiter($st['CHP']));
 	twrite($fontY, 9, 8,7,nlimiter($st['HP']));
-	twrite($fontB, 1, 9,0,'MP       /');
-	twrite($fontR, 3, 9,7,nlimiter($st['MP']));
-	twrite($fontY, 9, 9,7,nlimiter($st['MP']));
+
+	if ($class['name'] == 'Technomancer') {
+		twrite($fontB, 1, 9,0,'TP       %');
+		twrite($fontR, 3, 9,7,'100');
+	}
+	else {
+		twrite($fontB, 1, 9,0,'MP       /');
+		twrite($fontR, 3, 9,7,nlimiter($st['MP']));
+		twrite($fontY, 9, 9,7,nlimiter($st['MP']));
+	}
 
 	for($i=2;$i<9;$i++){
 		 twrite($fontB, 1,11+$i,0,"$stat[$i]");
