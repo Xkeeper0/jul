@@ -1484,7 +1484,7 @@ function printtimedif($timestart){
 	//print "<br>{$smallfont} Page rendered in {$tseconds} seconds.</font><br>";
 
 	print "<br>
-		{$smallfont}{$queries} database queries". (($cache > 0) ? ", {$cache} query cache hits" : "") .".</font>
+		{$queries} database queries". (($cache > 0) ? ", {$cache} query cache hits" : "") .".</font>
 		<table cellpadding=0 border=0 cellspacing=0 class='fonts'>
 			<tr><td align=right>Query execution time:&nbsp;</td><td>{$qseconds} seconds</td></tr>
 			<tr><td align=right>Script execution time:&nbsp;</td><td>{$sseconds} seconds</td></tr>

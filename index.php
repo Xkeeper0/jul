@@ -140,7 +140,7 @@
 	  print "$header
 		<br>
 		$tblstart
-		 $tccell1s><table width=100%><td class=fonts>$logmsg</td><td align=right class=fonts>$count[u] registered users<br>Latest registered user: $lastuserurl</table>
+		 $tccell1s><table width=100%><td>$logmsg</td><td align=right>$count[u] registered users<br>Latest registered user: $lastuserurl</table>
 		 $blist<tr>
 		$tccell2s>$count[t] threads and $count[p] posts in the board | $statsblip<tr>
 		 $tccell1s>$numonline user".($numonline!=1?'s':'')." currently online$onlineusers$guestcount
@@ -233,7 +233,7 @@
 			}
 
 			if ($m)
-				$modlist="$smallfont(moderated by: $modlist)</font>";
+				$modlist="(moderated by: $modlist)";
 
 			$namelink = getuserlink($forum, array('id'=>'uid'));
 			if($forum['numposts']){
@@ -282,4 +282,4 @@
 		$tblstart$forumlist$tblend$footer";
 		printtimedif($startingtime);
 	}
-	
+

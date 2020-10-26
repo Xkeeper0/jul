@@ -46,6 +46,8 @@
 	if($isadmin)
 		print '<br>Admin cruft: <a href=online.php'. ($sort ? '?sort=1&' : '?') ."time=$time>Sort by ".($sort == 'IP' ? 'date' : 'IP') ."</a>";
 
+	print "		</font>";
+
 	// Logged in users
 	$posters = $sql->query("SELECT id,posts,name,sex,powerlevel,aka,lastactivity,lastip,lastposttime,lasturl,birthday FROM users WHERE lastactivity>".(ctime()-$time).' ORDER BY '.($sort=='IP'&&$isadmin?'lastip':'lastactivity DESC'));
 
@@ -151,7 +153,7 @@
 			print "</td>$tccell1$marker>
 			<a href=ipsearch.php?ip=$guest[ip]>$guest[ip]</a>$smallfont
 			<br>[$ipban<a href=http://google.com/search?q=$guest[ip]>G</a>-<a href=http://en.wikipedia.org/wiki/User:$guest[ip]>W</a>-<a href=http://$guest[ip]/>H</a>]</a></font>";
-  
+
 		print "</tr>";
 	}
 

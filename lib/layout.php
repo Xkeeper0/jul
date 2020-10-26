@@ -95,17 +95,20 @@
 			a:hover		{	color: #$linkcolor4;	}
 			body {
 				color: #$textcolor;
-				font:13px $font;
+				font: 83% $font;
 				background: #$bgcolor$bgimage;
 
 			}
-			div.lastpost { font: 10px $font2 !important; white-space: nowrap; }
-			div.lastpost:first-line { font: 13px $font !important; }
+			table {
+				font-size: 100%;
+			}
+			div.lastpost { font: 80% $font2 !important; white-space: nowrap; }
+			div.lastpost:first-line { font: 120% $font !important; }
 			.sparkline { display: none; }
-			.font 	{font:13px $font}
-			.fonth	{font:13px $font;color:$tableheadtext}	/* is this even used? */
-			.fonts	{font:10px $font2}
-			.fontt	{font:10px $font3}
+			.font 	{font:100% $font}
+			.fonth	{font:100% $font;color:$tableheadtext}	/* is this even used? */
+			.fonts	{font:75% $font2}
+			.fontt	{font:75% $font3}
 			.tdbg1	{background:#$tablebg1}
 			.tdbg2	{background:#$tablebg2}
 			.tdbgc	{background:#$categorybg}
@@ -510,7 +513,6 @@
 			<img src=images/poweredbyacmlm.gif>
 		</td>
 		<td>
-			{$smallfont}
 			Acmlmboard - <a href='https://github.com/Xkeeper0/jul'>". (file_exists('version.txt') ? file_get_contents("version.txt") : shell_exec("git log --format='commit %h [%ad]' --date='short' -n 1")) ."</a>
 			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al.
 			</font>
