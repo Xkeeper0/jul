@@ -72,7 +72,7 @@
 			$header
 			Show:$smallfont
 			<br>Last <a href='?t=1800'>30 minutes</a> - <a href='?t=3600'>1 hour</a> - <a href='?t=18000'>5 hours</a> - <a href='?t=86400'>1 day</a>
-			<br>Most recent <a href='?p=20'>20 posts</a> - <a href='?p=50'>50 posts</a> - <a href='?p=100'>100 posts</a>
+			<br>Most recent <a href='?p=20'>20 posts</a> - <a href='?p=50'>50 posts</a> - <a href='?p=100'>100 posts</a></font>
 			<table class='table' cellspacing='0' name='latest'>
 				<tr>$tccellc colspan=6><b>Latest Posts</b></td></tr>
 				<tr>
