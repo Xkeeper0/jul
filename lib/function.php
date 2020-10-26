@@ -1240,7 +1240,6 @@ function dofilters($p){
 	$p=preg_replace("':spinnaz:'si", '<img src="images/smilies/spinnaz.gif">', $p);
 	$p=preg_replace("':trolldra:'si", '<img src="/images/trolldra.png">', $p);
 	$p=preg_replace("':reggie:'si",'<img src=http://xkeeper.net/img/reggieshrug.jpg title="REGGIE!">',$p);
-	$p=preg_replace("':specialed:'si",'<img src="images/smilies/eng00.png">',$p); // for backwards compatibility
 
 	$p=preg_replace("'zeon'si",'shit',$p);
 
