@@ -183,6 +183,8 @@
 	 $tccell2l>$seplist<tr>
 	 $tccell1><b>Color scheme / layout:$descbr You can select from a few color schemes here.</td>
 	 $tccell2l>$schlist<tr>
+	 $tccell1><b>Font size:$descbr Change the default font size of the forum.</td>
+	 $tccell2l>$inpt=fontsize VALUE=\"". ($loguser['fontsize'] ? $loguser['fontsize'] : 100) ."\" SIZE=5 MAXLENGTH=5>%</td><tr>
 
 	 $tccellh colspan='2'>&nbsp;</td><tr>
 	 $tccell1>&nbsp;</td>$tccell2l>
@@ -277,6 +279,7 @@
       `postbg` = '$postbg',
       `postheader` = '$postheader',
       `birthday` = '$birthday',
+      `fontsize` = ". (($_POST['fontsize'] || $_POST['fontsize'] == 100) ? intval($_POST['fontsize']) : "NULL") .",
       `scheme` = '$sscheme',
       `threadsperpage` = '$threadsperpage',
       `viewsig` = '$viewsig',

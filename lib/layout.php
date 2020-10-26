@@ -93,12 +93,17 @@
 			a:visited	{	color: #$linkcolor2;	}
 			a:active	{	color: #$linkcolor3;	}
 			a:hover		{	color: #$linkcolor4;	}
+			html { font-size: 83%; }
 			body {
 				color: #$textcolor;
-				font: 83% $font;
+				font-family: $font;
 				background: #$bgcolor$bgimage;
-
 			}
+
+			". ($loguser['fontsize'] ? "
+			body { font-size: $loguser[fontsize]%; }
+			" : "") ."
+
 			table {
 				font-size: 100%;
 			}
@@ -201,20 +206,20 @@
 		  border:	#$inputborder solid 1px;
 		  background:#000000;
 		  color:	#$formtextcolor;
-		  font:	10pt $font;}
+		  font:	100% $font;}
 		textarea:focus {
 		  border:	#$inputborder solid 1px;
 		  background:#000000;
 		  color:	#$formtextcolor;
-		  font:	10pt $font;}
+		  font:	100% $font;}
 		.radio{
 		  border:	none;
 		  background:none;
 		  color:	#$formtextcolor;
-		  font:	10pt $font;}
+		  font:	100% $font;}
 		.submit{
 		  border:	#$inputborder solid 2px;
-		  font:	10pt $font;}
+		  font:	100% $font;}
 		";
 	}
 

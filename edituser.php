@@ -157,6 +157,7 @@
 				$lft View signatures and post headers $rgt $vsig
 				$lft Thread layout                    $rgt $laylist
 				$lft Color scheme / layout            $rgt $schlist
+				$lft Font size                        $rgt $inpt=fontsize SIZE=5 MAXLENGTH=5 VALUE=$user[fontsize]>%
 
 				$lft &nbsp</td>$tccell2l>
 				$inph=action VALUE=saveprofile>
@@ -223,6 +224,7 @@
 		`minipic` = '$minipic',
 		`homepagename` = '$pagename',
 		`scheme` = '$sscheme',
+		`fontsize` = ". (($_POST['fontsize'] || $_POST['fontsize'] == 100) ? intval($_POST['fontsize']) : "NULL") .",
 		`threadsperpage` = '$threadsperpage',
 		`viewsig` = '$viewsig',
 		`layout` = '$tlayout',".
