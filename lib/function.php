@@ -21,6 +21,10 @@
 	require 'lib/config.php';
 	require 'lib/mysql.php';
 
+	if (isset($board_timezone)) {
+		date_default_timezone_set($board_timezone);
+	}
+
 	$sql	= new mysql;
 
 
@@ -596,8 +600,8 @@ function doforumlist($id){
 	return $forumlinks;
 }
 
-function ctime(){return time()+3*3600;}
-function cmicrotime(){return microtime(true)+3*3600;}
+function ctime(){return time(); } // +3*3600;}
+function cmicrotime(){return microtime(true); } // +3*3600;}
 
 function getrank($rankset,$title,$posts,$powl){
 	global $hacks, $sql;
