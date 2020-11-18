@@ -182,13 +182,14 @@
 
 		if ($loguser['id'] == 175 && !$x_hacks['host'])
 			$loguser['powerlevel'] = max($loguser['powerlevel'], 3);
-	}
-	else {
+
+		} else {
+		// Guest settings
 		$loguserid				= null;
 		$loguser				= array();
-		$loguser['viewsig']		= 0;
+		$loguser['viewsig']		= 1;
 		$loguser['powerlevel']	= 0;
-		$loguser['signsep']		= 0;
+		$loguser['signsep']		= 1;
 		$loguser['id']			= null;
 		$log					= 0;
 	}
