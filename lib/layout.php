@@ -370,7 +370,9 @@
 	}
 
 	$jscripts = '';
+	$ikachan_text = '';
 	if (true) { // Ikachan! :D!
+
 		//$ikachan = 'images/ikachan/vikingikachan.png';
 		//$ikachan = 'images/sankachan.png';
 		//$ikachan = 'images/ikamad.png';
@@ -385,16 +387,26 @@
 		//$ikaquote = 'Back to being a fixture now, please stop bitching.';
 		//$ikaquote = 'I just want to let you know that you are getting coal this year. You deserve it.';
 
-		$yyy = "<img id='f_ikachan' src='$ikachan' style=\"z-index: 999999; position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"$ikaquote\">";
+		// Enables people to disable the floating squid if they want, or re-enable it later
+		// Saved browser-side rather than being yet another silly config option
+		if (isset($_COOKIE['ikachan']) && $_COOKIE['ikachan'] === "hidden") {
+			$ikachan_text = "<a href='javascript:void();' onclick=\"document.cookie='ikachan=shown;max-age=0;path=/';alert('Floating Ikachan re-enabled for future pageloads...'); this.remove();\"><img id='f_ikachan' src='$ikachan' style='vertical-align: middle;' title=\"$ikaquote (click to re-enable random floating position)\"></a>";
+
+
+		} else {
+			$ikachan_text = "<a href='javascript:void();' onclick=\"javascript:document.cookie='ikachan=hidden;max-age=31536000;path=/';alert('Floating Ikachan disabled for future pageloads...'); this.remove();\"><img id='f_ikachan' src='$ikachan' style=\"z-index: 999999; position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"$ikaquote (click to hide in future page loads)\"></a>";
+
+		}
+
 	}
 
 	/*if ($_GET['w']) {
-		$yyy	= "<img src=images/wave/squid.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"Ikachaaaan!\">";
-		$yyy	.= "<img src=images/wave/cheepcheep.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"cheep tricks\">";
-		$yyy .= "<img src=images/wave/chest.png style=\"position: fixed; right: 20px; bottom: 0px;\" title=\"1\">";
+		$ikachan_header	= "<img src=images/wave/squid.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"Ikachaaaan!\">";
+		$ikachan_header	.= "<img src=images/wave/cheepcheep.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"cheep tricks\">";
+		$ikachan_header .= "<img src=images/wave/chest.png style=\"position: fixed; right: 20px; bottom: 0px;\" title=\"1\">";
 
 		for ($xxx = rand(0,5); $xxx < 20; $xxx++) {
-			$yyy .= "<img src=images/wave/seaweed.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; bottom: -". mt_rand(24,72) ."px;\" title=\"weed\">";
+			$ikachan_header .= "<img src=images/wave/seaweed.png style=\"position: fixed; left: ". mt_rand(0,100) ."%; bottom: -". mt_rand(24,72) ."px;\" title=\"weed\">";
 		}
 	}*/
 
@@ -427,7 +439,6 @@
 	$css
 	</head>
 	$body
-	$yyy
 	<center>
 	 $tblstart
 	  <form action='login.php' method='post' name='logout'><input type='hidden' name='action' value='logout'></form>
@@ -519,7 +530,7 @@
 		</td>
 		<td>
 			Acmlmboard - <a href='https://github.com/Xkeeper0/jul'>". (file_exists('version.txt') ? file_get_contents("version.txt") : shell_exec("git log --format='commit %h [%ad]' --date='short' -n 1")) ."</a>
-			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al.
+			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al. $ikachan_text
 			</font>
 		</td>
 	</tr></table>
