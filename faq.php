@@ -45,7 +45,7 @@
 			<li><strong>Don't be a jerk.</strong> If you don't have something constructive to say, <em>don't say it!</em>
 			<li><strong>No slurs, hate speech, or homo-/trans-phobia.</strong> If you can't respect your fellow posters, you aren't welcome here.
 			<li><strong>Post legibly</strong>. Keep it readable &mdash; you don't have to be perfect, but be understandable and don't post like this is an AOL chatroom.
-			<li><strong>Don't spam.</strong> Posting over and over without adding to a conversation is annoying. 
+			<li><strong>Don't spam.</strong> Posting over and over without adding to a conversation is annoying.
 			<li><strong>Don't get in fights.</strong> If you're having trouble with another user, contact an administrator.
 			<li><strong>No illegal content.</strong> Don't post stuff that would get you (or us) in legal trouble.
 		</ol>
@@ -170,6 +170,10 @@
 		  <tr>
 		    <td class='tbl tdbg2'>&amp;lvllen&amp;</td>
 		    <td class='tbl tdbg1'>EXP needed to go through your current level.</td>
+		  </tr>
+		  <tr>
+		    <td class='tbl tdbg2'>&amp;mood&amp;</td>
+		    <td class='tbl tdbg1'>Selected mood number for this post (default: 0)</td>
 		  </tr>
 		</table>
 		For an explanation of how the Level and EXP tags work, hover over the highlighted parts below. (The percentages are useful when creating 'EXP bars', as you can use them as a width value.)

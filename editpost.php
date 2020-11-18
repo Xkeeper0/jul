@@ -134,6 +134,7 @@
 				$ppost['signtext']=$sign;
 				$ppost['text']=$message;
 				$ppost['options']=$poptions;
+				$ppost['moodid']=$_POST['moodid'];
 
 				// Edited notice
 				$ppost['edited']   = $edited;
@@ -152,7 +153,7 @@
 					$tblend<br>$tblstart
 					$tccellh width=150>&nbsp</td>$tccellh colspan=2>&nbsp<tr>
 					$tccell1><b>Header:</td>	 $tccell2l width=800px valign=top>$txta=head ROWS=8 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($head) ."</textarea>
-					$tccell2l width=* rowspan=3>".moodlist($moodid)."</td><tr>
+					$tccell2l width=* rowspan=3>".moodlist($ppost['moodid'])."</td><tr>
 					$tccell1><b>Post:</td>		 $tccell2l width=800px valign=top>$txta=message ROWS=12 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($message) ."</textarea><tr>
 					$tccell1><b>Signature:</td>	 $tccell2l width=800px valign=top>$txta=sign ROWS=8 COLS=$numcols style=\"width: 100%; max-width: 800px; resize:vertical;\">". htmlspecialchars($sign) ."</textarea><tr>
 					$tccell1>&nbsp</td>$tccell2l colspan=2>

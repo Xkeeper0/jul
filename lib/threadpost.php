@@ -7,9 +7,9 @@
 		$set['bg']    = ${"tablebg$bg"};
 		$set['tdbg']  = "<td class='tbl font tdbg$bg' valign=top";
 
-    $linkclass = "url".$post['uid'];
-    $userlink = getuserlink($post, array('id'=>'uid'), $linkclass);
-    unset($postuser);
+		$linkclass = "url".$post['uid'];
+		$userlink = getuserlink($post, array('id'=>'uid'), $linkclass);
+		unset($postuser);
 
 		$set['userrank'] = getrank($post['useranks'],str_replace("<div", "<<z>idiot", $post['title']),$post['posts'],$post['powerlevel']);
 		$set['userlink'] = "<a name={$p}></a>{$userlink}";
@@ -37,7 +37,7 @@
 			$set['threadlink'] = "<a href=thread.php?id={$pthread['id']}>{$pthread['title']}</a>";
 		}
 
-		$post['text']=doreplace2($post['text'], $post['options']);
+		$post['text']=doreplace2($post['text'], $post['options'], $post['moodid']);
 
 		if (filter_int($post['editdate'])) {
 			$post['edited'] = " (last edited by {$post['edited']} at ".date($dateformat,$post['editdate']+$tzoff).")";
@@ -98,8 +98,8 @@
 			$post['headtext']=doreplace($post['headtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
 			$post['signtext']=doreplace($post['signtext'],$post['num'],($post['date']-$post['regdate'])/86400,$post['name']);
 		}
-		$post['headtext']=doreplace2($post['headtext']);
-		$post['signtext']=doreplace2($post['signtext']);
+		$post['headtext']=doreplace2($post['headtext'], null, $post['moodid']);
+		$post['signtext']=doreplace2($post['signtext'], null, $post['moodid']);
 		//	$post['text']=doreplace2($post['text'], $post['options']);
 		return $post;
 	}

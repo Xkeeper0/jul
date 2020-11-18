@@ -500,7 +500,9 @@ function escape_codeblock($text) {
 	return "<blockquote class='code'><hr><pre><code>". str_replace($list, $list2, $text[0]) ."</code></pre><hr></blockquote>";
 }
 
-function doreplace2($msg, $options='0|0'){
+function doreplace2($msg, $options = null, $mood = 0) {
+	// @TODO php7.4 or w/e null coalescing
+	if ($options === null) $options = '0|0';
 	// options will contain smiliesoff|htmloff
 	$options = explode("|", $options);
 	$smiliesoff = $options[0];
@@ -526,15 +528,19 @@ function doreplace2($msg, $options='0|0'){
 		}
 	}
 
-	$msg=str_replace('[red]',	'<font color=FFC0C0>',$msg);
-	$msg=str_replace('[green]',	'<font color=C0FFC0>',$msg);
-	$msg=str_replace('[blue]',	'<font color=C0C0FF>',$msg);
-	$msg=str_replace('[orange]','<font color=FFC080>',$msg);
-	$msg=str_replace('[yellow]','<font color=FFEE20>',$msg);
-	$msg=str_replace('[pink]',	'<font color=FFC0FF>',$msg);
-	$msg=str_replace('[white]',	'<font color=white>',$msg);
-	$msg=str_replace('[black]',	'<font color=0>'	,$msg);
-	$msg=str_replace('[/color]','</font>',$msg);
+	// &mood& pseudo-tag
+	$msg=str_replace('&mood&',	$mood, $msg);
+
+	$msg=str_replace('[red]',	'<span style="color: #ffc0c0;">', $msg);
+	$msg=str_replace('[green]',	'<span style="color: #c0ffc0;">', $msg);
+	$msg=str_replace('[blue]',	'<span style="color: #c0c0ff;">', $msg);
+	$msg=str_replace('[orange]','<span style="color: #ffc080;">', $msg);
+	$msg=str_replace('[yellow]','<span style="color: #ffee20;">', $msg);
+	$msg=str_replace('[pink]',	'<span style="color: #ffc0ff;">', $msg);
+	$msg=str_replace('[white]',	'<span style="color: white;">',   $msg);
+	$msg=str_replace('[black]',	'<span style="color: black;">',   $msg);
+	$msg=str_replace('[/color]','</span>', $msg);
+
 	$msg=preg_replace("'\[quote=(.*?)\]'si", '<blockquote><font class=fonts><i>Originally posted by \\1</i></font><hr>', $msg);
 	$msg=str_replace('[quote]','<blockquote><hr>',$msg);
 	$msg=str_replace('[/quote]','<hr></blockquote>',$msg);
@@ -1114,7 +1120,7 @@ function boardmessage($text, $title = "Message") {
 
 function moodlist($sel = 0, $return = false) {
 	global $loguserid, $log, $loguser;
-	//$sel		= $sel;
+	$sel		= intval($sel);
 
 	$moodlist	= array(
 			"(default)",
@@ -1141,7 +1147,7 @@ function moodlist($sel = 0, $return = false) {
 	$ret 		= "<select name='moodid'>\n";
 
 	foreach($moodlist as $num => $name) {
-		$ret .= "\t<option value='$num'". ($sel === $num ? " selected" : "") .">$name</option>\n";
+		$ret .= "\t<option value='$num'". ($sel === $num ? " selected" : "") .">$name ($num)</option>\n";
 	}
 
 	$ret .= "</select>\n";
