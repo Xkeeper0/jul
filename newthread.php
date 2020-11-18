@@ -117,11 +117,11 @@
 	");
 	if(!$_POST['action'] or $_POST['paction']) {
 		print "
-			$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
+			$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>".$forum['title']."</a>
 			<form action=newthread.php name=replier method=post autocomplete=\"off\">
 			$tblstart
 		";
-		if($log and $forums[$id][minpowerthread]>$power) {
+		if($log and $forums[$id]['minpowerthread']>$power) {
 			print "$tccell1>Sorry, but you are not allowed to post";
 			if($banned) print ", because you are banned from this board.<br>".redirect("forum.php?id=$id",'return to the forum',0);
 			else print ' in this restricted forum.<br>'.redirect('index.php','return to the board',0);
@@ -158,7 +158,7 @@
 			</table>
 			</table>
 			</form>
-			$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>".$forum[title]."</a>
+			$fonttag<a href=index.php>$boardname</a> - <a href=forum.php?id=$forumid>".$forum['title']."</a>
 			".replytoolbar(4);
 	}
 	if($_POST['action']=='postthread' and !$_POST['paction']) {
