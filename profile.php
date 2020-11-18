@@ -77,7 +77,6 @@
 		}
 	}
 
-	$aim=str_replace(" ","+",$user['aim']);
 	$schname=$sql->resultq("SELECT name FROM schemes WHERE id=$user[scheme]");
 	$numdays=(ctime()-$user['regdate'])/86400;
 
@@ -88,13 +87,6 @@
 
 	if ($user['picture']) $picture = "<img src=\"$user[picture]\">";
 	if ($user['moodurl']) $moodavatar = " | <a href='avatar.php?id=$id' class=\"popout\" target=\"_blank\">Preview mood avatar</a>";
-
-	$icqicon="<a href=http://wwp.icq.com/$user[icq]#pager><img src=http://wwp.icq.com/scripts/online.dll?icq=$user[icq]&img=5 border=0></a>";
-
-	if(!$user['icq']){
-		$user['icq']="";
-		$icqicon="";
-	}
 
 	$tccellha="<td bgcolor=$tableheadbg";
 	$tccellhb="><center>$fonthead";
@@ -132,8 +124,6 @@
 	else $projdate=" -- Projected date for $topposts posts: ".date($dateformat,$projdate+$tzoff);
 
 	if($user['minipic']) $minipic="<img src=\"". htmlspecialchars($user['minipic']) ."\" width=16 height=16 align=absmiddle> ";
-	$homepagename=$user['homepageurl'];
-	if($user['homepagename']) $homepagename="$user[homepagename]</a> - $user[homepageurl]";
 	if($user['postbg']) $postbg="<div style='background:url($user[postbg]);' height=100%>";
 
 	loadtlayout();
@@ -160,14 +150,74 @@
 			$tccell2s width=100%>".$items[$eq['eq'.$shop['id']]]['name']."&nbsp;</td>
 		";
 
-	/* extra munging for whatever reason */
-	$user['email'] = urlencode($user['email']);
-
 	// AKA
 	if ($user['aka'] && $user['aka'] != $user['name'])
 		$aka = "$tccell1l width=150><b>Also known as</td>			$tccell2l>$user[aka]<tr>";
 	else $aka='';
+	
+	// Contact information
+	
+	$contactinfo = '';
+	
+	if($user['aim']) {
+		$aim=str_replace(" ","+",$user['aim']);
+		$contactinfo .= "$tccell1l width=150><b>AIM screen name</td>		$tccell2l><a href='aim:goim?screenname=$aim'>$user[aim]</a>&nbsp;<tr>";
+	}
+	
+	if($user['icq']) {
+		$icqicon="<a href=http://wwp.icq.com/$user[icq]#pager><img src=http://wwp.icq.com/scripts/online.dll?icq=$user[icq]&img=5 border=0></a>";
+		$contactinfo .= "$tccell1l width=150><b>ICQ number</td>			$tccell2l>$user[icq] $icqicon&nbsp;<tr>";
+	}
+	
+	if($user['email']) {
+		$user['email'] = urlencode($user['email']);
+		$contactinfo .= "$tccell1l width=150><b>Email address</td>		$tccell2l><a href='mailto:$user[email]'>$user[email]</a>&nbsp;<tr>";
+	}
+	
+	if($user['homepageurl']) {
+		$homepagename=$user['homepageurl'];
+		if($user['homepagename']) $homepagename="$user[homepagename]</a> - $user[homepageurl]";
+		$contactinfo .= "$tccell1l width=150><b>Homepage</td>			$tccell2l><a href='$user[homepageurl]'>$homepagename</a>&nbsp;<tr>";
+	}
+	
+	if($contactinfo) $contactinfo = "
+<br>$tblstart
+	$tccellh colspan=2><center>Contact information<tr>
+	".$contactinfo."
+$tblend";
 
+	// Personal information
+	
+	$personalinfo = '';
+	
+	if($user['realname']) {
+		$personalinfo .= "$tccell1l width=150><b>Real name</td>			$tccell2l>$user[realname]&nbsp;<tr>";
+	}
+	
+	if($user['pronouns']) {
+		$personalinfo .= "$tccell1l width=150><b>Pronouns</td>			$tccell2l>". htmlspecialchars($user['pronouns']) ."&nbsp;<tr>";
+	}
+	
+	if($user['location']) {
+		$personalinfo .= "$tccell1l width=150><b>Location</td>			$tccell2l>$user[location]&nbsp;<tr>";
+	}
+	
+	if($user['birthday']) {
+		$personalinfo .= "$tccell1l width=150><b>Birthday</td>			$tccell2l>$birthday $age&nbsp;<tr>";
+	}
+	
+	if($user['bio']) {
+		$personalinfo .= "$tccell1l width=150><b>User bio</td>			$tccell2l>".dofilters(doreplace2(doreplace($user['bio'], $user['posts'], (ctime()-$user['regdate'])/86400, $user['name']))) ."&nbsp;<tr>";
+	}
+	
+	if($personalinfo) $personalinfo = "
+<br>$tblstart
+	$tccellh colspan=2><center>Personal information<tr>
+	".$personalinfo."
+$tblend";
+
+	// Do the profile
+	
   print "
 	$header
 	<div>$fonttag Profile for <b>$minipic<span style='color:#{$namecolor}'>$user[name]</span></b></div>
@@ -185,13 +235,7 @@ $tblstart
 	$tccell1l width=150><b>Last post</td>			$tccell2l>$lastpostdate$lastpostlink<tr>
 	$tccell1l width=150><b>Last activity</td>		$tccell2l>".date($dateformat,$user['lastactivity']+$tzoff)."$lastip<tr>
 $tblend
-<br>$tblstart
-	$tccellh colspan=2><center>Contact information<tr>
-	$tccell1l width=150><b>Email address</td>		$tccell2l><a href='mailto:$user[email]'>$user[email]</a>&nbsp;<tr>
-	$tccell1l width=150><b>Homepage</td>			$tccell2l><a href='$user[homepageurl]'>$homepagename</a>&nbsp;<tr>
-	$tccell1l width=150><b>ICQ number</td>			$tccell2l>$user[icq] $icqicon&nbsp;<tr>
-	$tccell1l width=150><b>AIM screen name</td>		$tccell2l><a href='aim:goim?screenname=$aim'>$user[aim]</a>&nbsp;<tr>
-$tblend
+$contactinfo
 <br>$tblstart
 	$tccellh colspan=2><center>User settings<tr>
 	$tccell1l width=150><b>Timezone offset</td>		$tccell2l>$tzoffset hours from the server, $tzoffrel hours from you (current time: $tzdate)<tr>
@@ -208,14 +252,7 @@ $tblend
 	$shoplist
 $tblend
 </td></table>
-<br>$tblstart
-	$tccellh colspan=2><center>Personal information<tr>
-	$tccell1l width=150><b>Real name</td>			$tccell2l>$user[realname]&nbsp;<tr>
-	$tccell1l width=150><b>Pronouns</td>			$tccell2l>". htmlspecialchars($user['pronouns']) ."&nbsp;<tr>
-	$tccell1l width=150><b>Location</td>			$tccell2l>$user[location]&nbsp;<tr>
-	$tccell1l width=150><b>Birthday</td>			$tccell2l>$birthday $age&nbsp;<tr>
-	$tccell1l width=150><b>User bio</td>			$tccell2l>". dofilters(doreplace2(doreplace($user['bio'], $user['posts'], (ctime()-$user['regdate'])/86400, $user['name']))) ."&nbsp;<tr>
-$tblend
+$personalinfo
 <br>$tblstart
 	$tccellh colspan=2><center>Sample post<tr>
 $tblend
