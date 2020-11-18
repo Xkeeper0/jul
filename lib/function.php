@@ -503,6 +503,8 @@ function escape_codeblock($text) {
 function doreplace2($msg, $options = null, $mood = 0) {
 	// @TODO php7.4 or w/e null coalescing
 	if ($options === null) $options = '0|0';
+	$mood = intval($mood);
+
 	// options will contain smiliesoff|htmloff
 	$options = explode("|", $options);
 	$smiliesoff = $options[0];
