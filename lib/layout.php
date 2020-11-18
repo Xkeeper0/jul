@@ -530,7 +530,7 @@
 		</td>
 		<td>
 			Acmlmboard - <a href='https://github.com/Xkeeper0/jul'>". (file_exists('version.txt') ? file_get_contents("version.txt") : shell_exec("git log --format='commit %h [%ad]' --date='short' -n 1")) ."</a>
-			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Inuyasha, et al. $ikachan_text
+			<br>&copy;2000-". date("Y") ." Acmlm, Xkeeper, Kaito Sinclare, et al. $ikachan_text
 			</font>
 		</td>
 	</tr></table>
