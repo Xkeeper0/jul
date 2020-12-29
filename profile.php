@@ -4,12 +4,6 @@
 	$windowtitle="$boardname -- Profile for $user[name]";
 	require 'lib/layout.php';
 
-//	if ($_GET['id'] == 1 && !$x_hacks['host']) {
-//		print "$header<br><center><img src='http://earthboundcentral.com/wp-content/uploads/2009/01/m3deletede.png'></center><br>$footer";
-//		printtimedif($startingtime);
-//		die();
-//	}
-
 	if (!$user) {
 		print "$header<br>$tblstart$tccell1>The specified user doesn't exist.$tblend$footer";
 		printtimedif($startingtime);

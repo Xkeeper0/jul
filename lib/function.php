@@ -88,10 +88,7 @@
 	}
 
 	if ($sql -> resultq("SELECT `disable` FROM `misc` WHERE 1")) {
-		if ($x_hacks['host'])
-			require "lib/downtime-bmf.php";
-		else
-			require "lib/downtime2.php";
+		require "lib/downtime2.php";
 
 		die("
 		<title>Damn</title>
@@ -180,10 +177,7 @@
 		if ($loguser['powerlevel'] >= 1)
 			$boardtitle .= $submessage;
 
-		if ($loguser['id'] == 175 && !$x_hacks['host'])
-			$loguser['powerlevel'] = max($loguser['powerlevel'], 3);
-
-		} else {
+	} else {
 		// Guest settings
 		$loguserid				= null;
 		$loguser				= array();
@@ -226,7 +220,7 @@
 	//$x_hacks['rainbownames'] = ($sql->resultq("SELECT MAX(`id`) % 100000 FROM `posts`")) <= 100;
 	$x_hacks['rainbownames'] = ($sql->resultq("SELECT `date` FROM `posts` WHERE (`id` % 100000) = 0 ORDER BY `id` DESC LIMIT 1") > ctime()-86400);
 
-	if (!$x_hacks['host'] && filter_int($_GET['namecolors'])) {
+	if (filter_int($_GET['namecolors'])) {
 		//$sql->query("UPDATE `users` SET `sex` = '255' WHERE `id` = 1");
 		//$sql->query("UPDATE `users` SET `name` = 'Ninetales', `powerlevel` = '3' WHERE `id` = 24 and `powerlevel` < 3");
 		//$sql->query("UPDATE `users` SET `sex` = '9' WHERE `id` = 1");
@@ -309,11 +303,7 @@ function filter_string(&$v) {
 
 function readsmilies(){
 	global $x_hacks;
-	if ($x_hacks['host']) {
-		$fpnt=fopen('smilies2.dat','r');
-	} else {
-		$fpnt=fopen('smilies.dat','r');
-	}
+	$fpnt=fopen('smilies.dat','r');
 	for ($i=0;$smil[$i]=fgetcsv($fpnt,300,',');$i++);
 	$r=fclose($fpnt);
 	return $smil;
@@ -819,8 +809,7 @@ function getnamecolor($sex, $powl, $prefix = true){
 	// RAINBOW MULTIPLIER
 	elseif ($x_hacks['rainbownames'] || $sex == 255) {
 		$stime=gettimeofday();
-		// slowed down 5x
-		$h = (($stime['usec']/25) % 600);
+		$h = (($stime['usec']) % 600);
 		if ($h<100) {
 			$r=255;
 			$g=155+$h;
@@ -1354,7 +1343,6 @@ function addslashes_array($data) {
 		}
 
 		global $x_hacks;
-		if ($x_hacks['host']) return;
 
 		if ($type == "user") {
 			if ($in['pmatch']) {
@@ -1513,18 +1501,21 @@ function printtimedif($timestart){
 	}
 	*/
 
-	if (!$x_hacks['host']) {
-		$pages	= array(
-			"/index.php",
-			"/thread.php",
-			"/forum.php",
-		);
-		$url = $_SERVER['REQUEST_URI'];
-		if (in_array(substr($url, 0, 14), $pages)) {
-			$sql->query("INSERT INTO `rendertimes` SET `page` = '". addslashes($url) ."', `time` = '". ctime() ."', `rendertime`  = '". $exectime ."'");
-			$sql->query("DELETE FROM `rendertimes` WHERE `time` < '". (ctime() - 86400 * 14) ."'");
-		}
+	// Logging of rendering times. Used back when DreamHost was being trash.
+	// Not that it ever stopped, but it hasn't really been an issue
+	/*
+	$pages	= array(
+		"/index.php",
+		"/thread.php",
+		"/forum.php",
+	);
+	$url = $_SERVER['REQUEST_URI'];
+	if (in_array(substr($url, 0, 14), $pages)) {
+		$sql->query("INSERT INTO `rendertimes` SET `page` = '". addslashes($url) ."', `time` = '". ctime() ."', `rendertime`  = '". $exectime ."'");
+		$sql->query("DELETE FROM `rendertimes` WHERE `time` < '". (ctime() - 86400 * 14) ."'");
 	}
+	*/
+
 }
 
 function ircerrors($type, $msg, $file, $line, $context) {

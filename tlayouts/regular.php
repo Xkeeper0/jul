@@ -80,7 +80,7 @@
 		// Large block of user-specific hacks follows //
 
 
-	if (false && $post['uid'] == 1 && !$x_hacks['host'] && true) {
+	if (false && $post['uid'] == 1 && true) {
 
 		global $numdir;
 		$numdir_	= $numdir;
@@ -116,7 +116,7 @@
 
 	// Inu's sidebar
 	// (moved up here for to display for everyone during doomclock mode!)
-	if ($post['uid'] == "2100" && !$x_hacks['host']) {
+	if ($post['uid'] == "2100") {
 		$posttable = "<table style=\"border:none;border-spacing:0px;\">";
 		// doomclock
 		$doomclock_time = mktime(3,0,0,5,19) - cmicrotime();
@@ -219,7 +219,7 @@
 	}
 	// End Inu's sidebar
 
-	if (($post['uid'] == 18) && !$x_hacks['host'] && $x_hacks['mmdeath'] >= 0 && !$_GET['test2']) {
+	if (($post['uid'] == 18) && $x_hacks['mmdeath'] >= 0 && !$_GET['test2']) {
 	return "
 	<table style=\"background: #f00 url('numgfx/red.gif');\" cellpadding=3 cellspacing=1>
 	$set[tdbg] style='background: #000;' rowspan=2>
@@ -243,7 +243,7 @@
 	}
 
   // Default layout
-	if (!(in_array($post['uid'], $sidebars) && !$x_hacks['host']) || $loguser['viewsig'] == 0) {
+	if (!(in_array($post['uid'], $sidebars)) || $loguser['viewsig'] == 0) {
 	return "
 	<div class='post'>
 	$tblstart
@@ -273,7 +273,7 @@
 	</div>";
 	}
 
-  elseif ($post['uid'] == "1" && !$x_hacks['host']) {
+  elseif ($post['uid'] == "1") {
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post['lastactivity']) ."<font color=#bbbbbb> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -302,7 +302,7 @@
 			</table><tr>
 			<td valign='top' id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
-	} elseif ($post['uid'] == "3" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "3") {
 		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) .'<font color=#bb0000> ago';
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
@@ -331,7 +331,7 @@
 // ************************************************************
 // SYAORAN COLIN
 // ************************************************************
-	} elseif ($post['uid'] == "45" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "45") {
 
 		$fcol1			= "#204080";
 		$fcol2			= "#3070a0";
@@ -365,7 +365,7 @@
 		";
 
 
-	} elseif ($post['uid'] == "47" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "47") {
 		$fcol1			= "#204080";
 		$fcol2			= "#3070a0";
 		$fcol3			= "#ffffff";
@@ -428,7 +428,7 @@
 // ************************************************************
 // SAKURA HIRYUU
 // ************************************************************
-	} elseif ($post['uid'] == "4xxxxxxxxxxx7" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "4xxxxxxxxxxx7") {
 
 		$fcol1			= "#802040";
 		$fcol2			= "#a07030";
@@ -465,7 +465,7 @@
 // ************************************************************
 // REAL HIRYUU
 // ************************************************************
-	} elseif ($post['uid'] == "92" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "92") {
 		$fcol1			= "#e2bbff";
 		$fcol2			= "#bb70dd";
 		$fcol3			= "#220033";
@@ -509,7 +509,7 @@
 			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
-	} elseif ($post['uid'] == "19" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "19") {
 		$fcol1			= "#bbbbeb";
 		$fcol2			= "#8888a8";
 		$fcol3			= "#080818 url('http://bloodstar.rustedlogic.net/layout/background.png')";
@@ -542,7 +542,7 @@
 			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
-	} elseif ($post['uid'] == "4" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "4") {
 		$fcol1			= "#9999cc";
 		$fcol2			= "#7777aa";
 		$fcol3			= "#000011";
@@ -574,7 +574,7 @@
 			$set[tdbg] style=\"padding: 0;\" id=\"post". $post['id'] ."\">$post[headtext]$post[text]$post[signtext]</td>$tblend</div>
 		";
 
-	} elseif ($post['uid'] == "387" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "387") {
 		if (!$x_hacks['rpgstats'][$post['uid']]) {
 			$css	= "<style> .a1{ height:100%; min-height: 286px; background:#000 url(http://acmlm.rustedlogic.net/etc/nismilly/bg.jpg) 50% 0% no-repeat; } div.a2{ height:100%; min-height: 286px; background:url(http://acmlm.rustedlogic.net/etc/nismilly/map.png) 50% 226px no-repeat; font:9px tahoma; color:#FD4; text-align:center; line-height:19px; } div.a2 img{ margin-top:-5px; border:0px; } div.a2 span{ color:#DEF; } </style>";
 			$x_hacks['rpgstats'][$post['uid']] == "lol";
@@ -606,7 +606,7 @@
 		";
 
 
-	} elseif ($post['uid'] == "89" && !$x_hacks['host']) {
+	} elseif ($post['uid'] == "89") {
 		$fcol1			= "#bbbbbb";
 		$fcol2			= "#555555";
 		$fcol3			= "#181818";
@@ -626,7 +626,7 @@
 		";
 
 
-	} elseif (($post['uid'] == "16" || $post['uid'] == "5") && !$x_hacks['host']) {
+	} elseif (($post['uid'] == "16" || $post['uid'] == "5")) {
 
 		// top bg #614735
 		// mid-bg #e1cfb6
@@ -746,7 +746,7 @@
 	}
 
 	// BlackRose/Lain's sidebar
-	elseif ($post['uid'] == 1090 && !$x_hacks['host']) {
+	elseif ($post['uid'] == 1090) {
 		$brltype = "catgirlredux2011";
 
 		static $brembedcss = false;

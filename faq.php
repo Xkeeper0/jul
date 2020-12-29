@@ -7,16 +7,6 @@
 
 	$topiclist	= "";
 	$faq		= "";
-  	if ($x_hacks['host']) {
-		print "$header<br>
-			$tblstart
-				<tr>$tccellh>FAQ and Rules</td></tr>
-				<tr>$tccell1l>Generally, this forum is for a small group of people that know each other well. You should probably think twice about registering if you don't know who the regulars are already.
-				</td></tr>
-			$tblend";
-
-	} else {
-
 
 	$faq	.= faqformat("aboot", "About Jul, the community", "
 		Jul itself is a community made up of people who predominantly like to just hang around friendlies and talk about whatever, though we also like games and occasionally anime/other things.
@@ -318,9 +308,6 @@
 
 		$faq
 		";
-
-
-	}
 
 		print "
 	<br><br>
