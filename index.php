@@ -181,6 +181,7 @@
 			f.title as ftitle,
 			t.forum as fid,
 			t.title as title,
+			u.id as user,
 			u.name as uname,
 			u.sex as usex,
 			u.powerlevel as upowerlevel
