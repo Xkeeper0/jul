@@ -33,10 +33,6 @@
 	require 'lib/function.php';
 	require 'lib/layout.php';
 
-	$sql->query("UPDATE `users` SET `name` = 'Xkeeper' WHERE `id` = 1"); # I'm hiding it here too as a 'last resort'. Remove this and I'll make that Z-line a month instead.
-	// You know me, I find it more fun to hide code to replace your name everywhere instead of altering the DB <3
-//	$sql->query("UPDATE `users` SET `sex` = '1' WHERE `id` = 2100");  // Me too <3 ~Ras
-
 	if ($x_hacks['smallbrowse'] == 1 and false) {
 		require 'mobile/index.php'; // alternate markup for mobile clients.
 	} else {
@@ -106,7 +102,7 @@
 		}
 
 		$lastuser = $sql->fetchq('SELECT id,name,sex,powerlevel,aka,birthday FROM users ORDER BY id DESC LIMIT 1');
-    $lastuserurl = getuserlink($lastuser);
+		$lastuserurl = getuserlink($lastuser);
 
 		$posts = $sql->fetchq('SELECT (SELECT COUNT( * ) FROM posts WHERE date>'.(ctime()-3600).') AS h, (SELECT COUNT( * ) FROM posts WHERE date>'.(ctime()-86400).') AS d');
 		$count = $sql->fetchq('SELECT (SELECT COUNT( * ) FROM users) AS u, (SELECT COUNT(*) FROM threads) as t, (SELECT COUNT(*) FROM posts) as p');
@@ -153,14 +149,14 @@
 			$pms = $sql->getresultsbykey("SELECT msgread, COUNT(*) num FROM pmsgs WHERE userto=$loguserid GROUP BY msgread", 'msgread', 'num');
 			$totalpms = intval($pms[0]+$pms[1]);
 
- 			if ($totalpms) {
+			if ($totalpms) {
 				if($pms[0]) $new = $statusicons['new'];
 
 				$pmsg = $sql->fetchq("SELECT date,u.id uid,name,sex,powerlevel,aka
 					FROM pmsgs p LEFT JOIN users u ON u.id=p.userfrom
 					WHERE userto=$loguserid". (($pms[0]) ? " AND msgread=0": "") ."
 					ORDER BY p.id DESC
-          LIMIT 1");
+					LIMIT 1");
 
 				$namelink = getuserlink($pmsg, array('id'=>'uid'));
 				$lastmsg = "Last ". (($pms[0]) ? "unread " : "") ."message from $namelink on ".date($dateformat,$pmsg['date']+$tzoff);
@@ -175,7 +171,54 @@
 
 		}
 
-  // Hopefully this version won't break horribly if breathed on wrong
+	// Display recent active threads
+	// Part of this was lifted from latestposts.php and tweaked to show threads instead of posts
+	$data	= $sql->query("
+		SELECT
+			t.id as id,
+			t.lastposter,
+			t.lastpostdate as date,
+			f.title as ftitle,
+			t.forum as fid,
+			t.title as title,
+			u.name as uname,
+			u.sex as usex,
+			u.powerlevel as upowerlevel
+		FROM `threads` t
+		LEFT JOIN `forums` f ON t.forum = f.id
+		LEFT JOIN `users` u ON t.lastposter = u.id
+		WHERE f.minpower <= '". $loguser['powerlevel'] ."' AND f.id <> 99 /* heh */
+		ORDER BY t.lastpostdate DESC
+		LIMIT 5
+		");
+
+	$recent_threads = "
+		$tblstart
+			<tr>
+			$tccellc colspan='4'><a href='latestposts.php'>Recently active threads</a>
+			</tr>
+			<tr>
+			$tccellh width='25%'>Forum
+			$tccellh width='45%'>Thread
+			$tccellh width='20%'>User
+			$tccellh width='10%'>Time
+			</tr>
+	";
+	while ($in = $sql->fetch($data, MYSQL_ASSOC)) {
+		$recent_threads .= "<tr>
+			$tccell2><a href='forum.php?id=". $in['fid'] ."'>". $in['ftitle'] ."</a></td>
+			$tccell1l>$newpost<a href='thread.php?id=". $in['id'] ."&end=1'>". $in['title'] ."</a></td>
+			$tccell1><a href='profile.php?id=". $in['user'] ."'><font ". getnamecolor($in['usex'], $in['upowerlevel']) .">". $in['uname'] ."</font></a></td>
+			$tccell2>". timeunits(ctime() - $in['date']) ."</td>
+			</tr>\n";
+
+	}
+
+	$recent_threads .= "
+		$tblend<br>";
+
+
+	// Hopefully this version won't break horribly if breathed on wrong
 	$forumlist="
 		<tr>
 			$tccellh>&nbsp;</td>
@@ -278,8 +321,15 @@
 		}
 	}
 
-		print "$tblend<br>$privatebox
-		$tblstart$forumlist$tblend$footer";
+		print "
+		$tblend
+		<br>$privatebox
+		$recent_threads
+		$tblstart
+		$forumlist
+		$tblend
+		$footer";
+
 		printtimedif($startingtime);
 	}
 
