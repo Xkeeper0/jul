@@ -243,6 +243,7 @@
 		$sql->query("UPDATE `users` SET `sex` = '22' WHERE `id` = 20"); #nicole
 		$sql->query("UPDATE `users` SET `sex` = '23' WHERE `id` = 50"); #Rena
 		$sql->query("UPDATE `users` SET `sex` = '24' WHERE `id` = 2069"); #Adelheid/Stark/etc.
+		$sql->query("UPDATE `users` SET `sex` = '25' WHERE `id` = 2889"); #Kak
 
 		$sql->query("UPDATE `users` SET `name` = 'Xkeeper' WHERE `id` = 1"); #Xkeeper. (Change this and I WILL Z-Line you from Badnik for a week.)
 
@@ -880,6 +881,8 @@ function getnamecolor($sex, $powl, $prefix = true){
 			$namecolor .= "77ECFF"; break;
 		case 24: // Adelheid
 			$namecolor .= "D2A6E1"; break;
+		case 25: // Kak
+			$namecolor .= "D8E8FE"; break;
 		case 41:
 			$namecolor .= "8a5231"; break;
 		case 42:
