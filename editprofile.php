@@ -214,6 +214,7 @@
       $sex=2;
 
 	$oldtitle	= "";
+	$title = stripslashes($title);
 	while ($oldtitle != $title) {
 		$oldtitle = $title;
 		$title=preg_replace("'<(b|i|u|s|small|br)>'si", '[\\1]', $title);
@@ -231,6 +232,8 @@
 		$title=preg_replace("'(face|style|class|size|id)=\'([^ ].*?)\''si", '', $title);
 		$title=preg_replace("'(face|style|class|size|id)=([^ ].*?)'si", '', $title);
 	}
+	$title = addslashes($title);
+	
 	$bio=preg_replace("'<iframe'si", '&lt;iframe', $bio);
     $bio=preg_replace("'<script'si", '&lt;script', $bio);
     $bio=preg_replace("'onload'si", 'o<z>nload', $bio);
