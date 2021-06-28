@@ -40,11 +40,14 @@
 
 				//if ($fails > 1)
 				@xk_ircsend("102|". xk(14) ."Failed attempt". xk(8) ." #$fails ". xk(14) ."to log in as ". xk(8) . $username . xk(14) ." by IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(14) .".");
+				report("mod", "Failed attempt **#$fails** to log in as **$username** by IP " . $_SERVER['REMOTE_ADDR'] . ".");
 
 				if ($fails >= 5) {
 					$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Send e-mail for password recovery'");
 					@xk_ircsend("102|". xk(7) ."Auto-IP banned ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." for this.");
+					report("mod", "Auto-IP banned " . $_SERVER['REMOTE_ADDR'] . "for this.");
 					@xk_ircsend("1|". xk(7) ."Auto-IP banned ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." for repeated failed logins.");
+					report("super", "Auto-IP banned " . $_SERVER['REMOTE_ADDR'] . "for repeated failed logins.");
 				}
 
 				$msg = "Couldn't login.  Either you didn't enter an existing username, or you haven't entered the right password for the username.";

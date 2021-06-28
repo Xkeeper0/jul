@@ -1335,6 +1335,17 @@ function addslashes_array($data) {
 	}
 }
 
+
+	function report($type, $msg) {
+		if (!function_exists('get_discord_webhook')) return;
+
+		$wh_url = get_discord_webhook($type, null); 
+
+		if (!$wh_url) return;
+
+		discord_send($wh_url, $outdiscord);
+	}
+
 	// general purpose report function, now with discord!
 	function xk_ircout($type, $user, $in) {
 
@@ -1377,8 +1388,8 @@ function addslashes_array($data) {
 
 		// logic to decide where the message goes based on info provided
 		if (!function_exists('get_discord_webhook')) return;
-		
-		$wh_url = get_discord_webhook($type, $user, $in); 
+
+		$wh_url = get_discord_webhook($type, $in); 
 
 		if (!$wh_url) return;
 
