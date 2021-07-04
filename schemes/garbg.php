@@ -25,7 +25,7 @@
 	$linkcolor4		= 'CCE8FF'; # Hover
 
 	$tableborder	= '000011'; # Border color for tables
-	$tableheadtext	= '002549'; # Table header text color
+	$tableheadtext	= 'bdd8f1'; # Table header text color
 	$tableheadbg	= '000921'; # Table header background (you can use images)
 	$categorybg		= '002864'; # Category BG
 	$tablebg1		= '001E4B'; # Table cell 1 background

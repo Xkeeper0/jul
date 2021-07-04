@@ -1336,6 +1336,17 @@ function addslashes_array($data) {
 }
 
 
+	function report($type, $msg) {
+		if (!function_exists('get_discord_webhook')) return;
+
+		$wh_url = get_discord_webhook($type, null); 
+
+		if (!$wh_url) return;
+
+		discord_send($wh_url, $outdiscord);
+	}
+
+	// general purpose report function, now with discord!
 	function xk_ircout($type, $user, $in) {
 
 		// gone
@@ -1357,18 +1368,33 @@ function addslashes_array($data) {
 				if		($in['pmatch'] >= 3) $color	= array(7, 4);
 				elseif	($in['pmatch'] >= 5) $color	= array(4, 5);
 				$extra	= " (". xk($color[1]) ."Password matches: ". xk($color[0]) . $in['pmatch'] . xk() .")";
+				$extradiscord	= " (**Password matches**: " . $in['pmatch'] . ")";
 			}
 
 			$out	= "1|New user: #". xk(12) . $in['id'] . xk(11) ." $user ". xk() ."(IP: ". xk(12) . $in['ip'] . xk() .")$extra: https://jul.rustedlogic.net/?u=". $in['id'];
+			$outdiscord = "New user: **#" . $in['id'] . "** (IP: " . $in['ip'] . ")$extra: <https://jul.rustedlogic.net/?u=" . $in['id'] . ">";
 
 		} else {
 //			global $sql;
 //			$res	= $sql -> resultq("SELECT COUNT(`id`) FROM `posts`");
 			$out	= "$dest|New $type by ". xk(11) . $user . xk() ." (". xk(12) . $in['forum'] .": ". xk(11) . $in['thread'] . xk() ."): https://jul.rustedlogic.net/?p=". $in['pid'];
+			$outdiscord = "New $type by **" . $user . "** (" . $in['forum'] . ": **" . $in['thread'] . "**): <https://jul.rustedlogic.net/?p=". $in['pid'] . ">";
 
 		}
 
 		xk_ircsend($out);
+		
+		// discord part
+
+		// logic to decide where the message goes based on info provided
+		if (!function_exists('get_discord_webhook')) return;
+
+		$wh_url = get_discord_webhook($type, $in); 
+
+		if (!$wh_url) return;
+
+		discord_send($wh_url, $outdiscord);
+
 	}
 
 	function xk_ircsend($str) {
@@ -1382,6 +1408,28 @@ function addslashes_array($data) {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3); // <---- HERE
 		curl_setopt($ch, CURLOPT_TIMEOUT, 5); // <---- HERE
 		$file_contents = curl_exec($ch);
+		curl_close($ch);
+
+		return true;
+	}
+
+	function discord_send($url, $msg) {
+		// stripped down from https://gist.github.com/Mo45/cb0813cb8a6ebcd6524f6a36d4f8862c
+		$json_data = json_encode([
+			"content" => $msg
+		], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$response = curl_exec($ch);
+		// echo $response;
 		curl_close($ch);
 
 		return true;
