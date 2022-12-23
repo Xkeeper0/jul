@@ -1262,6 +1262,10 @@ function dofilters($p){
 	$p=str_replace('<link href="http://pieguy1372.freeweb7.com/misc/piehills.css" rel="stylesheet">',"",$p);
 	$p=str_replace("tabindex=\"0\" ","title=\"the owner of this button is a fucking dumbass\" ",$p);
 
+	// Fix linkrot for Sanqui's old websites
+	$p=preg_replace("'http://sanky\.master\.sweb\.cz/'si",'https://sanqui.net/archive/sanky.master.sweb.cz/',$p);
+	$p=preg_replace("'http://sanqui\.sweb\.cz/'si",'https://sanqui.net/archive/sanqui.sweb.cz/',$p);
+
 //	$p=str_replace("http://xkeeper.shacknet.nu:5/", 'http://xchan.shacknet.nu:5/', $p);
 //	$p=preg_replace("'<style'si",'&lt;style',$p);
 
