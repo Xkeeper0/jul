@@ -17,7 +17,7 @@
 	}
 
 	// IE6 Guy Protection. IPv6 2A00:23C6:E782:EA01:0:0:0:0/64
-	if (strpos($_SERVER['REMOTE_HOST'], "btcentralplus.com") !== FALSE)) {
+	if (strpos($_SERVER['REMOTE_HOST'], "btcentralplus.com") !== FALSE) {
 		die("$tblstart<br>$tccell2>Due to abuse from transphobes with a fetish for IE6 (don't ask), this ISP has been disabled. If you are not Jamie Dignam/Termingamer2-JD/whatever you are calling yourself this week, please contact an administrator.$tblend$footer");
 	}
 
