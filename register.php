@@ -3,7 +3,7 @@
 	if ($_POST['action'] == "Register" && $_POST['homepage']) {
 		// If someone submits the form with the fake homepage field filled,
 		// just do nothing and send them off elsewhere to spam
-		header("Location: http://127.0.0.1");
+		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Spambot registration'");
 		die();
 	}
 
@@ -14,6 +14,11 @@
 
 	if ($adminconfig['registrationdisable']) {
 		die("$tblstart<br>$tccell2>Registration is disabled. Please contact an admin if you have any questions.$tblend$footer");
+	}
+
+	// IE6 Guy Protection. IPv6 2A00:23C6:E782:EA01:0:0:0:0/64
+	if (strpos($_SERVER['REMOTE_HOST'], "btcentralplus.com") !== FALSE)) {
+		die("$tblstart<br>$tccell2>Due to abuse from transphobes with a fetish for IE6 (don't ask), this ISP has been disabled. If you are not Jamie Dignam/Termingamer2-JD/whatever you are calling yourself this week, please contact an administrator.$tblend$footer");
 	}
 
 
