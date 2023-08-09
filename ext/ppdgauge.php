@@ -69,7 +69,7 @@
 					$cx	= ($i) / 25 * 255;
 					$cc	= imagecolorallocate($image, 255, $cx, 0);
 				} elseif ($i <= 49) {
-					$cx	= ($i - 75) / 25 * 127;
+					$cx	= ($i - 25) / 25 * 127;
 					$cc	= imagecolorallocate($image, 255 - $cx, 255 - $cx, $cx);
 				} elseif ($i <= 74) {
 					$cx	= ($i - 50) / 25 * 31;
