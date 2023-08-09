@@ -1260,6 +1260,8 @@ function dofilters($p){
 	//$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
 	$p=preg_replace("'http://.{0,3}\.?tinypic\.com'si",'tinyshit',$p);
 	$p=str_replace('<link href="http://pieguy1372.freeweb7.com/misc/piehills.css" rel="stylesheet">',"",$p);
+	$p=str_replace('yukina.io',"",$p);  // hiryuu's domain, dead, css lags
+	$p=str_replace('safiria.net',"",$p);
 	$p=str_replace("tabindex=\"0\" ","title=\"the owner of this button is a fucking dumbass\" ",$p);
 
 //	$p=str_replace("http://xkeeper.shacknet.nu:5/", 'http://xchan.shacknet.nu:5/', $p);
