@@ -112,6 +112,7 @@
 	$dateshort  = $defaultdateshort;
 
 	$loguser = array();
+	$hacks	= ['noposts' => false, 'comments' => false];
 
 	// Just making sure.  Don't use this anymore.
 	// (This is backup code to auto update passwords from cookies.)
@@ -174,8 +175,6 @@
 
 		if ($loguser['viewsig'] >= 3)
 			return header("Location: /?sec=1");
-		if ($loguser['powerlevel'] >= 1)
-			$boardtitle .= $submessage;
 
 	} else {
 		// Guest settings
@@ -785,7 +784,7 @@ function getuserlink(&$u, $substitutions = null, $urlclass = '') {
 	$u[$fn['name']] = htmlspecialchars($u[$fn['name']], ENT_QUOTES);
 
 	global $tzoff;
-	$birthday = (date('m-d', $u[$fn['birthday']]) == date('m-d',ctime() + $tzoff));
+	$birthday = ($u[$fn['birthday']] ?? null) && (date('m-d', $u[$fn['birthday']]) == date('m-d',ctime() + $tzoff));
 	$rsex = (($birthday) ? 255 : $u[$fn['sex']]);
 
 	$namecolor = getnamecolor($rsex, $u[$fn['powerlevel']], false);

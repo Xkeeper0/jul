@@ -144,17 +144,19 @@
 	  ";
 
 		// Displays total PMs along with unread unlike layout.php
-	  $new='&nbsp;';
+		$new = '&nbsp;';
 		if($log) {
 			$pms = $sql->getresultsbykey("SELECT msgread, COUNT(*) num FROM pmsgs WHERE userto=$loguserid GROUP BY msgread", 'msgread', 'num');
-			$totalpms = intval($pms[0]+$pms[1]);
+			$pms[0]		= intval($pms[0] ?? 0);		// unread
+			$pms[1]		= intval($pms[1] ?? 0);		// read
+			$totalpms = $pms[0] + $pms[1];
 
 			if ($totalpms) {
-				if($pms[0]) $new = $statusicons['new'];
+				if ($pms[0]) $new = $statusicons['new'];
 
 				$pmsg = $sql->fetchq("SELECT date,u.id uid,name,sex,powerlevel,aka
 					FROM pmsgs p LEFT JOIN users u ON u.id=p.userfrom
-					WHERE userto=$loguserid". (($pms[0]) ? " AND msgread=0": "") ."
+					WHERE userto=$loguserid". ($pms[0] ? " AND msgread=0": "") ."
 					ORDER BY p.id DESC
 					LIMIT 1");
 
@@ -291,7 +293,7 @@
 			$new='&nbsp;';
 
 			if ($forum['numposts']) {
-				if ($log && intval($forumnew[$forum['id']]) > 0) {
+				if ($log && intval($forumnew[$forum['id']] ?? 0) > 0) {
   	      $new = $statusicons['new'] ."<br>". generatenumbergfx(intval($forumnew[$forum['id']]));
 				}
 				elseif (!$log && $forum['lastpostdate']>ctime()-3600) {
