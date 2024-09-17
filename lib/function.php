@@ -246,7 +246,7 @@
 		// So I can switch between Schezo/Witch colors myself :D
 		$kakcol = filter_bool($_GET['witch_colors']) ? 96 : 25;
 		$sql->query("UPDATE `users` SET `sex` = '{$kakcol}' WHERE `id` = 2889"); #Kak
-		
+
 		$sql->query("UPDATE `users` SET `name` = 'Xkeeper' WHERE `id` = 1"); #Xkeeper. (Change this and I WILL Z-Line you from Badnik for a week.)
 
 	}
@@ -693,9 +693,9 @@ function checkuser($name,$pass){
 	if ($user['password'] !== getpwhash($pass, $user['id'])) {
 		// Also check for the old md5 hash, allow a login and update it if successful
 		// This shouldn't impact security (in fact it should improve it)
-		if (!$hacks['password_compatibility'])
+		if (!($hacks['password_compatibility'] ?? null)) {
 			return -1;
-		else {
+		} else {
 			if ($user['password'] === md5($pass)) { // Uncomment the lines below to update password hashes
 				$sql->query("UPDATE users SET `password` = '".getpwhash($pass, $user['id'])."' WHERE `id` = '$user[id]'");
 				xk_ircsend("102|".xk(3)."Password hash for ".xk(9).$name.xk(3)." (uid ".xk(9).$user['id'].xk(3).") has been automatically updated.");
@@ -1341,7 +1341,7 @@ function addslashes_array($data) {
 	function report($type, $msg) {
 		if (!function_exists('get_discord_webhook')) return;
 
-		$wh_url = get_discord_webhook($type, null); 
+		$wh_url = get_discord_webhook($type, null);
 
 		if (!$wh_url) return;
 
@@ -1385,13 +1385,13 @@ function addslashes_array($data) {
 		}
 
 		xk_ircsend($out);
-		
+
 		// discord part
 
 		// logic to decide where the message goes based on info provided
 		if (!function_exists('get_discord_webhook')) return;
 
-		$wh_url = get_discord_webhook($type, $in); 
+		$wh_url = get_discord_webhook($type, $in);
 
 		if (!$wh_url) return;
 
