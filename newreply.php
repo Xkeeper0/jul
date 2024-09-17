@@ -240,7 +240,7 @@
 				$userlogin
 				<tr>
 					$tccell1 style='width: 150px; max-width: 150px;'><strong>Reply:</strong></td>
-					$tccell2l>$txta=message class='newposttextbox'>". htmlspecialchars($message, ENT_QUOTES) ."</TEXTAREA></td>
+					$tccell2l>$txta=message class='newposttextbox' autofocus>". htmlspecialchars($message, ENT_QUOTES) ."</TEXTAREA></td>
 				<tr>
 					$tccell1>&nbsp;</td>$tccell2l>
 					$inph=action VALUE=postreply>

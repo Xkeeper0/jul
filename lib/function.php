@@ -591,6 +591,7 @@ function doforumlist($id){
 
 	$forum1= $sql->query("SELECT id,title,catid FROM forums WHERE (minpower<=$power OR minpower<=0) AND `hidden` = '0' AND `id` != '0' OR `id` = '$id' ORDER BY forder") or print mysql_error();
 	while($forum=$sql->fetch($forum1)) {
+		if (!isset($fjump[$forum['catid']])) $fjump[$forum['catid']] = "";
 		$fjump[$forum['catid']]	.="<option value=forum.php?id=$forum[id]".($forum['id']==$id?' selected':'').">$forum[title]</option>";
 	}
 
@@ -777,9 +778,12 @@ function getuserlink(&$u, $substitutions = null, $urlclass = '') {
 	if ($substitutions)
 		$fn = array_merge($fn, $substitutions);
 
-	$akafield = htmlspecialchars($u[$fn['aka']], ENT_QUOTES);
-	$alsoKnownAs = (($u[$fn['aka']] && $u[$fn['aka']] != $u[$fn['name']])
-		? " title='Also known as: {$akafield}'" : '');
+	$akafield = $alsoKnownAs = "";
+	if ($u[$fn['aka']] ?? false) {
+		$akafield = htmlspecialchars($u[$fn['aka']], ENT_QUOTES);
+		$alsoKnownAs = (($u[$fn['aka']] && $u[$fn['aka']] != $u[$fn['name']])
+			? " title='Also known as: {$akafield}'" : '');
+	}
 
 	$u[$fn['name']] = htmlspecialchars($u[$fn['name']], ENT_QUOTES);
 
@@ -934,8 +938,11 @@ function fonlineusers($id){
 	}
 	$p = ($numon ? ':' : '.');
 	$s = ($numon != 1 ? 's' : '');
+	$guests = "";
 	$numguests = $sql->resultq("SELECT count(*) AS n FROM guests WHERE date>$onlinetime AND lastforum=$id",0,0);
-	if($numguests) $guests="| $numguests guest".($numguests>1?'s':'');
+	if ($numguests) {
+		$guests = "| $numguests guest".($numguests>1?'s':'');
+	}
 	return "$numon user$s currently in $forumname$p $onlineusers $guests";
 }
 

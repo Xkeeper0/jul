@@ -1,7 +1,12 @@
 <?php
+
 	require_once 'lib/function.php';
-	$id = intval($_GET['id']);
-	$user = intval($_GET['user']);
+
+	$id		= intval($_GET['id'] ?? null);
+	$user	= intval($_GET['user'] ?? null);
+	$thread	= intval($_GET['thread'] ?? null);
+	$fav	= intval($_GET['fav'] ?? null);
+	$act	= $_GET['act'] ?? null;
 
 	if ($log)
 		$postread = $sql->getresultsbykey("SELECT forum,readdate FROM forumread WHERE user=$loguserid", 'forum', 'readdate');
@@ -101,14 +106,14 @@
 	$hotcount = $sql->resultq('SELECT hotcount FROM misc',0,0);
 	if ($hotcount <= 0) $hotcount = 0xFFFF;
 
-	$ppp = (($_GET['ppp']) ? intval($_GET['ppp']) : (($log) ? $loguser['postsperpage'] : 20));
-	$ppp = max(min($ppp, 500), 1);
+	$ppp	= intval($_GET['ppp'] ?? ($loguser['postsperpage'] ?? 20));
+	$ppp	= max(min($ppp, 500), 1);
 
-	$tpp = (($_GET['tpp']) ? intval($_GET['tpp']) : (($log) ? $loguser['threadsperpage'] : 50));
-	$tpp = max(min($tpp, 500), 1);
+	$tpp	= intval($_GET['tpp'] ?? ($loguser['threadsperpage'] ?? 50));
+	$tpp	= max(min($tpp, 500), 1);
 
-	$page = intval($_GET['page']);
-    $min = $page*$tpp;
+	$page	= intval($_GET['page'] ?? 0);
+	$min	= $page * $tpp;
 
 	$newthreadbar = $forumlist = '';
 	if ($id) {
@@ -134,7 +139,7 @@
 	$forumpagelinks = '';
 	if($threadcount > $tpp){
 		$query = ($id ? "id=$id" : ($user ? "user=$user" : "fav=1"));
-		if ($_GET['tpp']) $query .= "&tpp=$tpp";
+		if ($_GET['tpp'] ?? null) $query .= "&tpp=$tpp";
 
 		$forumpagelinks = "<table width=100%><tr>
 			<td align=left class='fonts'>Pages:";
@@ -241,7 +246,7 @@
 		}
 
 		// Disabled polls
-		if ($forum['pollstyle'] == -2)
+		if (($forum['pollstyle'] ?? 0) == -2)
 			$thread['poll'] = 0;
 
 		$new          = "&nbsp;";
