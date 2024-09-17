@@ -100,7 +100,7 @@
 				background: #$bgcolor$bgimage;
 			}
 
-			". ($loguser['fontsize'] ? "
+			". (($loguser['fontsize'] ?? false) ? "
 			body { font-size: $loguser[fontsize]%; }
 			" : "") ."
 
@@ -444,7 +444,7 @@
 	  <form action='login.php' method='post' name='logout'><input type='hidden' name='action' value='logout'></form>
 	  <td class='tbl tdbg1 center' colspan=3>$boardtitle";
   $header2="
-	  ". (!$x_hacks['smallbrowse'] ? "
+	  ". (!($x_hacks['smallbrowse'] ?? false) ? "
 	  </td><tr>
 		  <td width='120px' class='tbl tdbg2 center fonts'><nobr>Views: $dispviews<br><img src=images/_.gif width=120 height=1></td>
 		  <td width='100%' class='tbl tdbg2 center fonts'>$headlinks2</td>

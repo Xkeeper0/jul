@@ -52,14 +52,14 @@
 
 		// Bad Design Decisions 2001.
 		// :(
-		if (!get_magic_quotes_gpc()) {
+		if (!function_exists("get_magic_quotes_gpc")) {
 			$_GET = addslashes_array($_GET);
 			$_POST = addslashes_array($_POST);
 			$_COOKIE = addslashes_array($_COOKIE);
 		}
 		if(!ini_get('register_globals')){
 			$supers=array('_ENV', '_SERVER', '_GET', '_POST', '_COOKIE',);
-			foreach($supers as $__s) if (is_array($$__s)) extract($$__s, EXTR_SKIP);
+			foreach($supers as $__s) if (isset($$__s) && is_array($$__s)) extract($$__s, EXTR_SKIP);
 			unset($supers);
 		}
 	}
@@ -188,7 +188,7 @@
 		$log					= 0;
 	}
 
-	if ($x_hacks['superadmin']) $loguser['powerlevel'] = 4;
+	if ($x_hacks['superadmin'] ?? false) $loguser['powerlevel'] = 4;
 
 	$power     = $loguser['powerlevel'];
 	$banned    = ($power<0);
@@ -382,7 +382,7 @@ function generatenumbergfx($num,$minlen=0,$double=false){
 	}
 
 	for($i=0;$i<strlen($num);$i++) {
-		$code	= $num{$i};
+		$code	= $num[$i];
 		switch ($code) {
 			case "/":
 				$code	= "slash";

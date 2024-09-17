@@ -33,7 +33,7 @@
 	require 'lib/function.php';
 	require 'lib/layout.php';
 
-	if ($x_hacks['smallbrowse'] == 1 and false) {
+	if (false && $x_hacks['smallbrowse'] == 1) {
 		require 'mobile/index.php'; // alternate markup for mobile clients.
 	} else {
 		if (filter_string($_GET['action']) == 'markforumread' and $log) {
@@ -208,7 +208,7 @@
 	while ($in = $sql->fetch($data, MYSQL_ASSOC)) {
 		$recent_threads .= "<tr>
 			$tccell2><a href='forum.php?id=". $in['fid'] ."'>". $in['ftitle'] ."</a></td>
-			$tccell1l>$newpost<a href='thread.php?id=". $in['id'] ."&end=1'>". $in['title'] ."</a></td>
+			$tccell1l><a href='thread.php?id=". $in['id'] ."&end=1'>". $in['title'] ."</a></td>
 			$tccell1><a href='profile.php?id=". $in['user'] ."'><font ". getnamecolor($in['usex'], $in['upowerlevel']) .">". $in['uname'] ."</font></a></td>
 			$tccell2>". timeunits(ctime() - $in['date']) ."</td>
 			</tr>\n";
