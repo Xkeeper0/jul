@@ -2,10 +2,11 @@
 	require 'lib/function.php';
 	require 'lib/layout.php';
 
-	$set = (($_GET['set']) ? (int)$_GET['set'] : -1);
-	$showall = (($_GET['showall']) ? 1 : 0);
+	$set = intval($_GET['set'] ?? -1);
+	$showall = $_GET['showall'] ?? 0;
 
 	$rsets = $sql->query('SELECT * FROM ranksets WHERE id>0 ORDER BY id');
+	$ranksetlist	= "";
 	while($rset = $sql->fetch($rsets)) {
 		// First rankset
 		if($set < 0) $set = $rset['id'];
@@ -17,21 +18,23 @@
 
 	print "
 		$header
-		<FORM ACTION=ranks.php NAME=REPLIER>
+		<form action='ranks.php'>
+		<br>
 		$tblstart
 		$tccellh colspan=2>&nbsp;<tr>
 		$tccell1><b>Rank set</b></td>
-		$tccell2l><select name=set>$ranksetlist</select><tr>
+		$tccell2l><select name=set>$ranksetlist</select></td><tr>
 		$tccell1><b>Users to show</b></td>
 		$tccell2l>
-			$radio=showall value=0 $ch[0]> Selected rank set only
+			<label>$radio=showall value=0 ". ($ch[0] ?? "") ."> Selected rank set only</label>
 			&nbsp; &nbsp;
-			$radio=showall value=1 $ch[1]> All users
+			<label>$radio=showall value=1 ". ($ch[1] ?? "") ."> All users</label>
+			</td></tr>
 		<tr>
 		$tccellh colspan=2>&nbsp;<tr>
 		$tccell1>&nbsp;</td>
 		$tccell2l><input type=submit class=submit value=View></td>
-		</FORM>
+		</form>
 		$tblend
 		<br>
 		$tblstart
@@ -55,10 +58,13 @@
 		$user  = $sql->fetch($users);
 		$total = mysql_num_rows($users);
 	}
-	
+
 	for($i=0; $i<$totalranks; ++$i) {
 		$rankn=$sql->fetch($ranks);
-		if(!$rankn['num']) $rankn['num']=8388607;
+
+		if (!$rankn) {
+			$rankn	= ['num' => 8388607];
+		}
 
 		$userarray = array();
 		$inactive = 0;
