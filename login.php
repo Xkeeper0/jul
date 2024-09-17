@@ -42,8 +42,8 @@
 				@xk_ircsend("102|". xk(14) ."Failed attempt". xk(8) ." #$fails ". xk(14) ."to log in as ". xk(8) . $username . xk(14) ." by IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(14) .".");
 				report("mod", "Failed attempt **#$fails** to log in as **$username** by IP " . $_SERVER['REMOTE_ADDR'] . ".");
 
-				if ($fails >= 5) {
-					$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Send e-mail for password recovery'");
+				if ($fails >= 10) {
+					$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Too many failed login attempts. Send e-mail for password recovery'");
 					@xk_ircsend("102|". xk(7) ."Auto-IP banned ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." for this.");
 					report("mod", "Auto-IP banned " . $_SERVER['REMOTE_ADDR'] . "for this.");
 					@xk_ircsend("1|". xk(7) ."Auto-IP banned ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) ." for repeated failed logins.");
@@ -54,16 +54,16 @@
 			}
 		}
 		$txt.="$tccell1>$msg<br>".redirect('index.php','the board',0);
-	}
-	elseif ($_POST['action']=='logout') {
+
+	} elseif ($_POST['action'] == 'logout') {
 		setcookie('loguserid','', time()-3600, "/", $_SERVER['SERVER_NAME'], false, true);
 		setcookie('logverify','', time()-3600, "/", $_SERVER['SERVER_NAME'], false, true);
 
 		// May as well unset this as well
 		setcookie('logpassword','', time()-3600, "/", $_SERVER['SERVER_NAME'], false, true);
 		$txt.="$tccell1> You are now logged out.<br>".redirect('index.php','the board',0);
-	}
-	elseif (!$_POST['action']) {
+
+	} elseif (!$_POST['action']) {
 		$ipaddr = explode('.', $_SERVER['REMOTE_ADDR']);
 		for ($i = 4; $i > 0; --$i) {
 			$verifyoptext[$i] = "(".implode('.', $ipaddr).")";
@@ -93,7 +93,7 @@
 		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_SERVER['REMOTE_ADDR'] ."', `date` = '". ctime() ."', `reason` = 'Generic internet exploit searcher'");
 		if (!mysql_error())
 			xk_ircsend("1|". xk(7) ."Auto-banned asshole trying to be clever with the login form (action: ".xk(8).$_POST['action'].xk(7).") with IP ". xk(8) . $_SERVER['REMOTE_ADDR'] . xk(7) .".");
-	}	
+	}
 
 	print $txt.$tblend.$footer;
 	printtimedif($startingtime);
