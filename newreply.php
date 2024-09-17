@@ -6,6 +6,8 @@
 	// Stop this insanity.  Never index newreply.
 	$meta['noindex'] = true;
 
+	$message	= $_POST['message'] ?? null;
+
 	// Give failed replies a last-chance to copy and save their work,
 	// as way too often you'll miss and then it's just gone forever
 	$lastchance		= null;
@@ -103,10 +105,13 @@
 
 			$numdays		= (ctime() - $user['regdate']) / 86400;
 			$tags			= array();
-			$message		= doreplace($message, $numposts, $numdays, $username, $tags);
+
+			$message		= stripslashes($message);
+
+			$message		= doreplace($message, $numposts, $numdays, $user['name'], $tags);
 			$tagval			= $sql->escape(json_encode($tags));
-			$rsign			= doreplace($sign, $numposts, $numdays, $username);
-			$rhead			= doreplace($head, $numposts, $numdays, $username);
+			$rsign			= doreplace($sign, $numposts, $numdays, $user['name']);
+			$rhead			= doreplace($head, $numposts, $numdays, $user['name']);
 			$currenttime	= ctime();
 
 			// Submitting a post
@@ -137,7 +142,7 @@
 
 				$options = filter_int($nosmilies) . "|" . filter_int($nohtml);
 
-				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','$message','$tagval', '$options')");
+				if($pid) $sql->query("INSERT INTO `posts_text` (`pid`,`text`,`tagval`, `options`) VALUES ('$pid','". $sql->escape($message) ."','$tagval', '$options')");
 
 				$sql->query("UPDATE `threads` SET $closeq $stickq `replies` =  `replies` + 1, `lastpostdate` = '$currenttime', `lastposter` = '$userid' WHERE `id`='$id'");
 				$sql->query("UPDATE `forums` SET `numposts` = `numposts` + 1, `lastpostdate` = '$currenttime', `lastpostuser` ='$userid', `lastpostid` = '$pid' WHERE `id`='$forumid'");
@@ -161,7 +166,6 @@
 			} else {
 
 				loadtlayout();
-				$message				= stripslashes($message);
 				$ppost					= $user;
 				$ppost['posts']++;
 				$ppost['uid']			= $userid;
