@@ -360,16 +360,18 @@ function calclvlexp($lvl){
 function calcexp($posts,$days){
   if(@($posts/$days)>0) return floor($posts*pow($posts*$days,0.5));
   elseif($posts==0) return 0;
-  else return 'NaN';
+  else return -1; // 'NaN';
 }
 function calclvl($exp){
-  if($exp>=0){
-    $lvl=floor(@pow($exp,2/7));
-    if(calclvlexp($lvl+1)==$exp) $lvl++;
-    if(!$lvl) $lvl=1;
-  }else $lvl=-floor(pow(-$exp,2/7));
-  if(is_string($exp) && $exp=='NaN') $lvl='NaN';
-  return $lvl;
+	if (is_string($exp) && $exp === 'NaN') return 'NaN';
+	if ($exp >= 0) {
+		$lvl = floor(@pow($exp, 2/7));
+		if (calclvlexp($lvl + 1) == $exp) $lvl++;
+		if (!$lvl) $lvl = 1;
+	} else {
+		$lvl = -floor(pow(-$exp,2/7));
+	}
+	return $lvl;
 }
 
 function generatenumbergfx($num,$minlen=0,$double=false){
@@ -516,10 +518,10 @@ function doreplace2($msg, $options = null, $mood = 0) {
 
 	if (!$smiliesoff) {
 		global $smilies;
-		if(!$smilies) $smilies=readsmilies();
-		for($s=0;$smilies[$s][0];$s++){
-			$smilie=$smilies[$s];
-			$msg=str_replace($smilie[0],"<img src=$smilie[1] align=absmiddle>",$msg);
+		if (!$smilies) $smilies = readsmilies();
+		for ($s = 0; $smilies[$s]; $s++) {
+			$smilie = $smilies[$s];
+			$msg = str_replace($smilie[0], "<img src=$smilie[1] align=absmiddle>", $msg);
 		}
 	}
 

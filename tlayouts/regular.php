@@ -12,6 +12,8 @@
 		$exp		= calcexp($post['posts'],(ctime()-$post['regdate']) / 86400);
 		$lvl		= calclvl($exp);
 		$expleft	= calcexpleft($exp);
+		$set['userpic'] = $set['userpic'] ?? ""; // please stop being undefined
+
 
 		if ($tlayout == 1) {
 			$level		= "Level: $lvl";
@@ -24,6 +26,8 @@
 
 			if ($barwidth < 1) $barwidth=0;
 
+			$baron	= "";
+			$baroff	= "";
 			if ($barwidth > 0) $baron="<img src=images/$numdir"."bar-on.gif width=$barwidth height=8>";
 
 			if ($barwidth < $totalwidth) $baroff="<img src=images/$numdir".'bar-off.gif width='.($totalwidth-$barwidth).' height=8>';
@@ -338,7 +342,7 @@
 		$fcol3			= "#f0f8ff";
 
 
-		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
+		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post['lastactivity']) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -346,7 +350,7 @@
 			$postss		= "s:";
 		}
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
 				". ($set['userrank'] ? "<br>". $set['userrank'] : "") ."
@@ -379,7 +383,7 @@
 			$fcol3			= "#000000";
 		}
 
-		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
+		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post['lastactivity']) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -387,7 +391,7 @@
 			$postss		= "s:";
 		}
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3". ($post['posts'] >= 20000 ? " url('http://www.ffalexandria.com/orlandu/anya/side_bg.jpg'); background-position:bottom left" : "") ."; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3". ($post['posts'] >= 20000 ? " url('http://www.ffalexandria.com/orlandu/anya/side_bg.jpg'); background-position:bottom left" : "") ."; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				<br>$smallfont
 				". ($set['userrank'] ? "<br>". $set['userrank'] : "") ."
@@ -435,7 +439,7 @@
 		$fcol3			= "#fff0f8";
 
 
-		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
+		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post['lastactivity']) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -443,7 +447,7 @@
 			$postss		= "s:";
 		}
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
 				". ($set['userrank'] ? "<br>". $set['userrank'] : "") ."
@@ -483,7 +487,7 @@
 		$fcol3			= "#000000";
 
 
-		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
+		$lastactivity	= 'Active </font>' .timeunits(ctime()-$post['lastactivity']) ."<font color=$fcol2> ago";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -491,7 +495,7 @@
 			$postss		= "s:";
 		}
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
 				". ($set['userrank'] ? "<br>". $set['userrank'] : "") ."
@@ -513,8 +517,8 @@
 		$fcol1			= "#bbbbeb";
 		$fcol2			= "#8888a8";
 		$fcol3			= "#080818 url('http://bloodstar.rustedlogic.net/layout/background.png')";
-		$lastactivity	= 'Active </font>'. timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
-		$joindate		= 'Joined </font>'. date($dateshort,$post[regdate]+$tzoff) ."<font color=$fcol2>";
+		$lastactivity	= 'Active </font>'. timeunits(ctime()-$post['lastactivity']) ."<font color=$fcol2> ago";
+		$joindate		= 'Joined </font>'. date($dateshort,$post['regdate']+$tzoff) ."<font color=$fcol2>";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -522,7 +526,7 @@
 			$postss		= "s:";
 		}
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				 &mdash; $set[userlink] &mdash;
 				$smallfont
 				". ($set['userrank'] ? "<br>". $set['userrank'] ."<br>" : "") ."
@@ -546,8 +550,8 @@
 		$fcol1			= "#9999cc";
 		$fcol2			= "#7777aa";
 		$fcol3			= "#000011";
-		$lastactivity	= 'Active </font>'. timeunits(ctime()-$post[lastactivity]) ."<font color=$fcol2> ago";
-		$joindate		= 'Joined </font>'. date($dateshort,$post[regdate]+$tzoff) ."<font color=$fcol2>";
+		$lastactivity	= 'Active </font>'. timeunits(ctime()-$post['lastactivity']) ."<font color=$fcol2> ago";
+		$joindate		= 'Joined </font>'. date($dateshort,$post['regdate']+$tzoff) ."<font color=$fcol2>";
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -586,11 +590,11 @@
 			$postss		= "s:";
 		}
 		return "<div class='post'>$tblstart
-			". str_replace('\' valign=top', ' a1\' valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
+			". str_replace('\' valign=top', ' a1\' valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 12px; color: $fcol1; font-family: Verdana, sans-serif;\">
 				$css
 				<div class=a2>
-					Post$postss <span><b>$postnum</b></span><span><b>$posttotal</b></span> (<span>". timeunits(ctime()-$post[lastposttime]) ."</span>),
-					online <span>". timeunits(ctime()-$post[lastactivity]) ."</span> ago
+					Post$postss <span><b>$postnum</b></span><span><b>$posttotal</b></span> (<span>". timeunits(ctime()-$post['lastposttime']) ."</span>),
+					online <span>". timeunits(ctime()-$post['lastactivity']) ."</span> ago
 					<a href=//jul.rustedlogic.net/profile.php?id=387>
 			". (strpos($_SERVER['USER_AGENT'], "MSIE 6.0") ? "<img src=_.png style=filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=http://acmlm.rustedlogic.net/etc/nismilly/stat.php)>" : "<img src=http://acmlm.rustedlogic.net/etc/nismilly/stat.php>") ."
 					</a>
@@ -612,7 +616,7 @@
 		$fcol3			= "#181818";
 
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 14px; color: $fcol1; font-family: Verdana, sans-serif; padding-top: .5em;\">
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 align=center style=\"background: $fcol3; font-size: 14px; color: $fcol1; font-family: Verdana, sans-serif; padding-top: .5em;\">
 				$set[userlink]
 				<br><span style=\"letter-spacing: 0px; color: $fcol2; font-size: 10px;\">Collection of nobodies</span>
 				<br><img src=images/_.gif width=200 height=200>
@@ -647,20 +651,20 @@
 				'6' => "<center style=\"text-align: center; color: #b09080;\">(Acc.)</center>",
 			);
 			$user=mysql_fetch_array(mysql_query("SELECT name,posts,regdate,users_rpg.* FROM users,users_rpg WHERE id='". $post['uid'] ."' AND uid=id"));
-			$d=(ctime()-$user[regdate])/86400;
+			$d=(ctime()-$user['regdate'])/86400;
 			$eqitems=mysql_query("SELECT * FROM items WHERE id=$user[eq1] OR id=$user[eq2] OR id=$user[eq3] OR id=$user[eq4] OR id=$user[eq5] OR id=$user[eq6]") or print mysql_error();
 			while($item=mysql_fetch_array($eqitems)) {
 				$items[$item[id]]=$item;
 				$eq[$item['cat']] = $item['name'];
 			}
 			if($ct){
-			$GPdif=floor($items[$user['eq'.$ct]][coins]*0.6)-$items[$it][coins];
+			$GPdif=floor($items[$user['eq'.$ct]]['coins']*0.6)-$items[$it]['coins'];
 			$user['eq'.$ct]=$it;
 			}
 			$st=getstats($user,$items);
-			$st[GP]+=$GPdif;
-			if($st[lvl]>0) $pct=1-calcexpleft($st[exp])/totallvlexp($st[lvl]);
-			$st['expn']	= calcexpleft($st[exp]);
+			$st['GP']+=$GPdif;
+			if($st['lvl']>0) $pct=1-calcexpleft($st['exp'])/totallvlexp($st['lvl']);
+			$st['expn']	= calcexpleft($st['exp']);
 			$st['eq']	= $eq;
 
 			$x_hacks['rpgstats'][$post['uid']]	= $st;
@@ -668,8 +672,8 @@
 			$st	= $x_hacks['rpgstats'][$post['uid']];
 		}
 
-		$lastactivity	= 'Active '. timeunits(ctime()-$post[lastactivity]) ." ago";
-		$joindate		= 'Joined '. date($dateshort,$post[regdate]+$tzoff);
+		$lastactivity	= 'Active '. timeunits(ctime()-$post['lastactivity']) ." ago";
+		$joindate		= 'Joined '. date($dateshort,$post['regdate']+$tzoff);
 		$postnum		= ($post['num']) ."/";
 		$posttotal		= $post['posts'];
 		if(!$post['num']) {
@@ -685,7 +689,7 @@
 
 
 		return "<div class='post'>$tblstart
-			". str_replace('valign=top', 'valign=top', $set[tdbg]) ." rowspan=2 width=200>
+			". str_replace('valign=top', 'valign=top', $set['tdbg']) ." rowspan=2 width=200>
 				 <table style=\"font-family: Tahoma; font-size: 12px; color: #000; background: #e1cfb6;\" width=100% cellspacing=0>
 					<tr>
 						<td style=\"background: #614735; text-align: left; padding: 2px 0px 2px 15px; font-size: 14px; letter-spacing: 1px; border: 2px outset #614735;\" colspan=4>$set[userlink]</td>
@@ -851,4 +855,3 @@
 	}
 	//End random shit for Inu's layout
 
-?>

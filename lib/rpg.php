@@ -22,15 +22,24 @@
 		$stat=array('HP','MP','Atk','Def','Int','MDf','Dex','Lck','Spd');
 		$p=$u['posts'];
 		$d=(ctime()-$u['regdate'])/86400;
+		$a=[];
+		$m=[];
 		for($i=0;$i<9;$i++) {
 		$m[$i]=1;
+		$a[$i]=0;
 		}
 		for($i=1;$i<7;$i++){
+			if (!$u['eq'.$i]) {
+				continue;
+			}
 			$item=$items[$u['eq'.$i]];
 			for($k=0;$k<9;$k++){
 				$is=$item['s'.$stat[$k]];
-				if(substr($item['stype'],$k,1)=='m') $m[$k]*=$is/100;
-				else $a[$k]+=$is;
+				if (substr($item['stype'],$k,1)=='m') {
+					$m[$k]*=$is/100;
+				} else {
+					$a[$k] = ($a[$k] ?? 0) + $is;
+				}
 			}
 		}
 		for($i=0;$i<9;$i++){

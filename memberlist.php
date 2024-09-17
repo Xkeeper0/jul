@@ -10,24 +10,36 @@
 		return $cmpb-$cmpa;
 	}
 
-	if($sex) $qsex="&sex=$sex";
-	if($pow) $qpow="&pow=$pow";
-	if($ppp) $qppp="&ppp=$ppp";
-	if($rpg) $qrpg="&rpg=1";
-	$q = $qppp.$qrpg;
+	$sex	= $_GET['sex'] ?? null;
+	$qsex	= ($sex !== null ? "&sex=$sex" : "");
 
-	if(!$ppp) $ppp=50;
-	if(!$page) $page=0;
+	$pow	= null;
+	$qpow	= "";
+	if (isset($_GET['pow'])) {
+		$pow	= intval($_GET['pow']);
+		$qpow	= "&pow=$pow";
+	}
+	$qrpg	= "";
+	$rpg	= intval($_GET['rpg'] ?? 0);
+	$qrpg	= "&rpg=$rpg";
 
-	$lnk='<a href=memberlist.php?sort';
+	$sort	= $_GET['sort'] ?? "posts";
+	if (!in_array($sort, array('name','reg','exp','age','posts', 'act')))
+		$sort = 'posts';
 
-	$qwhere = array();
+
+	$page	= intval($_GET['page'] ?? 0);
+	$ppp	= intval($_GET['ppp'] ?? 50);
+	$qppp	= ($ppp !== 50) ? "&ppp=$ppp" : "";
+
+
+
+	$qwhere = [];
 	if($sex=='m') $qwhere[] = '(sex=0)';
 	if($sex=='f') $qwhere[] = '(sex=1)';
 	if($sex=='n') $qwhere[] = '(sex=2)';
 
-	if($pow!='') {
-		$pow = intval($pow);
+	if ($pow !== null) {
 		if (($pow == 1 || $pow == 0) && $loguser['powerlevel'] <= 0)
 			$pow = "IN (0, 1)";
 		elseif ($pow == 3 || $pow == 4) // merge admin + sysadmin (they appear the same)
@@ -41,9 +53,7 @@
 	}
 
 	$where = 'WHERE '.((empty($qwhere)) ? '1' : implode(' AND ', $qwhere));
-	
-	if (!in_array($sort, array('name','reg','exp','age','posts', 'act')))
-		$sort = 'posts';
+
 
 	$query='SELECT id,posts,regdate,lastactivity,name,minipic,sex,powerlevel,aka,r.* FROM users LEFT JOIN users_rpg r ON id=uid ';
 	if($sort=='name')  $users1=$sql->query("$query$where ORDER BY name", MYSQL_ASSOC);
@@ -55,9 +65,9 @@
 
 	$numusers=mysql_num_rows($users1);
 
-	for($i=0;$user = $sql->fetch($users1);$i++){
-		$user['days'] = (ctime()-$user['regdate'])/86400;
-		$user['exp']  = calcexp($user['posts'],$user['days']);
+	for ($i = 0; $user = $sql->fetch($users1); $i++) {
+		$user['days'] = (ctime() - $user['regdate']) / 86400;
+		$user['exp']  = calcexp($user['posts'], $user['days']);
 		$user['lvl']  = calclvl($user['exp']);
 		$users[] = $user;
 	}
@@ -69,36 +79,37 @@
 	for($i=0;$i<($numusers/$ppp);$i++)
 		$pagelinks.=($i==$page?' '.($i+1):" <a href=memberlist.php?sort=$sort$qsex$qpow$qrpg$qppp&page=$i>".($i+1).'</a>');
 
-	if($numusers>1) $s="s";
+	$lnk='<a href=memberlist.php?sort';
+
 	print "
 		$header<br>$tblstart
 		<tr>
-		$tccellh colspan=2>$numusers user$s found.
+		$tccellh colspan=2>$numusers user". ($numusers != 1 ? "s" : "") ." found.
 		</tr><tr>
 		$tccell1s>	Sort by:
 		$tccell2s>
-			$lnk=posts$q$qpow$qsex>Total posts</a> |
-			$lnk=exp$q$qpow$qsex>EXP</a> |
-			$lnk=name$q$qpow$qsex>User name</a> |
-			$lnk=reg$q$qpow$qsex>Registration date</a> |
-			$lnk=act$q$qpow$qsex>Last activity</a> |
-			$lnk=age$q$qpow$qsex>Age</a>
+			$lnk=posts$qpow$qsex>Total posts</a> |
+			$lnk=exp$qpow$qsex>EXP</a> |
+			$lnk=name$qpow$qsex>User name</a> |
+			$lnk=reg$qpow$qsex>Registration date</a> |
+			$lnk=act$qpow$qsex>Last activity</a> |
+			$lnk=age$qpow$qsex>Age</a>
 		</tr><tr>
 		$tccell1s>	Sex:
 		$tccell2s>
-			$lnk=$sort$q$qpow&sex=m>Male</a> |
-			$lnk=$sort$q$qpow&sex=f>Female</a> |
-			$lnk=$sort$q$qpow&sex=n>N/A</a> |
-			$lnk=$sort$q$qpow>All</a><tr>
+			$lnk=$sort$qpow&sex=m>Male</a> |
+			$lnk=$sort$qpow&sex=f>Female</a> |
+			$lnk=$sort$qpow&sex=n>N/A</a> |
+			$lnk=$sort$qpow>All</a><tr>
 		</tr><tr>
 		$tccell1s>	Powerlevel:
 		$tccell2s>
-			$lnk=$sort$q$qsex&pow=-1>Banned</a> |
-			$lnk=$sort$q$qsex&pow=0>Normal</a> |
-			". ($loguser['powerlevel'] >= 1 ? "$lnk=$sort$q$qsex&pow=1>Normal +</a> | " : "") ."
-			$lnk=$sort$q$qsex&pow=2>Moderator</a> |
-			$lnk=$sort$q$qsex&pow=3>Administrator</a> |
-			$lnk=$sort$q$qsex>All</a>
+			$lnk=$sort$qsex&pow=-1>Banned</a> |
+			$lnk=$sort$qsex&pow=0>Normal</a> |
+			". ($loguser['powerlevel'] >= 1 ? "$lnk=$sort$qsex&pow=1>Normal +</a> | " : "") ."
+			$lnk=$sort$qsex&pow=2>Moderator</a> |
+			$lnk=$sort$qsex&pow=3>Administrator</a> |
+			$lnk=$sort$qsex>All</a>
 		</tr>$tblend<br>$tblstart
 		<tr>
 		$tccellh width=30>#</td>
@@ -106,7 +117,7 @@
 		$tccellh>Username</td>
 	";
 
-	if(!$rpg) {
+	if (!$rpg) {
 		print "
 			$tccellh width=200>Registered on</td>
 			$tccellh width=200>Last active</td>
@@ -114,10 +125,9 @@
 			$tccellh width=35>Level</td>
 			$tccellh width=100>EXP</td></tr>
 		";
-	}
-	else {
+	} else {
 		$items   = $sql->getarraybykey("SELECT * FROM items", 'id');
-        $classes = $sql->getarraybykey("SELECT * FROM rpg_classes", 'id');
+		$classes = $sql->getarraybykey("SELECT * FROM rpg_classes", 'id');
 
 		print "$tccellh width=35>Level</td>";
 		print "$tccellh width=90>Class</td>";
@@ -128,9 +138,10 @@
 	}
 
 	$s = $ppp*$page;
+	$ulist	= "";
 	for($u=0;$u < $ppp;$u++) {
 		$i = $s + $u;
-		$user = $users[$i];
+		$user = $users[$i] ?? null;
 		if (!$user) break;
 		$ulist.="<tr style=\"height:24px;\">";
 
@@ -155,7 +166,7 @@
 			";
 		}
 		else {
-			if (!($class = $classes[$user['class']]))
+			if (!($class = ($classes[$user['class']] ?? null)))
 				$class = array('name'=>'None');
 			$stats=getstats($user,$items,$class);
 
