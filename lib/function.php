@@ -52,7 +52,7 @@
 
 		// Bad Design Decisions 2001.
 		// :(
-		if (!function_exists("get_magic_quotes_gpc")) {
+		if (true) {	// simulateds magic quotes gpc. if you don't know what that is: congrats!
 			$_GET = addslashes_array($_GET);
 			$_POST = addslashes_array($_POST);
 			$_COOKIE = addslashes_array($_COOKIE);
