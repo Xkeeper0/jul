@@ -243,7 +243,10 @@
 		$sql->query("UPDATE `users` SET `sex` = '22' WHERE `id` = 20"); #nicole
 		$sql->query("UPDATE `users` SET `sex` = '23' WHERE `id` = 50"); #Rena
 		$sql->query("UPDATE `users` SET `sex` = '24' WHERE `id` = 2069"); #Adelheid/Stark/etc.
-
+		// So I can switch between Schezo/Witch colors myself :D
+		$kakcol = filter_bool($_GET['witch_colors']) ? 96 : 25;
+		$sql->query("UPDATE `users` SET `sex` = '{$kakcol}' WHERE `id` = 2889"); #Kak
+		
 		$sql->query("UPDATE `users` SET `name` = 'Xkeeper' WHERE `id` = 1"); #Xkeeper. (Change this and I WILL Z-Line you from Badnik for a week.)
 
 	}
@@ -880,6 +883,8 @@ function getnamecolor($sex, $powl, $prefix = true){
 			$namecolor .= "77ECFF"; break;
 		case 24: // Adelheid
 			$namecolor .= "D2A6E1"; break;
+		case 25: // Kak - Schezo
+			$namecolor .= "D8E8FE"; break;
 		case 41:
 			$namecolor .= "8a5231"; break;
 		case 42:
@@ -890,6 +895,8 @@ function getnamecolor($sex, $powl, $prefix = true){
 			$namecolor .= $nmcol[0][3]; break;
 		case 97:
 			$namecolor .= "6600DD"; break;
+		case 96: // Kak - Witch
+			$namecolor .= $nmcol[2][3]; break; // Make it readable in case the user has a light theme
 		default:
 			$namecolor .= $nmcol[$sex][$powl];
 			break;
@@ -1253,6 +1260,8 @@ function dofilters($p){
 	//$p=preg_replace("'(https?://.*?photobucket.com/)'si",'images/photobucket.png#\\1',$p);
 	$p=preg_replace("'http://.{0,3}\.?tinypic\.com'si",'tinyshit',$p);
 	$p=str_replace('<link href="http://pieguy1372.freeweb7.com/misc/piehills.css" rel="stylesheet">',"",$p);
+	$p=str_replace('yukina.io',"",$p);  // hiryuu's domain, dead, css lags
+	$p=str_replace('safiria.net',"",$p);
 	$p=str_replace("tabindex=\"0\" ","title=\"the owner of this button is a fucking dumbass\" ",$p);
 
 //	$p=str_replace("http://xkeeper.shacknet.nu:5/", 'http://xchan.shacknet.nu:5/', $p);
@@ -1329,6 +1338,17 @@ function addslashes_array($data) {
 }
 
 
+	function report($type, $msg) {
+		if (!function_exists('get_discord_webhook')) return;
+
+		$wh_url = get_discord_webhook($type, null); 
+
+		if (!$wh_url) return;
+
+		discord_send($wh_url, $outdiscord);
+	}
+
+	// general purpose report function, now with discord!
 	function xk_ircout($type, $user, $in) {
 
 		// gone
@@ -1350,18 +1370,33 @@ function addslashes_array($data) {
 				if		($in['pmatch'] >= 3) $color	= array(7, 4);
 				elseif	($in['pmatch'] >= 5) $color	= array(4, 5);
 				$extra	= " (". xk($color[1]) ."Password matches: ". xk($color[0]) . $in['pmatch'] . xk() .")";
+				$extradiscord	= " (**Password matches**: " . $in['pmatch'] . ")";
 			}
 
 			$out	= "1|New user: #". xk(12) . $in['id'] . xk(11) ." $user ". xk() ."(IP: ". xk(12) . $in['ip'] . xk() .")$extra: https://jul.rustedlogic.net/?u=". $in['id'];
+			$outdiscord = "New user: **#" . $in['id'] . "** ". $user . " (IP: " . $in['ip'] . ")$extra: <https://jul.rustedlogic.net/?u=" . $in['id'] . ">";
 
 		} else {
 //			global $sql;
 //			$res	= $sql -> resultq("SELECT COUNT(`id`) FROM `posts`");
 			$out	= "$dest|New $type by ". xk(11) . $user . xk() ." (". xk(12) . $in['forum'] .": ". xk(11) . $in['thread'] . xk() ."): https://jul.rustedlogic.net/?p=". $in['pid'];
+			$outdiscord = "New $type by **" . $user . "** (" . $in['forum'] . ": **" . $in['thread'] . "**): <https://jul.rustedlogic.net/?p=". $in['pid'] . ">";
 
 		}
 
 		xk_ircsend($out);
+		
+		// discord part
+
+		// logic to decide where the message goes based on info provided
+		if (!function_exists('get_discord_webhook')) return;
+
+		$wh_url = get_discord_webhook($type, $in); 
+
+		if (!$wh_url) return;
+
+		discord_send($wh_url, $outdiscord);
+
 	}
 
 	function xk_ircsend($str) {
@@ -1375,6 +1410,28 @@ function addslashes_array($data) {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3); // <---- HERE
 		curl_setopt($ch, CURLOPT_TIMEOUT, 5); // <---- HERE
 		$file_contents = curl_exec($ch);
+		curl_close($ch);
+
+		return true;
+	}
+
+	function discord_send($url, $msg) {
+		// stripped down from https://gist.github.com/Mo45/cb0813cb8a6ebcd6524f6a36d4f8862c
+		$json_data = json_encode([
+			"content" => $msg
+		], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$response = curl_exec($ch);
+		// echo $response;
 		curl_close($ch);
 
 		return true;

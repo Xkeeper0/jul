@@ -9,9 +9,14 @@ require 'lib/layout.php';
 	$servers[3]		= "irc.tcrf.net";
 	if ($server > count($servers) || $server <= -1) $server = 0;
 
+	print "$header<br>";
 
+	print "	$tblstart<tr>
+	$tccellh><b>Hold up, it's ". '$' ."YEAR.</b></td></tr>
+	<tr>$tccell1>Maybe you want to head straight for our <a href='/thread.php?id=17948'>Discord</a>? 
+	$tblend";
 
-print "		$header<br>$tblstart<tr>
+print "<br><br>$tblstart<tr>
 		$tccellh><b>IRC Chat - BadnikZONE, #tcrf, #x</b></td></tr>
 		<tr>$tccell1>Server List: ";
 

@@ -42,6 +42,7 @@ else if ($_POST['knockout'])
 	echo "Delivered IP ban to {$uinfo['lastip']}.\n";
 
 	xk_ircsend("1|". xk(8) . $uinfo['name'] . xk(7). " (IP " . xk(8) . $uinfo['lastip'] . xk(7) .") is the latest victim of the new EZ BAN button(tm).");
+	report("super", "**" . $uinfo['name'] . "** (IP " . $uinfo['lastip']  .") is the latest victim of the new EZ BAN button(tm).");
 
 	echo "\n</div>".redirect("admin-slammer.php", 'the slammer (for another go)', 2);
 	die();
