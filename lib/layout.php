@@ -190,6 +190,8 @@
 			::-webkit-scrollbar-corner	{
 				background:		#$scr7;
 				}
+
+			html { color-scheme: dark; scrollbar-color: #$scr3 #$scr7 }
 			";
 		}
 	}
