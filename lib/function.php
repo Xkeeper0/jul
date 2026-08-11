@@ -1054,10 +1054,10 @@ function getpostlayoutid($text){
 
 function squot($t, &$src){
 	switch($t){
-		case 0: $src=htmlspecialchars($src); break;
-		case 1: $src=urlencode($src); break;
-		case 2: $src=str_replace('&quot;','"',$src); break;
-		case 3: $src=urldecode('%22','"',$src); break;
+		case 0: $src=htmlspecialchars($src ?? ""); break;
+		case 1: $src=urlencode($src ?? ""); break;
+		case 2: $src=str_replace('&quot;','"',$src ?? ""); break;
+		case 3: $src=urldecode('%22','"',$src ?? ""); break;
 	}
 /*  switch($t){
     case 0: $src=str_replace('"','&#34;',$src); break;
@@ -1069,8 +1069,8 @@ function squot($t, &$src){
 function sbr($t, &$src){
 	global $br;
 	switch($t) {
-		case 0: $src=str_replace($br,'<br>',$src); break;
-		case 1: $src=str_replace('<br>',$br,$src); break;
+		case 0: $src=str_replace($br,'<br>',$src ?? ""); break;
+		case 1: $src=str_replace('<br>',$br,$src ?? ""); break;
 	}
 }
 function mysql_get($query){
