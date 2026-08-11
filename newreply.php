@@ -224,7 +224,7 @@
 			if ($post['thread'] == $id) $quotemsg = "[quote={$users[$u]['name']}]{$post['text']}[/quote]\r\n";
 		}
 
-		$message	= $quotemsg . stripslashes(v($_POST['message']));
+		$message	= $quotemsg . stripslashes($_POST['message'] ?? "");
 
 		print "$header
 		$preview

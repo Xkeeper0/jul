@@ -254,10 +254,10 @@
 		$threadstatus	= "";
 
 		// Forum, logged in
-		if ($log && $id && $thread['lastpostdate']>$postread[$id] && !$thread['tread']) {
+		if ($log && $id && $thread['lastpostdate'] > ($postread[$id] ?? 0) && !$thread['tread']) {
 			$threadstatus	.= "new";
 			$newpost		= true;
-			$newpostt		= ($thread['treadtime'] ? $thread['treadtime'] : $postread[$id]);
+			$newpostt		= ($thread['treadtime'] ? $thread['treadtime'] : ($postread[$id] ?? 0));
 		}
 		// User's thread list / Favorites, logged in
 		elseif ($log && !$id && $thread['lastpostdate']>$postread[$thread['forumid']] && !$thread['tread']) {
