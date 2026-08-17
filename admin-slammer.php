@@ -34,6 +34,10 @@ else if ($_POST['knockout'])
 	$sql->query("DELETE FROM users_rpg WHERE uid = '{$target_id}' LIMIT 1");
 	echo "Deleted user data.\n";
 
+	$sql->query("DELETE FROM pmsgs_text WHERE pid IN (SELECT id FROM pmsgs WHERE userto = '{$target_id}' OR userfrom = '{$target_id}') LIMIT 50");
+	$sql->query("DELETE FROM pmsgs WHERE userto = '{$target_id}' OR userfrom = '{$target_id}'");
+	echo "Deleted privmsgs.\n";
+
 	$new_maxid = intval($sql->resultq("SELECT id FROM users ORDER BY id DESC LIMIT 1"));
 	$sql->query("ALTER TABLE users AUTO_INCREMENT = {$new_maxid}");
 	echo "Max ID set to {$new_maxid}.\n";
@@ -41,8 +45,12 @@ else if ($_POST['knockout'])
 	@$sql->query("INSERT INTO `ipbans` SET `ip` = '". $uinfo['lastip'] ."', `date` = '". ctime() ."', `reason` = 'Thanks for playing!'");
 	echo "Delivered IP ban to {$uinfo['lastip']}.\n";
 
-	xk_ircsend("1|". xk(8) . $uinfo['name'] . xk(7). " (IP " . xk(8) . $uinfo['lastip'] . xk(7) .") is the latest victim of the new EZ BAN button(tm).");
-	report("super", "**" . $uinfo['name'] . "** (IP " . $uinfo['lastip']  .") is the latest victim of the new EZ BAN button(tm).");
+//	xk_ircsend("1|". xk(8) . $uinfo['name'] . xk(7). " (IP " . xk(8) . $uinfo['lastip'] . xk(7) .") is the latest victim of the new EZ BAN button(tm).");
+//	report("super", "**" . $uinfo['name'] . "** (IP " . $uinfo['lastip']  .") is the latest victim of the new EZ BAN button(tm).");
+
+        $wh_url = get_discord_webhook("super", []);
+        if ($wh_url) discord_send($wh_url, "User ID {$target_id}, {$uinfo['name']}, last IP {$uinfo['lastip']} was deleted.");
+
 
 	echo "\n</div>".redirect("admin-slammer.php", 'the slammer (for another go)', 2);
 	die();
