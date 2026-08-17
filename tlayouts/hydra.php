@@ -5,25 +5,25 @@
 		global $tzoff, $smallfont, $ip, $quote, $edit, $dateshort, $dateformat, $tlayout, $textcolor, $numdir, $numfil, $tblstart, $hacks, $x_hacks, $loguser;
 
 		$tblend  = "</table>";
-		$exp     = calcexp($post[posts],(ctime()-$post[regdate])/86400);
+		$exp     = calcexp($post['posts'],(ctime()-$post['regdate'])/86400);
 		$lvl     = calclvl($exp);
 		$expleft = calcexpleft($exp);
 
-		$reinf=syndrome($post[act]);
+		$reinf=syndrome($post['act']);
 
 		$sincelastpost = "";
 		$lastactivity = "";
-		$since='Since: '.@date($dateshort,$post[regdate]+$tzoff);
+		$since='Since: '.@date($dateshort,$post['regdate']+$tzoff);
 
-		$postdate  =  date($dateformat,$post[date]+$tzoff);
+		$postdate  =  date($dateformat,$post['date']+$tzoff);
 
-		if($set[threadlink]) { $threadlink=", in $set[threadlink]"; }
+		if($set['threadlink']) { $threadlink=", in $set[threadlink]"; }
 
 		/* if($post[edited]){
 			$set[edited].="<hr>$smallfont$post[edited]";
 		}*/
 
-		$sidebars	= array(1, 16, 18, 19, 387);
+		// $sidebars	= array(1, 16, 18, 19, 387);
 
 		return "
 		$tblstart
@@ -46,8 +46,4 @@
 
 		if (!$set['picture']) $set['picture']	= "images/_.gif";
 
-		if ($_GET['z']) {
-			print_r($st['eq']);
-		}
 	}
-?>

@@ -7,8 +7,8 @@
   function postcode($post,$set){
     global $smallfont,$ip,$quote,$edit, $tblstart;
 
-    $postnum=($post[num]?"$post[num]/":'').$post[posts];
-    if($set[threadlink]) $threadlink=", in $set[threadlink]";
+    $postnum=($post['num']?"$post[num]/":'').$post['posts'];
+    if($set['threadlink']) $threadlink=", in $set[threadlink]";
     return "$tblstart
 	$set[tdbg]><div class='mobile-avatar'>$set[userpic]</div>
 	  $set[userlink]<br>
