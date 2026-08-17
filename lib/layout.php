@@ -19,7 +19,7 @@
 	if(!isset($windowtitle)) $windowtitle=$boardname;
 	require 'colors.php';
 	if($specialscheme) include "schemes/spec-$specialscheme.php";
-	$boardtitle	= "<a href='./'>$boardtitle</a>";
+	$boardtitle	= "<a href='./index.php'>$boardtitle</a>";
 
 	//$boardtitle = "<a href='./'><img src=\"images/christmas-banner-blackroseII.png\" title=\"Not even Christmas in July, no. It's May.\"></a>";
 
@@ -327,7 +327,9 @@
 	if (!$ipbanned && !$torbanned && (!defined("IS_AJAX_REQUEST") || !IS_AJAX_REQUEST)) {
 		// Don't increment the view counter for bots
 		// Todo: Actually check for bots and disable it because hdurfs
-		$sql->query("UPDATE misc SET views=$views");
+		if (stripos($_SERVER['HTTP_USER_AGENT'], "Uptime-Kuma") === false) {
+			$sql->query("UPDATE misc SET views=$views");
+		}
 
 		if($views%10000000>9999000 or $views%10000000<1000) {
 			$u=($loguserid?$loguserid:0);
@@ -503,7 +505,7 @@
 				else            $color = xk(8);
 				$diff = "/".($diff+1)*8;
 
-				xk_ircsend("102|". xk(7) ."User $loguser[name] (id $loguserid) changed from IP ". xk(8) . $loguser['lastip'] . xk(7) ." to ". xk(8) . $_SERVER['REMOTE_ADDR'] .xk(7). " ({$color}{$diff}" .xk(7). ")");
+				//xk_ircsend("102|". xk(7) ."User $loguser[name] (id $loguserid) changed from IP ". xk(8) . $loguser['lastip'] . xk(7) ." to ". xk(8) . $_SERVER['REMOTE_ADDR'] .xk(7). " ({$color}{$diff}" .xk(7). ")");
 			}
 
 			$sql->query("UPDATE users SET lastactivity=".ctime().",lastip='$userip',lasturl='".addslashes($url)."',lastforum=0,`influence`='$influencelv' WHERE id=$loguserid");
