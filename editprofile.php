@@ -327,8 +327,7 @@
 			`pollstyle` = '$pollstyle'
 		WHERE `id` = '$loguserid'") OR print mysql_error();
 
-		print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>(redirect disabled)".$tblend;
-		// print "$header<br>$tblstart$tccell1>Thank you, $loguser[name], for editing your profile.<br>".redirect("profile.php?id=$loguserid",'view your profile',0).$tblend;
+		print "$header<br>$tblstart$tccell1>Your profile has been updated.<br>".redirect("profile.php?id=$loguserid",'view your profile',0).$tblend;
 	}
 
 	print $footer;
