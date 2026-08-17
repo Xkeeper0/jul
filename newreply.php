@@ -1,5 +1,9 @@
 <?php
 
+	if ($_SERVER['HTTP_HOST'] === "jul.haus" && ($_GET['id'] ?? false) && ($_GET['postid'] ?? false) && !($_COOKIE['loguserid'] ?? false)) {
+		die("You seem like a bad scraper, sorry. Logging in will stop this.");
+	}
+
 	require 'lib/function.php';
 	$thread=$sql->fetchq("SELECT forum, closed, sticky,title,lastposter FROM threads WHERE id=$id");
 

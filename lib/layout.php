@@ -4,6 +4,7 @@
 	// UTF-8 time?
 	header("Content-type: text/html; charset=utf-8');");
 
+	jul_run_hack("prelayout_block");
 
 	// cache bad
 	header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');

@@ -1,5 +1,11 @@
 <?php
 
+	if (file_exists("lib/jul_hacks.php")) {
+		require 'lib/jul_hacks.php';
+	}
+	jul_run_hack("preinit_block");
+
+
 	// Set this right away to hopefully prevent fuckups
 	ini_set("default_charset", "UTF-8");
 
@@ -208,6 +214,9 @@
 	if($banned) $power=0;
 
 	$specialscheme = "";
+
+	// disable "mobile" browser mode for now
+	/*
 	$smallbrowsers	= array("Nintendo DS", "Android", "PSP", "Windows CE", "iPhone", "Mobile");
 	if ( (str_replace($smallbrowsers, "", $_SERVER['HTTP_USER_AGENT']) != $_SERVER['HTTP_USER_AGENT']) || filter_int($_GET['mobile']) == 1) {
 		$loguser['layout']		= 2;
@@ -215,6 +224,7 @@
 		$boardtitle				= "<span style=\"font-size: 2em;\">$boardname</span>";
 		$x_hacks['smallbrowse']	= true;
 	}
+	*/
 
 //	$atempval	= $sql -> resultq("SELECT MAX(`id`) FROM `posts`");
 //	if ($atempval == 199999 && $_SERVER['REMOTE_ADDR'] != "172.130.244.60") {
@@ -1497,3 +1507,13 @@ function printtimedif($timestart){
 	*/
 
 }
+
+
+	function jul_run_hack($hack, ...$args) {
+		$hfunc	= "jul_". $hack;
+		if (function_exists($hfunc)) {
+			return $hfunc(...$args);
+		} else {
+			return null;
+		}
+	}

@@ -10,6 +10,8 @@
 	require 'lib/function.php';
 	require 'lib/layout.php';
 
+	jul_run_hack("preregister_block");
+
 	print $header;
 
 	// if ($adminconfig['registrationdisable']) { // this is never defined anywhere
@@ -35,6 +37,8 @@
 	$action = trim($_POST['action'] ?? "");
 
 	if ($action == 'Register') {
+
+		jul_run_hack("preregister2_block");
 
 		if ($name === "") {
 			$error = "No username given.";
