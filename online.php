@@ -27,7 +27,10 @@
 	if ($banorama && filter_string($_GET['banip']) && filter_string($_GET['valid']) == md5($_GET['banip'] . "aglkdgslhkadgshlkgds")) {
 		$sql->query("INSERT INTO `ipbans` SET `ip` = '". $_GET['banip'] ."', `reason`='online.php ban', `date` = '". ctime() ."', `banner` = '$loguserid'") or print mysql_error();
 //		if ($_GET['uid']) mysql_query("UPDATE `users` SET `powerlevel` = -1, `title` = 'Banned; account hijacked. Contact admin via PM to change it.' WHERE `id` = '". $_GET['uid'] ."'") or print mysql_error();
-		xk_ircsend("1|". xk(8) . $loguser['name'] . xk(7) ." added IP ban for ". xk(8) . $_GET['banip'] . xk(7) .".");
+		//xk_ircsend("1|". xk(8) . $loguser['name'] . xk(7) ." added IP ban for ". xk(8) . $_GET['banip'] . xk(7) .".");
+                $wh_url = get_discord_webhook("super", []);
+                if ($wh_url) discord_send($wh_url, "{$loguser['name']} added IP ban for {$_GET['banip']}");
+
 		return header("Location: online.php?m=1");
 	}
 
@@ -152,7 +155,7 @@
 		if($isadmin)
 			print "</td>$tccell1$marker>
 			<a href=ipsearch.php?ip=$guest[ip]>$guest[ip]</a>$smallfont
-			<br>[$ipban<a href=http://google.com/search?q=$guest[ip]>G</a>-<a href=http://en.wikipedia.org/wiki/User:$guest[ip]>W</a>-<a href=http://$guest[ip]/>H</a>]</a></font>";
+			<br>[$ipban<a href=https://ipinfo.io/$guest[ip]>I</a>-<a href=http://en.wikipedia.org/wiki/Special:Contributions/$guest[ip]>W</a>-<a href=https://www.stopforumspam.com/ipcheck/$guest[ip]>S</a>]</a></font>";
 
 		print "</tr>";
 	}
