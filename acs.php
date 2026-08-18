@@ -93,7 +93,7 @@
 					$td>$b$r$slashb</td>
 					$tdl><a href=profile.php?id=$user[id]><font ".getnamecolor($user['sex'],$user['powerlevel']).">". (!$_GET['dur'] ? $user['name'] : "DU". str_repeat("R", mt_rand(1,25))) ."</font></a></td>
 					$td>$b$user[cnt]$slashb</td>
-					$tdl><img src=images/$numdir"."bar-on.gif width=".($user[cnt]*100/$max)."% height=8></td>
+					$tdl><img src=images/$numdir"."bar-on.gif width=".($user['cnt']*100/$max)."% height=8></td>
 					</tr>";
 			}
 		}
