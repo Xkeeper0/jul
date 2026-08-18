@@ -32,10 +32,10 @@
 			if (!$u['eq'.$i]) {
 				continue;
 			}
-			$item=$items[$u['eq'.$i]];
+			$item=$items[$u['eq'.$i]] ?? [];
 			for($k=0;$k<9;$k++){
-				$is=$item['s'.$stat[$k]];
-				if (substr($item['stype'],$k,1)=='m') {
+				$is=$item['s'.$stat[$k]] ?? 0;
+				if (substr($item['stype'] ?? "",$k,1)=='m') {
 					$m[$k]*=$is/100;
 				} else {
 					$a[$k] = ($a[$k] ?? 0) + $is;

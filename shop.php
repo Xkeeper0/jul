@@ -1,6 +1,6 @@
 <?php
 
-	if ($_GET['action'] == "buy" && $_GET['id'] == 286) {
+	if (($_GET['action'] ?? null) === "buy" && ($_GET['id'] ?? null) === 286) {
 		return header("Location: shoph.php");
 	}
 
@@ -19,18 +19,19 @@
     $d=(ctime()-$user['regdate'])/86400;
     $st=getstats($user);
     $GP=$st['GP'];
-    switch($action){
+    switch($action ?? ""){
 	case '':
 	  $shops=mysql_query('SELECT * FROM itemcateg ORDER BY corder');
 	  $eq=mysql_fetch_array(mysql_query("SELECT * FROM users_rpg WHERE uid=$loguserid"));
 	  $eqitems=mysql_query("SELECT * FROM items WHERE id=$eq[eq1] OR id=$eq[eq2] OR id=$eq[eq3] OR id=$eq[eq4] OR id=$eq[eq5] OR id=$eq[eq6] OR id=$eq[eq7]");
-	  while($item=mysql_fetch_array($eqitems)) $items[$item[id]]=$item;
+	  while($item=mysql_fetch_array($eqitems)) $items[$item['id']]=$item;
+	  $shoplist = "";
 	  while($shop=mysql_fetch_array($shops))
 	    $shoplist.="
 		<tr>
 		$tccell1><a href=shop.php?action=items&cat=$shop[id]#status>$shop[name]</a></td>
 		$tccell2s>$shop[description]
-		$tccell1s>".$items[$eq['eq'.$shop[id]]][name]."
+		$tccell1s>". ($items[$eq['eq'.$shop['id']]]['name'] ?? "") ."
 	    ";
 	  print "
 		<table width=100%><td valign=top width=120>
@@ -47,6 +48,21 @@
 	case 'items':
 	  $eq=mysql_fetch_array(mysql_query("SELECT eq$cat AS e FROM users_rpg WHERE uid=$loguserid"));
 	  $eqitem=mysql_fetch_array(mysql_query("SELECT * FROM items WHERE id=$eq[e]"));
+	  if (!$eqitem) {
+		$eqitem	= [
+			"id" => 0,
+			"sHP" => 0,
+			"sMP" => 0,
+			"sAtk" => 0,
+			"sDef" => 0,
+			"sInt" => 0,
+			"sMDf" => 0,
+			"sDex" => 0,
+			"sLck" => 0,
+			"sSpd" => 0,
+			"stype" => 0,
+			];
+	  }
         print "
 		<script>
 		  function preview(user,item,cat,name){
@@ -87,23 +103,23 @@
 		$tccellh width=5%><img src=images/coin2.gif></td>
 	  ";
 	  while($item=mysql_fetch_array($items)){
-	    $preview="<a href=#status onclick='preview($loguserid,$item[id],$cat,\"". htmlentities($item[name], ENT_QUOTES) ."\")'>Preview</a>";
-	    if($item[id]==$eq[e] && $item[id]){
-		$comm="width=80 colspan=2><a href=shop.php?action=sell&cat=$cat>Sell</a>";
-	    }elseif($item[id] && $item[coins]<=$GP && $item[gcoins] <= $user['gcoins']){
-		$comm="width=30><a href=shop.php?action=buy&id=$item[id]>Buy</a></td>$tccell1 width=50>$preview";
-	    }elseif(!$eq[e] && !$item[id]){
-		$comm="width=80 colspan=2>-";
+	    $preview="<a href=#status onclick='preview($loguserid,$item[id],$cat,\"". htmlentities($item['name'], ENT_QUOTES) ."\")'>Preview</a>";
+	    if($item['id']==$eq['e'] && $item['id']){
+			$comm="width=80 colspan=2><a href=shop.php?action=sell&cat=$cat>Sell</a>";
+	    }elseif($item['id'] && $item['coins']<=$GP && $item['gcoins'] <= $user['gcoins']){
+			$comm="width=30><a href=shop.php?action=buy&id=$item[id]>Buy</a></td>$tccell1 width=50>$preview";
+	    }elseif(!$eq['e'] && !$item['id']){
+			$comm="width=80 colspan=2>-";
 	    }else{
-		$comm="width=80 colspan=2>$preview";
+			$comm="width=80 colspan=2>$preview";
 	    }
-	    if($item[id]==$eqitem[id]) $color=' class=equal';
-	    elseif($item[coins]>$GP || $item[gcoins] > $user['gcoins']) $color=' class=disabled';
+	    if($item['id']==$eqitem['id']) $color=' class=equal';
+	    elseif($item['coins']>$GP || $item['gcoins'] > $user['gcoins']) $color=' class=disabled';
 	    else $color='';
 	    $atrlist='';
 	    for($i=0;$i<9;$i++){
 		$st=$item["s$stat[$i]"];
-		if(substr($item[stype],$i,1)=='m'){
+		if(substr($item['stype'],$i,1)=='m'){
 		  $st=vsprintf('x%1.2f',$st/100);
 		  if($st==100) $st='&nbsp;';
 		}else{
@@ -112,7 +128,7 @@
 		}
 		$itst=$item["s$stat[$i]"];
 		$eqst=$eqitem["s$stat[$i]"];
-		if(!$color && substr($item[stype],$i,1)==substr($eqitem[stype],$i,1)){
+		if(!$color && substr($item['stype'],$i,1)==substr($eqitem['stype'],$i,1)){
 		  if($itst> $eqst) $st="<font class=higher>$st</font>";
 		  if($itst==$eqst) $st="<font class=equal>$st</font>";
 		  if($itst< $eqst) $st="<font class=lower>$st</font>";
@@ -130,19 +146,19 @@
 		$tccell1 $comm</td>
 		$tccell2l>$item[name]</td>
 		$atrlist
-		$tccell2r>". ($item[coins] < 8388607 ? $item[coins] : "tons") ."</td>
-		$tccell2r>". ($item[gcoins] < 8388607 ? $item[gcoins] : "tons") ."</td>
+		$tccell2r>". ($item['coins'] < 8388607 ? $item['coins'] : "tons") ."</td>
+		$tccell2r>". ($item['gcoins'] < 8388607 ? $item['gcoins'] : "tons") ."</td>
 	    ";
 	  }
 	  print $tblend;
 	break;
 	case 'buy':
 	  $item=mysql_fetch_array(mysql_query("SELECT * FROM items WHERE id=$id AND `hidden` = '0'"));
-	  if($item && $item[coins]<=$GP && $item['gcoins'] <= $user['gcoins']){
-	    $pitem=mysql_fetch_array(mysql_query("SELECT coins FROM items WHERE id=".$user['eq'.$item[cat]]));
-	    $whatever = $item[coins] - $pitem[coins]*0.6;
+	  if($item && $item['coins']<=$GP && $item['gcoins'] <= $user['gcoins']){
+	    $pitem=mysql_fetch_array(mysql_query("SELECT coins FROM items WHERE id=".$user['eq'.$item['cat']]));
+	    $whatever = $item['coins'] - $pitem['coins']*0.6;
 		print "Debug output: Cost: ". $item['coins'] ." - Current item's sell value: ". ($pitem['coins'] * 0.6) ." - Amount to subtract: ". $whatever .". /debug";
-	    mysql_query("UPDATE users_rpg SET `eq". $item[cat] ."`='". $id ."',`spent`=spent+". $whatever .", `gcoins` = `gcoins` - '". $item['gcoins'] ."' WHERE uid=$loguserid") or print mysql_error();
+	    mysql_query("UPDATE users_rpg SET `eq". $item['cat'] ."`='". $id ."',`spent`=spent+". $whatever .", `gcoins` = `gcoins` - '". $item['gcoins'] ."' WHERE uid=$loguserid") or print mysql_error();
 	    print "
 		$tblstart
 		  $tccell1>The $item[name] has been bought and equipped.<br>
