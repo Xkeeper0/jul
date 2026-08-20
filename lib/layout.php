@@ -393,11 +393,11 @@
 		// Enables people to disable the floating squid if they want, or re-enable it later
 		// Saved browser-side rather than being yet another silly config option
 		if (isset($_COOKIE['ikachan']) && $_COOKIE['ikachan'] === "hidden") {
-			$ikachan_text = "<a href='javascript:void();' onclick=\"document.cookie='ikachan=shown;max-age=0;path=/';alert('Floating Ikachan re-enabled for future pageloads...'); this.remove();\"><img id='f_ikachan' src='$ikachan' style='vertical-align: middle;' title=\"$ikaquote (click to re-enable random floating position)\"></a>";
+			$ikachan_text = "<a href='javascript:void();' onclick=\"document.cookie='ikachan=shown;max-age=0;path=/';alert('Ikachan will now float around the page again on future page loads.'); this.remove();\"><img id='f_ikachan' src='$ikachan' style='vertical-align: middle;' title=\"$ikaquote (click to re-enable random floating position)\"></a>";
 
 
 		} else {
-			$ikachan_text = "<a href='javascript:void();' onclick=\"javascript:document.cookie='ikachan=hidden;max-age=31536000;path=/';alert('Floating Ikachan disabled for future pageloads...'); this.remove();\"><img id='f_ikachan' src='$ikachan' style=\"z-index: 999999; position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"$ikaquote (click to hide in future page loads)\"></a>";
+			$ikachan_text = "<a href='javascript:void();' onclick=\"javascript:document.cookie='ikachan=hidden;max-age=31536000;path=/';alert('Ikachan will now chill at the bottom of the page instead of floating on future page loads.'); this.remove();\"><img id='f_ikachan' src='$ikachan' style=\"z-index: 999999; position: fixed; left: ". mt_rand(0,100) ."%; top: ". mt_rand(0,100) ."%;\" title=\"$ikaquote (click to hide in future page loads)\"></a>";
 
 		}
 
